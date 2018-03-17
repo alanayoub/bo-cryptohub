@@ -1,0 +1,74 @@
+const mongoose = require('mongoose');
+
+const projectSchema = new mongoose.Schema({
+  name: String,
+  symbol:  String,
+  repos: [String],      // repos to scan
+  commits: [String],    // last commit parsed per repo
+  original: {           // original files (this project wrote this code)
+    active: [String],   // hashes of active files
+    old: [String],      // changed or deleted files
+  },
+  copies: {             // copied files (this project copied/forked this code)
+    active: [String],
+    old: [String],
+  }
+});
+
+const fileSchema = new mongoose.Schema({
+  hash: String,
+  length: Number,
+  project: String,
+  active: Boolean,
+  date: Date,
+  copies: [
+    {project: String, date: Date, active: Boolean}
+  ]
+});
+
+const project = mongoose.model('Project', projectSchema);
+const file = mongoose.model('File', fileSchema);
+
+module.exports = project;
+module.exports = file;
+
+const uri = 'mongodb://localhost';
+const database = 'cryptoHub';
+
+
+
+
+const dbConfig = {
+  user: process.env.DB_USER || 'pippa',
+  database: process.env.DB_NAME || 'test',
+  password: process.env.DB_PASS || 'RIC1L97ATErIPPEn09',
+  uri: process.env.DB_URL || 'mongodb://pippa-mongo',
+  env: process.env.NODE_ENV || 'test',
+  replicaSet: process.env.DB_REPLICA_SET || undefined,
+  urlOpts: process.env.DB_URL_OPTS || '',
+};
+
+// When successfully connected
+mongoose.connection.on('connected', () => {
+  console.log(`Mongoose default connection open to ${uri}`);
+});
+
+// If the connection throws an error
+mongoose.connection.on('error', error => {
+  console.log(`Mongoose default connection error: ${error}`);
+});
+
+// When the connection is disconnected
+mongoose.connection.on('disconnected', () => {
+  console.log('Mongoose default connection disconnected');
+});
+
+// If the Node process ends, close the Mongoose connection
+process.on('SIGINT', () => {
+  mongoose.connection.close(() => {
+    console.log('Mongoose default connection disconnected through app termination');
+    process.exit(0);
+  });
+});
+
+mongoose.connect(`${url}/${database}`);

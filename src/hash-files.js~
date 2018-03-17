@@ -1,0 +1,11 @@
+"use strict"
+
+/**
+ *
+ */
+module.exports = async function hashFiles() {
+  return new Promise(resolve => {
+    logHeader('Hashing Files');
+    resolve();
+  });
+};

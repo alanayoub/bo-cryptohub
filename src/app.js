@@ -6,7 +6,7 @@ const Scrape = require('./scrape.js');
 const hashFiles = require('./hash-files');
 const checkoutRepos = require('./checkout-repos');
 
-const scrape = new Scrape({scrapeRate: 1, requestLimit: 2, requestDelay: 2000});
+const scrape = new Scrape({scrapeRate: 1, requestLimit: 1, requestDelay: 2000});
 
 scrape.on('done', async () => {
 

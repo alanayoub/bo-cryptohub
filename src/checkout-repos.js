@@ -32,59 +32,48 @@ module.exports = async function checkoutRepos() {
    */
   const getRepoInfo = async function() {
 
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
 
-      //
-      // Get projects with github Urls
-      //
-      const query = {githubUrls: {$exists: true, $not: {$size: 0}}};
-      Project.find(query, '', (error, projects) => {
-
-        //
-        // Loop over projects
-        //
+      try {
+        const projects = await Project.find({githubUrls: {$exists: true, $not: {$size: 0}}});
         const numProjects = projects.length;
         let lastProject = false;
-        projects.forEach((project, i) => {
-
-          //
-          // Loop over github Urls for each project
-          //
-          console.log(`Github urls for ${project._id}: `, JSON.stringify(project.githubUrls));
-          if (numProjects === i + 1) lastProject = true;
+        //
+        // Iterate over projects
+        //
+        for (let [i, project] of projects.entries()) {
+          console.log(`Github urls for ${project._id}: ${JSON.stringify(project.githubUrls)}`);
           const numGithubUrls = project.githubUrls.length;
-          project.githubUrls.forEach((githubUrl, j) => {
-
-            //
-            // Get repo information for each github url and save it
-            //
-            // TODO: dont make all these requests at once!!! arrr
-            //
-            const [ projectPage, repo ] = githubUrl.split('https://github.com/')[1].split('/');
-            const options = {
+          if (numProjects === i + 1) {
+            lastProject = true;
+          }
+          //
+          // Iterate over githubUrls, get repo info for each and save
+          //
+          for (let [j, githubUrl] of project.githubUrls.entries()) {
+            const [projectPage, repo] = githubUrl.split('https://github.com/')[1].split('/');
+            const reposJson = await rp({
               uri: `https://api.github.com/orgs/${projectPage}/repos`,
               json: true,
-              headers: {'user-agent': 'node.js'}
-            };
-            rp(options).then(reposJson => {
-              project.repos = !!repo ? [reposJson[repo]] : reposJson;
-              project.save((error, updated) => {
-                if (error) {
-                  console.log(`Error saving repos field for project ${project._id}: ${error}`);
-                }
-                else {
-                  console.log(`Updated project ${project._id} repos field`);
-                }
-                if (lastProject && (numGithubUrls === j + 1)) {
-                  resolve(!!error);
-                };
-              });
+              headers: {'user-agent': 'node.js'},
             });
-
-          });
-
-        });
-      });
+            project.repos = !!repo ? [reposJson[repo]] : reposJson;
+            const updated = await project.save();
+            if (updated.errors) {
+              console.log(`Error saving repos field for project ${project._id}: ${updated.error}`);
+            }
+            else {
+              console.log(`Updated project ${project._id} repos field`);
+            }
+            if (lastProject && (numGithubUrls === j + 1)) {
+              resolve(!!updated.error);
+            };
+          }
+        }
+      }
+      catch (error) {
+        console.log(`getRepoInfo() Error: ${error}`);
+      }
 
     });
 
@@ -97,54 +86,51 @@ module.exports = async function checkoutRepos() {
    */
   const cloneRepos = async function () {
 
-    //
-    // maybe we can modularise this bit of getting and looping over projects.
-    //
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
 
-      //
-      // Get projects with github Urls
-      //
-      const query = {repos: {$exists: true, $not: {$size: 0}}};
-      Project.find(query, '', (error, projects) => {
-
-        //
-        // Loop over projects
-        //
+      try {
+        const projects = await Project.find({repos: {$exists: true, $not: {$size: 0}}});
         const numProjects = projects.length;
         let lastProject = false;
-        projects.forEach((project, i) => {
-
-          //
-          // Loop over github Urls for each project
-          //
+        //
+        // Iterate over projects
+        //
+        for (let [i, project] of projects.entries()) {
           console.log(`Github repos for ${project._id}: `);
-          if (numProjects === i + 1) lastProject = true;
-
+          const numRepos = project.repos.length;
+          if (numProjects === i + 1) {
+            lastProject = true;
+          }
           //
-          // TODO: dont clone everything at once!!! arrr
+          // Iterate over repos and clone
           //
-          project.repos.forEach((repoJson, j) => {
-            console.log(`Cloning ${repoJson.url} repo`);
-
-            git.Clone(`${repoJson.url}.git`, `../projects/${project._id}/${repoJson.name}`)
-              .then(repo => {
-                console.log(repo);
-              })
-              .catch(error => {
-                console.log(err);
-              });
-
-          });
-
-          if (lastProject) { // && (numGithubUrls === j + 1)) {
+          for (let [j, repoJson] of project.repos.entries()) {
+            if (repoJson.clone_url) {
+              console.log(`Cloning ${repoJson.clone_url} repo`);
+              const url = repoJson.clone_url;
+              const path = `./projects/${project._id}/${repoJson.name}`;
+              const options = {
+                fetchOpts: {
+                  callbacks: {
+                    certificateCheck: () => 1
+                  }
+                }
+              };
+              const repo = await git.Clone(url, path, options)
+            }
+          }
+          if (lastProject && (numRepos === j + 1)) {
             resolve();
           };
 
-        });
-      });
+        }
+      }
+      catch (error) {
+        console.log(`cloneRepos() Error: ${error}`);
+      }
 
     });
+
   };
 
   /**
@@ -175,7 +161,7 @@ module.exports = async function checkoutRepos() {
 
   logHeader('Checking out repos');
   await getRepoInfo();
-  // await cloneRepos();
+  await cloneRepos();
   return;
 
 };

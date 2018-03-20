@@ -60,19 +60,21 @@ module.exports = async function checkoutRepos() {
             project.repos = !!repo ? [reposJson[repo]] : reposJson;
             const updated = await project.save();
             if (updated.errors) {
-              console.log(`Error saving repos field for project ${project._id}: ${updated.error}`);
+              const msg = `Error saving repos field for project ${project._id}: ${updated.error}`;
+              console.log(msg);
+              throw new Error(msg);
             }
             else {
               console.log(`Updated project ${project._id} repos field`);
             }
             if (lastProject && (numGithubUrls === j + 1)) {
-              resolve(!!updated.error);
+              resolve(!!updated.errors);
             };
           }
         }
       }
       catch (error) {
-        console.log(`getRepoInfo() Error: ${error}`);
+        console.log(`getRepoInfo(): ${error}`);
       }
 
     });
@@ -105,8 +107,7 @@ module.exports = async function checkoutRepos() {
           // Iterate over repos and clone
           //
           for (let [j, repoJson] of project.repos.entries()) {
-            if (repoJson.clone_url) {
-              console.log(`Cloning ${repoJson.clone_url} repo`);
+            if (repoJson && repoJson.clone_url) {
               const url = repoJson.clone_url;
               const path = `./projects/${project._id}/${repoJson.name}`;
               const options = {
@@ -116,7 +117,13 @@ module.exports = async function checkoutRepos() {
                   }
                 }
               };
-              const repo = await git.Clone(url, path, options)
+              if (!fs.existsSync(path)) {
+                console.log(`cloneRepos(): Cloning ${repoJson.clone_url} repo`);
+                await git.Clone(url, path, options)
+              }
+              else {
+                console.log(`cloneRepos(): Skipping ${repoJson.clone_url}, repo already exists`);
+              }
             }
           }
           if (lastProject && (numRepos === j + 1)) {
@@ -126,38 +133,12 @@ module.exports = async function checkoutRepos() {
         }
       }
       catch (error) {
-        console.log(`cloneRepos() Error: ${error}`);
+        console.log(`cloneRepos(): ${error}`);
       }
 
     });
 
   };
-
-  /**
-   *
-   * Check if the project folder exists in projects
-   *
-   */
-  const folderExists = async function(path) {
-
-    // fs.access(`../projects/${project._id}`, fs.constants.R_OK | fs.constants.W_OK, error => {
-    //   if (error) {
-    //     if (error.code === 'ENOENT') {
-    //       console.log('Project has not been cloned yet');
-    //       // make folder
-    //       // do clone of each repo
-    //     }
-    //     if (error.code === 'EEXIST') {
-    //       console.error('Project has already been cloned');
-    //       // do clone of missing repos
-    //     }
-    //     console.log(`checkoutRepos() error: ${error}`);
-    //   }
-    //   console.log(error ? 'no access!' : 'can read/write');
-    // });
-
-  }
-
 
   logHeader('Checking out repos');
   await getRepoInfo();

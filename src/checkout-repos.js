@@ -1,4 +1,4 @@
-"use strict"
+'use strict';
 
 // Node
 const fs = require('fs');
@@ -75,6 +75,7 @@ module.exports = async function checkoutRepos() {
       }
       catch (error) {
         console.log(`getRepoInfo(): ${error}`);
+        resolve(false);
       }
 
     });
@@ -125,24 +126,27 @@ module.exports = async function checkoutRepos() {
                 console.log(`cloneRepos(): Skipping ${repoJson.clone_url}, repo already exists`);
               }
             }
+            if (lastProject && (numRepos === j + 1)) {
+              resolve(true);
+            };
           }
-          if (lastProject && (numRepos === j + 1)) {
-            resolve();
-          };
 
         }
       }
       catch (error) {
         console.log(`cloneRepos(): ${error}`);
+        resolve(false);
       }
 
     });
 
   };
 
-  logHeader('Checking out repos');
-  await getRepoInfo();
-  await cloneRepos();
-  return;
+  return new Promise(async resolve => {
+    logHeader('Checking out repos');
+    await getRepoInfo();
+    await cloneRepos();
+    resolve();
+  });
 
 };

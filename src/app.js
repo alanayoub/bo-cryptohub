@@ -1,17 +1,46 @@
-"use strict"
+'use strict';
 
+
+// Libs
+const rp = require('request-promise');
+const { to } = require('await-to-js');
+
+// CryptoHub
 require('./db-connect');
-
-const Scrape = require('./scrape.js');
+const scrape = require('./scrape.js');
 const hashFiles = require('./hash-files');
 const checkoutRepos = require('./checkout-repos');
 
-const scrape = new Scrape({scrapeRate: 1, requestLimit: 1, requestDelay: 2000});
+(async function doStuffYo() {
 
-scrape.on('done', async () => {
+  const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 1, requestDelay: 2000}));
+  if (scrapeError) {
+    // handle error
+    return;
+  };
 
-  await checkoutRepos();
-  await hashFiles();
+  const [cloneError, cloneResults]  = await to(checkoutRepos());
+  if (cloneError) {
+    // handle error
+    return;
+  }
+
+  // const [hashFiles, hashFilesError] = await to(hashFiles());
+  // if (hashFilesError) {
+  //   // handle error
+  //   return;
+  // }
+
+})();
+
+
+
+
+// scrape.on('done', async () => {
+
+//   console.log('Finished scraping');
+  // await checkoutRepos();
+  // await hashFiles();
 
   //
   // hashFiles();
@@ -30,7 +59,7 @@ scrape.on('done', async () => {
   // save file data
   //
 
-});
+// });
 
 // var hashStuff = () => {
 //   var results = [];

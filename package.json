@@ -9,9 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "await-to-js": "^2.0.1",
     "cheerio": "^1.0.0-rc.2",
     "mongoose": "^5.0.8",
     "nodegit": "^0.21.1",
+    "redis": "^2.8.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
   },

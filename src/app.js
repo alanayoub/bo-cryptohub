@@ -13,23 +13,28 @@ const checkoutRepos = require('./checkout-repos');
 
 (async function doStuffYo() {
 
-  const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 1, requestDelay: 2000}));
-  if (scrapeError) {
-    // handle error
-    return;
-  };
+  //
+  // Each task is completely independent
+  //
+  try {
+    // const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 1, requestDelay: 2000}));
+    // if (scrapeError) {
+    //   throw new Error(scrapeError);
+    // };
 
-  const [cloneError, cloneResults]  = await to(checkoutRepos());
-  if (cloneError) {
-    // handle error
-    return;
+    // const [cloneError, cloneResults]  = await to(checkoutRepos());
+    // if (cloneError) {
+    //   throw new Error(cloneError);
+    // };
+
+    const [hash, hashError] = await to(hashFiles());
+    if (hashError) {
+      throw new Error(hashError);
+    }
   }
-
-  // const [hashFiles, hashFilesError] = await to(hashFiles());
-  // if (hashFilesError) {
-  //   // handle error
-  //   return;
-  // }
+  catch(error) {
+    console.log('Um some error happened yo: ', error);
+  }
 
 })();
 
@@ -45,7 +50,7 @@ const checkoutRepos = require('./checkout-repos');
   //
   // hashFiles();
   // ----------------
-  // loop over github
+  // loop over repos
   //   go to project.commits[repoIdx] or first commit
   //   if first commit hash all files else hash changed files
   //

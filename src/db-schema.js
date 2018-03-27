@@ -13,7 +13,7 @@ const projectSchema = new mongoose.Schema({
   rank: Number,
   githubUrls: [String],
   repos: [],            // github repo objects
-  commits: [String],    // last commit parsed per repo
+  commits: [],          // last commit parsed per repo
   original: {           // original files (this project wrote this code)
     active: [String],   // hashes of active files
     old: [String],      // changed or deleted files

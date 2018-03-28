@@ -73,9 +73,9 @@ function arrayDiff(a, b) {
  * @return {Boolean}
  *
  */
-async function gitCommit(repo, commit) {
+async function gitCheckout(repo, commit) {
   return new Promise(resolve => {
-    console.log(`gitCommit(): ${repo} ${commit}`);
+    console.log(`gitCheckout(): ${repo} ${commit}`);
     // nodeGit
     // nodeGit.repository.open();
     // repository.getCommit();
@@ -87,6 +87,7 @@ async function gitCommit(repo, commit) {
 /**
  *
  * @param {String} path - absolute path to repo
+ * @return {Array|Object} - An array of commits or an error object
  *
  */
 async function gitLog(path) {
@@ -118,14 +119,12 @@ async function gitLog(path) {
               },
               message: commit.message(),
             };
-            results.push(details);
+            results.unshift(details);
           }
           resolve(results);
         });
 
-        history.on('error', error => {
-          resolve({error: true});
-        });
+        history.on('error', error => resolve({error: true, message: error}));
 
         history.start();
 
@@ -137,9 +136,9 @@ async function gitLog(path) {
 module.exports = {
   gitLog,
   getDirs,
-  gitCommit,
   arrayDiff,
   logHeader,
   typeOfData,
+  gitCheckout,
   getCurrentDate,
 };

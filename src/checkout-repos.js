@@ -57,6 +57,10 @@ module.exports = async function checkoutRepos() {
               json: true,
               headers: {'user-agent': 'node.js'},
             });
+
+            //
+            // TODO: Change this to save to create a new repo object and then link it to the project
+            //
             project.repos = !!repo ? [reposJson[repo]] : reposJson;
             const updated = await project.save();
             if (updated.errors) {
@@ -70,6 +74,7 @@ module.exports = async function checkoutRepos() {
             if (lastProject && (numGithubUrls === j + 1)) {
               resolve(!!updated.errors);
             };
+
           }
         }
       }

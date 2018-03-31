@@ -76,6 +76,7 @@ function arrayDiff(a, b) {
 async function gitCheckout(repo, commit) {
   return new Promise(resolve => {
     console.log(`gitCheckout(): ${repo} ${commit}`);
+    resolve(true);
     // nodeGit
     // nodeGit.repository.open();
     // repository.getCommit();
@@ -95,6 +96,8 @@ async function gitLog(path) {
 
     const git = require('nodegit');
 
+    // TODO: add a catch or error validation to this, at the moment
+    // if an incorrect path is used nothing is returned and it hangs
     git.Repository
       .open(path)
       .then(repo => repo.getMasterCommit())

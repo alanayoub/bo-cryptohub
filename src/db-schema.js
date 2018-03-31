@@ -13,7 +13,7 @@ const projectSchema = new mongoose.Schema({
   rank: Number,
   githubUrls: [String],
   repos: [],            // github repo objects
-  commits: [],          // last commit parsed per repo
+  commits: [],          // last commit parsed per repo ///// TODO: REMOVE THIS and use repo schema
   original: {           // original files (this project wrote this code)
     active: [String],   // hashes of active files
     old: [String],      // changed or deleted files
@@ -22,6 +22,23 @@ const projectSchema = new mongoose.Schema({
     active: [String],
     old: [String],
   }
+});
+
+const repoSchema = new mongoose.Schema({
+  _id: String,          // projectname/repo
+  isFork: Boolean,      // is a fork of another repo?
+  commit: {             // current commit
+    hash: String,
+    date: Date,
+    author: {
+      name: String,
+      email: String,
+    },
+    message: String,
+  },
+  commits: String,      // git log object
+  project: String,      // project name
+  githubObject: String, // github api repo object
 });
 
 const fileSchema = new mongoose.Schema({
@@ -36,8 +53,9 @@ const fileSchema = new mongoose.Schema({
 });
 
 const Project = mongoose.model('Project', projectSchema);
+const Repo = mongoose.model('Repo', repoSchema);
 const File = mongoose.model('File', fileSchema);
 
 module.exports = {
-  Project, File
+  Project, Repo, File
 }

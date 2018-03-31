@@ -6,9 +6,10 @@ const fs = require('fs');
 // Libs
 const rp = require('request-promise');
 const git = require('nodegit');
+const { to } = require('await-to-js');
 
 // CryptoHub
-const { Project } = require('./db-schema');
+const { Project, Repo } = require('./db-schema');
 const { logHeader } = require('./utils.js');
 
 /**
@@ -37,16 +38,14 @@ module.exports = async function checkoutRepos() {
       try {
         const projects = await Project.find({githubUrls: {$exists: true, $not: {$size: 0}}});
         const numProjects = projects.length;
-        let lastProject = false;
+        let numGithubUrls;
+        let numRepos;
         //
         // Iterate over projects
         //
         for (let [i, project] of projects.entries()) {
-          console.log(`Github urls for ${project._id}: ${JSON.stringify(project.githubUrls)}`);
-          const numGithubUrls = project.githubUrls.length;
-          if (numProjects === i + 1) {
-            lastProject = true;
-          }
+          console.log(`getRepoInfo(): List Github urls for ${project._id}: ${JSON.stringify(project.githubUrls)}`);
+          numGithubUrls = project.githubUrls.length;
           //
           // Iterate over githubUrls, get repo info for each and save
           //
@@ -57,35 +56,50 @@ module.exports = async function checkoutRepos() {
               json: true,
               headers: {'user-agent': 'node.js'},
             });
-
+            numRepos = reposJson.length;
             //
-            // TODO: Change this to save to create a new repo object and then link it to the project
+            // Iterate over repos in project and save
             //
-            project.repos = !!repo ? [reposJson[repo]] : reposJson;
-            const updated = await project.save();
-            if (updated.errors) {
-              const msg = `Error saving repos field for project ${project._id}: ${updated.error}`;
-              console.log(msg);
-              throw new Error(msg);
+            for (let [k, repoObj] of reposJson.entries()) {
+              const _id = `${project._id}/${repoObj.name}`;
+              const query = {_id};
+              const update = {
+                _id,
+                isFork: repoObj.fork,
+                commit: null,
+                commits: null,
+                project: project._id,
+                githubObject: JSON.stringify(repoObj),
+              };
+              const options = {
+                new: true,
+                upsert: true,
+                setDefaultsOnInsert: true,
+              };
+              const [error, result] = await to(Repo.findOneAndUpdate(query, update, options).exec());
+              if (error) {
+                resolve({error: true, message: error});
+                console.log(`getRepoInfo() error saving repo info for ${_id}: ${error}`);
+              }
+              else {
+                console.log(`getRepoInfo(): Saved repo information from github for ${_id}`);
+              }
+              // We are finished if this loop is the last repo in last github url in last project
+              if ((numProjects === i + 1) && (numGithubUrls === j + 1) && (numRepos === k + 1)) {
+                resolve(true);
+              };
             }
-            else {
-              console.log(`Updated project ${project._id} repos field`);
-            }
-            if (lastProject && (numGithubUrls === j + 1)) {
-              resolve(!!updated.errors);
-            };
-
           }
         }
       }
       catch (error) {
         console.log(`getRepoInfo(): ${error}`);
-        resolve(false);
+        resolve({error: true, message: error});
       }
 
     });
 
-  }
+  };
 
   /**
    *
@@ -97,46 +111,36 @@ module.exports = async function checkoutRepos() {
     return new Promise(async resolve => {
 
       try {
-        const projects = await Project.find({repos: {$exists: true, $not: {$size: 0}}});
-        const numProjects = projects.length;
-        let lastProject = false;
+        const repos = await Repo.find();
+        const numRepos = repos.length;
         //
-        // Iterate over projects
+        // Iterate over repos and clone
         //
-        for (let [i, project] of projects.entries()) {
-          console.log(`Github repos for ${project._id}: `);
-          const numRepos = project.repos.length;
-          if (numProjects === i + 1) {
-            lastProject = true;
-          }
-          //
-          // Iterate over repos and clone
-          //
-          for (let [j, repoJson] of project.repos.entries()) {
-            if (repoJson && repoJson.clone_url) {
-              const url = repoJson.clone_url;
-              const path = `./projects/${project._id}/${repoJson.name}`;
-              const options = {
-                fetchOpts: {
-                  callbacks: {
-                    certificateCheck: () => 1
-                  }
+        for (let [j, repo] of repos.entries()) {
+          const repoObj = JSON.parse(repo.githubObject);
+          if (repoObj && repoObj.clone_url) {
+            const url = repoObj.clone_url;
+            const path = `./projects/${repo._id}`;
+            const options = {
+              fetchOpts: {
+                callbacks: {
+                  certificateCheck: () => 1
                 }
-              };
-              if (!fs.existsSync(path)) {
-                console.log(`cloneRepos(): Cloning ${repoJson.clone_url} repo`);
-                await git.Clone(url, path, options)
               }
-              else {
-                console.log(`cloneRepos(): Skipping ${repoJson.clone_url}, repo already exists`);
-              }
-            }
-            if (lastProject && (numRepos === j + 1)) {
-              resolve(true);
             };
+            if (!fs.existsSync(path)) {
+              console.log(`cloneRepos(): Cloning ${url} repo`);
+              await git.Clone(url, path, options);
+            }
+            else {
+              console.log(`cloneRepos(): Skipping ${url}, repo already exists`);
+            }
           }
-
+          if (numRepos === j + 1) {
+            resolve(true);
+          };
         }
+
       }
       catch (error) {
         console.log(`cloneRepos(): ${error}`);

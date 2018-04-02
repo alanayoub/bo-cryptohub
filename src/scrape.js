@@ -17,6 +17,7 @@ const { getCurrentDate, typeOfData, logHeader } = require('./utils.js');
 const { Project } = require('./db-schema');
 
 // Local
+// What is this for????
 const readFileAsync = promisify(fs.readFile);
 
 /**

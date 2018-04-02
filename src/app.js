@@ -1,6 +1,5 @@
 'use strict';
 
-
 // Libs
 const rp = require('request-promise');
 const { to } = require('await-to-js');
@@ -22,15 +21,15 @@ const checkoutRepos = require('./checkout-repos');
     //   throw new Error(scrapeError);
     // };
 
-    const [cloneError, cloneResults]  = await to(checkoutRepos());
-    if (cloneError) {
-      throw new Error(cloneError);
-    };
+    // const [cloneError, cloneResults]  = await to(checkoutRepos());
+    // if (cloneError) {
+    //   throw new Error(cloneError);
+    // };
 
-    // const [hash, hashError] = await to(hashFiles());
-    // if (hashError) {
-    //   throw new Error(hashError);
-    // }
+    const [hash, hashError] = await to(hashFiles());
+    if (hashError) {
+      throw new Error(hashError);
+    }
   }
   catch(error) {
     console.log('Um some error happened yo: ', error);

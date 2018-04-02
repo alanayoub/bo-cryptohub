@@ -68,20 +68,26 @@ function arrayDiff(a, b) {
 
 /**
  *
- * @param {String} repo - absolute path to repo
+ * @param {String} path - absolute path to repo
  * @param {String} [commit] - commit to checkout
  * @return {Boolean}
  *
  */
-async function gitCheckout(repo, commit) {
-  return new Promise(resolve => {
-    console.log(`gitCheckout(): ${repo} ${commit}`);
-    resolve(true);
-    // nodeGit
-    // nodeGit.repository.open();
-    // repository.getCommit();
-    //
-    // something like that
+async function gitCheckout(path, hash) {
+  const git = require('nodegit');
+  return new Promise(async resolve => {
+    try {
+      const repository = await git.Repository.open(path);
+      const commit = await repository.getCommit(hash);
+      await repository.setHeadDetached(commit.id(), repository.defaultSignature(), `Checkout: HEAD ${commit.id()}`);
+      await git.Checkout.tree(repository, commit.sha(), {checkoutStrategy: git.Checkout.STRATEGY.FORCE});
+      console.log(`gitCheckout(): Checked out ${hash} from ${path}`);
+      resolve(true);
+    }
+    catch(error) {
+      console.log(`gitCheckout(): Failed to checked out ${hash} from ${path}`);
+      resolve({error: true, message: `gitCheckout(): ${error}`});
+    }
   });
 }
 
@@ -92,9 +98,8 @@ async function gitCheckout(repo, commit) {
  *
  */
 async function gitLog(path) {
+  const git = require('nodegit');
   return new Promise(resolve => {
-
-    const git = require('nodegit');
 
     // TODO: add a catch or error validation to this, at the moment
     // if an incorrect path is used nothing is returned and it hangs

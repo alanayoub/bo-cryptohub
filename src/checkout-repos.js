@@ -65,9 +65,9 @@ module.exports = async function checkoutRepos() {
               const query = {_id};
               const update = {
                 _id,
+                log: null,
                 isFork: repoObj.fork,
                 commit: null,
-                commits: null,
                 project: project._id,
                 githubObject: JSON.stringify(repoObj),
               };

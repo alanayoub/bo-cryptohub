@@ -69,7 +69,7 @@ function arrayDiff(a, b) {
 /**
  *
  * @param {String} path - absolute path to repo
- * @param {String} [commit] - commit to checkout
+ * @param {String} hash - commit to checkout
  * @return {Boolean}
  *
  */
@@ -87,6 +87,22 @@ async function gitCheckout(path, hash) {
     catch(error) {
       console.log(`gitCheckout(): Failed to checked out ${hash} from ${path}`);
       resolve({error: true, message: `gitCheckout(): ${error}`});
+    }
+  });
+}
+
+async function gitCheckoutBranch(path, branch) {
+  const git = require('nodegit');
+  return new Promise(async resolve => {
+    try {
+      const repository = await git.Repository.open(path);
+      repository.checkoutBranch(branch);
+      console.log(`gitCheckoutBranch(): Checked out branch:${branch} from ${path}`);
+      resolve(true);
+    }
+    catch(error) {
+      console.log(`gitCheckoutBranch(): Failed to checked out branch:${branch} from ${path}`);
+      resolve({error: true, message: `gitCheckoutBranch(): ${error}`});
     }
   });
 }
@@ -149,4 +165,5 @@ module.exports = {
   typeOfData,
   gitCheckout,
   getCurrentDate,
+  gitCheckoutBranch,
 };

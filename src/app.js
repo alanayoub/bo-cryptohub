@@ -10,6 +10,9 @@ const scrape = require('./scrape.js');
 const hashFiles = require('./hash-files');
 const checkoutRepos = require('./checkout-repos');
 
+// TODO: do this
+// process.on('warning', e => console.warn(e.stack));
+
 (async function doStuffYo() {
 
   //

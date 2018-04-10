@@ -112,58 +112,128 @@ async function gitCheckoutBranch(path, branch) {
  * @param {String} path - absolute path to repo
  * @return {Array|Object} - An array of commits or an error object
  *
+ * TODO: What else can we get from the log? number of changes etc?
+ *
  */
 async function gitLog(path) {
   const git = require('nodegit');
   return new Promise(resolve => {
 
-    // TODO: add a catch or error validation to this, at the moment
-    // if an incorrect path is used nothing is returned and it hangs
-    git.Repository
-      .open(path)
-      .then(repo => repo.getMasterCommit())
-      .then(firstCommitOnMaster => {
+    try {
+      // TODO: at the moment if an incorrect path is used nothing is returned and it hangs
+      git.Repository
+        .open(path)
+        .then(repo => repo.getMasterCommit())
+        .then(firstCommitOnMaster => {
 
-        const history = firstCommitOnMaster.history();
+          const history = firstCommitOnMaster.history();
 
-        history.on('commit', commit => {});
+          history.on('commit', commit => {});
 
-        history.on('end', commits => {
-          const results = [];
-          let author;
-          let details;
-          for (let [i, commit] of commits.entries()) {
-            author = commit.author();
-            details = {
-              hash: commit.sha(),
-              date: commit.date(),
-              author: {
-                name: author.name(),
-                email: author.email(),
-              },
-              message: commit.message(),
-            };
-            results.unshift(details);
-          }
-          resolve(results);
+          history.on('end', commits => {
+            const results = [];
+            let author;
+            let details;
+            for (let [i, commit] of commits.entries()) {
+              author = commit.author();
+              details = {
+                hash: commit.sha(),
+                date: commit.date(),
+                author: {
+                  name: author.name(),
+                  email: author.email(),
+                },
+                message: commit.message(),
+              };
+              results.unshift(details);
+            }
+            resolve(results);
+          });
+
+          history.on('error', error => resolve({error: true, message: error}));
+
+          history.start();
+
         });
-
-        history.on('error', error => resolve({error: true, message: error}));
-
-        history.start();
-
-      });
+    }
+    catch(error) {
+      console.log(`gitLog(): ${error}`);
+    }
 
   });
 }
 
+/**
+ *
+ * Save commits to db if they don't alrady exist
+ * @param {Array} log - array of commits
+ * @param {String} project - project/repo
+ * @return {Array} array of Commit objects
+ *
+ */
+async function dbSaveCommits(log, project) {
+
+    try {
+
+      const { to } = require('await-to-js');
+      const { Commit } = require('./db-schema');
+      const commits = [];
+      let error;
+      let dbCommit;
+      let savedCommit;
+
+      for (let [i, commit] of log.entries()) {
+        [error, dbCommit] = await to(Commit.findOne({hash: commit.hash}).exec());
+        if (error) throw new Error(`saveCommits(): ${error}`);
+        if (dbCommit) {
+          // console.log(`savedCommits(): Skipping, ${commit.hash} already exists for ${project}`);
+          commits.push(dbCommit);
+        }
+        else {
+          [error, savedCommit] = await to(Commit.create(commit));
+          if (error) throw new Error(error);
+          // console.log(`savedCommits(): Creating new commit ${commit.hash} for ${project}`);
+          commits.push(savedCommit);
+        }
+      };
+
+      return commits;
+
+    }
+    catch(error) {
+      console.log(`saveCommits(): ${error}`);
+      return false;
+    }
+
+}
+
+/**
+ *
+ */
+const get = uri => {
+  const rp = require('request-promise');
+  return rp({
+    uri,
+    json: true,
+    headers: {'user-agent': 'node.js'},
+  });
+}
+
 module.exports = {
-  gitLog,
   getDirs,
   arrayDiff,
   logHeader,
   typeOfData,
-  gitCheckout,
   getCurrentDate,
+
+  // resource
+  get,
+
+  // git
+  gitLog,
+  gitCheckout,
   gitCheckoutBranch,
+
+  // db
+  dbSaveCommits,
 };

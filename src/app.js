@@ -8,7 +8,8 @@ const { to } = require('await-to-js');
 require('./db-connect');
 const scrape = require('./scrape.js');
 const hashFiles = require('./hash-files');
-const checkoutRepos = require('./checkout-repos');
+const cloneRepos = require('./clone-repos');
+const getRepoData = require('./get-repo-data');
 
 // TODO: do this
 // process.on('warning', e => console.warn(e.stack));
@@ -22,6 +23,11 @@ const checkoutRepos = require('./checkout-repos');
     // const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 1, requestDelay: 2000}));
     // if (scrapeError) {
     //   throw new Error(scrapeError);
+    // };
+
+    // const [repoError, repoResults]  = await to(getRepoData());
+    // if (repoError) {
+    //   throw new Error(repoError);
     // };
 
     // const [cloneError, cloneResults]  = await to(checkoutRepos());

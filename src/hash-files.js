@@ -1,14 +1,16 @@
 'use strict';
 
 // Node
-const glob = require('glob');
+const fs = require('fs');
+const glob = require('globby');
+const crypto = require('crypto');
 const { join, dirname, basename } = require('path');
 
 // Libs
 const { to } = require('await-to-js');
 
 // CryptoHub
-const { Project, Commit, Repo } = require('./db-schema');
+const { Project, File, Repo } = require('./db-schema');
 const { arrayDiff, logHeader, getDirs, gitCheckout, gitCheckoutBranch, gitLog } = require('./utils.js');
 
 /**
@@ -24,42 +26,10 @@ module.exports = async function hashFiles() {
   /**
    *
    * Make sure every repo is at the correct commit as defined in the DB.
-   * If no commit is registered for a repo go to the first commit
    * Save commit information to Commit schema and reference in Reop
-   *
-   * @param {Array} commitLog
-   * @param {String} project
    *
    */
   async function syncCommits() {
-
-    async function saveCommits(commitLog, project) {
-      new Promise(async resolve => {
-        try {
-          for (let [i, commit] of commitLog.entries()) {
-            const _id = commit.hash;
-            const [error, dbCommit] = await to(Commit.findOne({_id: _id}));
-            if (error) throw new Error(`saveCommits(): ${error}`);
-            if (dbCommit) {
-              const dbDate = +dbCommit.commit.date;
-              const newDate = +commit.date;
-              if (newDate < dbDate) {
-                debugger
-                // replace commit
-              }
-            }
-            else {
-              const doc = {_id, project, commit};
-              await to(Commit.create(doc));
-            }
-          };
-          resolve(true);
-        }
-        catch(error) {
-          console.log(`saveCommits(): ${error}`);
-        }
-      });
-    }
 
     return new Promise(async resolve => {
 
@@ -68,28 +38,16 @@ module.exports = async function hashFiles() {
         let path;
         let error;
         let repos;
-        let commit;
         [error, repos] = await to(Repo.find({}));
         if (error) throw new Error(`Repo.find(): ${error}`);
         for (let [i, repo] of repos.entries()) {
           path = `projects/${repo._id}`;
           [error] = await to(gitCheckoutBranch(path, 'master'));
           if (error) throw new Error(`gitCheckoutBranch(): ${error}`);
-          [error, log] = await to(gitLog(path));
-          if (error) throw new Error(`gitLog(): ${error}`);
-          else {
-            console.log(`syncCommits(): Saved commit info to commits collection for ${path}`);
+          if (repo.commit) {
+            [error] = await to(gitCheckout(path, commit));
+            if (error) throw new Error(`gitCheckout(): ${error}`);
           }
-          await saveCommits(log, repo.project);
-          repo.log = JSON.stringify(log);
-          if (!repo.commit) {
-            commit = repo.commit = log[0].hash;
-          }
-          else {
-            commit = repo.commit;
-          }
-          [error] = await to(gitCheckout(path, commit));
-          if (error) throw new Error(`gitCheckout(): ${error}`);
           [error] = await to(repo.save());
           if (error) throw new Error(`repo.save(): ${error}`);
           else {
@@ -109,8 +67,91 @@ module.exports = async function hashFiles() {
 
   /**
    *
+   * Hash all files in all repos
+   * Start at the commit registered at repo.commit
+   * TODO: Set overwrite to start again from the first commit
+   * TODO: remove all this new Promise stuff, we dont need it as async functions return a promise by default
+   *
+   * ---------------------------------
+   * NOTE: This doest work because oldCommit.date and newCommit.date will be the same for forked stuff, but this
+   * will work only for copied files. For forked stuff we should find the commit where the project started and work
+   * from there on only, dont run firstCommit in thoes cases
+   * ---------------------------------
    */
   async function hashAllFiles() {
+
+    /**
+     *
+     * This function should be called on the first commit of any repo, it parse
+     * all the files in the repo not just the changed ones
+     *
+     */
+    async function firstCommit(repo, commitObj) {
+
+      let error;
+      let newFile;
+      let oldFile;
+      const files = await glob(`projects/${repo._id}/**/*.*`);
+
+      for (let [i, path] of files.entries()) {
+
+        newFile = parseFile(repo.project, repo._id, path, commitObj);
+        [error, oldFile] = await to(File.findOne({_id: newFile._id}));
+        if (error) throw new Error(error);
+
+        // If file already exists
+        if (oldFile) {
+
+          const oldCopies = oldFile.copies;
+          const oldDate = +oldFile.date;
+          const newDate = +newFile.date;
+
+          switch (true) {
+
+            case oldDate > newDate:
+              // If newFile is older update file and set the old file and any copies as copies
+              // Don't add copies for files in the same project
+              if (oldFlie.project !== newFile.project) {
+                newFile.copies = [...oldFile.copies, {date: oldFile.date, project: oldFile.project}];
+              }
+              File.update({_id: newFile._id}, newFile);
+
+            case oldDate < newDate:
+              // if oldFile is older leave as is but update copies
+              const newCopy = {date: newFile.date, project: newFile.project};
+              const exists = oldCopies.some(copy =>  {
+                return copy.project === newFile.project && copy.date === newFile.date;
+              });
+              if (!exists) {
+                oldFile.copies = [...oldCopies, newCopy];
+              }
+
+            case oldDate > newDate || oldDate < newDate:
+              // If either of the above, save and break
+              [error] = await to(oldFile.save());
+              if (error) throw new Error(error);
+              else {
+                console.log(`hashAllFiles(): update old file from (${oldFile.project} -> ${newFile.project})`);
+              }
+              break;
+
+            case oldDate === newDate:
+              // If same date, most likely same commit, do nothing
+              console.log(`hashAllFiles(): skipping ${oldFile.path}, been here done that`);
+              break;
+
+          }
+
+        }
+        // If file doesn't already exist add it
+        else {
+          [error] = await to(File.create(newFile));
+          if (error) throw new Error(error);
+          console.log(`hashAllfiles(): Added new file to DB: ${newFile.path}`);
+        }
+      }
+    }
+
     new Promise(async resolve => {
       try {
         let error;
@@ -120,24 +161,18 @@ module.exports = async function hashFiles() {
         // For each repo
         for (let [i, repo] of repos.entries()) {
           const commit = repo.commit;
-          const log = JSON.parse(repo.log);
-          const idx = log.findIndex(c => c.hash = commit);
-          if (idx === 0) {
-            // For all Files: HashFiles()
-            // todo await!
-            glob(`projects/${repo._id}/**/*.*`, {}, (error, files) => {
-              if (error) throw new Error();
-              files.forEach(path => {
-                hashFile(repo.project, repo._id, path);
-              });
-            });
+          const log = repo.log;
+          const idx = log.findIndex(c => c.hash === commit);
+          if (idx < 1) {
+            [error] = await to(gitCheckout(`projects/${repo._id}`, log[0].hash));
+            if (error) throw new Error(error);
+            await firstCommit(repo, log[0]);
           }
-          // Go to the next commit in repo.log
           else {
-            const nextCommit = log[idx];
-            [error] = await to(gitCheckout(`projects/${repo._id}`, nextCommit.hash));
+            [error] = await to(gitCheckout(`projects/${repo._id}`, log[idx + 1].hash));
             // For all changed files: HashFiles()
           }
+          repo.commit = log[idx + 1].hash;
           // Update repo.commit
         }
         resolve(true);
@@ -147,47 +182,53 @@ module.exports = async function hashFiles() {
         resolve(false);
       }
     });
-
-    // return new Promise(async resolve => {
-    //   var results = [];
-    //   //
-    //   // log a hash of all files in folder
-    //   //
-    //   glob(`projects/bitcoin/**/*.*`, {}, (error, files) => {
-    //     // files.forEach(path => {
-    //       // fs.readFile(path, 'utf8', (error, contents) => {
-    //       //   var md5 = crypto.createHash('md5');
-    //       //   var item = md5.update(contents).digest('hex');
-    //       //   results.push(item);
-    //       //   console.log(`${path}\n${item}\n`);
-    //       //   // console.log(item);
-    //       // });
-    //     // });
-    //     debugger
-    //     // TODO: count times filetype is used, maybe chars too?
-    //     files.map(file => {
-    //       return file.split('.').pop();
-    //     })
-    //   });
-    //   debugger;
-    //   resolve(true);
-    // });
-
   }
 
   /**
    *
+   * Conduct all required file operations
+   * @param {String} projectName
+   * @param {String} repo
+   * @param {String} path
+   * @param {Object} commit
+   *
    */
-  async function hashFile(projectName, repo, path) {
-    console.log(`Hashing ${path}`);
-    // fs.readFile(path, 'utf8', (error, contents) => {
-    //   var md5 = crypto.createHash('md5');
-    //   var item = md5.update(contents).digest('hex');
-    //   results.push(item);
-    //   console.log(`${path}\n${item}\n`);
-    //   // console.log(item);
-    // });
+  function parseFile(projectName, repo, path, commit) {
+    try {
+      const file = fs.readFileSync(path, 'utf8');
+      const md5 = crypto.createHash('md5');
+      const hash = md5.update(file).digest('hex');
+      return {
+        _id: hashFile(path),
+        ext: path.split('.').pop(),
+        path,
+        repo,
+        date: new Date(commit.date),
+        commit: commit.hash,
+        length: file.length,
+        project: projectName,
+        whitespace: (file.split(' ').length - 1),
+      };
+    }
+    catch(error) {
+      console.log(`parseFile(): ${error}`);
+    }
   }
+
+
+  /**
+   *
+   * @param {String} path
+   * @return {String}
+   *
+   */
+  function hashFile(path) {
+    const file = fs.readFileSync(path, 'utf8');
+    const md5 = crypto.createHash('md5');
+    const hash = md5.update(file).digest('hex');
+    return hash;
+  }
+
 
   /**
    *
@@ -267,7 +308,7 @@ module.exports = async function hashFiles() {
 
   return new Promise(async resolve => {
     logHeader('Hashing Files');
-    // await syncCommits();
+    await syncCommits();
     await hashAllFiles();
     resolve();
   });

@@ -20,25 +20,31 @@ const getRepoData = require('./get-repo-data');
   // Each task is completely independent
   //
   try {
+
+    // for await (const repo of itterateRepos('Test message')) {
+    //   console.log(`repo: ${repo}`);
+    //   if (!repo) break;
+    // }
+
     // const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 1, requestDelay: 2000}));
     // if (scrapeError) {
     //   throw new Error(scrapeError);
     // };
 
-    // const [repoError, repoResults]  = await to(getRepoData());
-    // if (repoError) {
-    //   throw new Error(repoError);
-    // };
+    const [repoError, repoResults]  = await to(getRepoData());
+    if (repoError) {
+      throw new Error(repoError);
+    };
 
     // const [cloneError, cloneResults]  = await to(checkoutRepos());
     // if (cloneError) {
     //   throw new Error(cloneError);
     // };
 
-    const [hash, hashError] = await to(hashFiles());
-    if (hashError) {
-      throw new Error(hashError);
-    }
+    // const [hash, hashError] = await to(hashFiles());
+    // if (hashError) {
+    //   throw new Error(hashError);
+    // }
   }
   catch(error) {
     console.log('Um some error happened yo: ', error);

@@ -1,11 +1,15 @@
 'use strict';
 
+// Node
+const { join } = require('path');
+
 // Libs
 const { to } = require('await-to-js');
 
 // CryptoHub
-const { Project, Repo } = require('./db-schema');
-const { get, logHeader, gitLog, dbSaveCommits } = require('./utils.js');
+const { Repo } = require('./db-schema');
+const { gitLog, dbSaveCommits } = require('./utils.js');
+const itterateWebRepos = require('./itterate-web-repos');
 
 /**
  *
@@ -14,90 +18,48 @@ const { get, logHeader, gitLog, dbSaveCommits } = require('./utils.js');
  */
 module.exports = async function getRepoData() {
 
-  return new Promise(async resolve => {
+  try {
 
-    try {
+    for await (const repo of itterateWebRepos('Get all github repo information')) {
 
-      logHeader('Get all github repo information');
-      const projects = await Project.find({githubUrls: {$exists: true, $not: {$size: 0}}});
-      const numProjects = projects.length;
-      let numGithubUrls;
-      let numRepos;
-      let commits;
-      let error;
+      if (!repo) break;
 
-      //
-      // - Iterate projects
-      //
-      for (let [i, project] of projects.entries()) {
+      const _id = join(repo.projectId, repo.data.name);
+      const query = {_id};
+      const log = await gitLog(join('projects', _id));
+      const [error, commits] = await to(dbSaveCommits(log, _id)); // TODO: Deal with error
+      const update = {
+        _id,
+        log: commits,
+        isFork: repo.data.fork,
+        commit: null,
+        project: repo.projectId,
+        githubObject: JSON.stringify(repo.data),
+      };
+      const options = {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true,
+      };
 
-        numGithubUrls = project.githubUrls.length;
+      const [findError] = await to(Repo.findOneAndUpdate(query, update, options).exec());
 
-        //
-        // - Iterate githubUrls
-        // - Get repo info
-        //
-        for (let [j, githubUrl] of project.githubUrls.entries()) {
-
-          const [projectPage, repo] = githubUrl.split('https://github.com/')[1].split('/');
-          const reposJson = await get(`https://api.github.com/orgs/${projectPage}/repos`);
-          numRepos = reposJson.length;
-
-          //
-          // - Iterate repos
-          // - Save data
-          //
-          for (let [k, repoObj] of reposJson.entries()) {
-
-            const _id = `${project._id}/${repoObj.name}`;
-            const query = {_id};
-            const log = await gitLog(`projects/${_id}`);
-
-            [error, commits] = await to(dbSaveCommits(log, _id));
-
-            const update = {
-              _id,
-              log: commits,
-              isFork: repoObj.fork,
-              commit: null,
-              project: project._id,
-              githubObject: JSON.stringify(repoObj),
-            };
-            const options = {
-              new: true,
-              upsert: true,
-              setDefaultsOnInsert: true,
-            };
-
-            [error] = await to(Repo.findOneAndUpdate(query, update, options).exec());
-
-            if (error) {
-              resolve({error: true, message: error});
-              console.log(`getRepoData() error saving repo info for ${_id}: ${error}`);
-            }
-            else {
-              console.log(`getRepoData(): Saved repo information from github for ${_id}`);
-            }
-
-            // We are finished if this loop is the last repo in last github url in last project
-            if ((numProjects === i + 1) && (numGithubUrls === j + 1) && (numRepos === k + 1)) {
-              resolve(true);
-            };
-
-          }
-
-        }
-
+      if (findError) {
+        return {error: true, message: findError};
+        console.log(`getRepoData() error saving repo info for ${_id}: ${findError}`);
+      }
+      else {
+        console.log(`getRepoData(): Saved repo information from github for ${_id}`);
       }
 
     }
-    catch (error) {
 
-      console.log(`getRepoData(): ${error}`);
-      resolve({error: true, message: error});
+  }
+  catch (error) {
 
-    }
+    console.log(`getRepoData(): ${error}`);
+    return {error: true, message: error};
 
-  });
+  }
 
 };

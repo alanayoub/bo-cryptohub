@@ -1,5 +1,3 @@
-'use strict';
-
 // Node
 const fs = require('fs');
 

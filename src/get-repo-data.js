@@ -1,5 +1,3 @@
-'use strict';
-
 // Node
 const { join } = require('path');
 

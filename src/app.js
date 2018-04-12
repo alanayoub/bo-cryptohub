@@ -1,5 +1,3 @@
-'use strict';
-
 // Libs
 const rp = require('request-promise');
 const { to } = require('await-to-js');
@@ -50,9 +48,9 @@ const getRepoData = require('./get-repo-data');
     console.log('Um some error happened yo: ', error);
   }
 
+  process.exit(1);
+
 })();
-
-
 
 
 // scrape.on('done', async () => {

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  *
  * Get the current date in the format yyyy/mm/dd

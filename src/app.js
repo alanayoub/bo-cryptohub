@@ -8,6 +8,7 @@ const scrape = require('./scrape.js');
 const hashFiles = require('./hash-files');
 const cloneRepos = require('./clone-repos');
 const getRepoData = require('./get-repo-data');
+const getForkData = require('./get-fork-data');
 
 // TODO: do this
 // process.on('warning', e => console.warn(e.stack));
@@ -29,9 +30,14 @@ const getRepoData = require('./get-repo-data');
     //   throw new Error(scrapeError);
     // };
 
-    const [repoError, repoResults]  = await to(getRepoData());
-    if (repoError) {
-      throw new Error(repoError);
+    // const [repoError, repoResults]  = await to(getRepoData());
+    // if (repoError) {
+    //   throw new Error(repoError);
+    // };
+
+    const [forkError, forkResults]  = await to(getForkData());
+    if (forkError) {
+      throw new Error(forkError);
     };
 
     // const [cloneError, cloneResults]  = await to(checkoutRepos());
@@ -46,6 +52,7 @@ const getRepoData = require('./get-repo-data');
   }
   catch(error) {
     console.log('Um some error happened yo: ', error);
+    process.exit(1);
   }
 
   process.exit(1);

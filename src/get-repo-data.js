@@ -26,8 +26,11 @@ module.exports = async function getRepoData() {
       const query = {_id};
       const log = await gitLog(join('projects', _id));
       const [error, commits] = await to(dbSaveCommits(log, _id)); // TODO: Deal with error
+      const [githubProjectName, githubRepoName] = repo.data.full_name.split('/');
       const update = {
         _id,
+        githubRepoName,
+        githubProjectName,
         log: commits,
         isFork: repo.data.fork,
         commit: null,

@@ -20,7 +20,7 @@ const projectSchema = new mongoose.Schema({
 });
 
 const repoSchema = new mongoose.Schema({
-  _id: String,          // projectname/repo
+  _id: String,          // projectname/repo this is the coinmarketcap project name / repo
   log: [{               // git log object
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Commit'
@@ -28,8 +28,11 @@ const repoSchema = new mongoose.Schema({
   isFork: Boolean,      // is a fork of another repo?
   commit: String,       // current commit
   project: String,      // project name
-  firstCommit: String,  // the projects first commit (will be different if it was a fork)
+  forkedFrom: String,   // what project was the repo forked from
+  firstCommit: String,  // the projects first commit excluding any fork history
   githubObject: String, // github api repo object
+  githubRepoName: String,
+  githubProjectName: String,
 });
 
 const fileSchema = new mongoose.Schema({

@@ -34,8 +34,11 @@ module.exports = async function* itterateWebRepos(message) {
         for (let [k, repoObj] of reposJson.entries()) {
 
           yield {
+            githubUrl,
+            data: repoObj,
+            githubRepo: repo,
             projectId: project._id,
-            data: repoObj
+            githubProject: projectPage,
           };
 
           // We are finished if this loop is the last repo in last github url in last project

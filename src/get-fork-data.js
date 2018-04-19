@@ -1,5 +1,6 @@
 // Libs
 const { to } = require('await-to-js');
+// const { paginate } = require('utils-github');
 const octokit = require('@octokit/rest')();
 
 // CryptoHub
@@ -31,19 +32,11 @@ module.exports = async function getForkData() {
       // getFirstPage(response)
       // getLastPage(response)
 
-      async function paginate(method) {
-        let response = await method({owner: repo.githubProjectName, repo: repo.githubRepoName, per_page: 30});
-        let { data } = response;
-        while (octokit.hasNextPage(response)) {
-          response = await octokit.getNextPage(response);
-          data = data.concat(response.data);
-        }
-        return data;
-      }
-      const [error, forks] = await to(paginate(octokit.repos.getForks));
-      if (error) throw new Error(error);
-      debugger
-      console.log('forks: ', forks);
+      // const options = {owner: repo.githubProjectName, repo: repo.githubRepoName, per_page: 30};
+      // const [error, forks] = await to(paginate(octokit.repos.getForks, options));
+      // if (error) throw new Error(error);
+      // debugger
+      // console.log('forks: ', forks);
 
 
     }

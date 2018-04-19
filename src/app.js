@@ -9,6 +9,9 @@ const hashFiles = require('./hash-files');
 const cloneRepos = require('./clone-repos');
 const getRepoData = require('./get-repo-data');
 const getForkData = require('./get-fork-data');
+const Cache = require('./cache');
+
+global.cache = new Cache('cache', true);
 
 // TODO: do this
 // process.on('warning', e => console.warn(e.stack));
@@ -20,25 +23,20 @@ const getForkData = require('./get-fork-data');
   //
   try {
 
-    // for await (const repo of itterateRepos('Test message')) {
-    //   console.log(`repo: ${repo}`);
-    //   if (!repo) break;
-    // }
-
-    // const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 1, requestDelay: 2000}));
-    // if (scrapeError) {
-    //   throw new Error(scrapeError);
-    // };
+    const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 1, requestDelay: 2000}));
+    if (scrapeError) {
+      throw new Error(scrapeError);
+    };
 
     // const [repoError, repoResults]  = await to(getRepoData());
     // if (repoError) {
     //   throw new Error(repoError);
     // };
 
-    const [forkError, forkResults]  = await to(getForkData());
-    if (forkError) {
-      throw new Error(forkError);
-    };
+    // const [forkError, forkResults]  = await to(getForkData());
+    // if (forkError) {
+    //   throw new Error(forkError);
+    // };
 
     // const [cloneError, cloneResults]  = await to(checkoutRepos());
     // if (cloneError) {
@@ -55,7 +53,7 @@ const getForkData = require('./get-fork-data');
     process.exit(1);
   }
 
-  process.exit(1);
+  process.exit(0);
 
 })();
 

@@ -208,7 +208,7 @@ async function dbSaveCommits(log, project) {
 /**
  *
  */
-const get = uri => {
+function get(uri) {
   const rp = require('request-promise');
   return rp({
     uri,

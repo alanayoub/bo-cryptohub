@@ -11,6 +11,7 @@ const { to } = require('await-to-js');
 const cheerio = require('cheerio');
 
 // CryptoHub
+const Cache = require('./cache');
 const { getCurrentDate, typeOfData, logHeader } = require('./utils.js');
 const { Project } = require('./db-schema');
 
@@ -25,21 +26,31 @@ const readFileAsync = promisify(fs.readFile);
  */
 async function getGithubUrls(slug) {
   const uri = `https://coinmarketcap.com/currencies/${slug}/`;
+  const key = `coinmarketcap.com-currencies-${slug}.html`;
   const urls = [];
   const options = {
     uri,
-    transform: body => cheerio.load(body)
+    transform: html => cheerio.load(html)
   };
-  const [error, $] = await to(rp(options));
-  if (!$) {
-    return console.log(`Error fetching getGithubUrls: ${error}`);
+  let $;
+  let error;
+  let [file, age] = global.cache.get(key);
+  if (!file || age > 30) {
+    [error, $] = await to(rp(options));
+    if (!$) {
+      return console.log(`Error fetching getGithubUrls: ${error}`);
+    }
+    file = $.html();
+    global.cache.set(key, file);
   }
-  const html = $.html();
+  else {
+    $ = cheerio.load(file);
+  }
   const githubs = $('a[href^="https://github"]').toArray();
   githubs.forEach(a => {
     urls.push(a.attribs.href);
   });
-  console.log(`Scraped the following urls from ${uri}:\n${urls}`);
+  console.log(`Scraped the following urls from ${uri}:\n -> ${urls}`);
   return urls;
 }
 
@@ -145,15 +156,23 @@ module.exports = async function scrape({requestLimit = Infinity, requestDelay = 
   return new Promise(async resolve => {
 
     console.log(logHeader('Scraping CoinMarketCap.com'));
-    const coinDataUrl = 'https://s2.coinmarketcap.com/generated/search/quick_search.json';
+    const uri = 'https://s2.coinmarketcap.com/generated/search/quick_search.json';
+    const key = 'coinmarketcap.com-api-quick_search.json';
 
-    const [coinDataError, coinData] = await to(rp({uri: coinDataUrl, json: true}));
-    if (!coinData) return console.log('error', {error: `scrape() error scraping: ${coinDataError}`});
+    let error;
+    let [file, age] = global.cache.get(key);
+    if (!file || age > 1) {
+      [error, file] = await to(rp({uri, json: true}));
+      if (!file) return console.log('error', {error: `scrape() error scraping: ${error}`});
+      global.cache.set(key, JSON.stringify(file));
+      const [saveError] = await to(saveCoreCoinData(file));
+      if (saveError) return console.log('error', {msg, error: `scrape() error saving: ${saveError}`});
+    }
+    else {
+      file = JSON.parse(file);
+    }
 
-    const [saveCoinDataError, updated] = await to(saveCoreCoinData(coinData));
-    if (!updated) return console.log('error', {msg, error: `scrape() error saving: ${saveCoinDataError}`});
-
-    let slugs = coinData.map(v => v.slug);
+    let slugs = file.map(v => v.slug);
     let results = {};
     (async function scrapeGitUrlsForAllProjects(idx = 0) {
       const slug = slugs.shift();

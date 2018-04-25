@@ -12,6 +12,8 @@ const getForkData = require('./get-fork-data');
 const Cache = require('./cache');
 
 global.cache = new Cache('cache', true);
+global.githubClientId = 'c7a2c111a27dee50bba0';
+global.githubClientSecret = '5e4b8b348c8165536391bdbf6041685f270503f0';
 
 // TODO: do this
 // process.on('warning', e => console.warn(e.stack));
@@ -23,25 +25,26 @@ global.cache = new Cache('cache', true);
   //
   try {
 
-    const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 1, requestDelay: 2000}));
+    const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 3, requestDelay: 2000}));
     if (scrapeError) {
       throw new Error(scrapeError);
     };
 
-    // const [repoError, repoResults]  = await to(getRepoData());
-    // if (repoError) {
-    //   throw new Error(repoError);
-    // };
+    const [repoError, repoResults]  = await to(getRepoData());
+    if (repoError) {
+      throw new Error(repoError);
+    };
 
-    // const [forkError, forkResults]  = await to(getForkData());
-    // if (forkError) {
-    //   throw new Error(forkError);
-    // };
+    const [cloneError, cloneResults]  = await to(cloneRepos());
+    if (cloneError) {
+      throw new Error(cloneError);
+    };
 
-    // const [cloneError, cloneResults]  = await to(checkoutRepos());
-    // if (cloneError) {
-    //   throw new Error(cloneError);
-    // };
+    const [forkError, forkResults]  = await to(getForkData());
+    if (forkError) {
+      throw new Error(forkError);
+    };
+
 
     // const [hash, hashError] = await to(hashFiles());
     // if (hashError) {

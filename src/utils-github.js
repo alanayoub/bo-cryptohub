@@ -1,32 +1,38 @@
 /**
  *
  * @param {Function} method
- * @param {Object} options
- *
- * TODO: Add caching
+ * @param {Object} octokitOptions
+ * @param {String} cacheKey
+ * @param {Number} cacheFor - in days
  *
  */
-async function paginate(method, options, cachePrefix) {
+const log = require('single-line-log').stdout;
+async function paginate(method, octokitOptions, cacheKey, cacheFor) {
 
-  // const { to } = require('await-to-js');
-  // const cache = require('./cache');
+  const { to } = require('await-to-js');
+  const octokit = require('@octokit/rest')();
+  let response;
+  let [data, age] = global.cache.get(cacheKey);
 
-  // const key = `${cachePrefix}-${JSON.stringify(options)}`;
-  // let error, data, response;
-
-  // [error, data] = await to(cache.getAsync(key));
-  // if (error) throw new Error(error);
-  // if (data !== null) return data;
-
-  // response = await method(options);
-  // { data } = response;
-  // while (octokit.hasNextPage(response)) {
-  //   response = await octokit.getNextPage(response);
-  //   data = data.concat(response.data);
-  // }
-  // [error] = await to(cache.setAsync(key, data));
-  // if (error) console.log(`paginate(): ${error}`);
-  // return data;
+  // TODO: dont set age here!
+  if (!data || age > cacheFor) {
+    console.log('paginate(): Fetching lots of data, this could take a while...');
+    let count = 0;
+    response = await method(octokitOptions);
+    log(`paginate(): ${cacheKey}:${++count}`);
+    let { data } = response;
+    while (octokit.hasNextPage(response)) {
+      response = await octokit.getNextPage(response);
+      data = data.concat(response.data);
+      log.clear();
+      log(`paginate(): ${cacheKey}:${++count}`);
+    }
+    global.cache.set(cacheKey, JSON.stringify(data));
+    return data;
+  }
+  else {
+    return JSON.parse(data);
+  }
 
 }
 

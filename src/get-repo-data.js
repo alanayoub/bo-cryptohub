@@ -23,20 +23,31 @@ module.exports = async function getRepoData() {
       if (!repo) break;
 
       const _id = join(repo.projectId, repo.data.name);
+      const key = `gitlog-${repo.projectId}-${repo.data.name}`;
       const query = {_id};
-      const log = await gitLog(join('projects', _id));
-      const [error, commits] = await to(dbSaveCommits(log, _id)); // TODO: Deal with error
+      let commits, error;
+
+      let [log, age] = global.cache.get(key);
+      if (!log || age > 7) {
+        log = await gitLog(join('projects', _id), repo.data.default_branch);
+        [error, commits] = await to(dbSaveCommits(log, _id)); // TODO: Deal with error
+        global.cache.set(key, JSON.stringify(log));
+      }
+
       const [githubProjectName, githubRepoName] = repo.data.full_name.split('/');
       const update = {
         _id,
         githubRepoName,
         githubProjectName,
-        log: commits,
         isFork: repo.data.fork,
         commit: null,
         project: repo.projectId,
         githubObject: JSON.stringify(repo.data),
       };
+      // TODO: conditional literal property?
+      if (commits) {
+        update.log = commits;
+      }
       const options = {
         new: true,
         upsert: true,
@@ -57,10 +68,9 @@ module.exports = async function getRepoData() {
 
   }
   catch (error) {
-
+    debugger
     console.log(`getRepoData(): ${error}`);
     return {error: true, message: error};
-
   }
 
 };

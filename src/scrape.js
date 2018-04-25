@@ -35,10 +35,13 @@ async function getGithubUrls(slug) {
   let $;
   let error;
   let [file, age] = global.cache.get(key);
+  //
+  // TODO: put age in config file
+  //
   if (!file || age > 30) {
     [error, $] = await to(rp(options));
     if (!$) {
-      return console.log(`Error fetching getGithubUrls: ${error}`);
+      return console.log(`getGithubUrls(): Error fetching getGithubUrls: ${error}`);
     }
     file = $.html();
     global.cache.set(key, file);
@@ -50,7 +53,7 @@ async function getGithubUrls(slug) {
   githubs.forEach(a => {
     urls.push(a.attribs.href);
   });
-  console.log(`Scraped the following urls from ${uri}:\n -> ${urls}`);
+  console.log(`getGithubUrls(): Scraped the following urls from ${uri}: ${urls}`);
   return urls;
 }
 
@@ -118,24 +121,24 @@ async function saveGithubUrls({_id, urls}) {
   return await new Promise(resolve => {
 
     if (!Array.isArray(urls)) {
-      console.log(`saveGithubUrls takes an Array as it's second paramater, you provided: ${typeOfData(urls)}`);
+      console.log(`saveGithubUrls(): takes an Array as it's second paramater, you provided: ${typeOfData(urls)}`);
       resolve();
       return;
     }
 
     Project.findById(_id, (error, project) => {
       if (error) {
-        console.log(`Error saving githubUrls field to project ${_id}: ${error}`);
+        console.log(`saveGithubUrls(): Error saving githubUrls field to project ${_id}: ${error}`);
         resolve();
         return;
       }
       project.githubUrls = urls;
       project.save((error, updated) => {
         if (error) {
-          console.log(`Error saving githubUrls field for project ${_id}: ${error}`);
+          console.log(`saveGithubUrls(): Error saving githubUrls field for project ${_id}: ${error}`);
         }
         else {
-          console.log(`Updated project ${_id} githubUrls field to: ${updated.githubUrls}`);
+          console.log(`saveGithubUrls(): Updated project ${_id} githubUrls field to: ${updated.githubUrls}`);
         }
         resolve();
       });
@@ -147,12 +150,13 @@ async function saveGithubUrls({_id, urls}) {
 
 /**
  *
- * @param {Number} requestLimit - For test purposes limit the number of requests
+ * @param {Number} requestLimit - For test purposes limit the number of requests to coinmarketcap project pages
  * @param {Number} requestDelay - How long to wait inbetween requests so coinmarketcap doesn't crap out (in ms)
  *
  */
 module.exports = async function scrape({requestLimit = Infinity, requestDelay = 2000}) {
 
+  // TODO: remove this new Promise shit, its an async function dumbass
   return new Promise(async resolve => {
 
     console.log(logHeader('Scraping CoinMarketCap.com'));
@@ -162,11 +166,12 @@ module.exports = async function scrape({requestLimit = Infinity, requestDelay = 
     let error;
     let [file, age] = global.cache.get(key);
     if (!file || age > 1) {
+      // TODO: replace with get?
       [error, file] = await to(rp({uri, json: true}));
-      if (!file) return console.log('error', {error: `scrape() error scraping: ${error}`});
+      if (!file) return console.log(`scrape(): ${error}`);
       global.cache.set(key, JSON.stringify(file));
       const [saveError] = await to(saveCoreCoinData(file));
-      if (saveError) return console.log('error', {msg, error: `scrape() error saving: ${saveError}`});
+      if (saveError) return console.log(`scrape(): error saving: ${saveError}`);
     }
     else {
       file = JSON.parse(file);
@@ -184,7 +189,7 @@ module.exports = async function scrape({requestLimit = Infinity, requestDelay = 
       idx++;
       if (slugs.length && idx < requestLimit) {
         setTimeout(() => {
-          console.log('\nWaiting 2000ms and incrementing counter now lets do next scrape...');
+          console.log('Scrape(): Waiting 2000ms and incrementing counter now lets do next scrape...');
           scrapeGitUrlsForAllProjects(idx);
         }, requestDelay);
       }

@@ -113,18 +113,36 @@ async function gitCheckoutBranch(path, branch) {
  * TODO: What else can we get from the log? number of changes etc?
  *
  */
-async function gitLog(path) {
+async function gitLog(path, branch) {
   const git = require('nodegit');
+  const { to } = require('await-to-js');
   return new Promise(resolve => {
 
     try {
       // TODO: at the moment if an incorrect path is used nothing is returned and it hangs
+      console.log(`gitLog(): Getting log for ${path}`);
+      let repository;
       git.Repository
         .open(path)
-        .then(repo => repo.getMasterCommit())
-        .then(firstCommitOnMaster => {
+        .then(repo => {
+          repository = repo;
+          repository.fetch('origin');
+        })
+        .then(() => {
+          repository.mergeBranches(branch, `origin/${branch}`);
+        })
+        .then(() => {
+          if (repository.isEmpty()) {
+            resolve([]);
+            return false;
+          }
+          return repository.getBranchCommit(`refs/remotes/origin/${branch}`);
+        })
+        .then(commit => {
 
-          const history = firstCommitOnMaster.history();
+          if (!commit) resolve([]);
+
+          const history = commit.history();
 
           history.on('commit', commit => {});
 
@@ -145,6 +163,7 @@ async function gitLog(path) {
               };
               results.unshift(details);
             }
+            console.log(`gitLog(): Got log for ${path} (${results.length} items)`);
             resolve(results);
           });
 

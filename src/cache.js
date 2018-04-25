@@ -33,7 +33,7 @@ module.exports = class Cache {
   get(key) {
     try {
       const files = glob.sync(`${join(this.dir, key)}*`, {});
-      if (!files.length) return false;
+      if (!files.length) return [false];
       const newestFile = files.sort().pop();
       const newestFileDate = newestFile.replace(/.*<(.*)>$/, '$1');
       const dateNow = +new Date();

@@ -1,3 +1,6 @@
+// Libs
+const { to } = require('await-to-js');
+
 // CryptoHub
 const { Project } = require('./db-schema');
 const { get, logHeader } = require('./utils.js');
@@ -27,11 +30,26 @@ module.exports = async function* itterateWebRepos(message) {
       for (let [j, githubUrl] of project.githubUrls.entries()) {
 
         const [projectPage, repo] = githubUrl.split('https://github.com/')[1].split('/');
-        const reposJson = await get(`https://api.github.com/orgs/${projectPage}/repos`);
-        numRepos = reposJson.length;
+        const uri = `https://api.github.com/orgs/${projectPage}/repos`;
+        const key = `api.github.com-${projectPage}-repos`;
+        let error;
+        let [file, age] = global.cache.get(key);
+
+        if (!file || age > 30) {
+          [error, file] = await to(get(uri));
+          if (error) {
+            throw `itterateWebRepos() error fetching ${uri}: ${error}`;
+          }
+          global.cache.set(key, JSON.stringify(file));
+        }
+        else {
+          file = JSON.parse(file);
+        }
+
+        numRepos = file.length;
 
         // Iterate repos
-        for (let [k, repoObj] of reposJson.entries()) {
+        for (let [k, repoObj] of file.entries()) {
 
           yield {
             githubUrl,

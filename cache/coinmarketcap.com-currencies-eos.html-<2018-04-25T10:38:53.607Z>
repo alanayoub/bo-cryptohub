@@ -1,0 +1,3725 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]--><!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]--><!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]--><!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]--><head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VQ4BV1dWDxABVFdQAQIEX1M="};window.NREUM||(NREUM={}),__nr_require=function(t,n,e){function r(e){if(!n[e]){var o=n[e]={exports:{}};t[e][0].call(o.exports,function(n){var o=t[e][1][n];return r(o||n)},o,o.exports)}return n[e].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<e.length;o++)r(e[o]);return r}({1:[function(t,n,e){function r(t){try{s.console&&console.log(t)}catch(n){}}var o,i=t("ee"),a=t(15),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,o.indexOf("dev")!==-1&&(s.dev=!0),o.indexOf("nr_dev")!==-1&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,n,e){r(e.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,n){return t}).join(", ")))},{}],2:[function(t,n,e){function r(t,n,e,r,s){try{p?p-=1:o(s||new UncaughtException(t,n,e),!0)}catch(f){try{i("ierr",[f,c.now(),!0])}catch(d){}}return"function"==typeof u&&u.apply(this,a(arguments))}function UncaughtException(t,n,e){this.message=t||"Uncaught error with no additional information",this.sourceURL=n,this.line=e}function o(t,n){var e=n?null:c.now();i("err",[t,e])}var i=t("handle"),a=t(16),s=t("ee"),c=t("loader"),f=t("gos"),u=window.onerror,d=!1,l="nr@seenError",p=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(h){"stack"in h&&(t(8),t(7),"addEventListener"in window&&t(5),c.xhrWrappable&&t(9),d=!0)}s.on("fn-start",function(t,n,e){d&&(p+=1)}),s.on("fn-err",function(t,n,e){d&&!e[l]&&(f(e,l,function(){return!0}),this.thrown=!0,o(e))}),s.on("fn-end",function(){d&&!this.thrown&&p>0&&(p-=1)}),s.on("internal-error",function(t){i("ierr",[t,c.now(),!0])})},{}],3:[function(t,n,e){t("loader").features.ins=!0},{}],4:[function(t,n,e){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),s=t(7),c="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",l="resource",p="-start",h="-end",m="fn"+p,w="fn"+h,v="bstTimer",y="pushState",g=t("loader");g.features.stn=!0,t(6);var b=NREUM.o.EV;o.on(m,function(t,n){var e=t[0];e instanceof b&&(this.bstStart=g.now())}),o.on(w,function(t,n){var e=t[0];e instanceof b&&i("bst",[e,n,this.bstStart,g.now()])}),a.on(m,function(t,n,e){this.bstStart=g.now(),this.bstType=e}),a.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),this.bstType])}),s.on(m,function(){this.bstStart=g.now()}),s.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),"requestAnimationFrame"])}),o.on(y+p,function(t){this.time=g.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+c]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["c"+c]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["webkitC"+c]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],5:[function(t,n,e){function r(t){for(var n=t;n&&!n.hasOwnProperty(u);)n=Object.getPrototypeOf(n);n&&o(n)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,n){return t[1]}var a=t("ee").get("events"),s=t(18)(a,!0),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";n.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,n){var e=t[1],r=c(e,"nr@wrapped",function(){function t(){if("function"==typeof e.handleEvent)return e.handleEvent.apply(e,arguments)}var n={object:t,"function":e}[typeof e];return n?s(n,"fn-",null,n.name||"anonymous"):e});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],6:[function(t,n,e){var r=t("ee").get("history"),o=t(18)(r);n.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],7:[function(t,n,e){var r=t("ee").get("raf"),o=t(18)(r),i="equestAnimationFrame";n.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,n,e){function r(t,n,e){t[0]=a(t[0],"fn-",null,e)}function o(t,n,e){this.method=e,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,e)}var i=t("ee").get("timer"),a=t(18)(i),s="setTimeout",c="setInterval",f="clearTimeout",u="-start",d="-";n.exports=i,a.inPlace(window,[s,"setImmediate"],s+d),a.inPlace(window,[c],c+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(c+u,r),i.on(s+u,o)},{}],9:[function(t,n,e){function r(t,n){d.inPlace(n,["onreadystatechange"],"fn-",s)}function o(){var t=this,n=u.context(t);t.readyState>3&&!n.resolved&&(n.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,y,"fn-",s)}function i(t){g.push(t),h&&(x?x.then(a):w?w(a):(E=-E,O.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function s(t,n){return n}function c(t,n){for(var e in t)n[e]=t[e];return n}t(5);var f=t("ee"),u=f.get("xhr"),d=t(18)(u),l=NREUM.o,p=l.XHR,h=l.MO,m=l.PR,w=l.SI,v="readystatechange",y=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];n.exports=u;var b=window.XMLHttpRequest=function(t){var n=new p(t);try{u.emit("new-xhr",[n],n),n.addEventListener(v,o,!1)}catch(e){try{u.emit("internal-error",[e])}catch(r){}}return n};if(c(p,b),b.prototype=p.prototype,d.inPlace(b.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,n){r(t,n),i(n)}),u.on("open-xhr-start",r),h){var x=m&&m.resolve();if(!w&&!m){var E=1,O=document.createTextNode(E);new h(a).observe(O,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===v||a()})},{}],10:[function(t,n,e){function r(t){var n=this.params,e=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!n.aborted){if(e.duration=a.now()-this.startTime,4===t.readyState){n.status=t.status;var i=o(t,this.lastSize);if(i&&(e.rxSize=i),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(n.cat=c.split(", ").pop())}}else n.status=0;e.cbTime=this.cbTime,f.emit("xhr-done",[t],t),s("xhr",[n,e,this.startTime])}}}function o(t,n){var e=t.responseType;if("json"===e&&null!==n)return n;var r="arraybuffer"===e||"blob"===e||"json"===e?t.response:t.responseText;return h(r)}function i(t,n){var e=c(n),r=t.params;r.host=e.hostname+":"+e.port,r.pathname=e.pathname,t.sameOrigin=e.sameOrigin}var a=t("loader");if(a.xhrWrappable){var s=t("handle"),c=t(11),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(14),h=t(13),m=window.XMLHttpRequest;a.features.xhr=!0,t(9),f.on("new-xhr",function(t){var n=this;n.totalCbs=0,n.called=0,n.cbTime=0,n.end=r,n.ended=!1,n.xhrGuids={},n.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){n.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,n){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&n.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,n){var e=this.metrics,r=t[0],o=this;if(e&&r){var i=h(r);i&&(e.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof n.onload))&&o.end(n)}catch(e){try{f.emit("internal-error",[e])}catch(r){}}};for(var s=0;s<d;s++)n.addEventListener(u[s],this.listener,!1)}),f.on("xhr-cb-time",function(t,n,e){this.cbTime+=t,n?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof e.onload||this.end(e)}),f.on("xhr-load-added",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&!this.xhrGuids[e]&&(this.xhrGuids[e]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&this.xhrGuids[e]&&(delete this.xhrGuids[e],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],n)}),f.on("removeEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],n)}),f.on("fn-start",function(t,n,e){n instanceof m&&("onload"===e&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,n){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,n],n)})}},{}],11:[function(t,n,e){n.exports=function(t){var n=document.createElement("a"),e=window.location,r={};n.href=t,r.port=n.port;var o=n.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=n.hostname||e.hostname,r.pathname=n.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!n.protocol||":"===n.protocol||n.protocol===e.protocol,a=n.hostname===document.domain&&n.port===e.port;return r.sameOrigin=i&&(!n.hostname||a),r}},{}],12:[function(t,n,e){function r(){}function o(t,n,e){return function(){return i(t,[f.now()].concat(s(arguments)),n?null:this,e),n?void 0:this}}var i=t("handle"),a=t(15),s=t(16),c=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,n){u[n]=o(l+n,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),n.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,n){var e={},r=this,o="function"==typeof n;return i(p+"tracer",[f.now(),t,e],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],e),o)try{return n.apply(this,arguments)}catch(t){throw c.emit("fn-err",[arguments,this,t],e),t}finally{c.emit("fn-end",[f.now()],e)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,n){h[n]=o(p+n)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now()])}},{}],13:[function(t,n,e){n.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(n){return}}}},{}],14:[function(t,n,e){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),n.exports=r},{}],15:[function(t,n,e){function r(t,n){var e=[],r="",i=0;for(r in t)o.call(t,r)&&(e[i]=n(r,t[r]),i+=1);return e}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],16:[function(t,n,e){function r(t,n,e){n||(n=0),"undefined"==typeof e&&(e=t?t.length:0);for(var r=-1,o=e-n||0,i=Array(o<0?0:o);++r<o;)i[r]=t[n+r];return i}n.exports=r},{}],17:[function(t,n,e){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],18:[function(t,n,e){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(16),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;n.exports=function(t,n){function e(t,n,e,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof e?e(r,a):e||{}}catch(f){l([f,"",[r,a,o],s])}u(n+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(d){throw u(n+"err",[r,a,d],s),d}finally{u(n+"end",[r,a,c],s)}}return r(t)?t:(n||(n=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,n,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<n.length;c++)s=n[c],a=t[s],r(a)||(t[s]=e(a,f?s+o:o,i,s))}function u(e,r,o){if(!c||n){var i=c;c=!0;try{t.emit(e,r,o,n)}catch(a){l([a,e,r,o])}c=i}}function d(t,n){if(Object.defineProperty&&Object.keys)try{var e=Object.keys(t);return e.forEach(function(e){Object.defineProperty(n,e,{get:function(){return t[e]},set:function(n){return t[e]=n,n}})}),n}catch(r){l([r])}for(var o in t)s.call(t,o)&&(n[o]=t[o]);return n}function l(n){try{t.emit("internal-error",n)}catch(e){}}return t||(t=o),e.inPlace=f,e.flag=a,e}},{}],ee:[function(t,n,e){function r(){}function o(t){function n(t){return t&&t instanceof r?t:t?c(t,s,i):i()}function e(e,r,o,i){if(!l.aborted||i){t&&t(e,r,o);for(var a=n(o),s=h(e),c=s.length,f=0;f<c;f++)s[f].apply(a,r);var d=u[y[e]];return d&&d.push([g,e,r,a]),a}}function p(t,n){v[t]=h(t).concat(n)}function h(t){return v[t]||[]}function m(t){return d[t]=d[t]||o(e)}function w(t,n){f(t,function(t,e){n=n||"feature",y[e]=n,n in u||(u[n]=[])})}var v={},y={},g={on:p,emit:e,get:m,listeners:h,context:n,buffer:w,abort:a,aborted:!1};return g}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var s="nr@context",c=t("gos"),f=t(15),u={},d={},l=n.exports=o();l.backlog=u},{}],gos:[function(t,n,e){function r(t,n,e){if(o.call(t,n))return t[n];var r=e();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(t,n,e){function r(t,n,e,r){o.buffer([t],r),o.emit(t,n,e)}var o=t("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(t,n,e){function r(t){var n=typeof t;return!t||"object"!==n&&"function"!==n?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");n.exports=r},{}],loader:[function(t,n,e){function r(){if(!x++){var t=b.info=NREUM.info,n=l.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&n))return u.abort();f(y,function(n,e){t[n]||(t[n]=e)}),c("mark",["onload",a()+b.offset],null,"api");var e=l.createElement("script");e.src="https://"+t.agent,n.parentNode.insertBefore(e,n)}}function o(){"complete"===l.readyState&&i()}function i(){c("mark",["domContent",a()+b.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(s=Math.max((new Date).getTime(),s))-b.offset}var s=(new Date).getTime(),c=t("handle"),f=t(15),u=t("ee"),d=window,l=d.document,p="addEventListener",h="attachEvent",m=d.XMLHttpRequest,w=m&&m.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:m,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var v=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1071.min.js"},g=m&&w&&w[p]&&!/CriOS/.test(navigator.userAgent),b=n.exports={offset:s,now:a,origin:v,features:{},xhrWrappable:g};t(12),l[p]?(l[p]("DOMContentLoaded",i,!1),d[p]("load",r,!1)):(l[h]("onreadystatechange",o),d[h]("onload",r)),c("mark",["firstbyte",s],null,"api");var x=0,E=t(17)},{}]},{},["loader",2,10,4,3]);</script><script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","queueTime":0,"licenseKey":"6d0ece54b7","agent":"","transactionName":"NFBbY0VUXEEEARUPXg0af0JZVkZbCgxOBV4KW1RWRV5XRgYDEUhHClBORBlBQFMLEQ0HRQZRA1RCR0BXCwEYOVUGQVheWw==","applicationID":"106263397","errorBeacon":"bam.nr-data.net","applicationTime":141}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EOS (EOS) price, charts, market cap, and other metrics | CoinMarketCap</title>
+<meta name="google-site-verification" content="EDc1reqlQ-zAgeRrrgAxRXNK-Zs9JgpE9a0wdaoSO9A">
+<meta property="og:type" content="website">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="200">
+<meta property="og:image:height" content="200">
+<meta property="og:image" content="https://s2.coinmarketcap.com/static/img/coins/200x200/1765.png">
+<meta property="og:image:secure_url" content="https://s2.coinmarketcap.com/static/img/coins/200x200/1765.png">
+<meta property="og:title" content="EOS (EOS) price, charts, market cap, and other metrics | CoinMarketCap">
+<meta name="description" content="Get EOS price, charts, and other cryptocurrency info">
+<meta property="og:description" content="Get EOS price, charts, and other cryptocurrency info">
+<link rel="icon" type="image/png" href="https://s2.coinmarketcap.com/static/img/coins/16x16/1765.png" sizes="16x16">
+<link rel="icon" type="image/png" href="https://s2.coinmarketcap.com/static/img/coins/32x32/1765.png" sizes="32x32">
+<link rel="canonical" href="https://coinmarketcap.com/currencies/eos/">
+<link rel="alternate" href="https://coinmarketcap.com/de/currencies/eos/" hreflang="de">
+<link rel="alternate" href="https://coinmarketcap.com/currencies/eos/" hreflang="en">
+<link rel="alternate" href="https://coinmarketcap.com/es/currencies/eos/" hreflang="es">
+<link rel="alternate" href="https://coinmarketcap.com/fil/currencies/eos/" hreflang="fil">
+<link rel="alternate" href="https://coinmarketcap.com/fr/currencies/eos/" hreflang="fr">
+<link rel="alternate" href="https://coinmarketcap.com/hi/currencies/eos/" hreflang="hi">
+<link rel="alternate" href="https://coinmarketcap.com/it/currencies/eos/" hreflang="it">
+<link rel="alternate" href="https://coinmarketcap.com/ja/currencies/eos/" hreflang="ja">
+<link rel="alternate" href="https://coinmarketcap.com/ko/currencies/eos/" hreflang="ko">
+<link rel="alternate" href="https://coinmarketcap.com/pt-br/currencies/eos/" hreflang="pt-br">
+<link rel="alternate" href="https://coinmarketcap.com/ru/currencies/eos/" hreflang="ru">
+<link rel="alternate" href="https://coinmarketcap.com/vi/currencies/eos/" hreflang="vi">
+<link rel="alternate" href="https://coinmarketcap.com/zh/currencies/eos/" hreflang="zh">
+<link href="https://s2.coinmarketcap.com/static/cloud/compressed/base.3a76de2d.min.css" rel="stylesheet">
+<script>
+        function getCookie(e){var n=" "+document.cookie,t=" "+e+"=",i=null,o=0,u=0;return n.length>0&&-1!=(o=n.indexOf(t))&&(o+=t.length,-1==(u=n.indexOf(";",o))&&(u=n.length),i=unescape(n.substring(o,u))),i}
+
+        var DEFAULT_CURRENCY = 'USD';
+        dataLayer = [{
+            'section': 'Details',
+            'subSection': 'Currencies',
+            'firstSessionDate': getCookie('gtm_session_first'),
+            'lastSessionDate': getCookie('gtm_session_last'),
+            'language': 'en',
+            'currency': getCookie('currency') || DEFAULT_CURRENCY,
+            'siteTheme': getCookie('theme') || 'day'
+        }];
+        </script>
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MNVXW26');
+        </script>
+
+<script>
+            var NightMode = (function () {
+                var key = 'theme', on = 'night', off = 'day';
+                var _trackEvent = function (value) {
+                    dataLayer.push({
+                        'event': 'customEvent',
+                        'eventCategory': 'Night Mode',
+                        'eventAction': 'Night Mode Toggled',
+                        'eventLabel': value
+                    });
+                };
+                var _setCookie = function (value) {
+                    Cookies.set(key, value, {expires: 3650});
+                };
+                var _activateSwitch = function (value) {
+                    if (value) {
+                        $('[data-night-mode-on]').addClass('active');
+                        $('[data-night-mode-off]').removeClass('active');
+                    } else {
+                        $('[data-night-mode-on]').removeClass('active');
+                        $('[data-night-mode-off]').addClass('active');
+                    }
+                };
+                var initSwitch = function () {
+                    $('[data-night-mode-on]').on('click', function () {
+                        $('body').addClass('night-mode');
+                        _activateSwitch(true);
+                        _setCookie(on);
+                        _trackEvent('on');
+                    });
+                    $('[data-night-mode-off]').on('click', function () {
+                        $('body').removeClass('night-mode');
+                        _activateSwitch(false);
+                        _setCookie(off);
+                        _trackEvent('off');
+                    });
+
+                    _activateSwitch(Cookies.get(key) === on);
+                };
+                var init = function () {
+                    if (getCookie(key) === on) {
+                        var nightModeClass = 'night-mode';
+                        var currentClass = document.body.className;
+                        if (currentClass.length > 0) {
+                            if (currentClass.indexOf(nightModeClass) === -1) {
+                                document.body.className = currentClass + ' ' + nightModeClass;
+                            }
+                        } else {
+                            document.body.className = nightModeClass;
+                        }
+                    }
+                };
+                return {initSwitch: initSwitch, init: init};
+            })();
+        </script>
+<script async="async" src="https://s2.coinmarketcap.com/static/cloud/compressed/prebid.cb5bd327.min.js"></script>
+<script async="async" src="https://www.googletagservices.com/tag/js/gpt.js"></script>
+<script>
+            var googletag = googletag || {};
+            googletag.cmd = googletag.cmd || [];
+            googletag.cmd.push(function() {
+                googletag.pubads().disableInitialLoad();
+            });
+        </script>
+<script>
+          googletag.cmd.push(function() {
+            
+                
+                    googletag.defineSlot('/48901027/non_landing_leaderboard_top', [728, 90], 'div-gpt-ad-1488495260324-9').addService(googletag.pubads());
+                    googletag.defineSlot('/48901027/non_landing_side', [160, 600], 'div-gpt-ad-1488495260324-10').addService(googletag.pubads());
+                    googletag.defineSlot('/48901027/non_landing_leaderboard_bottom', [728, 90], 'div-gpt-ad-1488495260324-8').addService(googletag.pubads());
+                
+            
+
+            
+                googletag.defineSlot('/48901027/native_coin_details', ['fluid'], 'div-gpt-ad-1520101567641-0').addService(googletag.pubads());                
+                googletag.pubads().setTargeting("coin_id","1765");
+            
+
+            
+            var mapping = googletag.sizeMapping()
+              .addSize([1280,0], [1280, 90])
+              .addSize([970,0], [970, 90])
+              .addSize([750,0], [750, 90])
+              .addSize([0,0], [320, 100])
+              .build();
+            googletag.defineSlot('/48901027/full_width_top', [960, 90], 'div-gpt-ad-1517714727704-0')
+                .defineSizeMapping(mapping)
+                .addService(googletag.pubads());
+
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+          });
+        </script>
+<script>
+
+        //Load the UAM JavaScript Library
+        !function(a9,a,p,s,t,A,g){if(a[a9])return;function
+        q(c,r){a[a9]._Q.push([c,r])}a[a9]={init:function(){q("i",arguments)},fetchBids:function(){q("f",arguments)},setDisplayBids:function(){},targetingKeys:function(){return[]},_Q:[]};A=p.createElement(s);A.async=!0;A.src=t;g=p.getElementsByTagName(s)[0];g.parentNode.insertBefore(A,g)}("apstag",window,document,"script","//c.amazon-adsystem.com/aax2/apstag.js");
+        apstag.init({
+            pubID: '1edde03c-121e-457d-9c35-ad4fca989bac',
+            adServer: 'googletag',
+            bidTimeout: 2000
+        });
+
+        var pbjs = pbjs || {};
+        pbjs.que = pbjs.que || [];
+
+        </script>
+<script>
+        function fetchHeaderBids() {
+            var bidTimeout = 2000;
+            var adUnits = [
+            
+                
+                    {
+                        code: 'div-gpt-ad-1488495260324-9',
+                        sizes: [[728, 90]],
+                        bids: [
+                        {
+                            "bidder": "appnexus",
+                            "params": {
+                                "placementId": "11835084" // [D] 728x90 Detail ATF: 11835084
+                            }
+                        },        
+                        {
+                            "bidder": "indexExchange",
+                            "params": {
+                                "id": "4",
+                                "siteID": "219067" // coinmarketcap.com_Desktop_728x90_ATF Detail
+                            }
+                        }]
+                    },{
+                        code: 'div-gpt-ad-1488495260324-10',
+                        sizes: [[160, 600]],
+                        bids: [
+                        {
+                            "bidder": "openx",
+                            "params": {
+                                "unit": "539181152",
+                                "delDomain": "coinmarketcap-d.openx.net" // Desktop - 160x600 Detail page
+                            }
+                        },
+                        {
+                            "bidder": "appnexus",
+                            "params": {
+                                "placementId": "11835085" // [D] 160x600 Detail: 11835085
+                            }
+                        },        
+                        {
+                            "bidder": "indexExchange",
+                            "params": {
+                                "id": "5",
+                                "siteID": "219068" // coinmarketcap.com_Desktop_160x600_Side Detail
+                            }
+                        },        
+                        {
+                            "bidder": "sovrn",
+                            "params": {
+                                "tagid": "496633" // CoinMarketCap_AiH_160x600_Side_DETAILPAGE_Desktop
+                            }
+                        }]
+                    },{
+                        code: 'div-gpt-ad-1488495260324-8',
+                        sizes: [[728, 90]],
+                        bids: [
+                        {
+                            "bidder": "openx",
+                            "params": {
+                                "unit": "539181150",
+                                "delDomain": "coinmarketcap-d.openx.net" // Desktop - 728x90 BTF Detail page
+                            }
+                        },
+                        {
+                            "bidder": "appnexus",
+                            "params": {
+                                "placementId": "11835086" // [D] 728x90 Detail BTF: 11835086
+                            }
+                        },        
+                        {
+                            "bidder": "indexExchange",
+                            "params": {
+                                "id": "6",
+                                "siteID": "219069" // coinmarketcap.com_Desktop_728x90_BTF Detail
+                            }
+                        },        
+                        {
+                            "bidder": "sovrn",
+                            "params": {
+                                "tagid": "496631" // CoinMarketCap_AiH_728x90_BTF_DETAILPAGE_Desktop
+                            }
+                        }]
+                    }
+                
+            
+            ];
+
+            var apstagSlots = [
+            
+                
+                    {
+                        slotID: 'div-gpt-ad-1488495260324-9',
+                        slotName: '/48901027/non_landing_leaderboard_top',
+                        sizes: [[728, 90]]
+                    },
+                    {
+                        slotID: 'div-gpt-ad-1488495260324-10',
+                        slotName: '/48901027/non_landing_side',
+                        sizes: [[160, 600]]
+                    },
+                    {
+                        slotID: 'div-gpt-ad-1488495260324-8',
+                        slotName: '/48901027/non_landing_leaderboard_bottom',
+                        sizes: [[728, 90]]
+                    }
+                
+            
+            ];
+
+            var bidders = ['a9', 'prebid'];
+
+            var requestManager = {
+                adserverRequestSent: false,
+            };
+            
+                bidders.forEach(function(bidder) {
+                requestManager[bidder] = false;
+            })
+
+            function allBiddersBack() {
+                var allBiddersBack = bidders
+                .map(function(bidder) {
+                    return requestManager[bidder];
+                })
+                .filter(Boolean)
+                .length === bidders.length;
+                return allBiddersBack;
+            }
+            
+            function headerBidderBack(bidder) {
+                if (requestManager.adserverRequestSent === true) {
+                    return;
+                }
+                if (bidder === 'a9') {
+                    requestManager.a9 = true;
+                } else if (bidder === 'prebid') {
+                    requestManager.prebid = true;
+                }
+                if (allBiddersBack()) {
+                    sendAdserverRequest();
+                }
+            }
+
+            function sendAdserverRequest() {
+                if (requestManager.adserverRequestSent === true) {
+                    return;
+                }
+
+                requestManager.adserverRequestSent = true;
+                pbjs.adserverRequestSent = true;
+                requestManager.sendAdserverRequest = true;
+                googletag.cmd.push(function() {
+                    apstag.setDisplayBids();
+                    if (pbjs.version) {
+                        pbjs.setTargetingForGPTAsync();
+                    }
+                    googletag.pubads().refresh();
+                });
+            }
+
+            function requestBids(apstagSlots, adUnits, bidTimeout) {
+                apstag.fetchBids({
+                    slots: apstagSlots,
+                    timeout: bidTimeout
+                    }, function(bids) {
+                        headerBidderBack('a9');
+                    });
+
+                // request bids from prebid
+                pbjs.que.push(function() {
+                    pbjs.setPriceGranularity("high");
+                    pbjs.addAdUnits(adUnits);
+                    pbjs.enableSendAllBids();
+                    pbjs.bidderSettings = {
+                      appnexus: {
+                        bidCpmAdjustment : function(bidCpm){
+                          return bidCpm * 0.66;
+                        }
+                      },
+                      openx: {
+                        bidCpmAdjustment : function(bidCpm){
+                          return bidCpm * 0.80;
+                        }
+                      }                      
+                    };
+
+                    pbjs.requestBids({
+                        bidsBackHandler: function (bids) {
+                            headerBidderBack('prebid');
+                        }
+                    });
+                });
+            }
+
+            requestBids(apstagSlots, adUnits, bidTimeout)
+            window.setTimeout(function() {
+                sendAdserverRequest();
+            }, bidTimeout);
+        };
+
+        fetchHeaderBids();
+
+        </script>
+<script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Product",
+            "name": "EOS",
+            "image": "https://s2.coinmarketcap.com/static/img/coins/32x32/1765.png",
+            
+                "offers": {
+                    "@type": "Offer",
+                    "price": "13.82",
+                    "priceCurrency": "USD"
+                }
+            
+        }
+    </script>
+<link href="https://files.coinmarketcap.com/static/header_banner/header-banner-production.css" rel="stylesheet">
+</head>
+<body>
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MNVXW26" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+<script>
+            NightMode.init();
+        </script>
+<div id="header-banner-wrapper" style="display:none;overflow-x: hidden;">
+
+<div id="div-gpt-ad-1517714727704-0" class="centered">
+<script>
+                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1517714727704-0'); });
+            </script>
+</div>
+<div class="header-banner-close">X</div>
+</div>
+<script>
+            if (getCookie("header-banner-noshow") != "1") {
+                document.getElementById('header-banner-wrapper').style.display = 'block';
+            }
+        </script>
+<nav class="navbar mobile navbar-default visible-xs">
+<div class="container-fluid">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mobile-navbar-dropdown" aria-expanded="false">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<h2><a href="/" class="navbar-brand">CoinMarketCap</a></h2>
+</div>
+<div class="collapse navbar-collapse" id="mobile-navbar-dropdown">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Market Cap <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="/">All</a></li>
+<li><a href="/coins/">Coins</a></li>
+<li><a href="/tokens/">Tokens</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Trade Volume <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="/currencies/volume/24-hour/">24 Hour Volume Rankings (Currency)</a></li>
+<li><a href="/exchanges/volume/24-hour/">24 Hour Volume Rankings (Exchange)</a></li>
+<li><a href="/currencies/volume/monthly/">Monthly Volume Rankings (Currency)</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Trending <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="/gainers-losers/">Gainers and Losers</a></li>
+<li><a href="/new/">Recently Added</a></li>
+ </ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="/charts/">Global Charts</a></li>
+<li><a href="/historical/">Historical Snapshots</a></li>
+<li><a href="/calculator/">Currency Converter Calculator</a></li>
+<li><a href="/widget/">Website Widgets</a></li>
+</ul>
+</li>
+</ul>
+<form action="/search/" class="navbar-form quick-search-container" role="search">
+<div class="form-group">
+<input type="text" class="form-control quick-search-box js-quick-search" placeholder="Search" name="q">
+<button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+</div>
+<div class="clearfix"></div>
+</form>
+<div class="navbar-text">
+<div class="btn-group">
+<button type="button" class="btn btn-xs dropdown-toggle language-dropdown" data-toggle="dropdown">
+<span data-language-dropdown="">English</span> <span class="caret"></span>
+</button>
+<ul class="dropdown-menu language-dropdown-menu text-center" role="menu">
+<li class="pointer"><a href="/de/currencies/eos/" data-language-toggle="de">Deutsch</a></li>
+<li class="pointer"><a href="/currencies/eos/" data-language-toggle="en">English</a></li>
+<li class="pointer"><a href="/es/currencies/eos/" data-language-toggle="es">Espa&#xF1;ol</a></li>
+<li class="pointer"><a href="/fil/currencies/eos/" data-language-toggle="fil">Filipino</a></li>
+<li class="pointer"><a href="/fr/currencies/eos/" data-language-toggle="fr">Fran&#xE7;ais</a></li>
+<li class="pointer"><a href="/hi/currencies/eos/" data-language-toggle="hi">&#x939;&#x93F;&#x928;&#x94D;&#x926;&#x940;</a></li>
+<li class="pointer"><a href="/it/currencies/eos/" data-language-toggle="it">Italiano</a></li>
+<li class="pointer"><a href="/ja/currencies/eos/" data-language-toggle="ja">&#x65E5;&#x672C;&#x8A9E;</a></li>
+<li class="pointer"><a href="/ko/currencies/eos/" data-language-toggle="ko">&#xD55C;&#xAD6D;&#xC5B4;</a></li>
+<li class="pointer"><a href="/pt-br/currencies/eos/" data-language-toggle="pt-br">Portugu&#xEA;s Brasil</a></li>
+<li class="pointer"><a href="/ru/currencies/eos/" data-language-toggle="ru">&#x420;&#x443;&#x441;&#x441;&#x43A;&#x438;&#x439;</a></li>
+<li class="pointer"><a href="/vi/currencies/eos/" data-language-toggle="vi">Ti&#x1EBF;ng Vi&#x1EC7;t</a></li>
+<li class="pointer"><a href="/zh/currencies/eos/" data-language-toggle="zh">&#x7B80;&#x4F53;&#x4E2D;&#x6587;</a></li>
+</ul>
+</div>
+<div data-global-currency-switch="" class="btn-group global-currency-dropdown-container">
+<button type="button" class="btn btn-xs dropdown-toggle global-currency-dropdown" data-toggle="dropdown">
+<span data-currency-display="">USD</span> <span class="caret"></span>
+</button>
+<ul class="dropdown-menu global-currency-dropdown-menu text-center" role="menu">
+<li class="pointer"><a data-currency-toggle="">USD</a></li>
+<li class="pointer"><a data-currency-toggle="">DKK</a></li>
+<li class="pointer"><a data-currency-toggle="">JPY</a></li>
+<li class="pointer"><a data-currency-toggle="">PLN</a></li>
+<li class="pointer"><a data-currency-toggle="">AUD</a></li>
+<li class="pointer"><a data-currency-toggle="">EUR</a></li>
+<li class="pointer"><a data-currency-toggle="">KRW</a></li>
+<li class="pointer"><a data-currency-toggle="">RUB</a></li>
+<li class="pointer"><a data-currency-toggle="">BRL</a></li>
+<li class="pointer"><a data-currency-toggle="">GBP</a></li>
+<li class="pointer"><a data-currency-toggle="">MXN</a></li>
+<li class="pointer"><a data-currency-toggle="">SEK</a></li>
+<li class="pointer"><a data-currency-toggle="">CAD</a></li>
+<li class="pointer"><a data-currency-toggle="">HKD</a></li>
+<li class="pointer"><a data-currency-toggle="">MYR</a></li>
+<li class="pointer"><a data-currency-toggle="">SGD</a></li>
+<li class="pointer"><a data-currency-toggle="">CHF</a></li>
+<li class="pointer"><a data-currency-toggle="">HUF</a></li>
+<li class="pointer"><a data-currency-toggle="">NOK</a></li>
+<li class="pointer"><a data-currency-toggle="">THB</a></li>
+<li class="pointer"><a data-currency-toggle="">CLP</a></li>
+<li class="pointer"><a data-currency-toggle="">IDR</a></li>
+<li class="pointer"><a data-currency-toggle="">NZD</a></li>
+<li class="pointer"><a data-currency-toggle="">TRY</a></li>
+<li class="pointer"><a data-currency-toggle="">CNY</a></li>
+<li class="pointer"><a data-currency-toggle="">ILS</a></li>
+<li class="pointer"><a data-currency-toggle="">PHP</a></li>
+<li class="pointer"><a data-currency-toggle="">TWD</a></li>
+<li class="pointer"><a data-currency-toggle="">CZK</a></li>
+<li class="pointer"><a data-currency-toggle="">INR</a></li>
+<li class="pointer"><a data-currency-toggle="">PKR</a></li>
+<li class="pointer"><a data-currency-toggle="">ZAR</a></li>
+</ul>
+</div>
+</div>
+<p class="navbar-text">
+<a href="https://www.facebook.com/CoinMarketCap" target="_blank" rel="noopener"><img src="https://s2.coinmarketcap.com/static/cloud/img/facebook_logo.png" alt="twitter" class="icon-social"></a>
+&#x200A;
+<a href="https://twitter.com/CoinMarketCap" target="_blank" rel="noopener"><img src="https://s2.coinmarketcap.com/static/cloud/img/twitter_logo.png" alt="twitter" class="icon-social"></a>
+</p>
+</div>
+</div>
+</nav>
+<div class="global-stats mobile visible-xs" data-global-stats-container="">
+<ul class="list-group">
+<li class="list-group-item">
+Market Cap: <strong><a href="/charts/"><span data-global-stats-market-cap="" data-global-currency-market-cap=""></span></a></strong>
+<button class="pull-right dropdown-toggle" data-toggle="collapse" data-target="#global-stats-mobile" aria-expanded="false" aria-controls="global-stats-mobile"><span class="caret"></span></button>
+</li>
+</ul>
+<div id="global-stats-mobile" class="collapse">
+<ul class="list-group">
+<li class="list-group-item">24h Vol: <strong><a href="/charts/"><span data-global-stats-volume="" data-global-currency-volume=""></span></a></strong></li>
+<li class="list-group-item">BTC Dominance: <strong><a href="/charts/#dominance-percentage"><span data-global-stats-btc-dominance=""></span>%</a></strong></li>
+<li class="list-group-item">Cryptocurrencies: <strong><a href="/all/views/all/"><span data-global-stats-cryptocurrencies=""></span></a></strong></li>
+<li class="list-group-item">Markets: <strong><a href="/currencies/volume/24-hour/"><span data-global-stats-markets=""></span></a></strong></li>
+</ul>
+</div>
+</div>
+<div class="outer-container global-stats desktop hidden-xs">
+<div class="container global-stats desktop">
+<div class="row">
+<div class="col-sm-3">
+<ul class="list-inline stat-counters hidden" data-global-stats-container="">
+<li>Cryptocurrencies: <strong><a href="/all/views/all/"><span data-global-stats-cryptocurrencies=""></span></a></strong></li>
+<li>/ Markets: <strong><a href="/currencies/volume/24-hour/"><span data-global-stats-markets=""></span></a></strong></li>
+</ul>
+</div>
+<div class="col-sm-6 text-center">
+<ul class="list-inline stat-counters hidden" data-global-stats-container="">
+<li>Market Cap: <strong><a href="/charts/"><span data-global-stats-market-cap="" data-global-currency-market-cap=""></span></a></strong></li>
+<li> / 24h Vol: <strong><a href="/charts/"><span data-global-stats-volume="" data-global-currency-volume=""></span></a></strong> / BTC Dominance: <strong><a href="/charts/#dominance-percentage"><span data-global-stats-btc-dominance=""></span>%</a></strong></li>
+</ul>
+</div>
+<div class="col-sm-3 text-right">
+<div class="btn-group">
+<button type="button" class="btn btn-xs dropdown-toggle language-dropdown" data-toggle="dropdown">
+<span data-language-dropdown="">English</span> <span class="caret"></span>
+</button>
+<ul class="dropdown-menu language-dropdown-menu text-center" role="menu">
+<li class="pointer"><a href="/de/currencies/eos/" data-language-toggle="de">Deutsch</a></li>
+<li class="pointer"><a href="/currencies/eos/" data-language-toggle="en">English</a></li>
+<li class="pointer"><a href="/es/currencies/eos/" data-language-toggle="es">Espa&#xF1;ol</a></li>
+<li class="pointer"><a href="/fil/currencies/eos/" data-language-toggle="fil">Filipino</a></li>
+<li class="pointer"><a href="/fr/currencies/eos/" data-language-toggle="fr">Fran&#xE7;ais</a></li>
+<li class="pointer"><a href="/hi/currencies/eos/" data-language-toggle="hi">&#x939;&#x93F;&#x928;&#x94D;&#x926;&#x940;</a></li>
+<li class="pointer"><a href="/it/currencies/eos/" data-language-toggle="it">Italiano</a></li>
+<li class="pointer"><a href="/ja/currencies/eos/" data-language-toggle="ja">&#x65E5;&#x672C;&#x8A9E;</a></li>
+<li class="pointer"><a href="/ko/currencies/eos/" data-language-toggle="ko">&#xD55C;&#xAD6D;&#xC5B4;</a></li>
+<li class="pointer"><a href="/pt-br/currencies/eos/" data-language-toggle="pt-br">Portugu&#xEA;s Brasil</a></li>
+<li class="pointer"><a href="/ru/currencies/eos/" data-language-toggle="ru">&#x420;&#x443;&#x441;&#x441;&#x43A;&#x438;&#x439;</a></li>
+<li class="pointer"><a href="/vi/currencies/eos/" data-language-toggle="vi">Ti&#x1EBF;ng Vi&#x1EC7;t</a></li>
+<li class="pointer"><a href="/zh/currencies/eos/" data-language-toggle="zh">&#x7B80;&#x4F53;&#x4E2D;&#x6587;</a></li>
+</ul>
+</div>
+<div data-global-currency-switch="" class="btn-group global-currency-dropdown-container">
+<button type="button" class="btn btn-xs dropdown-toggle global-currency-dropdown" data-toggle="dropdown">
+<span data-currency-display="">USD</span> <span class="caret"></span>
+</button>
+<ul class="dropdown-menu global-currency-dropdown-menu text-center" role="menu">
+<li class="pointer"><a data-currency-toggle="">USD</a></li>
+<li class="pointer"><a data-currency-toggle="">DKK</a></li>
+<li class="pointer"><a data-currency-toggle="">JPY</a></li>
+<li class="pointer"><a data-currency-toggle="">PLN</a></li>
+<li class="pointer"><a data-currency-toggle="">AUD</a></li>
+<li class="pointer"><a data-currency-toggle="">EUR</a></li>
+<li class="pointer"><a data-currency-toggle="">KRW</a></li>
+<li class="pointer"><a data-currency-toggle="">RUB</a></li>
+<li class="pointer"><a data-currency-toggle="">BRL</a></li>
+<li class="pointer"><a data-currency-toggle="">GBP</a></li>
+<li class="pointer"><a data-currency-toggle="">MXN</a></li>
+<li class="pointer"><a data-currency-toggle="">SEK</a></li>
+<li class="pointer"><a data-currency-toggle="">CAD</a></li>
+<li class="pointer"><a data-currency-toggle="">HKD</a></li>
+<li class="pointer"><a data-currency-toggle="">MYR</a></li>
+<li class="pointer"><a data-currency-toggle="">SGD</a></li>
+ <li class="pointer"><a data-currency-toggle="">CHF</a></li>
+<li class="pointer"><a data-currency-toggle="">HUF</a></li>
+<li class="pointer"><a data-currency-toggle="">NOK</a></li>
+<li class="pointer"><a data-currency-toggle="">THB</a></li>
+<li class="pointer"><a data-currency-toggle="">CLP</a></li>
+<li class="pointer"><a data-currency-toggle="">IDR</a></li>
+<li class="pointer"><a data-currency-toggle="">NZD</a></li>
+<li class="pointer"><a data-currency-toggle="">TRY</a></li>
+<li class="pointer"><a data-currency-toggle="">CNY</a></li>
+<li class="pointer"><a data-currency-toggle="">ILS</a></li>
+<li class="pointer"><a data-currency-toggle="">PHP</a></li>
+<li class="pointer"><a data-currency-toggle="">TWD</a></li>
+<li class="pointer"><a data-currency-toggle="">CZK</a></li>
+<li class="pointer"><a data-currency-toggle="">INR</a></li>
+<li class="pointer"><a data-currency-toggle="">PKR</a></li>
+<li class="pointer"><a data-currency-toggle="">ZAR</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-lg-10">
+<div id="title" class="hidden-xs"><a href="/">Cryptocurrency Market Capitalizations</a></div>
+<hr class="divider-under-title">
+<div id="leaderboard" class="text-center">
+
+<div id="div-gpt-ad-1488495260324-9" class="centered leaderboard">
+<script>
+                                    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1488495260324-9'); });
+                                    </script>
+</div>
+</div>
+<nav class="navbar desktop navbar-default hidden-xs">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+</div>
+<div class="collapse navbar-collapse" id="navbar-collapse-1">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Market Cap <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="/">All</a></li>
+<li><a href="/coins/">Coins</a></li>
+<li><a href="/tokens/">Tokens</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Trade Volume <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="/currencies/volume/24-hour/">24 Hour Volume Rankings (Currency)</a></li>
+<li><a href="/exchanges/volume/24-hour/">24 Hour Volume Rankings (Exchange)</a></li>
+<li><a href="/currencies/volume/monthly/">Monthly Volume Rankings (Currency)</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Trending <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="/gainers-losers/">Gainers and Losers</a></li>
+<li><a href="/new/">Recently Added</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="/charts/">Global Charts</a></li>
+<li><a href="/historical/">Historical Snapshots</a></li>
+<li><a href="/calculator/">Currency Converter Calculator</a></li>
+<li><a href="/widget/">Website Widgets</a></li>
+</ul>
+</li>
+</ul>
+<form action="/search/" class="navbar-form navbar-right quick-search-container" role="search">
+<div class="form-group">
+<input type="text" class="form-control quick-search-box js-quick-search" placeholder="Search" name="q">
+</div>
+<button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+</form>
+<div class="bottom-margin-1x hidden-sm hidden-md hidden-lg"></div>
+</div>
+</nav>
+<div class="row bottom-margin-1x">
+<div class="col-xs-6 col-sm-4 col-md-4">
+<h1 class="text-large">
+<img src="https://s2.coinmarketcap.com/static/img/coins/32x32/1765.png" class="logo-32x32" alt="EOS">
+<small class="bold hidden-sm hidden-md hidden-lg">(EOS)</small>
+<span class="clearfix visible-xs"></span>
+EOS
+<small class="bold hidden-xs">(EOS)</small>
+</h1>
+</div>
+<div class="col-xs-6 col-sm-8 col-md-4 text-left">
+<span id="quote_price" data-currency-price="" data-usd="13.8182">
+<span class="text-large2" data-currency-value="">13.82</span>
+<span class="details-text-medium" data-currency-code="">USD</span>
+</span>
+<span class="text-large2  positive_change ">
+(<span data-format-percentage="" data-format-value="1.68784">1.69</span>%)
+</span>
+<br>
+<span class="text-gray details-text-medium">
+<span data-format-price-crypto="" data-format-value="0.00149674">
+0.00149674
+</span>
+BTC
+</span>
+<span class="details-text-medium  positive_change ">
+(<span data-format-percentage="" data-format-value="2.01877">2.02</span>%)
+</span>
+<br>
+<span class="text-gray details-text-medium">
+<span data-format-price-crypto="" data-format-value="0.0222237">
+0.02222370
+</span>
+ETH
+</span>
+<span class="details-text-medium  positive_change ">
+(<span data-format-percentage="" data-format-value="12.0987">12.10</span>%)
+</span>
+</div>
+<div class="col-xs-push-6 col-sm-push-4 col-md-push-0 col-md-4 text-left">
+
+<div id="div-gpt-ad-1520101567641-0">
+<script>
+            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1520101567641-0'); });
+            </script>
+</div>
+</div>
+</div>
+<div class="row bottom-margin-2x">
+<div class="col-sm-8 col-sm-push-4">
+<div class="coin-summary-item col-xs-6  col-md-3">
+<div class="coin-summary-item-header">
+<h3 class="details-text-medium">Market Cap</h3>
+</div>
+<div class="coin-summary-item-detail details-text-medium">
+<span data-currency-market-cap="" data-usd="11259711022.9">
+<span data-currency-value="">11,259,711,023</span>
+<span data-currency-code="">USD</span>
+</span><br>
+<span class="text-gray">
+<span data-format-market-cap="" data-format-value="1219613.25472">
+1,219,613
+</span>
+BTC
+<br>
+</span>
+<span class="text-gray">
+<span data-format-market-cap="" data-format-value="18108902.7412">
+18,108,903
+</span>
+ETH
+</span>
+</div>
+</div>
+<div class="coin-summary-item col-xs-6  col-md-3">
+<div class="coin-summary-item-header">
+<h3 class="details-text-medium">Volume (24h)</h3>
+</div>
+<div class="coin-summary-item-detail details-text-medium">
+<span data-currency-volume="" data-usd="3062600000.0">
+<span data-currency-value="">3,062,600,000</span>
+<span data-currency-code="">USD</span>
+</span><br>
+<span class="text-gray">
+<span data-format-volume-crypto="" data-format-value="331731.0">
+331,731
+</span>
+BTC
+</span>
+<br>
+<span class="text-gray">
+<span data-format-volume-crypto="" data-format-value="4925560.0">
+4,925,560
+</span>
+ETH
+</span>
+</div>
+</div>
+<div class="vertical-spacer col-xs-12 hidden-md hidden-lg"></div>
+<div class="coin-summary-item col-xs-6  col-md-3">
+<div class="coin-summary-item-header">
+<h3 class="details-text-medium">Circulating Supply</h3>
+</div>
+<div class="coin-summary-item-detail details-text-medium">
+<span data-format-supply="" data-format-value="814846436.066">
+814,846,436
+</span>
+EOS
+</div>
+</div>
+<div class="coin-summary-item col-xs-6  col-md-3">
+<div class="coin-summary-item-header">
+<h3 class="details-text-medium">Total Supply</h3>
+</div>
+<div class="coin-summary-item-detail details-text-medium">
+<span data-format-supply="" data-format-value="900000000.0">
+900,000,000
+</span>
+EOS
+</div>
+</div>
+
+<div class="vertical-spacer col-xs-12 hidden-md"></div>
+<div class="clearfix visible-xs"></div>
+<div class="coin-summary-item col-xs-6  col-md-3  col-xs-offset-6 col-md-offset-9 ">
+<div class="coin-summary-item-header">
+<h3 class="details-text-medium">Max Supply</h3>
+</div>
+<div class="coin-summary-item-detail details-text-medium">
+<span data-format-supply="" data-format-value="1000000000">
+1,000,000,000
+</span>
+EOS
+</div>
+</div>
+<div class="clearfix visible-xs"></div>
+</div>
+<div class="col-sm-4 col-sm-pull-8">
+<ul class="list-unstyled">
+<li><span class="glyphicon glyphicon-link text-gray" title="Website"></span> <a href="https://eos.io/" target="_blank" rel="noopener">Website</a></li>
+<li><span class="glyphicon glyphicon-bullhorn text-gray" title="Announcement"></span> <a href="https://bitcointalk.org/index.php?topic=1904415.0" target="_blank" rel="noopener">Announcement</a></li>
+<li><span class="glyphicon glyphicon-search text-gray" title="Explorer"></span> <a href="https://etherscan.io/token/EOS" target="_blank" rel="noopener">Explorer</a></li>
+<li><span class="glyphicon glyphicon-search text-gray" title="Explorer"></span> <a href="https://ethplorer.io/address/0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0" target="_blank" rel="noopener">Explorer 2</a></li>
+<li><span class="glyphicon glyphicon-globe text-gray" title="Chat"></span> <a href="https://t.me/joinchat/AAAAAEQbOeucnaMWN0A9dQ" target="_blank" rel="noopener">Chat</a></li>
+<li><span class="glyphicon glyphicon-hdd text-gray" title="Source Code"></span> <a href="https://github.com/eosio" target="_blank" rel="noopener">Source Code</a></li>
+<li><span class="glyphicon glyphicon glyphicon-star text-gray" title="Rank"></span>
+<small><span class="label label-success"> Rank 5</span></small>
+</li>
+<li><span class="glyphicon glyphicon glyphicon-tag text-gray" title="Tags"></span>
+<small>
+<span class="label label-warning">Token</span>
+</small>
+</li>
+</ul>
+</div>
+</div>
+<div class="row bottom-margin-1x">
+<div class="col-xs-12">
+<ul class="nav nav-tabs text-left" role="tablist">
+<li><a href="#charts" role="tab" data-toggle="tab"> <span class="glyphicon glyphicon-stats text-gray"></span> Charts</a></li>
+<li><a href="#markets" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-transfer text-gray"></span> Markets</a></li>
+<li><a href="#social" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-globe text-gray"></span> Social</a></li>
+<li><a href="#tools" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-wrench text-gray"></span> Tools</a></li>
+<li><a href="/currencies/eos/historical-data/"><span class="glyphicon glyphicon-calendar text-gray"></span>&#xA0;Historical Data</a></li>
+</ul>
+</div>
+<div class="col-xs-12 tab-content">
+<div id="charts" class="tab-pane active">
+<div class="tab-header">
+<div id="highcharts-loading" class="text-center">Loading data from server...<div><span class="loading"></span></div></div>
+<div id="highcharts-nodata" class="hidden text-center">No chart data found</div>
+<div class="clear"></div>
+</div>
+<div id="highcharts-graph"></div>
+<br>
+</div>
+<div id="markets" class="tab-pane">
+<div class="tab-header">
+<h2 class="pull-left">EOS Markets</h2><br>
+<div class="pull-right">
+<div class="clear"></div>
+<div id="currency-switch" class="btn-group">
+<button id="currency-switch-button" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+USD <span class="caret"></span>
+</button>
+<ul class="dropdown-menu text-center" role="menu">
+<li class="pointer" data-fiat-item=""><a class="price-toggle" data-currency="usd" data-fiat="">USD</a></li>
+<li class="divider" data-fiat-item=""></li>
+<li class="pointer"><a class="price-toggle" data-currency="usd">USD</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="btc" data-currencyid="bitcoin">BTC</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="eth" data-currencyid="ethereum">ETH</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="xrp" data-currencyid="ripple">XRP</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="bch" data-currencyid="bitcoin-cash">BCH</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="ltc" data-currencyid="litecoin">LTC</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="native">Native</a></li>
+</ul>
+</div>
+</div>
+<div class="table-responsive">
+<table id="markets-table" class="table no-border table-condensed">
+<thead>
+<tr>
+<th class="text-right sortable">#</th>
+<th id="th-source" class="sortable">Source</th>
+<th id="th-pair" class="sortable">Pair</th>
+<th class="text-right sortable">Volume (24h)</th>
+<th class="text-right sortable">Price</th>
+<th class="text-right sortable">Volume (%)</th>
+<th class="text-right sortable">Updated</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-right">1</td>
+<td data-sort="OKEx"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/294.png" class="logo" alt="OKEx"><a href="/exchanges/okex/">OKEx</a></td>
+<td data-sort="EOS/USDT"><a href="https://www.okex.com/spot/trade/index.do#eos_usdt" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="486511000.0">
+<span class="volume" data-usd="486511000.0" data-btc="52697.2" data-native="35279400.0">
+$486,511,000
+</span>
+</td>
+<td class="text-right" data-sort="13.7903">
+<span class="price" data-usd="13.7903" data-btc="0.00149371" data-native="13.7859">
+$13.79
+</span>
+</td>
+<td class="text-right" data-sort="15.8855547574">
+<span data-format-percentage="" data-format-value="15.8855547574">15.89</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">2</td>
+<td data-sort="Bitfinex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/37.png" class="logo" alt="Bitfinex"><a href="/exchanges/bitfinex/">Bitfinex</a></td>
+<td data-sort="EOS/USD"><a href="https://www.bitfinex.com/t/EOS:USD" target="_blank">EOS/USD</a></td>
+<td class="text-right" data-sort="431592000.0">
+<span class="volume" data-usd="431592000.0" data-btc="46748.5" data-native="31281600.0">
+$431,592,000
+</span>
+</td>
+<td class="text-right" data-sort="13.797">
+<span class="price" data-usd="13.797" data-btc="0.00149444" data-native="13.797">
+$13.80
+</span>
+</td>
+<td class="text-right" data-sort="14.092339842">
+<span data-format-percentage="" data-format-value="14.092339842">14.09</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">3</td>
+<td data-sort="Bithumb"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/200.png" class="logo" alt="Bithumb"><a href="/exchanges/bithumb/">Bithumb</a></td>
+<td data-sort="EOS/KRW"><a href="https://www.bithumb.com/" target="_blank">EOS/KRW</a></td>
+<td class="text-right" data-sort="421737000.0">
+<span class="volume" data-usd="421737000.0" data-btc="45681.1" data-native="30446400.0">
+$421,737,000
+</span>
+</td>
+<td class="text-right" data-sort="13.8518">
+<span class="price" data-usd="13.8518" data-btc="0.00150038" data-native="14965.0">
+$13.85
+</span>
+</td>
+<td class="text-right" data-sort="13.7705544309">
+<span data-format-percentage="" data-format-value="13.7705544309">13.77</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">4</td>
+<td data-sort="Huobi"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/102.png" class="logo" alt="Huobi"><a href="/exchanges/huobi/">Huobi</a></td>
+<td data-sort="EOS/USDT"><a href="https://www.huobi.pro/ko-kr/eos_usdt/exchange/" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="421329000.0">
+<span class="volume" data-usd="421329000.0" data-btc="45637.0" data-native="30486100.0">
+$421,329,000
+</span>
+</td>
+<td class="text-right" data-sort="13.8204">
+<span class="price" data-usd="13.8204" data-btc="0.00149697" data-native="13.816">
+$13.82
+</span>
+</td>
+<td class="text-right" data-sort="13.7572324169">
+<span data-format-percentage="" data-format-value="13.7572324169">13.76</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">5</td>
+<td data-sort="Upbit"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/351.png" class="logo" alt="Upbit"><a href="/exchanges/upbit/">Upbit</a></td>
+<td data-sort="EOS/KRW"><a href="https://upbit.com/exchange?code=CRIX.UPBIT.KRW-EOS" target="_blank">EOS/KRW</a></td>
+<td class="text-right" data-sort="362289000.0">
+<span class="volume" data-usd="362289000.0" data-btc="39241.9" data-native="26286400.0">
+$362,289,000
+</span>
+</td>
+<td class="text-right" data-sort="13.7824">
+<span class="price" data-usd="13.7824" data-btc="0.00149286" data-native="14890.0">
+$13.78
+</span>
+</td>
+<td class="text-right" data-sort="11.8294586299">
+<span data-format-percentage="" data-format-value="11.8294586299">11.83</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">6</td>
+<td data-sort="Binance"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/270.png" class="logo" alt="Binance"><a href="/exchanges/binance/">Binance</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.binance.com/trade.html?symbol=EOS_BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="209170000.0">
+<span class="volume" data-usd="209170000.0" data-btc="22656.6" data-native="15104400.0">
+$209,170,000
+</span>
+</td>
+<td class="text-right" data-sort="13.8483">
+<span class="price" data-usd="13.8483" data-btc="0.0015" data-native="0.0015">
+$13.85
+</span>
+</td>
+<td class="text-right" data-sort="6.82981780187">
+<span data-format-percentage="" data-format-value="6.82981780187">6.83</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">7</td>
+<td data-sort="OKEx"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/294.png" class="logo" alt="OKEx"><a href="/exchanges/okex/">OKEx</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.okex.com/spot/trade/index.do#eos_btc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="111061000.0">
+<span class="volume" data-usd="111061000.0" data-btc="12029.7" data-native="8004190.0">
+$111,061,000
+</span>
+</td>
+<td class="text-right" data-sort="13.8753">
+<span class="price" data-usd="13.8753" data-btc="0.00150293" data-native="0.00150293">
+$13.88
+</span>
+</td>
+<td class="text-right" data-sort="3.62636322079">
+<span data-format-percentage="" data-format-value="3.62636322079">3.63</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">8</td>
+<td data-sort="Binance"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/270.png" class="logo" alt="Binance"><a href="/exchanges/binance/">Binance</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.binance.com/trade.html?symbol=EOS_ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="70601800.0">
+<span class="volume" data-usd="70601800.0" data-btc="7647.35" data-native="5115940.0">
+$70,601,800
+</span>
+</td>
+<td class="text-right" data-sort="13.8004">
+<span class="price" data-usd="13.8004" data-btc="0.00149481" data-native="0.022195">
+$13.80
+</span>
+</td>
+<td class="text-right" data-sort="2.3052896232">
+<span data-format-percentage="" data-format-value="2.3052896232">2.31</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">9</td>
+<td data-sort="ZB.COM"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/326.png" class="logo" alt="ZB.COM"><a href="/exchanges/zb-com/">ZB.COM</a></td>
+<td data-sort="EOS/USDT"><a href="https://trans.zb.com/eosusdt" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="69472300.0">
+<span class="volume" data-usd="69472300.0" data-btc="7525.0" data-native="5045060.0">
+$69,472,300
+</span>
+</td>
+<td class="text-right" data-sort="13.7704">
+<span class="price" data-usd="13.7704" data-btc="0.00149156" data-native="13.766">
+$13.77
+</span>
+</td>
+<td class="text-right" data-sort="2.2684091948">
+<span data-format-percentage="" data-format-value="2.2684091948">2.27</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">10</td>
+<td data-sort="Huobi"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/102.png" class="logo" alt="Huobi"><a href="/exchanges/huobi/">Huobi</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.huobi.pro/ko-kr/eos_btc/exchange/" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="47302000.0">
+<span class="volume" data-usd="47302000.0" data-btc="5123.59" data-native="3400420.0">
+$47,302,000
+</span>
+</td>
+<td class="text-right" data-sort="13.9107">
+<span class="price" data-usd="13.9107" data-btc="0.00150676" data-native="0.00150676">
+$13.91
+ </span>
+</td>
+<td class="text-right" data-sort="1.54450466924">
+<span data-format-percentage="" data-format-value="1.54450466924">1.54</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">11</td>
+<td data-sort="Bitfinex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/37.png" class="logo" alt="Bitfinex"><a href="/exchanges/bitfinex/">Bitfinex</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.bitfinex.com/t/EOS:BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="44281200.0">
+<span class="volume" data-usd="44281200.0" data-btc="4796.39" data-native="3195460.0">
+$44,281,200
+</span>
+</td>
+<td class="text-right" data-sort="13.8575">
+<span class="price" data-usd="13.8575" data-btc="0.001501" data-native="0.001501">
+$13.86
+</span>
+</td>
+<td class="text-right" data-sort="1.44586952263">
+<span data-format-percentage="" data-format-value="1.44586952263">1.45</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">12</td>
+<td data-sort="Gate.io"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/302.png" class="logo" alt="Gate.io"><a href="/exchanges/gate-io/">Gate.io</a></td>
+<td data-sort="EOS/USDT"><a href="https://gate.io/trade/eos_usdt" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="43125700.0">
+<span class="volume" data-usd="43125700.0" data-btc="4671.23" data-native="3155600.0">
+$43,125,700
+</span>
+</td>
+<td class="text-right" data-sort="13.6664">
+<span class="price" data-usd="13.6664" data-btc="0.0014803" data-native="13.6621">
+$13.67
+</span>
+</td>
+<td class="text-right" data-sort="1.40814014236">
+<span data-format-percentage="" data-format-value="1.40814014236">1.41</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">13</td>
+<td data-sort="Huobi"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/102.png" class="logo" alt="Huobi"><a href="/exchanges/huobi/">Huobi</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.huobi.pro/ko-kr/eos_eth/exchange/" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="38446800.0">
+<span class="volume" data-usd="38446800.0" data-btc="4164.42" data-native="2772470.0">
+$38,446,800
+</span>
+</td>
+<td class="text-right" data-sort="13.8674">
+<span class="price" data-usd="13.8674" data-btc="0.00150206" data-native="0.0223027">
+$13.87
+</span>
+</td>
+<td class="text-right" data-sort="1.25536472278">
+<span data-format-percentage="" data-format-value="1.25536472278">1.26</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">14</td>
+<td data-sort="Bitfinex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/37.png" class="logo" alt="Bitfinex"><a href="/exchanges/bitfinex/">Bitfinex</a></td>
+<td data-sort="EOS/EUR"><a href="https://www.bitfinex.com/t/EOS:EUR" target="_blank">EOS/EUR</a></td>
+<td class="text-right" data-sort="31478700.0">
+<span class="volume" data-usd="31478700.0" data-btc="3409.66" data-native="2282380.0">
+$31,478,700
+</span>
+</td>
+<td class="text-right" data-sort="13.7921">
+<span class="price" data-usd="13.7921" data-btc="0.00149391" data-native="11.289">
+$13.79
+</span>
+</td>
+<td class="text-right" data-sort="1.02784235617">
+<span data-format-percentage="" data-format-value="1.02784235617">1.03</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">15</td>
+<td data-sort="Bit-Z"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/300.png" class="logo" alt="Bit-Z"><a href="/exchanges/bit-z/">Bit-Z</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.bit-z.com/trade/eos_btc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="30900600.0">
+<span class="volume" data-usd="30900600.0" data-btc="3347.05" data-native="2236430.0">
+$30,900,600
+</span>
+</td>
+<td class="text-right" data-sort="13.8169">
+<span class="price" data-usd="13.8169" data-btc="0.0014966" data-native="0.0014966">
+$13.82
+</span>
+</td>
+<td class="text-right" data-sort="1.00896623784">
+<span data-format-percentage="" data-format-value="1.00896623784">1.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">16</td>
+<td data-sort="ZB.COM"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/326.png" class="logo" alt="ZB.COM"><a href="/exchanges/zb-com/">ZB.COM</a></td>
+<td data-sort="EOS/BTC"><a href="https://trans.zb.com/eosbtc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="24362200.0">
+<span class="volume" data-usd="24362200.0" data-btc="2638.83" data-native="1755430.0">
+$24,362,200
+</span>
+</td>
+<td class="text-right" data-sort="13.8782">
+<span class="price" data-usd="13.8782" data-btc="0.00150324" data-native="0.00150324">
+$13.88
+</span>
+</td>
+<td class="text-right" data-sort="0.795474433488">
+<span data-format-percentage="" data-format-value="0.795474433488">0.80</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">17</td>
+<td data-sort="Bitfinex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/37.png" class="logo" alt="Bitfinex"><a href="/exchanges/bitfinex/">Bitfinex</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.bitfinex.com/t/EOS:ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="21871200.0">
+<span class="volume" data-usd="21871200.0" data-btc="2369.01" data-native="1578140.0">
+$21,871,200
+</span>
+</td>
+ <td class="text-right" data-sort="13.8588">
+<span class="price" data-usd="13.8588" data-btc="0.00150114" data-native="0.022289">
+$13.86
+</span>
+</td>
+<td class="text-right" data-sort="0.714138313851">
+<span data-format-percentage="" data-format-value="0.714138313851">0.71</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">18</td>
+<td data-sort="OKEx"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/294.png" class="logo" alt="OKEx"><a href="/exchanges/okex/">OKEx</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.okex.com/spot/trade/index.do#eos_eth" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="19089000.0">
+<span class="volume" data-usd="19089000.0" data-btc="2067.65" data-native="1379570.0">
+$19,089,000
+</span>
+</td>
+<td class="text-right" data-sort="13.8369">
+<span class="price" data-usd="13.8369" data-btc="0.00149876" data-native="0.0222537">
+$13.84
+</span>
+</td>
+<td class="text-right" data-sort="0.623293933259">
+<span data-format-percentage="" data-format-value="0.623293933259">0.62</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">19</td>
+<td data-sort="Coinone"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/174.png" class="logo" alt="Coinone"><a href="/exchanges/coinone/">Coinone</a></td>
+<td data-sort="EOS/KRW"><a href="https://coinone.co.kr/exchange/trade/eos/" target="_blank">EOS/KRW</a></td>
+<td class="text-right" data-sort="16783600.0">
+<span class="volume" data-usd="16783600.0" data-btc="1817.94" data-native="1199230.0">
+$16,783,600
+</span>
+</td>
+<td class="text-right" data-sort="13.9953">
+<span class="price" data-usd="13.9953" data-btc="0.00151592" data-native="15120.0">
+$14.00
+</span>
+</td>
+ <td class="text-right" data-sort="0.548018023901">
+<span data-format-percentage="" data-format-value="0.548018023901">0.55</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">20</td>
+<td data-sort="HitBTC"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/42.png" class="logo" alt="HitBTC"><a href="/exchanges/hitbtc/">HitBTC</a></td>
+<td data-sort="EOS/BTC"><a href="https://hitbtc.com/exchange/EOS-to-BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="14912400.0">
+<span class="volume" data-usd="14912400.0" data-btc="1615.26" data-native="1078280.0">
+$14,912,400
+</span>
+</td>
+<td class="text-right" data-sort="13.8298">
+<span class="price" data-usd="13.8298" data-btc="0.001498" data-native="0.001498">
+$13.83
+</span>
+</td>
+<td class="text-right" data-sort="0.486919610788">
+<span data-format-percentage="" data-format-value="0.486919610788">0.49</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">21</td>
+<td data-sort="Kraken"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/24.png" class="logo" alt="Kraken"><a href="/exchanges/kraken/">Kraken</a></td>
+<td data-sort="EOS/EUR"><a href="https://www.kraken.com" target="_blank">EOS/EUR</a></td>
+<td class="text-right" data-sort="13499800.0">
+<span class="volume" data-usd="13499800.0" data-btc="1462.25" data-native="995406.0">
+$13,499,800
+</span>
+</td>
+<td class="text-right" data-sort="13.5621">
+<span class="price" data-usd="13.5621" data-btc="0.001469" data-native="11.1008">
+$13.56
+</span>
+</td>
+<td class="text-right" data-sort="0.440795402599">
+<span data-format-percentage="" data-format-value="0.440795402599">0.44</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+ <td class="text-right">22</td>
+<td data-sort="Kraken"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/24.png" class="logo" alt="Kraken"><a href="/exchanges/kraken/">Kraken</a></td>
+<td data-sort="EOS/USD"><a href="https://www.kraken.com" target="_blank">EOS/USD</a></td>
+<td class="text-right" data-sort="11343600.0">
+<span class="volume" data-usd="11343600.0" data-btc="1228.7" data-native="829739.0">
+$11,343,600
+</span>
+</td>
+<td class="text-right" data-sort="13.6713">
+<span class="price" data-usd="13.6713" data-btc="0.00148083" data-native="13.6713">
+$13.67
+</span>
+</td>
+<td class="text-right" data-sort="0.370391170901">
+<span data-format-percentage="" data-format-value="0.370391170901">0.37</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">23</td>
+<td data-sort="Kraken"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/24.png" class="logo" alt="Kraken"><a href="/exchanges/kraken/">Kraken</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.kraken.com" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="9947110.0">
+<span class="volume" data-usd="9947110.0" data-btc="1077.44" data-native="719250.0">
+$9,947,110
+</span>
+</td>
+<td class="text-right" data-sort="13.8298">
+<span class="price" data-usd="13.8298" data-btc="0.001498" data-native="0.001498">
+$13.83
+</span>
+</td>
+<td class="text-right" data-sort="0.324792986351">
+<span data-format-percentage="" data-format-value="0.324792986351">0.32</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">24</td>
+<td data-sort="IDAX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/368.png" class="logo" alt="IDAX"><a href="/exchanges/idax/">IDAX</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.idax.mn/#/exchange?pairname=EOS_BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="9305520.0">
+ <span class="volume" data-usd="9305520.0" data-btc="1007.94" data-native="671849.0">
+$9,305,520
+</span>
+</td>
+<td class="text-right" data-sort="13.8506">
+<span class="price" data-usd="13.8506" data-btc="0.00150025" data-native="0.00150025">
+$13.85
+</span>
+</td>
+<td class="text-right" data-sort="0.303843792856">
+<span data-format-percentage="" data-format-value="0.303843792856">0.30</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">25</td>
+<td data-sort="HitBTC"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/42.png" class="logo" alt="HitBTC"><a href="/exchanges/hitbtc/">HitBTC</a></td>
+<td data-sort="EOS/USDT"><a href="https://hitbtc.com/exchange/EOS-to-USDT" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="7894870.0">
+<span class="volume" data-usd="7894870.0" data-btc="855.145" data-native="573525.0">
+$7,894,870
+</span>
+</td>
+<td class="text-right" data-sort="13.7655">
+<span class="price" data-usd="13.7655" data-btc="0.00149103" data-native="13.7612">
+$13.77
+</span>
+</td>
+<td class="text-right" data-sort="0.257783256057">
+<span data-format-percentage="" data-format-value="0.257783256057">0.26</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">26</td>
+<td data-sort="GOPAX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/335.png" class="logo" alt="GOPAX"><a href="/exchanges/gopax/">GOPAX</a></td>
+<td data-sort="EOS/KRW"><a href="https://www.gopax.co.kr" target="_blank">EOS/KRW</a></td>
+<td class="text-right" data-sort="7766670.0">
+<span class="volume" data-usd="7766670.0" data-btc="841.259" data-native="555685.0">
+$7,766,670
+</span>
+</td>
+<td class="text-right" data-sort="13.9768">
+<span class="price" data-usd="13.9768" data-btc="0.00151391" data-native="15100.0">
+$13.98
+</span>
+</td>
+<td class="text-right" data-sort="0.253597270293">
+<span data-format-percentage="" data-format-value="0.253597270293">0.25</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">27</td>
+<td data-sort="CoinTiger"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/391.png" class="logo" alt="CoinTiger"><a href="/exchanges/cointiger/">CoinTiger</a></td>
+<td data-sort="EOS/BTC"><a href="" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="7608030.0">
+<span class="volume" data-usd="7608030.0" data-btc="824.076" data-native="548076.0">
+$7,608,030
+</span>
+</td>
+<td class="text-right" data-sort="13.8814">
+<span class="price" data-usd="13.8814" data-btc="0.00150358" data-native="0.00150358">
+$13.88
+</span>
+</td>
+<td class="text-right" data-sort="0.248417357801">
+<span data-format-percentage="" data-format-value="0.248417357801">0.25</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">28</td>
+<td data-sort="DragonEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/398.png" class="logo" alt="DragonEX"><a href="/exchanges/dragonex/">DragonEX</a></td>
+<td data-sort="EOS/USDT"><a href="" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="7442500.0">
+<span class="volume" data-usd="7442500.0" data-btc="806.146" data-native="544862.0">
+$7,442,500
+</span>
+</td>
+<td class="text-right" data-sort="13.6594">
+<span class="price" data-usd="13.6594" data-btc="0.00147954" data-native="13.6551">
+$13.66
+</span>
+</td>
+<td class="text-right" data-sort="0.243012473062">
+<span data-format-percentage="" data-format-value="0.243012473062">0.24</span>%
+</td>
+ <td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">29</td>
+<td data-sort="BCEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/312.png" class="logo" alt="BCEX"><a href="/exchanges/bcex/">BCEX</a></td>
+<td data-sort="EOS/CKUSD"><a href="https://www.bcex.ca/trade/eos2ckusd" target="_blank">EOS/CKUSD</a></td>
+<td class="text-right" data-sort="5491360.0">
+<span class="volume" data-usd="5491360.0" data-btc="594.805" data-native="369043.0">
+$5,491,360
+</span>
+</td>
+<td class="text-right" data-sort="14.88">
+<span class="price" data-usd="14.88" data-btc="0.00161175" data-native="14.88">
+$14.88
+</span>
+</td>
+<td class="text-right" data-sort="0.179303859466">
+<span data-format-percentage="" data-format-value="0.179303859466">0.18</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">30</td>
+<td data-sort="TOPBTC"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/317.png" class="logo" alt="TOPBTC"><a href="/exchanges/topbtc/">TOPBTC</a></td>
+<td data-sort="EOS/CNY"><a href="https://topbtc.com/home/Market/index/market/CNY/coin/EOS.html" target="_blank">EOS/CNY</a></td>
+<td class="text-right" data-sort="5455920.0">
+<span class="volume" data-usd="5455920.0" data-btc="590.966" data-native="374899.0">
+$5,455,920
+</span>
+</td>
+<td class="text-right" data-sort="14.553">
+<span class="price" data-usd="14.553" data-btc="0.00157634" data-native="91.7926">
+$14.55
+</span>
+</td>
+<td class="text-right" data-sort="0.178146672762">
+<span data-format-percentage="" data-format-value="0.178146672762">0.18</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">31</td>
+<td data-sort="Bitfinex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/37.png" class="logo" alt="Bitfinex"><a href="/exchanges/bitfinex/">Bitfinex</a></td>
+ <td data-sort="EOS/JPY"><a href="https://www.bitfinex.com/t/EOS:JPY" target="_blank">EOS/JPY</a></td>
+<td class="text-right" data-sort="5266130.0">
+<span class="volume" data-usd="5266130.0" data-btc="570.409" data-native="381750.0">
+$5,266,130
+</span>
+</td>
+<td class="text-right" data-sort="13.7947">
+<span class="price" data-usd="13.7947" data-btc="0.0014942" data-native="1504.1">
+$13.79
+</span>
+</td>
+<td class="text-right" data-sort="0.171949650624">
+<span data-format-percentage="" data-format-value="0.171949650624">0.17</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">32</td>
+<td data-sort="Kraken"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/24.png" class="logo" alt="Kraken"><a href="/exchanges/kraken/">Kraken</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.kraken.com" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="4414480.0">
+<span class="volume" data-usd="4414480.0" data-btc="478.162" data-native="320981.0">
+$4,414,480
+</span>
+</td>
+<td class="text-right" data-sort="13.7531">
+<span class="price" data-usd="13.7531" data-btc="0.00148969" data-native="0.022119">
+$13.75
+</span>
+</td>
+<td class="text-right" data-sort="0.14414157905">
+<span data-format-percentage="" data-format-value="0.14414157905">0.14</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">33</td>
+<td data-sort="Lbank"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/333.png" class="logo" alt="Lbank"><a href="/exchanges/lbank/">Lbank</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.lbank.info/trading/eos/eth" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="4304990.0">
+<span class="volume" data-usd="4304990.0" data-btc="466.301" data-native="312026.0">
+$4,304,990
+</span>
+ </td>
+<td class="text-right" data-sort="13.7969">
+<span class="price" data-usd="13.7969" data-btc="0.00149443" data-native="0.0221894">
+$13.80
+</span>
+</td>
+<td class="text-right" data-sort="0.140566512114">
+<span data-format-percentage="" data-format-value="0.140566512114">0.14</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">34</td>
+<td data-sort="OTCBTC"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/353.png" class="logo" alt="OTCBTC"><a href="/exchanges/otcbtc/">OTCBTC</a></td>
+<td data-sort="EOS/BTC"><a href="https://bb.otcbtc.com/exchange/markets/eosbtc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="3718790.0">
+<span class="volume" data-usd="3718790.0" data-btc="402.806" data-native="267123.0">
+$3,718,790
+</span>
+</td>
+<td class="text-right" data-sort="13.9216">
+<span class="price" data-usd="13.9216" data-btc="0.00150794" data-native="0.00150794">
+$13.92
+</span>
+</td>
+<td class="text-right" data-sort="0.121425912623">
+<span data-format-percentage="" data-format-value="0.121425912623">0.12</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">35</td>
+<td data-sort="Zebpay"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/370.png" class="logo" alt="Zebpay"><a href="/exchanges/zebpay/">Zebpay</a></td>
+<td data-sort="EOS/INR"><a href="https://www.zebpay.com/" target="_blank">EOS/INR</a></td>
+<td class="text-right" data-sort="3586210.0">
+<span class="volume" data-usd="3586210.0" data-btc="388.446" data-native="256721.0">
+$3,586,210
+</span>
+</td>
+<td class="text-right" data-sort="13.9693">
+<span class="price" data-usd="13.9693" data-btc="0.00151311" data-native="931.0">
+$13.97
+</span>
+</td>
+ <td class="text-right" data-sort="0.117096911121">
+<span data-format-percentage="" data-format-value="0.117096911121">0.12</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">36</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="EOS/BTC"><a href="https://big.one/trade/EOS-BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="3044710.0">
+<span class="volume" data-usd="3044710.0" data-btc="329.792" data-native="221390.0">
+$3,044,710
+</span>
+</td>
+<td class="text-right" data-sort="13.7527">
+<span class="price" data-usd="13.7527" data-btc="0.00148964" data-native="0.00148964">
+$13.75
+</span>
+</td>
+<td class="text-right" data-sort="0.0994158558088">
+<span data-format-percentage="" data-format-value="0.0994158558088">0.10</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">37</td>
+<td data-sort="Bancor Network"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/267.png" class="logo" alt="Bancor Network"><a href="/exchanges/bancor-network/">Bancor Network</a></td>
+<td data-sort="EOS/BNT"><a href="https://www.bancor.network/" target="_blank">EOS/BNT</a></td>
+<td class="text-right" data-sort="3009720.0">
+<span class="volume" data-usd="3009720.0" data-btc="326.002" data-native="217556.0">
+$3,009,720
+</span>
+</td>
+<td class="text-right" data-sort="13.8342">
+<span class="price" data-usd="13.8342" data-btc="0.00149848" data-native="3.27005">
+$13.83
+</span>
+</td>
+<td class="text-right" data-sort="0.0982733625024">
+<span data-format-percentage="" data-format-value="0.0982733625024">0.10</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+ <tr>
+<td class="text-right">38</td>
+<td data-sort="OTCBTC"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/353.png" class="logo" alt="OTCBTC"><a href="/exchanges/otcbtc/">OTCBTC</a></td>
+<td data-sort="EOS/ETH"><a href="https://bb.otcbtc.com/exchange/markets/eoseth" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="2828130.0">
+<span class="volume" data-usd="2828130.0" data-btc="306.333" data-native="203959.0">
+$2,828,130
+</span>
+</td>
+<td class="text-right" data-sort="13.8661">
+<span class="price" data-usd="13.8661" data-btc="0.00150193" data-native="0.0223008">
+$13.87
+</span>
+</td>
+<td class="text-right" data-sort="0.0923440867237">
+<span data-format-percentage="" data-format-value="0.0923440867237">0.09</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">39</td>
+<td data-sort="Exrates"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/155.png" class="logo" alt="Exrates"><a href="/exchanges/exrates/">Exrates</a></td>
+<td data-sort="EOS/USD"><a href="https://exrates.me/" target="_blank">EOS/USD</a></td>
+<td class="text-right" data-sort="2601380.0">
+<span class="volume" data-usd="2601380.0" data-btc="281.772" data-native="186257.0">
+$2,601,380
+</span>
+</td>
+<td class="text-right" data-sort="13.9666">
+<span class="price" data-usd="13.9666" data-btc="0.00151281" data-native="13.9666">
+$13.97
+</span>
+</td>
+<td class="text-right" data-sort="0.0849402468491">
+<span data-format-percentage="" data-format-value="0.0849402468491">0.08</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">40</td>
+<td data-sort="IDAX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/368.png" class="logo" alt="IDAX"><a href="/exchanges/idax/">IDAX</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.idax.mn/#/exchange?pairname=EOS_ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="2234000.0">
+<span class="volume" data-usd="2234000.0" data-btc="241.979" data-native="161770.0">
+$2,234,000
+</span>
+</td>
+<td class="text-right" data-sort="13.8097">
+<span class="price" data-usd="13.8097" data-btc="0.00149582" data-native="0.02221">
+$13.81
+</span>
+</td>
+<td class="text-right" data-sort="0.0729445569124">
+<span data-format-percentage="" data-format-value="0.0729445569124">0.07</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">41</td>
+<td data-sort="CoinTiger"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/391.png" class="logo" alt="CoinTiger"><a href="/exchanges/cointiger/">CoinTiger</a></td>
+<td data-sort="EOS/ETH"><a href="" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="1794420.0">
+<span class="volume" data-usd="1794420.0" data-btc="194.365" data-native="129881.0">
+$1,794,420
+</span>
+</td>
+<td class="text-right" data-sort="13.8159">
+<span class="price" data-usd="13.8159" data-btc="0.00149649" data-native="0.02222">
+$13.82
+</span>
+</td>
+<td class="text-right" data-sort="0.0585913929341">
+<span data-format-percentage="" data-format-value="0.0585913929341">0.06</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">42</td>
+<td data-sort="Bitfinex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/37.png" class="logo" alt="Bitfinex"><a href="/exchanges/bitfinex/">Bitfinex</a></td>
+<td data-sort="EOS/GBP"><a href="https://www.bitfinex.com/t/EOS:GBP" target="_blank">EOS/GBP</a></td>
+<td class="text-right" data-sort="1736790.0">
+<span class="volume" data-usd="1736790.0" data-btc="188.123" data-native="126382.0">
+$1,736,790
+</span>
+</td>
+<td class="text-right" data-sort="13.7424">
+ <span class="price" data-usd="13.7424" data-btc="0.00148853" data-native="9.83802">
+$13.74
+</span>
+</td>
+<td class="text-right" data-sort="0.0567096584601">
+<span data-format-percentage="" data-format-value="0.0567096584601">0.06</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">43</td>
+<td data-sort="Coinrail"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/332.png" class="logo" alt="Coinrail"><a href="/exchanges/coinrail/">Coinrail</a></td>
+<td data-sort="EOS/BTC"><a href="https://coinrail.co.kr/stock/eos-btc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="1677740.0">
+<span class="volume" data-usd="1677740.0" data-btc="181.727" data-native="121192.0">
+$1,677,740
+</span>
+</td>
+<td class="text-right" data-sort="13.8437">
+<span class="price" data-usd="13.8437" data-btc="0.0014995" data-native="0.0014995">
+$13.84
+</span>
+</td>
+<td class="text-right" data-sort="0.0547815581532">
+<span data-format-percentage="" data-format-value="0.0547815581532">0.05</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">44</td>
+<td data-sort="CoinEx Market"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/397.png" class="logo" alt="CoinEx Market"><a href="/exchanges/coinexmarket/">CoinEx Market</a></td>
+<td data-sort="EOS/BTC"><a href="" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="1641290.0">
+<span class="volume" data-usd="1641290.0" data-btc="177.778" data-native="119075.0">
+$1,641,290
+</span>
+</td>
+<td class="text-right" data-sort="13.7837">
+<span class="price" data-usd="13.7837" data-btc="0.001493" data-native="0.001493">
+$13.78
+</span>
+</td>
+<td class="text-right" data-sort="0.0535913929341">
+<span data-format-percentage="" data-format-value="0.0535913929341">0.05</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">45</td>
+<td data-sort="Gate.io"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/302.png" class="logo" alt="Gate.io"><a href="/exchanges/gate-io/">Gate.io</a></td>
+<td data-sort="EOS/ETH"><a href="https://gate.io/trade/eos_eth" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="1469400.0">
+<span class="volume" data-usd="1469400.0" data-btc="159.16" data-native="106870.0">
+$1,469,400
+</span>
+</td>
+<td class="text-right" data-sort="13.7494">
+<span class="price" data-usd="13.7494" data-btc="0.00148929" data-native="0.022113">
+$13.75
+</span>
+</td>
+<td class="text-right" data-sort="0.0479788415072">
+<span data-format-percentage="" data-format-value="0.0479788415072">0.05</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">46</td>
+<td data-sort="Kucoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/311.png" class="logo" alt="Kucoin"><a href="/exchanges/kucoin/">Kucoin</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.kucoin.com/#/trade/EOS-BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="1425050.0">
+<span class="volume" data-usd="1425050.0" data-btc="154.356" data-native="102631.0">
+$1,425,050
+</span>
+</td>
+<td class="text-right" data-sort="13.8851">
+<span class="price" data-usd="13.8851" data-btc="0.00150399" data-native="0.00150399">
+$13.89
+</span>
+</td>
+<td class="text-right" data-sort="0.0465307255273">
+<span data-format-percentage="" data-format-value="0.0465307255273">0.05</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">47</td>
+<td data-sort="DragonEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/398.png" class="logo" alt="DragonEX"><a href="/exchanges/dragonex/">DragonEX</a></td>
+<td data-sort="EOS/ETH"><a href="" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="1180010.0">
+<span class="volume" data-usd="1180010.0" data-btc="127.815" data-native="86211.7">
+$1,180,010
+</span>
+</td>
+<td class="text-right" data-sort="13.6874">
+<span class="price" data-usd="13.6874" data-btc="0.00148257" data-native="0.0220133">
+$13.69
+</span>
+</td>
+<td class="text-right" data-sort="0.0385296806635">
+<span data-format-percentage="" data-format-value="0.0385296806635">0.04</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">48</td>
+<td data-sort="OEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/334.png" class="logo" alt="OEX"><a href="/exchanges/oex/">OEX</a></td>
+<td data-sort="EOS/CNY"><a href="https://www.oex.com/" target="_blank">EOS/CNY</a></td>
+<td class="text-right" data-sort="1167190.0">
+<span class="volume" data-usd="1167190.0" data-btc="126.426" data-native="80021.6">
+$1,167,190
+</span>
+</td>
+<td class="text-right" data-sort="14.5859">
+<span class="price" data-usd="14.5859" data-btc="0.0015799" data-native="92.0">
+$14.59
+</span>
+</td>
+<td class="text-right" data-sort="0.0381110820871">
+<span data-format-percentage="" data-format-value="0.0381110820871">0.04</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">49</td>
+<td data-sort="Gate.io"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/302.png" class="logo" alt="Gate.io"><a href="/exchanges/gate-io/">Gate.io</a></td>
+<td data-sort="EOS/BTC"><a href="https://gate.io/trade/eos_btc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="1054700.0">
+<span class="volume" data-usd="1054700.0" data-btc="114.241" data-native="76769.7">
+$1,054,700
+</span>
+</td>
+<td class="text-right" data-sort="13.7384">
+<span class="price" data-usd="13.7384" data-btc="0.0014881" data-native="0.0014881">
+$13.74
+</span>
+</td>
+<td class="text-right" data-sort="0.0344380591654">
+<span data-format-percentage="" data-format-value="0.0344380591654">0.03</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">50</td>
+<td data-sort="BtcTrade.im"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/337.png" class="logo" alt="BtcTrade.im"><a href="/exchanges/btctrade-im/">BtcTrade.im</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.btctrade.im/btc/eos/" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="781638.0">
+<span class="volume" data-usd="781638.0" data-btc="84.6643" data-native="57205.6">
+$781,638
+</span>
+</td>
+<td class="text-right" data-sort="13.6637">
+<span class="price" data-usd="13.6637" data-btc="0.00148" data-native="0.00148">
+$13.66
+</span>
+</td>
+<td class="text-right" data-sort="0.0255220400966">
+<span data-format-percentage="" data-format-value="0.0255220400966">0.03</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">51</td>
+<td data-sort="Ovis"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/374.png" class="logo" alt="Ovis"><a href="/exchanges/ovis/">Ovis</a></td>
+<td data-sort="EOS/TRY"><a href="https://www.ovis.com.tr/" target="_blank">EOS/TRY</a></td>
+<td class="text-right" data-sort="666466.0">
+<span class="volume" data-usd="666466.0" data-btc="72.1893" data-native="46099.9">
+$666,466
+</span>
+</td>
+<td class="text-right" data-sort="14.457">
+<span class="price" data-usd="14.457" data-btc="0.00156593" data-native="59.1">
+$14.46
+</span>
+</td>
+<td class="text-right" data-sort="0.0217614445243">
+<span data-format-percentage="" data-format-value="0.0217614445243">0.02</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">52</td>
+<td data-sort="HitBTC"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/42.png" class="logo" alt="HitBTC"><a href="/exchanges/hitbtc/">HitBTC</a></td>
+<td data-sort="EOS/ETH"><a href="https://hitbtc.com/exchange/EOS-to-ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="534017.0">
+<span class="volume" data-usd="534017.0" data-btc="57.8429" data-native="38669.8">
+$534,017
+</span>
+</td>
+<td class="text-right" data-sort="13.8097">
+<span class="price" data-usd="13.8097" data-btc="0.00149582" data-native="0.02221">
+$13.81
+</span>
+</td>
+<td class="text-right" data-sort="0.0174367204336">
+<span data-format-percentage="" data-format-value="0.0174367204336">0.02</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">53</td>
+<td data-sort="Neraex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/315.png" class="logo" alt="Neraex"><a href="/exchanges/neraexpro/">Neraex</a></td>
+<td data-sort="EOS/BTC"><a href="https://neraex.com/markets/eosbtc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="489275.0">
+<span class="volume" data-usd="489275.0" data-btc="52.9966" data-native="35576.8">
+$489,275
+</span>
+</td>
+<td class="text-right" data-sort="13.7527">
+<span class="price" data-usd="13.7527" data-btc="0.00148964" data-native="0.00148964">
+$13.75
+</span>
+</td>
+<td class="text-right" data-sort="0.0159758048717">
+<span data-format-percentage="" data-format-value="0.0159758048717">0.02</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+
+<tr>
+<td class="text-right">54</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="EOS/BITUSD"><a href="https://openledger.io" target="_blank">EOS/BITUSD</a></td>
+<td class="text-right" data-sort="480235.0">
+<span class="volume" data-usd="480235.0" data-btc="52.0174" data-native="34531.5">
+$480,235
+</span>
+</td>
+<td class="text-right" data-sort="13.9071">
+<span class="price" data-usd="13.9071" data-btc="0.00150637" data-native="13.5428">
+$13.91
+</span>
+</td>
+<td class="text-right" data-sort="0.0156806308365">
+<span data-format-percentage="" data-format-value="0.0156806308365">0.02</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">55</td>
+<td data-sort="EXX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/331.png" class="logo" alt="EXX"><a href="/exchanges/exx/">EXX</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.exx.com/trade/eos_btc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="452240.0">
+<span class="volume" data-usd="452240.0" data-btc="48.9851" data-native="31380.6">
+$452,240
+</span>
+</td>
+<td class="text-right" data-sort="14.4115">
+<span class="price" data-usd="14.4115" data-btc="0.001561" data-native="0.001561">
+$14.41
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">1 hour ago</td>
+</tr>
+<tr>
+<td class="text-right">56</td>
+<td data-sort="fex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/399.png" class="logo" alt="fex"><a href="/exchanges/fexpro/">fex</a></td>
+<td data-sort="EOS/ETH"><a href="" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="445897.0">
+
+<span class="volume" data-usd="445897.0" data-btc="48.298" data-native="32257.1">
+$445,897
+</span>
+</td>
+<td class="text-right" data-sort="13.8232">
+<span class="price" data-usd="13.8232" data-btc="0.00149728" data-native="0.0222318">
+$13.82
+</span>
+</td>
+<td class="text-right" data-sort="0.014559426631">
+<span data-format-percentage="" data-format-value="0.014559426631">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">57</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="ETH/EOS"><a href="https://big.one/trade/ETH-EOS" target="_blank">ETH/EOS</a></td>
+<td class="text-right" data-sort="425535.0">
+<span class="volume" data-usd="425535.0" data-btc="46.0924" data-native="673.528">
+$425,535
+</span>
+</td>
+<td class="text-right" data-sort="13.6355">
+<span class="price" data-usd="13.6355" data-btc="0.00147695" data-native="45.6">
+$13.64
+</span>
+</td>
+<td class="text-right" data-sort="0.013894566708">
+<span data-format-percentage="" data-format-value="0.013894566708">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">58</td>
+<td data-sort="Fatbtc"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/363.png" class="logo" alt="Fatbtc"><a href="/exchanges/fatbtc/">Fatbtc</a></td>
+<td data-sort="EOS/CNY"><a href="https://www.fatbtc.com/" target="_blank">EOS/CNY</a></td>
+<td class="text-right" data-sort="422419.0">
+<span class="volume" data-usd="422419.0" data-btc="45.7549" data-native="28640.1">
+$422,419
+</span>
+</td>
+<td class="text-right" data-sort="14.7492">
+<span class="price" data-usd="14.7492" data-btc="0.00159759" data-native="93.03">
+$14.75
+</span>
+</td>
+<td class="text-right" data-sort="0.0137928230915">
+<span data-format-percentage="" data-format-value="0.0137928230915">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">59</td>
+<td data-sort="Kucoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/311.png" class="logo" alt="Kucoin"><a href="/exchanges/kucoin/">Kucoin</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.kucoin.com/#/trade/EOS-ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="410073.0">
+<span class="volume" data-usd="410073.0" data-btc="44.4177" data-native="29842.4">
+$410,073
+</span>
+</td>
+<td class="text-right" data-sort="13.7413">
+<span class="price" data-usd="13.7413" data-btc="0.00148841" data-native="0.0221">
+$13.74
+</span>
+</td>
+<td class="text-right" data-sort="0.0133897015608">
+<span data-format-percentage="" data-format-value="0.0133897015608">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">60</td>
+<td data-sort="Koinex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/324.png" class="logo" alt="Koinex"><a href="/exchanges/koinex/">Koinex</a></td>
+<td data-sort="EOS/INR"><a href="https://koinex.in/exchange/eos" target="_blank">EOS/INR</a></td>
+<td class="text-right" data-sort="408730.0">
+<span class="volume" data-usd="408730.0" data-btc="44.2722" data-native="30098.0">
+$408,730
+</span>
+</td>
+<td class="text-right" data-sort="13.58">
+<span class="price" data-usd="13.58" data-btc="0.00147093" data-native="905.05">
+$13.58
+</span>
+</td>
+<td class="text-right" data-sort="0.0133458499314">
+<span data-format-percentage="" data-format-value="0.0133458499314">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">61</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="XIN/EOS"><a href="https://big.one/trade/XIN-EOS" target="_blank">XIN/EOS</a></td>
+<td class="text-right" data-sort="367291.0">
+<span class="volume" data-usd="367291.0" data-btc="39.7837" data-native="369.208">
+$367,291
+</span>
+</td>
+<td class="text-right" data-sort="13.771">
+<span class="price" data-usd="13.771" data-btc="0.00149163" data-native="71.8">
+$13.77
+</span>
+</td>
+<td class="text-right" data-sort="0.0119927839091">
+<span data-format-percentage="" data-format-value="0.0119927839091">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">62</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="HMC/EOS"><a href="https://big.one/trade/HMC-EOS" target="_blank">HMC/EOS</a></td>
+<td class="text-right" data-sort="349705.0">
+<span class="volume" data-usd="349705.0" data-btc="37.8789" data-native="5258310.0">
+$349,705
+</span>
+</td>
+<td class="text-right" data-sort="13.2508">
+<span class="price" data-usd="13.2508" data-btc="0.00143528" data-native="0.0048">
+$13.25
+</span>
+</td>
+<td class="text-right" data-sort="0.0114185659244">
+<span data-format-percentage="" data-format-value="0.0114185659244">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">63</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+ <td data-sort="EOS/USDT"><a href="https://big.one/trade/EOS-USDT" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="339983.0">
+<span class="volume" data-usd="339983.0" data-btc="36.8258" data-native="24862.9">
+$339,983
+</span>
+</td>
+<td class="text-right" data-sort="13.6743">
+<span class="price" data-usd="13.6743" data-btc="0.00148116" data-native="13.67">
+$13.67
+</span>
+</td>
+<td class="text-right" data-sort="0.0111011232286">
+<span data-format-percentage="" data-format-value="0.0111011232286">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">64</td>
+<td data-sort="Kucoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/311.png" class="logo" alt="Kucoin"><a href="/exchanges/kucoin/">Kucoin</a></td>
+<td data-sort="EOS/USDT"><a href="https://www.kucoin.com/#/trade/EOS-USDT" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="280435.0">
+<span class="volume" data-usd="280435.0" data-btc="30.3757" data-native="20428.0">
+$280,435
+</span>
+</td>
+<td class="text-right" data-sort="13.728">
+<span class="price" data-usd="13.728" data-btc="0.00148696" data-native="13.7236">
+$13.73
+</span>
+</td>
+<td class="text-right" data-sort="0.00915676222817">
+<span data-format-percentage="" data-format-value="0.00915676222817">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">65</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="UIP/EOS"><a href="https://big.one/trade/UIP-EOS" target="_blank">UIP/EOS</a></td>
+<td class="text-right" data-sort="279568.0">
+<span class="volume" data-usd="279568.0" data-btc="30.2818" data-native="6365210.0">
+$279,568
+</span>
+ </td>
+<td class="text-right" data-sort="13.7378">
+<span class="price" data-usd="13.7378" data-btc="0.00148803" data-native="0.00317">
+$13.74
+</span>
+</td>
+<td class="text-right" data-sort="0.00912845294848">
+<span data-format-percentage="" data-format-value="0.00912845294848">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">66</td>
+<td data-sort="CoinEx"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/350.png" class="logo" alt="CoinEx"><a href="/exchanges/coinex/">CoinEx</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.coinex.com/trading?currency=btc&amp;dest=eos&amp;tab=limit" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="262368.0">
+<span class="volume" data-usd="262368.0" data-btc="28.4188" data-native="19022.0">
+$262,368
+</span>
+</td>
+<td class="text-right" data-sort="13.7929">
+<span class="price" data-usd="13.7929" data-btc="0.001494" data-native="0.001494">
+$13.79
+</span>
+</td>
+<td class="text-right" data-sort="0.00856683863384">
+<span data-format-percentage="" data-format-value="0.00856683863384">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">67</td>
+<td data-sort="Bibox"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/339.png" class="logo" alt="Bibox"><a href="/exchanges/bibox/">Bibox</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.bibox.com/exchange?coinPair=EOS_BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="252066.0">
+<span class="volume" data-usd="252066.0" data-btc="27.3029" data-native="18309.0">
+$252,066
+</span>
+</td>
+<td class="text-right" data-sort="13.7673">
+<span class="price" data-usd="13.7673" data-btc="0.00149123" data-native="0.00149123">
+$13.77
+</span>
+</td>
+
+<td class="text-right" data-sort="0.00823045778097">
+<span data-format-percentage="" data-format-value="0.00823045778097">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">68</td>
+<td data-sort="Fatbtc"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/363.png" class="logo" alt="Fatbtc"><a href="/exchanges/fatbtc/">Fatbtc</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.fatbtc.com/" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="247290.0">
+<span class="volume" data-usd="247290.0" data-btc="26.7856" data-native="18956.5">
+$247,290
+</span>
+</td>
+<td class="text-right" data-sort="13.0451">
+<span class="price" data-usd="13.0451" data-btc="0.001413" data-native="0.001413">
+$13.05
+</span>
+</td>
+<td class="text-right" data-sort="0.00807451185267">
+<span data-format-percentage="" data-format-value="0.00807451185267">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">69</td>
+<td data-sort="Bibox"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/339.png" class="logo" alt="Bibox"><a href="/exchanges/bibox/">Bibox</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.bibox.com/exchange?coinPair=EOS_ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="243885.0">
+<span class="volume" data-usd="243885.0" data-btc="26.4168" data-native="17772.0">
+$243,885
+</span>
+</td>
+<td class="text-right" data-sort="13.723">
+<span class="price" data-usd="13.723" data-btc="0.00148643" data-native="0.0220706">
+$13.72
+</span>
+</td>
+<td class="text-right" data-sort="0.00796333180957">
+<span data-format-percentage="" data-format-value="0.00796333180957">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+ <tr>
+<td class="text-right">70</td>
+<td data-sort="BuyBitcoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/393.png" class="logo" alt="BuyBitcoin"><a href="/exchanges/buybitcoin/">BuyBitcoin</a></td>
+<td data-sort="EOS/INR"><a href="https://buybitcoin.org.in/trade/EOS" target="_blank">EOS/INR</a></td>
+<td class="text-right" data-sort="243287.0">
+<span class="volume" data-usd="243287.0" data-btc="26.352" data-native="21475.6">
+$243,287
+</span>
+</td>
+<td class="text-right" data-sort="11.3285">
+<span class="price" data-usd="11.3285" data-btc="0.00122707" data-native="755.0">
+$11.33
+</span>
+</td>
+<td class="text-right" data-sort="0.00794380591654">
+<span data-format-percentage="" data-format-value="0.00794380591654">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">71</td>
+<td data-sort="Liqui"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/183.png" class="logo" alt="Liqui"><a href="/exchanges/liqui/">Liqui</a></td>
+<td data-sort="EOS/BTC"><a href="https://liqui.io/#/exchange/EOS_BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="221780.0">
+<span class="volume" data-usd="221780.0" data-btc="24.0225" data-native="16011.7">
+$221,780
+</span>
+</td>
+<td class="text-right" data-sort="13.8512">
+<span class="price" data-usd="13.8512" data-btc="0.00150031" data-native="0.00150031">
+$13.85
+</span>
+</td>
+<td class="text-right" data-sort="0.00724155945928">
+<span data-format-percentage="" data-format-value="0.00724155945928">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">72</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="DEW/EOS"><a href="https://big.one/trade/DEW-EOS" target="_blank">DEW/EOS</a></td>
+ <td class="text-right" data-sort="212216.0">
+<span class="volume" data-usd="212216.0" data-btc="22.9865" data-native="212731.0">
+$212,216
+</span>
+</td>
+<td class="text-right" data-sort="13.6594">
+<span class="price" data-usd="13.6594" data-btc="0.00147954" data-native="0.072">
+$13.66
+</span>
+</td>
+<td class="text-right" data-sort="0.00692927577875">
+<span data-format-percentage="" data-format-value="0.00692927577875">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">73</td>
+<td data-sort="EXX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/331.png" class="logo" alt="EXX"><a href="/exchanges/exx/">EXX</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.exx.com/trade/eos_eth" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="200798.0">
+<span class="volume" data-usd="200798.0" data-btc="21.7498" data-native="14468.7">
+$200,798
+</span>
+</td>
+<td class="text-right" data-sort="13.8781">
+<span class="price" data-usd="13.8781" data-btc="0.00150323" data-native="0.02232">
+$13.88
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">1 hour ago</td>
+</tr>
+<tr>
+<td class="text-right">74</td>
+<td data-sort="Hotbit"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/400.png" class="logo" alt="Hotbit"><a href="/exchanges/hotbit/">Hotbit</a></td>
+<td data-sort="EOS/ETH"><a href="" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="187898.0">
+<span class="volume" data-usd="187898.0" data-btc="20.3525" data-native="13695.9">
+$187,898
+</span>
+</td>
+<td class="text-right" data-sort="13.7194">
+<span class="price" data-usd="13.7194" data-btc="0.00148603" data-native="0.0220647">
+$13.72
+</span>
+</td>
+<td class="text-right" data-sort="0.00613524456344">
+<span data-format-percentage="" data-format-value="0.00613524456344">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">75</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="PRS/EOS"><a href="https://big.one/trade/PRS-EOS" target="_blank">PRS/EOS</a></td>
+<td class="text-right" data-sort="182166.0">
+<span class="volume" data-usd="182166.0" data-btc="19.7316" data-native="670807.0">
+$182,166
+</span>
+</td>
+<td class="text-right" data-sort="13.4336">
+<span class="price" data-usd="13.4336" data-btc="0.00145508" data-native="0.0196">
+$13.43
+</span>
+</td>
+<td class="text-right" data-sort="0.00594808332789">
+<span data-format-percentage="" data-format-value="0.00594808332789">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">76</td>
+<td data-sort="CoinEx"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/350.png" class="logo" alt="CoinEx"><a href="/exchanges/coinex/">CoinEx</a></td>
+<td data-sort="EOS/BCH"><a href="https://www.coinex.com/trading?currency=bch&amp;dest=eos&amp;tab=limit" target="_blank">EOS/BCH</a></td>
+<td class="text-right" data-sort="181272.0">
+<span class="volume" data-usd="181272.0" data-btc="19.6348" data-native="13608.4">
+$181,272
+</span>
+</td>
+<td class="text-right" data-sort="13.3207">
+<span class="price" data-usd="13.3207" data-btc="0.00144285" data-native="0.010485">
+$13.32
+</span>
+</td>
+<td class="text-right" data-sort="0.00591889244433">
+<span data-format-percentage="" data-format-value="0.00591889244433">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">77</td>
+<td data-sort="OTCBTC"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/353.png" class="logo" alt="OTCBTC"><a href="/exchanges/otcbtc/">OTCBTC</a></td>
+<td data-sort="EOS/USDT"><a href="https://bb.otcbtc.com/exchange/markets/eosusdt" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="173221.0">
+<span class="volume" data-usd="173221.0" data-btc="18.7627" data-native="12421.0">
+$173,221
+</span>
+</td>
+<td class="text-right" data-sort="13.9458">
+<span class="price" data-usd="13.9458" data-btc="0.00151056" data-native="13.9414">
+$13.95
+</span>
+</td>
+<td class="text-right" data-sort="0.00565601123229">
+<span data-format-percentage="" data-format-value="0.00565601123229">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">78</td>
+<td data-sort="YoBit"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/100.png" class="logo" alt="YoBit"><a href="/exchanges/yobit/">YoBit</a></td>
+<td data-sort="EOS/BTC"><a href="https://yobit.net/en/trade/EOS/BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="172974.0">
+<span class="volume" data-usd="172974.0" data-btc="18.736" data-native="12515.7">
+$172,974
+</span>
+</td>
+<td class="text-right" data-sort="13.8206">
+<span class="price" data-usd="13.8206" data-btc="0.001497" data-native="0.001497">
+$13.82
+</span>
+</td>
+<td class="text-right" data-sort="0.00564794618951">
+<span data-format-percentage="" data-format-value="0.00564794618951">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">79</td>
+<td data-sort="ChaoEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/341.png" class="logo" alt="ChaoEX"><a href="/exchanges/chaoex/">ChaoEX</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.chaoex.com/" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="172729.0">
+<span class="volume" data-usd="172729.0" data-btc="18.7094" data-native="12446.9">
+$172,729
+</span>
+</td>
+<td class="text-right" data-sort="13.8772">
+<span class="price" data-usd="13.8772" data-btc="0.00150313" data-native="0.0223186">
+$13.88
+</span>
+</td>
+<td class="text-right" data-sort="0.00563994645073">
+<span data-format-percentage="" data-format-value="0.00563994645073">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">80</td>
+<td data-sort="Liqui"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/183.png" class="logo" alt="Liqui"><a href="/exchanges/liqui/">Liqui</a></td>
+<td data-sort="EOS/USDT"><a href="https://liqui.io/#/exchange/EOS_USDT" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="168576.0">
+<span class="volume" data-usd="168576.0" data-btc="18.2595" data-native="12241.4">
+$168,576
+</span>
+</td>
+<td class="text-right" data-sort="13.7709">
+<span class="price" data-usd="13.7709" data-btc="0.00149162" data-native="13.7666">
+$13.77
+</span>
+</td>
+<td class="text-right" data-sort="0.00550434271534">
+<span data-format-percentage="" data-format-value="0.00550434271534">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">81</td>
+<td data-sort="Liqui"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/183.png" class="logo" alt="Liqui"><a href="/exchanges/liqui/">Liqui</a></td>
+<td data-sort="EOS/ETH"><a href="https://liqui.io/#/exchange/EOS_ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="151963.0">
+<span class="volume" data-usd="151963.0" data-btc="16.4601" data-native="11032.1">
+ $151,963
+</span>
+</td>
+<td class="text-right" data-sort="13.7746">
+<span class="price" data-usd="13.7746" data-btc="0.00149202" data-native="0.0221536">
+$13.77
+</span>
+</td>
+<td class="text-right" data-sort="0.00496189512179">
+<span data-format-percentage="" data-format-value="0.00496189512179">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">82</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="EOS/BTS"><a href="https://openledger.io" target="_blank">EOS/BTS</a></td>
+<td class="text-right" data-sort="146776.0">
+<span class="volume" data-usd="146776.0" data-btc="15.8982" data-native="10521.8">
+$146,776
+</span>
+</td>
+<td class="text-right" data-sort="13.9497">
+<span class="price" data-usd="13.9497" data-btc="0.00151099" data-native="53.6903">
+$13.95
+</span>
+</td>
+<td class="text-right" data-sort="0.00479252922354">
+<span data-format-percentage="" data-format-value="0.00479252922354">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">83</td>
+<td data-sort="Hotbit"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/400.png" class="logo" alt="Hotbit"><a href="/exchanges/hotbit/">Hotbit</a></td>
+<td data-sort="EOS/BTC"><a href="" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="139126.0">
+<span class="volume" data-usd="139126.0" data-btc="15.0697" data-native="10062.0">
+$139,126
+</span>
+</td>
+<td class="text-right" data-sort="13.8269">
+<span class="price" data-usd="13.8269" data-btc="0.00149768" data-native="0.00149768">
+$13.83
+</span>
+ </td>
+<td class="text-right" data-sort="0.0045427414615">
+<span data-format-percentage="" data-format-value="0.0045427414615">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">84</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="BIG/EOS"><a href="https://big.one/trade/BIG-EOS" target="_blank">BIG/EOS</a></td>
+<td class="text-right" data-sort="125284.0">
+<span class="volume" data-usd="125284.0" data-btc="13.5704" data-native="63233.3">
+$125,284
+</span>
+</td>
+<td class="text-right" data-sort="13.9887">
+<span class="price" data-usd="13.9887" data-btc="0.0015152" data-native="0.143">
+$13.99
+</span>
+</td>
+<td class="text-right" data-sort="0.0040907725462">
+<span data-format-percentage="" data-format-value="0.0040907725462">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">85</td>
+<td data-sort="EtherDelta (ForkDelta)"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/372.png" class="logo" alt="EtherDelta (ForkDelta)"><a href="/exchanges/forkdelta/">EtherDelta (ForkDelta)</a></td>
+<td data-sort="EOS/ETH"><a href="https://forkdelta.github.io/#!/trade/EOS-ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="118502.0">
+<span class="volume" data-usd="118502.0" data-btc="12.8357" data-native="8474.21">
+$118,502
+</span>
+</td>
+<td class="text-right" data-sort="13.9838">
+<span class="price" data-usd="13.9838" data-btc="0.00151468" data-native="0.02249">
+$13.98
+</span>
+</td>
+<td class="text-right" data-sort="0.00386932671586">
+<span data-format-percentage="" data-format-value="0.00386932671586">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+ </tr>
+<tr>
+<td class="text-right">86</td>
+<td data-sort="Vebitcoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/355.png" class="logo" alt="Vebitcoin"><a href="/exchanges/vebitcoin/">Vebitcoin</a></td>
+<td data-sort="EOS/TRY"><a href="https://www.vebitcoin.com/" target="_blank">EOS/TRY</a></td>
+<td class="text-right" data-sort="111770.0">
+<span class="volume" data-usd="111770.0" data-btc="12.1065" data-native="7821.19">
+$111,770
+</span>
+</td>
+<td class="text-right" data-sort="14.2907">
+<span class="price" data-usd="14.2907" data-btc="0.00154791" data-native="58.42">
+$14.29
+</span>
+</td>
+<td class="text-right" data-sort="0.00364951348527">
+<span data-format-percentage="" data-format-value="0.00364951348527">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">87</td>
+<td data-sort="Rfinex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/357.png" class="logo" alt="Rfinex"><a href="/exchanges/rfinex/">Rfinex</a></td>
+<td data-sort="EOS/ETH"><a href="https://rfinex.com/" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="104147.0">
+<span class="volume" data-usd="104147.0" data-btc="11.2808" data-native="7520.91">
+$104,147
+</span>
+</td>
+<td class="text-right" data-sort="13.8476">
+<span class="price" data-usd="13.8476" data-btc="0.00149993" data-native="0.022271">
+$13.85
+</span>
+</td>
+<td class="text-right" data-sort="0.00340060732711">
+<span data-format-percentage="" data-format-value="0.00340060732711">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">88</td>
+<td data-sort="Mercatox"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/213.png" class="logo" alt="Mercatox"><a href="/exchanges/mercatox/">Mercatox</a></td>
+<td data-sort="EOS/ETH"><a href="https://mercatox.com/exchange/EOS/ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="101642.0">
+<span class="volume" data-usd="101642.0" data-btc="11.0095" data-native="7099.89">
+$101,642
+</span>
+</td>
+<td class="text-right" data-sort="14.316">
+<span class="price" data-usd="14.316" data-btc="0.00155066" data-native="0.0230244">
+$14.32
+</span>
+</td>
+<td class="text-right" data-sort="0.00331881407954">
+<span data-format-percentage="" data-format-value="0.00331881407954">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">89</td>
+<td data-sort="YoBit"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/100.png" class="logo" alt="YoBit"><a href="/exchanges/yobit/">YoBit</a></td>
+<td data-sort="EOS/USD"><a href="https://yobit.net/en/trade/EOS/USD" target="_blank">EOS/USD</a></td>
+<td class="text-right" data-sort="100331.0">
+<span class="volume" data-usd="100331.0" data-btc="10.8675" data-native="7375.65">
+$100,331
+</span>
+</td>
+<td class="text-right" data-sort="13.603">
+<span class="price" data-usd="13.603" data-btc="0.00147343" data-native="13.603">
+$13.60
+</span>
+</td>
+<td class="text-right" data-sort="0.00327600731405">
+<span data-format-percentage="" data-format-value="0.00327600731405">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">90</td>
+<td data-sort="LATOKEN"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/380.png" class="logo" alt="LATOKEN"><a href="/exchanges/latoken/">LATOKEN</a></td>
+<td data-sort="EOS/ETH"><a href="https://wallet.latoken.com/market/Crypto/ETH/EOS-ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="84253.8">
+<span class="volume" data-usd="84253.8" data-btc="9.12609" data-native="6201.59">
+$84,254
+</span>
+</td>
+<td class="text-right" data-sort="13.5859">
+<span class="price" data-usd="13.5859" data-btc="0.00147157" data-native="0.02185">
+$13.59
+</span>
+</td>
+<td class="text-right" data-sort="0.00275105465944">
+<span data-format-percentage="" data-format-value="0.00275105465944">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">91</td>
+<td data-sort="Mercatox"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/213.png" class="logo" alt="Mercatox"><a href="/exchanges/mercatox/">Mercatox</a></td>
+<td data-sort="EOS/BTC"><a href="https://mercatox.com/exchange/EOS/BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="84037.0">
+<span class="volume" data-usd="84037.0" data-btc="9.1026" data-native="6219.24">
+$84,037
+</span>
+</td>
+<td class="text-right" data-sort="13.5124">
+<span class="price" data-usd="13.5124" data-btc="0.00146362" data-native="0.00146362">
+$13.51
+</span>
+</td>
+<td class="text-right" data-sort="0.00274397570692">
+<span data-format-percentage="" data-format-value="0.00274397570692">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">92</td>
+<td data-sort="Bibox"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/339.png" class="logo" alt="Bibox"><a href="/exchanges/bibox/">Bibox</a></td>
+<td data-sort="EOS/USDT"><a href="https://www.bibox.com/exchange?coinPair=EOS_USDT" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="83621.1">
+<span class="volume" data-usd="83621.1" data-btc="9.05755" data-native="6116.0">
+$83,621
+</span>
+</td>
+<td class="text-right" data-sort="13.6725">
+<span class="price" data-usd="13.6725" data-btc="0.00148096" data-native="13.6682">
+$13.67
+</span>
+</td>
+<td class="text-right" data-sort="0.00273039574218">
+<span data-format-percentage="" data-format-value="0.00273039574218">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">93</td>
+<td data-sort="IDEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/310.png" class="logo" alt="IDEX"><a href="/exchanges/idex/">IDEX</a></td>
+<td data-sort="EOS/ETH"><a href="https://idex.market/eth/eos" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="80356.9">
+<span class="volume" data-usd="80356.9" data-btc="8.70399" data-native="5746.44">
+$80,357
+</span>
+</td>
+<td class="text-right" data-sort="13.9838">
+<span class="price" data-usd="13.9838" data-btc="0.00151468" data-native="0.02249">
+$13.98
+</span>
+</td>
+<td class="text-right" data-sort="0.00262381309998">
+<span data-format-percentage="" data-format-value="0.00262381309998">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">94</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="EOS/BITCNY"><a href="https://openledger.io" target="_blank">EOS/BITCNY</a></td>
+<td class="text-right" data-sort="74095.4">
+<span class="volume" data-usd="74095.4" data-btc="8.02576" data-native="5307.86">
+$74,095
+</span>
+</td>
+<td class="text-right" data-sort="13.9596">
+<span class="price" data-usd="13.9596" data-btc="0.00151205" data-native="88.5249">
+$13.96
+</span>
+</td>
+<td class="text-right" data-sort="0.00241936263306">
+<span data-format-percentage="" data-format-value="0.00241936263306">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">95</td>
+ <td data-sort="QBTC"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/336.png" class="logo" alt="QBTC"><a href="/exchanges/qbtc/">QBTC</a></td>
+<td data-sort="EOS/USDT"><a href="https://www.qbtc.com/" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="69151.6">
+<span class="volume" data-usd="69151.6" data-btc="7.49026" data-native="4683.59">
+$69,152
+</span>
+</td>
+<td class="text-right" data-sort="14.7647">
+<span class="price" data-usd="14.7647" data-btc="0.00159926" data-native="14.76">
+$14.76
+</span>
+</td>
+<td class="text-right" data-sort="0.00225793769999">
+<span data-format-percentage="" data-format-value="0.00225793769999">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">96</td>
+<td data-sort="OKEx"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/294.png" class="logo" alt="OKEx"><a href="/exchanges/okex/">OKEx</a></td>
+<td data-sort="EOS/BCH"><a href="https://www.okex.com/spot/trade/index.do#eos_bch" target="_blank">EOS/BCH</a></td>
+<td class="text-right" data-sort="67625.0">
+<span class="volume" data-usd="67625.0" data-btc="9.7593" data-native="11958.4">
+$67,625
+</span>
+</td>
+<td class="text-right" data-sort="5.655">
+<span class="price" data-usd="5.655" data-btc="0.000816102" data-native="0.00808773">
+$5.66
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">625 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">97</td>
+<td data-sort="Bitbns"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/376.png" class="logo" alt="Bitbns"><a href="/exchanges/bitbns/">Bitbns</a></td>
+<td data-sort="EOS/INR"><a href="https://bitbns.com/trade/#/eos" target="_blank">EOS/INR</a></td>
+<td class="text-right" data-sort="63884.4">
+<span class="volume" data-usd="63884.4" data-btc="6.91974" data-native="4627.87">
+$63,884
+</span>
+</td>
+<td class="text-right" data-sort="13.8043">
+<span class="price" data-usd="13.8043" data-btc="0.00149523" data-native="920.0">
+$13.80
+</span>
+</td>
+<td class="text-right" data-sort="0.00208595311174">
+<span data-format-percentage="" data-format-value="0.00208595311174">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">98</td>
+<td data-sort="Livecoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/107.png" class="logo" alt="Livecoin"><a href="/exchanges/livecoin/">Livecoin</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.livecoin.net/" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="59251.5">
+<span class="volume" data-usd="59251.5" data-btc="6.41792" data-native="4519.63">
+$59,252
+</span>
+</td>
+<td class="text-right" data-sort="13.1098">
+<span class="price" data-usd="13.1098" data-btc="0.00142001" data-native="0.00142001">
+$13.11
+</span>
+</td>
+<td class="text-right" data-sort="0.00193467968393">
+<span data-format-percentage="" data-format-value="0.00193467968393">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">99</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="OCT/EOS"><a href="https://big.one/trade/OCT-EOS" target="_blank">OCT/EOS</a></td>
+<td class="text-right" data-sort="58536.9">
+<span class="volume" data-usd="58536.9" data-btc="6.34052" data-native="103046.0">
+$58,537
+</span>
+</td>
+<td class="text-right" data-sort="14.0106">
+<span class="price" data-usd="14.0106" data-btc="0.00151758" data-native="0.041">
+$14.01
+</span>
+</td>
+<td class="text-right" data-sort="0.00191134656828">
+<span data-format-percentage="" data-format-value="0.00191134656828">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">100</td>
+<td data-sort="Livecoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/107.png" class="logo" alt="Livecoin"><a href="/exchanges/livecoin/">Livecoin</a></td>
+<td data-sort="EOS/USD"><a href="https://www.livecoin.net/" target="_blank">EOS/USD</a></td>
+<td class="text-right" data-sort="57367.2">
+<span class="volume" data-usd="57367.2" data-btc="6.21381" data-native="4169.43">
+$57,367
+</span>
+</td>
+<td class="text-right" data-sort="13.759">
+<span class="price" data-usd="13.759" data-btc="0.00149033" data-native="13.759">
+$13.76
+</span>
+</td>
+<td class="text-right" data-sort="0.00187315352968">
+<span data-format-percentage="" data-format-value="0.00187315352968">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">101</td>
+<td data-sort="LATOKEN"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/380.png" class="logo" alt="LATOKEN"><a href="/exchanges/latoken/">LATOKEN</a></td>
+<td data-sort="EOS/LA"><a href="https://wallet.latoken.com/market/Crypto/LA/EOS-LA" target="_blank">EOS/LA</a></td>
+<td class="text-right" data-sort="55422.0">
+<span class="volume" data-usd="55422.0" data-btc="6.00312" data-native="3958.22">
+$55,422
+</span>
+</td>
+<td class="text-right" data-sort="14.0017">
+<span class="price" data-usd="14.0017" data-btc="0.00151662" data-native="61.4982">
+$14.00
+</span>
+</td>
+<td class="text-right" data-sort="0.00180963886893">
+<span data-format-percentage="" data-format-value="0.00180963886893">0.00</span>%
+</td>
+ <td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">102</td>
+<td data-sort="Kucoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/311.png" class="logo" alt="Kucoin"><a href="/exchanges/kucoin/">Kucoin</a></td>
+<td data-sort="EOS/NEO"><a href="https://www.kucoin.com/#/trade/EOS-NEO" target="_blank">EOS/NEO</a></td>
+<td class="text-right" data-sort="54193.8">
+<span class="volume" data-usd="54193.8" data-btc="5.87008" data-native="3887.3">
+$54,194
+</span>
+</td>
+<td class="text-right" data-sort="13.9412">
+<span class="price" data-usd="13.9412" data-btc="0.00151007" data-native="0.190974">
+$13.94
+</span>
+</td>
+<td class="text-right" data-sort="0.00176953568863">
+<span data-format-percentage="" data-format-value="0.00176953568863">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">103</td>
+<td data-sort="Coinrail"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/332.png" class="logo" alt="Coinrail"><a href="/exchanges/coinrail/">Coinrail</a></td>
+<td data-sort="EOS/KRW"><a href="https://coinrail.co.kr/stock/eos-krw" target="_blank">EOS/KRW</a></td>
+<td class="text-right" data-sort="43074.3">
+<span class="volume" data-usd="43074.3" data-btc="4.66566" data-native="3360.0">
+$43,074
+</span>
+</td>
+<td class="text-right" data-sort="12.8197">
+<span class="price" data-usd="12.8197" data-btc="0.00138859" data-native="13850.0">
+$12.82
+</span>
+</td>
+<td class="text-right" data-sort="0.00140646182982">
+<span data-format-percentage="" data-format-value="0.00140646182982">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">104</td>
+<td data-sort="COSS"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/242.png" class="logo" alt="COSS"><a href="/exchanges/coss/">COSS</a></td>
+<td data-sort="EOS/BTC"><a href="https://exchange.coss.io/exchange/eos-btc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="34307.2">
+<span class="volume" data-usd="34307.2" data-btc="3.71604" data-native="2239.93">
+$34,307
+</span>
+</td>
+<td class="text-right" data-sort="15.3162">
+<span class="price" data-usd="15.3162" data-btc="0.001659" data-native="0.001659">
+$15.32
+</span>
+</td>
+<td class="text-right" data-sort="0.00112019852413">
+<span data-format-percentage="" data-format-value="0.00112019852413">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">105</td>
+<td data-sort="Kuna"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/209.png" class="logo" alt="Kuna"><a href="/exchanges/kuna/">Kuna</a></td>
+<td data-sort="EOS/UAH"><a href="https://kuna.io/markets/eosuah" target="_blank">EOS/UAH</a></td>
+<td class="text-right" data-sort="29379.5">
+<span class="volume" data-usd="29379.5" data-btc="3.18228" data-native="2103.26">
+$29,380
+</span>
+</td>
+<td class="text-right" data-sort="13.9686">
+<span class="price" data-usd="13.9686" data-btc="0.00151303" data-native="364.0">
+$13.97
+</span>
+</td>
+<td class="text-right" data-sort="0.000959299288187">
+<span data-format-percentage="" data-format-value="0.000959299288187">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">106</td>
+<td data-sort="YoBit"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/100.png" class="logo" alt="YoBit"><a href="/exchanges/yobit/">YoBit</a></td>
+<td data-sort="EOS/ETH"><a href="https://yobit.net/en/trade/EOS/ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="14526.6">
+<span class="volume" data-usd="14526.6" data-btc="1.57347" data-native="1036.05">
+$14,527
+</span>
+</td>
+ <td class="text-right" data-sort="14.0211">
+<span class="price" data-usd="14.0211" data-btc="0.00151872" data-native="0.02255">
+$14.02
+</span>
+</td>
+<td class="text-right" data-sort="0.000474322471103">
+<span data-format-percentage="" data-format-value="0.000474322471103">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">107</td>
+<td data-sort="DDEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/367.png" class="logo" alt="DDEX"><a href="/exchanges/ddex/">DDEX</a></td>
+<td data-sort="EOS/ETH"><a href="https://ddex.io/trade/EOS-ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="14032.8">
+<span class="volume" data-usd="14032.8" data-btc="1.51999" data-native="1023.53">
+$14,033
+</span>
+</td>
+<td class="text-right" data-sort="13.7102">
+<span class="price" data-usd="13.7102" data-btc="0.00148504" data-native="0.02205">
+$13.71
+</span>
+</td>
+<td class="text-right" data-sort="0.000458198915954">
+<span data-format-percentage="" data-format-value="0.000458198915954">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">108</td>
+<td data-sort="Livecoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/107.png" class="logo" alt="Livecoin"><a href="/exchanges/livecoin/">Livecoin</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.livecoin.net/" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="13015.7">
+<span class="volume" data-usd="13015.7" data-btc="1.40981" data-native="913.497">
+$13,016
+</span>
+</td>
+<td class="text-right" data-sort="14.2482">
+<span class="price" data-usd="14.2482" data-btc="0.00154331" data-native="0.0229152">
+$14.25
+</span>
+</td>
+<td class="text-right" data-sort="0.000424988571802">
+<span data-format-percentage="" data-format-value="0.000424988571802">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">109</td>
+<td data-sort="CoinExchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/147.png" class="logo" alt="CoinExchange"><a href="/exchanges/coinexchange/">CoinExchange</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.coinexchange.io/market/EOS/BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="11214.5">
+<span class="volume" data-usd="11214.5" data-btc="1.21472" data-native="793.932">
+$11,215
+</span>
+</td>
+<td class="text-right" data-sort="14.1253">
+<span class="price" data-usd="14.1253" data-btc="0.00153" data-native="0.00153">
+$14.13
+</span>
+</td>
+<td class="text-right" data-sort="0.000366175798341">
+<span data-format-percentage="" data-format-value="0.000366175798341">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">110</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="EOS/BTC"><a href="https://openledger.io" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="10202.4">
+<span class="volume" data-usd="10202.4" data-btc="1.10509" data-native="732.593">
+$10,202
+</span>
+</td>
+<td class="text-right" data-sort="13.9264">
+<span class="price" data-usd="13.9264" data-btc="0.00150846" data-native="0.00150846">
+$13.93
+</span>
+</td>
+<td class="text-right" data-sort="0.000333128714164">
+<span data-format-percentage="" data-format-value="0.000333128714164">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">111</td>
+<td data-sort="Token Store"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/340.png" class="logo" alt="Token Store"><a href="/exchanges/token-store/">Token Store</a></td>
+<td data-sort="EOS/ETH"><a href="https://token.store/trade/EOS" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="7393.54">
+<span class="volume" data-usd="7393.54" data-btc="0.800843" data-native="540.498">
+$7,394
+</span>
+</td>
+<td class="text-right" data-sort="13.6791">
+<span class="price" data-usd="13.6791" data-btc="0.00148167" data-native="0.022">
+$13.68
+</span>
+</td>
+<td class="text-right" data-sort="0.000241413831385">
+<span data-format-percentage="" data-format-value="0.000241413831385">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">112</td>
+<td data-sort="Braziliex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/292.png" class="logo" alt="Braziliex"><a href="/exchanges/braziliex/">Braziliex</a></td>
+<td data-sort="EOS/BRL"><a href="https://braziliex.com" target="_blank">EOS/BRL</a></td>
+<td class="text-right" data-sort="5645.32">
+<span class="volume" data-usd="5645.32" data-btc="0.611482" data-native="400.442">
+$5,645
+</span>
+</td>
+<td class="text-right" data-sort="14.0977">
+<span class="price" data-usd="14.0977" data-btc="0.00152702" data-native="48.96">
+$14.10
+</span>
+</td>
+<td class="text-right" data-sort="0.000184330960622">
+<span data-format-percentage="" data-format-value="0.000184330960622">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">113</td>
+<td data-sort="Lykke Exchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/201.png" class="logo" alt="Lykke Exchange"><a href="/exchanges/lykke-exchange/">Lykke Exchange</a></td>
+<td data-sort="EOS/ETH"><a href="https://lykke.com/exchange.php" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="2265.65">
+<span class="volume" data-usd="2265.65" data-btc="0.245407" data-native="165.628">
+$2,266
+</span>
+</td>
+<td class="text-right" data-sort="13.6791">
+<span class="price" data-usd="13.6791" data-btc="0.00148167" data-native="0.022">
+$13.68
+</span>
+</td>
+<td class="text-right" data-sort="7.39779925553e-05">
+<span data-format-percentage="" data-format-value="7.39779925553e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">114</td>
+<td data-sort="BitFlip"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/308.png" class="logo" alt="BitFlip"><a href="/exchanges/bitflip/">BitFlip</a></td>
+<td data-sort="EOS/USD"><a href="https://bitflip.li/trade/EOS-USD" target="_blank">EOS/USD</a></td>
+<td class="text-right" data-sort="1632.13">
+<span class="volume" data-usd="1632.13" data-btc="0.176787" data-native="114.939">
+$1,632
+</span>
+</td>
+<td class="text-right" data-sort="14.2">
+<span class="price" data-usd="14.2" data-btc="0.0015381" data-native="14.2">
+$14.20
+</span>
+</td>
+<td class="text-right" data-sort="5.32923006596e-05">
+<span data-format-percentage="" data-format-value="5.32923006596e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">115</td>
+<td data-sort="BitFlip"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/308.png" class="logo" alt="BitFlip"><a href="/exchanges/bitflip/">BitFlip</a></td>
+<td data-sort="EOS/RUB"><a href="https://bitflip.li/trade/EOS-RUB" target="_blank">EOS/RUB</a></td>
+<td class="text-right" data-sort="1550.57">
+<span class="volume" data-usd="1550.57" data-btc="0.167953" data-native="95.6202">
+$1,551
+</span>
+</td>
+<td class="text-right" data-sort="16.216">
+<span class="price" data-usd="16.216" data-btc="0.00175646" data-native="1000.0">
+$16.22
+</span>
+</td>
+<td class="text-right" data-sort="5.06292039444e-05">
+<span data-format-percentage="" data-format-value="5.06292039444e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">116</td>
+<td data-sort="COSS"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/242.png" class="logo" alt="COSS"><a href="/exchanges/coss/">COSS</a></td>
+<td data-sort="EOS/ETH"><a href="https://exchange.coss.io/exchange/eos-eth" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="1301.9">
+<span class="volume" data-usd="1301.9" data-btc="0.141018" data-native="87.2434">
+$1,302
+</span>
+</td>
+<td class="text-right" data-sort="14.9227">
+<span class="price" data-usd="14.9227" data-btc="0.00161637" data-native="0.024">
+$14.92
+</span>
+</td>
+<td class="text-right" data-sort="4.25096323385e-05">
+<span data-format-percentage="" data-format-value="4.25096323385e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">117</td>
+<td data-sort="Paradex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/379.png" class="logo" alt="Paradex"><a href="/exchanges/paradex/">Paradex</a></td>
+<td data-sort="EOS/WETH"><a href="https://app.paradex.io/market/eos-weth" target="_blank">EOS/WETH</a></td>
+<td class="text-right" data-sort="1250.0">
+<span class="volume" data-usd="1250.0" data-btc="0.135396" data-native="97.5125">
+$1,250
+</span>
+</td>
+<td class="text-right" data-sort="12.8189">
+<span class="price" data-usd="12.8189" data-btc="0.00138849" data-native="0.0208">
+$12.82
+</span>
+</td>
+<td class="text-right" data-sort="4.08149937961e-05">
+<span data-format-percentage="" data-format-value="4.08149937961e-05">0.00</span>%
+ </td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">118</td>
+<td data-sort="Abucoins"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/313.png" class="logo" alt="Abucoins"><a href="/exchanges/abucoins/">Abucoins</a></td>
+<td data-sort="EOS/BTC"><a href="https://abucoins.com/trade/EOS-BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="1132.21">
+<span class="volume" data-usd="1132.21" data-btc="0.122637" data-native="80.8059">
+$1,132
+</span>
+</td>
+<td class="text-right" data-sort="14.0114">
+<span class="price" data-usd="14.0114" data-btc="0.00151767" data-native="0.00151767">
+$14.01
+</span>
+</td>
+<td class="text-right" data-sort="3.69689153007e-05">
+<span data-format-percentage="" data-format-value="3.69689153007e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">119</td>
+<td data-sort="CoinExchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/147.png" class="logo" alt="CoinExchange"><a href="/exchanges/coinexchange/">CoinExchange</a></td>
+<td data-sort="EOS/DOGE"><a href="https://www.coinexchange.io/market/EOS/DOGE" target="_blank">EOS/DOGE</a></td>
+<td class="text-right" data-sort="1019.36">
+<span class="volume" data-usd="1019.36" data-btc="0.110414" data-native="64.9388">
+$1,019
+</span>
+</td>
+<td class="text-right" data-sort="15.6972">
+<span class="price" data-usd="15.6972" data-btc="0.00170027" data-native="3000.0">
+$15.70
+</span>
+</td>
+<td class="text-right" data-sort="3.32841376608e-05">
+<span data-format-percentage="" data-format-value="3.32841376608e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">120</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="MAG/EOS"><a href="https://big.one/trade/MAG-EOS" target="_blank">MAG/EOS</a></td>
+<td class="text-right" data-sort="748.517">
+<span class="volume" data-usd="748.517" data-btc="0.0810767" data-native="45020.0">
+$749
+</span>
+</td>
+<td class="text-right" data-sort="14.1014">
+<span class="price" data-usd="14.1014" data-btc="0.00152741" data-native="0.0012">
+$14.10
+</span>
+</td>
+<td class="text-right" data-sort="2.4440573369e-05">
+<span data-format-percentage="" data-format-value="2.4440573369e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">121</td>
+<td data-sort="BitFlip"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/308.png" class="logo" alt="BitFlip"><a href="/exchanges/bitflip/">BitFlip</a></td>
+<td data-sort="EOS/BTC"><a href="https://bitflip.li/trade/EOS-BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="727.689">
+<span class="volume" data-usd="727.689" data-btc="0.0788207" data-native="39.6084">
+$728
+</span>
+</td>
+<td class="text-right" data-sort="18.3721">
+<span class="price" data-usd="18.3721" data-btc="0.00199" data-native="0.00199">
+$18.37
+</span>
+</td>
+<td class="text-right" data-sort="2.37604976164e-05">
+<span data-format-percentage="" data-format-value="2.37604976164e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">122</td>
+<td data-sort="Tidex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/219.png" class="logo" alt="Tidex"><a href="/exchanges/tidex/">Tidex</a></td>
+<td data-sort="EOS/BTC"><a href="https://tidex.com/#/exchange/EOS_BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="601.785">
+<span class="volume" data-usd="601.785" data-btc="0.0651833" data-native="39.8672">
+ $602
+</span>
+</td>
+<td class="text-right" data-sort="15.0947">
+<span class="price" data-usd="15.0947" data-btc="0.00163501" data-native="0.00163501">
+$15.09
+</span>
+</td>
+<td class="text-right" data-sort="1.96494808333e-05">
+<span data-format-percentage="" data-format-value="1.96494808333e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">123</td>
+<td data-sort="CoinExchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/147.png" class="logo" alt="CoinExchange"><a href="/exchanges/coinexchange/">CoinExchange</a></td>
+<td data-sort="EOS/ETH"><a href="https://www.coinexchange.io/market/EOS/ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="332.829">
+<span class="volume" data-usd="332.829" data-btc="0.0360508" data-native="19.8327">
+$333
+</span>
+</td>
+<td class="text-right" data-sort="16.7818">
+<span class="price" data-usd="16.7818" data-btc="0.00181775" data-native="0.02699">
+$16.78
+</span>
+</td>
+<td class="text-right" data-sort="1.08675308561e-05">
+<span data-format-percentage="" data-format-value="1.08675308561e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">124</td>
+<td data-sort="CoinExchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/147.png" class="logo" alt="CoinExchange"><a href="/exchanges/coinexchange/">CoinExchange</a></td>
+<td data-sort="EOS/LTC"><a href="https://www.coinexchange.io/market/EOS/LTC" target="_blank">EOS/LTC</a></td>
+<td class="text-right" data-sort="282.002">
+<span class="volume" data-usd="282.002" data-btc="0.0305455" data-native="17.2924">
+$282
+</span>
+</td>
+<td class="text-right" data-sort="16.3079">
+<span class="price" data-usd="16.3079" data-btc="0.00176641" data-native="0.11">
+$16.31
+ </span>
+</td>
+<td class="text-right" data-sort="9.20792790439e-06">
+<span data-format-percentage="" data-format-value="9.20792790439e-06">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">125</td>
+<td data-sort="EXX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/331.png" class="logo" alt="EXX"><a href="/exchanges/exx/">EXX</a></td>
+<td data-sort="EOS/QTUM"><a href="https://www.exx.com/trade/eos_qtum" target="_blank">EOS/QTUM</a></td>
+<td class="text-right" data-sort="76.3073">
+<span class="volume" data-usd="76.3073" data-btc="0.00928808" data-native="10.781">
+$76
+</span>
+</td>
+<td class="text-right" data-sort="7.07794">
+<span class="price" data-usd="7.07794" data-btc="0.000861523" data-native="0.387">
+$7.08
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">163 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">126</td>
+<td data-sort="BitFlip"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/308.png" class="logo" alt="BitFlip"><a href="/exchanges/bitflip/">BitFlip</a></td>
+<td data-sort="EOS/EUR"><a href="https://bitflip.li/trade/EOS-EUR" target="_blank">EOS/EUR</a></td>
+<td class="text-right" data-sort="0.0">
+<span class="volume" data-usd="0.0" data-btc="0.0" data-native="0.0">
+$0
+</span>
+</td>
+<td class="text-right" data-sort="12.205">
+<span class="price" data-usd="12.205" data-btc="0.00132201" data-native="9.99">
+$12.21
+</span>
+</td>
+<td class="text-right" data-sort="0.0">
+<span data-format-percentage="" data-format-value="0.0">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+
+<tr>
+<td class="text-right">127</td>
+<td data-sort="BitFlip"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/308.png" class="logo" alt="BitFlip"><a href="/exchanges/bitflip/">BitFlip</a></td>
+<td data-sort="EOS/UAH"><a href="https://bitflip.li/trade/EOS-UAH" target="_blank">EOS/UAH</a></td>
+<td class="text-right" data-sort="0.0">
+<span class="volume" data-usd="0.0" data-btc="0.0" data-native="0.0">
+$0
+</span>
+</td>
+<td class="text-right" data-sort="5.75628">
+<span class="price" data-usd="5.75628" data-btc="0.0006235" data-native="150.0">
+$5.76
+</span>
+</td>
+<td class="text-right" data-sort="0.0">
+<span data-format-percentage="" data-format-value="0.0">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr class="stale-box">
+<td class="text-right">128</td>
+<td data-sort="Cobinhood"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/346.png" class="logo" alt="Cobinhood"><a href="/exchanges/cobinhood/">Cobinhood</a></td>
+<td data-sort="EOS/ETH"><a href="https://cobinhood.com/trade/EOS-ETH" target="_blank">EOS/ETH</a></td>
+<td class="text-right" data-sort="18302.2">
+**
+<span class="volume" data-usd="18302.2" data-btc="1.98243" data-native="1337.97">
+$18,302
+</span>
+</td>
+<td class="text-right" data-sort="13.6791">
+<span class="price" data-usd="13.6791" data-btc="0.00148167" data-native="0.022">
+$13.68
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr class="stale-box">
+<td class="text-right">129</td>
+<td data-sort="Cobinhood"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/346.png" class="logo" alt="Cobinhood"><a href="/exchanges/cobinhood/">Cobinhood</a></td>
+<td data-sort="EOS/BTC"><a href="https://cobinhood.com/trade/EOS-BTC" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="12959.0">
+**
+<span class="volume" data-usd="12959.0" data-btc="1.40367" data-native="903.637">
+$12,959
+</span>
+</td>
+<td class="text-right" data-sort="14.3409">
+<span class="price" data-usd="14.3409" data-btc="0.00155336" data-native="0.00155336">
+$14.34
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr class="stale-box">
+<td class="text-right">130</td>
+<td data-sort="xBTCe"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/176.png" class="logo" alt="xBTCe"><a href="/exchanges/xbtce/">xBTCe</a></td>
+<td data-sort="EOS/BTC"><a href="https://www.xbtce.com/eosbtc" target="_blank">EOS/BTC</a></td>
+<td class="text-right" data-sort="4686.15">
+**
+<span class="volume" data-usd="4686.15" data-btc="0.52625" data-native="421.0">
+$4,686
+</span>
+</td>
+<td class="text-right" data-sort="11.131">
+<span class="price" data-usd="11.131" data-btc="0.00125" data-native="0.00125">
+$11.13
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">89 hours ago</td>
+</tr>
+<tr class="stale-box">
+<td class="text-right">131</td>
+<td data-sort="Cobinhood"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/346.png" class="logo" alt="Cobinhood"><a href="/exchanges/cobinhood/">Cobinhood</a></td>
+<td data-sort="EOS/USDT"><a href="https://cobinhood.com/trade/EOS-USDT" target="_blank">EOS/USDT</a></td>
+<td class="text-right" data-sort="122.541">
+**
+<span class="volume" data-usd="122.541" data-btc="0.0147131" data-native="12.9147">
+$123
+</span>
+</td>
+<td class="text-right" data-sort="9.48847">
+ <span class="price" data-usd="9.48847" data-btc="0.00113925" data-native="9.5">
+$9.49
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">146 hours ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="clear"></div>
+* Price Excluded<br>
+** Volume Excluded - No Trading Fees<br>
+*** Price/Volume Excluded - Outlier Detected
+</div>
+</div>
+<div id="social" class="tab-pane">
+<div class="tab-header">
+<h2 class="pull-left">EOS Social Media Feeds</h2>
+<div class="clear"></div>
+</div>
+<div class="row">
+<div class="col-sm-6 text-left">
+<a class="twitter-timeline" href="https://twitter.com/eos_io" data-widget-id="506520279636377601" data-screen-name="eos_io">Tweets by @eos_io</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div id="reddit" class="col-sm-6 text-left">
+</div>
+</div>
+</div>
+<div id="tools" class="tab-pane">
+<div class="tab-header">
+<h2 class="pull-left">Tools for EOS</h2>
+<div class="clear bottom-margin-1x"></div>
+</div>
+<div class="row">
+<div class="col-md-2">
+<strong>Website Widget</strong>
+</div>
+<div class="col-md-6">
+<textarea class="form-control" rows="6" data-snippet-container="">&lt;script type=&quot;text/javascript&quot; src=&quot;https://files.coinmarketcap.com/static/widget/currency.js&quot;&gt;&lt;/script&gt;
+&lt;div class=&quot;coinmarketcap-currency-widget&quot; data-currencyid=&quot;1765&quot; data-base=&quot;USD&quot;  data-secondary=&quot;BTC&quot;&gt;&lt;/div&gt;</textarea>
+<br>
+<a class="btn btn-primary pull-right" href="/widget/?c=eos" target="_blank" role="button" style="width:100%">Customize this widget</a>
+<div class="clear"></div>
+</div>
+<div class="col-md-4">
+<div class="coinmarketcap-currency-widget" data-currencyid="1765" data-base="USD" data-secondary="BTC" data-ticker="true" style=""></div>
+</div>
+</div>
+<div class="row">
+<div class="clear bottom-margin-2x"></div>
+<div class="col-md-12"><hr></div>
+<div class="clear bottom-margin-2x"></div>
+<div class="col-md-2">
+<strong>API Ticker</strong>
+</div>
+<div class="col-md-6">
+<a href="https://api.coinmarketcap.com/v1/ticker/eos/" target="_blank">https://api.coinmarketcap.com/v1/ticker/eos/</a>
+</div>
+<div class="col-md-4">
+<a href="/api/" target="_blank" class="text-small">[API Docs]</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="metadata" class="hidden" data-slug="eos" data-platformsymbol="ETH" data-apidomain="https://graphs2.coinmarketcap.com" data-mobile="False" data-platform="True">
+</div>
+<hr>
+<div id="leaderboard-bottom" class="row text-center">
+
+<div id="div-gpt-ad-1488495260324-8" class="centered leaderboard">
+<script>
+                                    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1488495260324-8'); });
+                                    </script>
+</div>
+</div>
+<hr>
+<div id="footer" class="row">
+<div class="col-xs-12 col-md-5">
+<div>
+&#xA9; 2018 CoinMarketCap |
+<a href="/advertising/" target="_blank">Advertise</a> |
+<a href="/api/">API</a> |
+<a href="/disclaimer/">Disclaimer</a> |
+<a href="/privacy/">Privacy Policy</a> |
+<a href="/faq/">FAQ</a> |
+<a href="/request/" target="_blank">Request Form</a>
+</div>
+<br>
+<div>
+Night Mode:
+<div class="btn-group" data-toggle="buttons">
+<label class="btn btn-default btn-sm" data-night-mode-off="">
+<input type="radio"> Off
+</label>
+<label class="btn btn-default btn-sm" data-night-mode-on="">
+<input type="radio"> On
+</label>
+</div>
+</div>
+<div class="visible-sm visible-xs"><br></div>
+</div>
+<div class="clearfix visible-sm visible-xs"></div>
+<div class="col-md-1 text-center">
+<a href="https://www.facebook.com/CoinMarketCap" target="_blank" rel="noopener"><img src="https://s2.coinmarketcap.com/static/cloud/img/facebook_logo.png" alt="twitter" class="icon-social"></a>
+<a href="https://twitter.com/CoinMarketCap" target="_blank" rel="noopener"><img src="https://s2.coinmarketcap.com/static/cloud/img/twitter_logo.png" alt="twitter" class="icon-social"></a>
+</div>
+<div class="clearfix visible-sm visible-xs"><br></div>
+<div class="col-xs-12 col-md-6 text-right">
+Donate BTC: <a class="pointer" data-toggle="modal" data-target="#donate_btc">3CMCRgEm8HVz3DrWaCCid3vAANE42jcEv9</a><br>
+Donate LTC: <a class="pointer" data-toggle="modal" data-target="#donate_ltc">LTdsVS8VDw6syvfQADdhf2PHAm3rMGJvPX</a><br>
+Donate ETH: <a class="pointer" data-toggle="modal" data-target="#donate_eth">0x0074709077B8AE5a245E4ED161C971Dc4c3C8E2B</a><br>
+Donate BCH: <a class="pointer" data-toggle="modal" data-target="#donate_bch">1LVXG4Z4oF6TrJfmUfSuLX8nqb8c5eCwha</a>
+</div>
+</div>
+
+<div class="modal fade" id="donate_btc" tabindex="-1" role="dialog" aria-labelledby="donate_btc_label" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header text-center">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#xD7;</button>
+<h4 class="modal-title" id="donate_btc_label">Donate Bitcoin</h4>
+</div>
+<div class="modal-body text-center">
+<strong>3CMCRgEm8HVz3DrWaCCid3vAANE42jcEv9</strong> <br> <img src="https://s2.coinmarketcap.com/static/cloud/img/qrcodes/donate_bitcoin.png" alt="Donate Bitcoin"><br>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="donate_ltc" tabindex="-1" role="dialog" aria-labelledby="donate_ltc_label" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header text-center">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#xD7;</button>
+<h4 class="modal-title" id="donate_ltc_label">Donate Litecoin</h4>
+</div>
+<div class="modal-body text-center">
+<strong>LTdsVS8VDw6syvfQADdhf2PHAm3rMGJvPX</strong> <br> <img src="https://s2.coinmarketcap.com/static/cloud/img/qrcodes/donate_litecoin.png" alt="Donate Litecoin"><br>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="donate_eth" tabindex="-1" role="dialog" aria-labelledby="donate_eth_label" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header text-center">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#xD7;</button>
+<h4 class="modal-title" id="donate_eth_label">Donate Ethereum</h4>
+</div>
+<div class="modal-body text-center">
+<strong>0x0074709077B8AE5a245E4ED161C971Dc4c3C8E2B</strong> <br> <img src="https://s2.coinmarketcap.com/static/cloud/img/qrcodes/donate_ethereum.png" alt="Donate Ethereum"><br>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="donate_bch" tabindex="-1" role="dialog" aria-labelledby="donate_bch_label" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header text-center">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#xD7;</button>
+<h4 class="modal-title" id="donate_bch_label">Donate Bitcoin Cash</h4>
+</div>
+<div class="modal-body text-center">
+<strong>1LVXG4Z4oF6TrJfmUfSuLX8nqb8c5eCwha</strong> <br> <img src="https://s2.coinmarketcap.com/static/cloud/img/qrcodes/donate_bitcoin_cash.png" alt="Donate Bitcoin Cash"><br>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-2 hidden-xs hidden-sm hidden-md">
+<div style="margin-top:200px;float:right;">
+<div style="width:160px; height:600px;">
+
+<div id="div-gpt-ad-1488495260324-10" class="skyscraper">
+<script>
+                                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1488495260324-10'); });
+                                </script>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="currency-exchange-rates" data-usd="1" data-eur="1.2217247087713725" data-cny="0.1585426757247382" data-gbp="1.3968645977239489" data-cad="0.7784675865558648" data-rub="0.016215970785307034" data-hkd="0.12742554525390815" data-jpy="0.00917140904942931" data-aud="0.7574437787355234" data-brl="0.28794379337153386" data-inr="0.015004651441947004" data-krw="0.0009256131029790858" data-mxn="0.0530453325411897" data-idr="7.216839839842133e-05" data-chf="1.0193503272624225" data-clp="0.0016641704110500915" data-czk="0.048024031993994305" data-dkk="0.16406164123984662" data-huf="0.003907181007974557" data-ils="0.2804948377730056" data-myr="0.25578489513458763" data-nok="0.12628813901798344" data-nzd="0.7093094021798497" data-php="0.019105663874055465" data-pkr="0.008657489958177398" data-pln="0.2902483800512288" data-sek="0.11735137477722309" data-sgd="0.7545347538707633" data-thb="0.031744016252936325" data-try="0.24461917320187174" data-twd="0.03369726378218089" data-zar="0.0808451225733326" data-btc="9195.12" data-eth="623.305" data-ltc="147.953" data-xrp="0.806404" data-bch="1276.12"></div>
+<div class="scroll-to-top">
+<button class="btn"><span class="glyphicon glyphicon-chevron-up"></span></button>
+</div>
+<script>
+            var LANG_CODE = 'en';
+            var STATIC_DOMAIN = 's2.coinmarketcap.com';
+        </script>
+<script src="https://s2.coinmarketcap.com/static/cloud/compressed/base.da168f5e.min.js"></script>
+<script src="https://s2.coinmarketcap.com/static/cloud/compressed/highcharts.c76bd9fb.js"></script>
+<script src="https://s2.coinmarketcap.com/static/cloud/compressed/detail.6f7c8004.min.js"></script>
+<script>
+$(document).ready(function() {
+    
+        /* Reddit lazy load hack */
+        var oScript = document.createElement("script");
+        document.write = function(text) {
+            document.getElementById("reddit").innerHTML += text;
+        };
+        oScript.src = "https://www.reddit.com/r/EOS.embed?limit=9";
+        document.body.appendChild(oScript);
+    
+
+    setTimeout(function() {
+        document.title = "EOS (EOS) $13.82 (1.69%) | CoinMarketCap";
+    }, 10000);
+
+
+});
+
+const PHRASES = {
+    contextButtonTitle: "Chart context menu",
+    downloadCSV: "Download CSV",
+    downloadJPEG: "Download JPEG image",
+    downloadPDF: "Download PDF document",
+    downloadPNG: "Download PNG image",
+    downloadSVG: "Download SVG vector image",
+    downloadXLS: "Download XLS",
+    drillUpText: "Back to {series.name}",
+    loading: "Loading...",
+    noData: "No data to display",
+    printChart: "Print chart",
+    resetZoom: "Reset zoom",
+    resetZoomTitle: "Reset zoom level 1:1",
+    viewData: "View data table",
+    '1d': "1d",
+    '7d': "7d",
+    '1m': "1m",
+    '3m': "3m",
+    '1y': "1y",
+    'ytd': "YTD",
+    'all': "ALL",
+    dateFormat: "%A, %b %d %Y, %H:%M:%S UTC",
+    months: {
+        full: {mar: 'March',feb: 'February',aug: 'August',sep: 'September',apr: 'April',jun: 'June',jul: 'July',jan: 'January',may: 'May',nov: 'November',dec: 'December',oct: 'October'},
+        short: {mar: 'Mar',feb: 'Feb',aug: 'Aug',sep: 'Sep',apr: 'Apr',jun: 'Jun',jul: 'Jul',jan: 'Jan',may: 'May',nov: 'Nov',dec: 'Dec',oct: 'Oct'}
+    },
+    weekdays: {
+        full: {wed: 'Wednesday',sun: 'Sunday',thu: 'Thursday',mon: 'Monday',fri: 'Friday',tue: 'Tuesday',sat: 'Saturday'},
+        short: {wed: 'Wed',sun: 'Sun',thu: 'Thu',mon: 'Mon',fri: 'Fri',tue: 'Tue',sat: 'Sat'}
+    },
+    emptyTable: "No data available in table",
+    zeroRecords: "No matching records found",
+    sortAscending: ": activate to sort column ascending",
+    sortDescending: ": activate to sort column descending",
+    'K': "K",
+    'M': "M",
+    'B': "B",
+    'T': "T",
+    chartTitle: "EOS Charts",
+    marketCap: "Market Cap",
+    priceUSD: "Price (USD)",
+    priceBTC: "Price (BTC)",
+    pricePlatform: "Price (ETH)",
+    volume: "24h Vol",
+    linearScale: "Linear Scale",
+    logScale: "Log Scale"
+};
+var polyglot = new Polyglot({phrases: PHRASES});
+</script>
+<script>
+            $( document ).ready(function() {
+                // GTM Session Set
+                var maxExpire = new Date('2038-01-19 00:00:00');
+                if (Cookies.get("gtm_session_first") === undefined) {
+                    Cookies.set("gtm_session_first", new Date(), {expires: maxExpire})
+                }            
+
+                Cookies.set("gtm_session_last", new Date(), {expires: maxExpire})
+                
+                // Header Banner Prefs
+                $(".header-banner-close").on('click', function () {
+                    Cookies.set("header-banner-noshow", "1", {expires: 1})
+                    $('#header-banner-wrapper').fadeOut();
+                    dataLayer.push({
+                        'event': 'customEvent',
+                        'eventCategory': 'Header Banner',
+                        'eventAction': 'Close',
+                    });
+                });
+
+            });
+
+            (function () {
+                var polyglot = new Polyglot({phrases: {
+                    cryptocurrencies: "Cryptocurrencies",
+                    exchanges: "Exchanges"
+                }});
+
+                initQuickSearch({
+                    currencyDataURL: 'https://' + STATIC_DOMAIN + '/generated/search/quick_search.json',
+                    exchangeDataURL: 'https://' + STATIC_DOMAIN + '/generated/search/quick_search_exchanges.json',
+                    currencySuggestionTemplate: function (context) {
+                        var template = "/currencies/%25s/";
+                        context.url = template.replace('%25s', context.slug);
+                        return Handlebars.templates['quick_search'](context);
+                    },
+                    exchangeSuggestionTemplate: function (context) {
+                        var template = "/exchanges/%25s/";
+                        context.url = template.replace('%25s', context.slug);
+                        return Handlebars.templates['quick_search_exchanges'](context);
+                    },
+                    currencyLimit: 6,
+                    exchangeLimit: 4
+                }, polyglot);
+
+                $('[data-language-toggle]').on('click', function () {
+                    dataLayer.push({
+                        'event': 'customEvent',
+                        'eventCategory': 'Language Dropdown',
+                        'eventAction': 'Language Selected',
+                        'eventLabel': $(this).data('language-toggle')
+                    });
+                });
+
+                var language = $('[data-language-toggle="' + 'en' + '"]').html();
+                $('[data-language-dropdown]').html(language);
+
+                NightMode.initSwitch();
+
+                ScrollToTop('.scroll-to-top');
+            })();
+        </script>
+
+</body></html>

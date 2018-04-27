@@ -1,0 +1,2603 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]--><!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]--><!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]--><!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]--><head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VQ4BV1dWDxABVFdQAQIEX1M="};window.NREUM||(NREUM={}),__nr_require=function(t,n,e){function r(e){if(!n[e]){var o=n[e]={exports:{}};t[e][0].call(o.exports,function(n){var o=t[e][1][n];return r(o||n)},o,o.exports)}return n[e].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<e.length;o++)r(e[o]);return r}({1:[function(t,n,e){function r(t){try{s.console&&console.log(t)}catch(n){}}var o,i=t("ee"),a=t(15),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,o.indexOf("dev")!==-1&&(s.dev=!0),o.indexOf("nr_dev")!==-1&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,n,e){r(e.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,n){return t}).join(", ")))},{}],2:[function(t,n,e){function r(t,n,e,r,s){try{p?p-=1:o(s||new UncaughtException(t,n,e),!0)}catch(f){try{i("ierr",[f,c.now(),!0])}catch(d){}}return"function"==typeof u&&u.apply(this,a(arguments))}function UncaughtException(t,n,e){this.message=t||"Uncaught error with no additional information",this.sourceURL=n,this.line=e}function o(t,n){var e=n?null:c.now();i("err",[t,e])}var i=t("handle"),a=t(16),s=t("ee"),c=t("loader"),f=t("gos"),u=window.onerror,d=!1,l="nr@seenError",p=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(h){"stack"in h&&(t(8),t(7),"addEventListener"in window&&t(5),c.xhrWrappable&&t(9),d=!0)}s.on("fn-start",function(t,n,e){d&&(p+=1)}),s.on("fn-err",function(t,n,e){d&&!e[l]&&(f(e,l,function(){return!0}),this.thrown=!0,o(e))}),s.on("fn-end",function(){d&&!this.thrown&&p>0&&(p-=1)}),s.on("internal-error",function(t){i("ierr",[t,c.now(),!0])})},{}],3:[function(t,n,e){t("loader").features.ins=!0},{}],4:[function(t,n,e){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),s=t(7),c="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",l="resource",p="-start",h="-end",m="fn"+p,w="fn"+h,v="bstTimer",y="pushState",g=t("loader");g.features.stn=!0,t(6);var b=NREUM.o.EV;o.on(m,function(t,n){var e=t[0];e instanceof b&&(this.bstStart=g.now())}),o.on(w,function(t,n){var e=t[0];e instanceof b&&i("bst",[e,n,this.bstStart,g.now()])}),a.on(m,function(t,n,e){this.bstStart=g.now(),this.bstType=e}),a.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),this.bstType])}),s.on(m,function(){this.bstStart=g.now()}),s.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),"requestAnimationFrame"])}),o.on(y+p,function(t){this.time=g.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+c]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["c"+c]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["webkitC"+c]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],5:[function(t,n,e){function r(t){for(var n=t;n&&!n.hasOwnProperty(u);)n=Object.getPrototypeOf(n);n&&o(n)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,n){return t[1]}var a=t("ee").get("events"),s=t(18)(a,!0),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";n.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,n){var e=t[1],r=c(e,"nr@wrapped",function(){function t(){if("function"==typeof e.handleEvent)return e.handleEvent.apply(e,arguments)}var n={object:t,"function":e}[typeof e];return n?s(n,"fn-",null,n.name||"anonymous"):e});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],6:[function(t,n,e){var r=t("ee").get("history"),o=t(18)(r);n.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],7:[function(t,n,e){var r=t("ee").get("raf"),o=t(18)(r),i="equestAnimationFrame";n.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,n,e){function r(t,n,e){t[0]=a(t[0],"fn-",null,e)}function o(t,n,e){this.method=e,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,e)}var i=t("ee").get("timer"),a=t(18)(i),s="setTimeout",c="setInterval",f="clearTimeout",u="-start",d="-";n.exports=i,a.inPlace(window,[s,"setImmediate"],s+d),a.inPlace(window,[c],c+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(c+u,r),i.on(s+u,o)},{}],9:[function(t,n,e){function r(t,n){d.inPlace(n,["onreadystatechange"],"fn-",s)}function o(){var t=this,n=u.context(t);t.readyState>3&&!n.resolved&&(n.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,y,"fn-",s)}function i(t){g.push(t),h&&(x?x.then(a):w?w(a):(E=-E,O.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function s(t,n){return n}function c(t,n){for(var e in t)n[e]=t[e];return n}t(5);var f=t("ee"),u=f.get("xhr"),d=t(18)(u),l=NREUM.o,p=l.XHR,h=l.MO,m=l.PR,w=l.SI,v="readystatechange",y=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];n.exports=u;var b=window.XMLHttpRequest=function(t){var n=new p(t);try{u.emit("new-xhr",[n],n),n.addEventListener(v,o,!1)}catch(e){try{u.emit("internal-error",[e])}catch(r){}}return n};if(c(p,b),b.prototype=p.prototype,d.inPlace(b.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,n){r(t,n),i(n)}),u.on("open-xhr-start",r),h){var x=m&&m.resolve();if(!w&&!m){var E=1,O=document.createTextNode(E);new h(a).observe(O,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===v||a()})},{}],10:[function(t,n,e){function r(t){var n=this.params,e=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!n.aborted){if(e.duration=a.now()-this.startTime,4===t.readyState){n.status=t.status;var i=o(t,this.lastSize);if(i&&(e.rxSize=i),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(n.cat=c.split(", ").pop())}}else n.status=0;e.cbTime=this.cbTime,f.emit("xhr-done",[t],t),s("xhr",[n,e,this.startTime])}}}function o(t,n){var e=t.responseType;if("json"===e&&null!==n)return n;var r="arraybuffer"===e||"blob"===e||"json"===e?t.response:t.responseText;return h(r)}function i(t,n){var e=c(n),r=t.params;r.host=e.hostname+":"+e.port,r.pathname=e.pathname,t.sameOrigin=e.sameOrigin}var a=t("loader");if(a.xhrWrappable){var s=t("handle"),c=t(11),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(14),h=t(13),m=window.XMLHttpRequest;a.features.xhr=!0,t(9),f.on("new-xhr",function(t){var n=this;n.totalCbs=0,n.called=0,n.cbTime=0,n.end=r,n.ended=!1,n.xhrGuids={},n.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){n.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,n){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&n.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,n){var e=this.metrics,r=t[0],o=this;if(e&&r){var i=h(r);i&&(e.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof n.onload))&&o.end(n)}catch(e){try{f.emit("internal-error",[e])}catch(r){}}};for(var s=0;s<d;s++)n.addEventListener(u[s],this.listener,!1)}),f.on("xhr-cb-time",function(t,n,e){this.cbTime+=t,n?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof e.onload||this.end(e)}),f.on("xhr-load-added",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&!this.xhrGuids[e]&&(this.xhrGuids[e]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&this.xhrGuids[e]&&(delete this.xhrGuids[e],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],n)}),f.on("removeEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],n)}),f.on("fn-start",function(t,n,e){n instanceof m&&("onload"===e&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,n){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,n],n)})}},{}],11:[function(t,n,e){n.exports=function(t){var n=document.createElement("a"),e=window.location,r={};n.href=t,r.port=n.port;var o=n.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=n.hostname||e.hostname,r.pathname=n.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!n.protocol||":"===n.protocol||n.protocol===e.protocol,a=n.hostname===document.domain&&n.port===e.port;return r.sameOrigin=i&&(!n.hostname||a),r}},{}],12:[function(t,n,e){function r(){}function o(t,n,e){return function(){return i(t,[f.now()].concat(s(arguments)),n?null:this,e),n?void 0:this}}var i=t("handle"),a=t(15),s=t(16),c=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,n){u[n]=o(l+n,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),n.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,n){var e={},r=this,o="function"==typeof n;return i(p+"tracer",[f.now(),t,e],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],e),o)try{return n.apply(this,arguments)}catch(t){throw c.emit("fn-err",[arguments,this,t],e),t}finally{c.emit("fn-end",[f.now()],e)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,n){h[n]=o(p+n)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now()])}},{}],13:[function(t,n,e){n.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(n){return}}}},{}],14:[function(t,n,e){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),n.exports=r},{}],15:[function(t,n,e){function r(t,n){var e=[],r="",i=0;for(r in t)o.call(t,r)&&(e[i]=n(r,t[r]),i+=1);return e}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],16:[function(t,n,e){function r(t,n,e){n||(n=0),"undefined"==typeof e&&(e=t?t.length:0);for(var r=-1,o=e-n||0,i=Array(o<0?0:o);++r<o;)i[r]=t[n+r];return i}n.exports=r},{}],17:[function(t,n,e){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],18:[function(t,n,e){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(16),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;n.exports=function(t,n){function e(t,n,e,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof e?e(r,a):e||{}}catch(f){l([f,"",[r,a,o],s])}u(n+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(d){throw u(n+"err",[r,a,d],s),d}finally{u(n+"end",[r,a,c],s)}}return r(t)?t:(n||(n=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,n,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<n.length;c++)s=n[c],a=t[s],r(a)||(t[s]=e(a,f?s+o:o,i,s))}function u(e,r,o){if(!c||n){var i=c;c=!0;try{t.emit(e,r,o,n)}catch(a){l([a,e,r,o])}c=i}}function d(t,n){if(Object.defineProperty&&Object.keys)try{var e=Object.keys(t);return e.forEach(function(e){Object.defineProperty(n,e,{get:function(){return t[e]},set:function(n){return t[e]=n,n}})}),n}catch(r){l([r])}for(var o in t)s.call(t,o)&&(n[o]=t[o]);return n}function l(n){try{t.emit("internal-error",n)}catch(e){}}return t||(t=o),e.inPlace=f,e.flag=a,e}},{}],ee:[function(t,n,e){function r(){}function o(t){function n(t){return t&&t instanceof r?t:t?c(t,s,i):i()}function e(e,r,o,i){if(!l.aborted||i){t&&t(e,r,o);for(var a=n(o),s=h(e),c=s.length,f=0;f<c;f++)s[f].apply(a,r);var d=u[y[e]];return d&&d.push([g,e,r,a]),a}}function p(t,n){v[t]=h(t).concat(n)}function h(t){return v[t]||[]}function m(t){return d[t]=d[t]||o(e)}function w(t,n){f(t,function(t,e){n=n||"feature",y[e]=n,n in u||(u[n]=[])})}var v={},y={},g={on:p,emit:e,get:m,listeners:h,context:n,buffer:w,abort:a,aborted:!1};return g}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var s="nr@context",c=t("gos"),f=t(15),u={},d={},l=n.exports=o();l.backlog=u},{}],gos:[function(t,n,e){function r(t,n,e){if(o.call(t,n))return t[n];var r=e();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(t,n,e){function r(t,n,e,r){o.buffer([t],r),o.emit(t,n,e)}var o=t("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(t,n,e){function r(t){var n=typeof t;return!t||"object"!==n&&"function"!==n?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");n.exports=r},{}],loader:[function(t,n,e){function r(){if(!x++){var t=b.info=NREUM.info,n=l.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&n))return u.abort();f(y,function(n,e){t[n]||(t[n]=e)}),c("mark",["onload",a()+b.offset],null,"api");var e=l.createElement("script");e.src="https://"+t.agent,n.parentNode.insertBefore(e,n)}}function o(){"complete"===l.readyState&&i()}function i(){c("mark",["domContent",a()+b.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(s=Math.max((new Date).getTime(),s))-b.offset}var s=(new Date).getTime(),c=t("handle"),f=t(15),u=t("ee"),d=window,l=d.document,p="addEventListener",h="attachEvent",m=d.XMLHttpRequest,w=m&&m.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:m,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var v=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1071.min.js"},g=m&&w&&w[p]&&!/CriOS/.test(navigator.userAgent),b=n.exports={offset:s,now:a,origin:v,features:{},xhrWrappable:g};t(12),l[p]?(l[p]("DOMContentLoaded",i,!1),d[p]("load",r,!1)):(l[h]("onreadystatechange",o),d[h]("onload",r)),c("mark",["firstbyte",s],null,"api");var x=0,E=t(17)},{}]},{},["loader",2,10,4,3]);</script><script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","queueTime":0,"licenseKey":"6d0ece54b7","agent":"","transactionName":"NFBbY0VUXEEEARUPXg0af0JZVkZbCgxOBV4KW1RWRV5XRgYDEUhHClBORBlBQFMLEQ0HRQZRA1RCR0BXCwEYOVUGQVheWw==","applicationID":"106263397","errorBeacon":"bam.nr-data.net","applicationTime":113}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BitShares (BTS) price, charts, market cap, and other metrics | CoinMarketCap</title>
+<meta name="google-site-verification" content="EDc1reqlQ-zAgeRrrgAxRXNK-Zs9JgpE9a0wdaoSO9A">
+<meta property="og:type" content="website">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="200">
+<meta property="og:image:height" content="200">
+<meta property="og:image" content="https://s2.coinmarketcap.com/static/img/coins/200x200/463.png">
+<meta property="og:image:secure_url" content="https://s2.coinmarketcap.com/static/img/coins/200x200/463.png">
+<meta property="og:title" content="BitShares (BTS) price, charts, market cap, and other metrics | CoinMarketCap">
+<meta name="description" content="Get BitShares price, charts, and other cryptocurrency info">
+<meta property="og:description" content="Get BitShares price, charts, and other cryptocurrency info">
+<link rel="icon" type="image/png" href="https://s2.coinmarketcap.com/static/img/coins/16x16/463.png" sizes="16x16">
+<link rel="icon" type="image/png" href="https://s2.coinmarketcap.com/static/img/coins/32x32/463.png" sizes="32x32">
+<link rel="canonical" href="https://coinmarketcap.com/currencies/bitshares/">
+<link rel="alternate" href="https://coinmarketcap.com/de/currencies/bitshares/" hreflang="de">
+<link rel="alternate" href="https://coinmarketcap.com/currencies/bitshares/" hreflang="en">
+<link rel="alternate" href="https://coinmarketcap.com/es/currencies/bitshares/" hreflang="es">
+<link rel="alternate" href="https://coinmarketcap.com/fil/currencies/bitshares/" hreflang="fil">
+<link rel="alternate" href="https://coinmarketcap.com/fr/currencies/bitshares/" hreflang="fr">
+<link rel="alternate" href="https://coinmarketcap.com/hi/currencies/bitshares/" hreflang="hi">
+<link rel="alternate" href="https://coinmarketcap.com/it/currencies/bitshares/" hreflang="it">
+<link rel="alternate" href="https://coinmarketcap.com/ja/currencies/bitshares/" hreflang="ja">
+<link rel="alternate" href="https://coinmarketcap.com/ko/currencies/bitshares/" hreflang="ko">
+<link rel="alternate" href="https://coinmarketcap.com/pt-br/currencies/bitshares/" hreflang="pt-br">
+<link rel="alternate" href="https://coinmarketcap.com/ru/currencies/bitshares/" hreflang="ru">
+<link rel="alternate" href="https://coinmarketcap.com/vi/currencies/bitshares/" hreflang="vi">
+<link rel="alternate" href="https://coinmarketcap.com/zh/currencies/bitshares/" hreflang="zh">
+<link href="https://s2.coinmarketcap.com/static/cloud/compressed/base.3a76de2d.min.css" rel="stylesheet">
+<script>
+        function getCookie(e){var n=" "+document.cookie,t=" "+e+"=",i=null,o=0,u=0;return n.length>0&&-1!=(o=n.indexOf(t))&&(o+=t.length,-1==(u=n.indexOf(";",o))&&(u=n.length),i=unescape(n.substring(o,u))),i}
+
+        var DEFAULT_CURRENCY = 'USD';
+        dataLayer = [{
+            'section': 'Details',
+            'subSection': 'Currencies',
+            'firstSessionDate': getCookie('gtm_session_first'),
+            'lastSessionDate': getCookie('gtm_session_last'),
+            'language': 'en',
+            'currency': getCookie('currency') || DEFAULT_CURRENCY,
+            'siteTheme': getCookie('theme') || 'day'
+        }];
+        </script>
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MNVXW26');
+        </script>
+
+<script>
+            var NightMode = (function () {
+                var key = 'theme', on = 'night', off = 'day';
+                var _trackEvent = function (value) {
+                    dataLayer.push({
+                        'event': 'customEvent',
+                        'eventCategory': 'Night Mode',
+                        'eventAction': 'Night Mode Toggled',
+                        'eventLabel': value
+                    });
+                };
+                var _setCookie = function (value) {
+                    Cookies.set(key, value, {expires: 3650});
+                };
+                var _activateSwitch = function (value) {
+                    if (value) {
+                        $('[data-night-mode-on]').addClass('active');
+                        $('[data-night-mode-off]').removeClass('active');
+                    } else {
+                        $('[data-night-mode-on]').removeClass('active');
+                        $('[data-night-mode-off]').addClass('active');
+                    }
+                };
+                var initSwitch = function () {
+                    $('[data-night-mode-on]').on('click', function () {
+                        $('body').addClass('night-mode');
+                        _activateSwitch(true);
+                        _setCookie(on);
+                        _trackEvent('on');
+                    });
+                    $('[data-night-mode-off]').on('click', function () {
+                        $('body').removeClass('night-mode');
+                        _activateSwitch(false);
+                        _setCookie(off);
+                        _trackEvent('off');
+                    });
+
+                    _activateSwitch(Cookies.get(key) === on);
+                };
+                var init = function () {
+                    if (getCookie(key) === on) {
+                        var nightModeClass = 'night-mode';
+                        var currentClass = document.body.className;
+                        if (currentClass.length > 0) {
+                            if (currentClass.indexOf(nightModeClass) === -1) {
+                                document.body.className = currentClass + ' ' + nightModeClass;
+                            }
+                        } else {
+                            document.body.className = nightModeClass;
+                        }
+                    }
+                };
+                return {initSwitch: initSwitch, init: init};
+            })();
+        </script>
+<script async="async" src="https://s2.coinmarketcap.com/static/cloud/compressed/prebid.cb5bd327.min.js"></script>
+<script async="async" src="https://www.googletagservices.com/tag/js/gpt.js"></script>
+<script>
+            var googletag = googletag || {};
+            googletag.cmd = googletag.cmd || [];
+            googletag.cmd.push(function() {
+                googletag.pubads().disableInitialLoad();
+            });
+        </script>
+<script>
+          googletag.cmd.push(function() {
+            
+                
+                    googletag.defineSlot('/48901027/non_landing_leaderboard_top', [728, 90], 'div-gpt-ad-1488495260324-9').addService(googletag.pubads());
+                    googletag.defineSlot('/48901027/non_landing_side', [160, 600], 'div-gpt-ad-1488495260324-10').addService(googletag.pubads());
+                    googletag.defineSlot('/48901027/non_landing_leaderboard_bottom', [728, 90], 'div-gpt-ad-1488495260324-8').addService(googletag.pubads());
+                
+            
+
+            
+                googletag.defineSlot('/48901027/native_coin_details', ['fluid'], 'div-gpt-ad-1520101567641-0').addService(googletag.pubads());                
+                googletag.pubads().setTargeting("coin_id","463");
+            
+
+            
+            var mapping = googletag.sizeMapping()
+              .addSize([1280,0], [1280, 90])
+              .addSize([970,0], [970, 90])
+              .addSize([750,0], [750, 90])
+              .addSize([0,0], [320, 100])
+              .build();
+            googletag.defineSlot('/48901027/full_width_top', [960, 90], 'div-gpt-ad-1517714727704-0')
+                .defineSizeMapping(mapping)
+                .addService(googletag.pubads());
+
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+          });
+        </script>
+<script>
+
+        //Load the UAM JavaScript Library
+        !function(a9,a,p,s,t,A,g){if(a[a9])return;function
+        q(c,r){a[a9]._Q.push([c,r])}a[a9]={init:function(){q("i",arguments)},fetchBids:function(){q("f",arguments)},setDisplayBids:function(){},targetingKeys:function(){return[]},_Q:[]};A=p.createElement(s);A.async=!0;A.src=t;g=p.getElementsByTagName(s)[0];g.parentNode.insertBefore(A,g)}("apstag",window,document,"script","//c.amazon-adsystem.com/aax2/apstag.js");
+        apstag.init({
+            pubID: '1edde03c-121e-457d-9c35-ad4fca989bac',
+            adServer: 'googletag',
+            bidTimeout: 2000
+        });
+
+        var pbjs = pbjs || {};
+        pbjs.que = pbjs.que || [];
+
+        </script>
+<script>
+        function fetchHeaderBids() {
+            var bidTimeout = 2000;
+            var adUnits = [
+            
+                
+                    {
+                        code: 'div-gpt-ad-1488495260324-9',
+                        sizes: [[728, 90]],
+                        bids: [
+                        {
+                            "bidder": "appnexus",
+                            "params": {
+                                "placementId": "11835084" // [D] 728x90 Detail ATF: 11835084
+                            }
+                        },        
+                        {
+                            "bidder": "indexExchange",
+                            "params": {
+                                "id": "4",
+                                "siteID": "219067" // coinmarketcap.com_Desktop_728x90_ATF Detail
+                            }
+                        }]
+                    },{
+                        code: 'div-gpt-ad-1488495260324-10',
+                        sizes: [[160, 600]],
+                        bids: [
+                        {
+                            "bidder": "openx",
+                            "params": {
+                                "unit": "539181152",
+                                "delDomain": "coinmarketcap-d.openx.net" // Desktop - 160x600 Detail page
+                            }
+                        },
+                        {
+                            "bidder": "appnexus",
+                            "params": {
+                                "placementId": "11835085" // [D] 160x600 Detail: 11835085
+                            }
+                        },        
+                        {
+                            "bidder": "indexExchange",
+                            "params": {
+                                "id": "5",
+                                "siteID": "219068" // coinmarketcap.com_Desktop_160x600_Side Detail
+                            }
+                        },        
+                        {
+                            "bidder": "sovrn",
+                            "params": {
+                                "tagid": "496633" // CoinMarketCap_AiH_160x600_Side_DETAILPAGE_Desktop
+                            }
+                        }]
+                    },{
+                        code: 'div-gpt-ad-1488495260324-8',
+                        sizes: [[728, 90]],
+                        bids: [
+                        {
+                            "bidder": "openx",
+                            "params": {
+                                "unit": "539181150",
+                                "delDomain": "coinmarketcap-d.openx.net" // Desktop - 728x90 BTF Detail page
+                            }
+                        },
+                        {
+                            "bidder": "appnexus",
+                            "params": {
+                                "placementId": "11835086" // [D] 728x90 Detail BTF: 11835086
+                            }
+                        },        
+                        {
+                            "bidder": "indexExchange",
+                            "params": {
+                                "id": "6",
+                                "siteID": "219069" // coinmarketcap.com_Desktop_728x90_BTF Detail
+                            }
+                        },        
+                        {
+                            "bidder": "sovrn",
+                            "params": {
+                                "tagid": "496631" // CoinMarketCap_AiH_728x90_BTF_DETAILPAGE_Desktop
+                            }
+                        }]
+                    }
+                
+            
+            ];
+
+            var apstagSlots = [
+            
+                
+                    {
+                        slotID: 'div-gpt-ad-1488495260324-9',
+                        slotName: '/48901027/non_landing_leaderboard_top',
+                        sizes: [[728, 90]]
+                    },
+                    {
+                        slotID: 'div-gpt-ad-1488495260324-10',
+                        slotName: '/48901027/non_landing_side',
+                        sizes: [[160, 600]]
+                    },
+                    {
+                        slotID: 'div-gpt-ad-1488495260324-8',
+                        slotName: '/48901027/non_landing_leaderboard_bottom',
+                        sizes: [[728, 90]]
+                    }
+                
+            
+            ];
+
+            var bidders = ['a9', 'prebid'];
+
+            var requestManager = {
+                adserverRequestSent: false,
+            };
+            
+                bidders.forEach(function(bidder) {
+                requestManager[bidder] = false;
+            })
+
+            function allBiddersBack() {
+                var allBiddersBack = bidders
+                .map(function(bidder) {
+                    return requestManager[bidder];
+                })
+                .filter(Boolean)
+                .length === bidders.length;
+                return allBiddersBack;
+            }
+            
+            function headerBidderBack(bidder) {
+                if (requestManager.adserverRequestSent === true) {
+                    return;
+                }
+                if (bidder === 'a9') {
+                    requestManager.a9 = true;
+                } else if (bidder === 'prebid') {
+                    requestManager.prebid = true;
+                }
+                if (allBiddersBack()) {
+                    sendAdserverRequest();
+                }
+            }
+
+            function sendAdserverRequest() {
+                if (requestManager.adserverRequestSent === true) {
+                    return;
+                }
+
+                requestManager.adserverRequestSent = true;
+                pbjs.adserverRequestSent = true;
+                requestManager.sendAdserverRequest = true;
+                googletag.cmd.push(function() {
+                    apstag.setDisplayBids();
+                    if (pbjs.version) {
+                        pbjs.setTargetingForGPTAsync();
+                    }
+                    googletag.pubads().refresh();
+                });
+            }
+
+            function requestBids(apstagSlots, adUnits, bidTimeout) {
+                apstag.fetchBids({
+                    slots: apstagSlots,
+                    timeout: bidTimeout
+                    }, function(bids) {
+                        headerBidderBack('a9');
+                    });
+
+                // request bids from prebid
+                pbjs.que.push(function() {
+                    pbjs.setPriceGranularity("high");
+                    pbjs.addAdUnits(adUnits);
+                    pbjs.enableSendAllBids();
+                    pbjs.bidderSettings = {
+                      appnexus: {
+                        bidCpmAdjustment : function(bidCpm){
+                          return bidCpm * 0.66;
+                        }
+                      },
+                      openx: {
+                        bidCpmAdjustment : function(bidCpm){
+                          return bidCpm * 0.80;
+                        }
+                      }                      
+                    };
+
+                    pbjs.requestBids({
+                        bidsBackHandler: function (bids) {
+                            headerBidderBack('prebid');
+                        }
+                    });
+                });
+            }
+
+            requestBids(apstagSlots, adUnits, bidTimeout)
+            window.setTimeout(function() {
+                sendAdserverRequest();
+            }, bidTimeout);
+        };
+
+        fetchHeaderBids();
+
+        </script>
+<script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Product",
+            "name": "BitShares",
+            "image": "https://s2.coinmarketcap.com/static/img/coins/32x32/463.png",
+            
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0.255342",
+                    "priceCurrency": "USD"
+                }
+            
+        }
+    </script>
+<link href="https://files.coinmarketcap.com/static/header_banner/header-banner-production.css" rel="stylesheet">
+</head>
+<body>
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MNVXW26" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+<script>
+            NightMode.init();
+        </script>
+<div id="header-banner-wrapper" style="display:none;overflow-x: hidden;">
+
+<div id="div-gpt-ad-1517714727704-0" class="centered">
+<script>
+                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1517714727704-0'); });
+            </script>
+</div>
+<div class="header-banner-close">X</div>
+</div>
+<script>
+            if (getCookie("header-banner-noshow") != "1") {
+                document.getElementById('header-banner-wrapper').style.display = 'block';
+            }
+        </script>
+<nav class="navbar mobile navbar-default visible-xs">
+<div class="container-fluid">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mobile-navbar-dropdown" aria-expanded="false">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<h2><a href="/" class="navbar-brand">CoinMarketCap</a></h2>
+</div>
+<div class="collapse navbar-collapse" id="mobile-navbar-dropdown">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Market Cap <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="/">All</a></li>
+<li><a href="/coins/">Coins</a></li>
+<li><a href="/tokens/">Tokens</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Trade Volume <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="/currencies/volume/24-hour/">24 Hour Volume Rankings (Currency)</a></li>
+<li><a href="/exchanges/volume/24-hour/">24 Hour Volume Rankings (Exchange)</a></li>
+<li><a href="/currencies/volume/monthly/">Monthly Volume Rankings (Currency)</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Trending <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="/gainers-losers/">Gainers and Losers</a></li>
+<li><a href="/new/">Recently Added</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="/charts/">Global Charts</a></li>
+<li><a href="/historical/">Historical Snapshots</a></li>
+<li><a href="/calculator/">Currency Converter Calculator</a></li>
+<li><a href="/widget/">Website Widgets</a></li>
+</ul>
+</li>
+</ul>
+<form action="/search/" class="navbar-form quick-search-container" role="search">
+<div class="form-group">
+<input type="text" class="form-control quick-search-box js-quick-search" placeholder="Search" name="q">
+<button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+</div>
+<div class="clearfix"></div>
+</form>
+<div class="navbar-text">
+<div class="btn-group">
+<button type="button" class="btn btn-xs dropdown-toggle language-dropdown" data-toggle="dropdown">
+<span data-language-dropdown="">English</span> <span class="caret"></span>
+</button>
+<ul class="dropdown-menu language-dropdown-menu text-center" role="menu">
+<li class="pointer"><a href="/de/currencies/bitshares/" data-language-toggle="de">Deutsch</a></li>
+<li class="pointer"><a href="/currencies/bitshares/" data-language-toggle="en">English</a></li>
+<li class="pointer"><a href="/es/currencies/bitshares/" data-language-toggle="es">Espa&#xF1;ol</a></li>
+<li class="pointer"><a href="/fil/currencies/bitshares/" data-language-toggle="fil">Filipino</a></li>
+<li class="pointer"><a href="/fr/currencies/bitshares/" data-language-toggle="fr">Fran&#xE7;ais</a></li>
+<li class="pointer"><a href="/hi/currencies/bitshares/" data-language-toggle="hi">&#x939;&#x93F;&#x928;&#x94D;&#x926;&#x940;</a></li>
+<li class="pointer"><a href="/it/currencies/bitshares/" data-language-toggle="it">Italiano</a></li>
+<li class="pointer"><a href="/ja/currencies/bitshares/" data-language-toggle="ja">&#x65E5;&#x672C;&#x8A9E;</a></li>
+<li class="pointer"><a href="/ko/currencies/bitshares/" data-language-toggle="ko">&#xD55C;&#xAD6D;&#xC5B4;</a></li>
+<li class="pointer"><a href="/pt-br/currencies/bitshares/" data-language-toggle="pt-br">Portugu&#xEA;s Brasil</a></li>
+<li class="pointer"><a href="/ru/currencies/bitshares/" data-language-toggle="ru">&#x420;&#x443;&#x441;&#x441;&#x43A;&#x438;&#x439;</a></li>
+<li class="pointer"><a href="/vi/currencies/bitshares/" data-language-toggle="vi">Ti&#x1EBF;ng Vi&#x1EC7;t</a></li>
+<li class="pointer"><a href="/zh/currencies/bitshares/" data-language-toggle="zh">&#x7B80;&#x4F53;&#x4E2D;&#x6587;</a></li>
+</ul>
+</div>
+<div data-global-currency-switch="" class="btn-group global-currency-dropdown-container">
+<button type="button" class="btn btn-xs dropdown-toggle global-currency-dropdown" data-toggle="dropdown">
+<span data-currency-display="">USD</span> <span class="caret"></span>
+</button>
+<ul class="dropdown-menu global-currency-dropdown-menu text-center" role="menu">
+<li class="pointer"><a data-currency-toggle="">USD</a></li>
+<li class="pointer"><a data-currency-toggle="">DKK</a></li>
+<li class="pointer"><a data-currency-toggle="">JPY</a></li>
+<li class="pointer"><a data-currency-toggle="">PLN</a></li>
+<li class="pointer"><a data-currency-toggle="">AUD</a></li>
+<li class="pointer"><a data-currency-toggle="">EUR</a></li>
+<li class="pointer"><a data-currency-toggle="">KRW</a></li>
+<li class="pointer"><a data-currency-toggle="">RUB</a></li>
+<li class="pointer"><a data-currency-toggle="">BRL</a></li>
+<li class="pointer"><a data-currency-toggle="">GBP</a></li>
+<li class="pointer"><a data-currency-toggle="">MXN</a></li>
+<li class="pointer"><a data-currency-toggle="">SEK</a></li>
+<li class="pointer"><a data-currency-toggle="">CAD</a></li>
+<li class="pointer"><a data-currency-toggle="">HKD</a></li>
+<li class="pointer"><a data-currency-toggle="">MYR</a></li>
+<li class="pointer"><a data-currency-toggle="">SGD</a></li>
+<li class="pointer"><a data-currency-toggle="">CHF</a></li>
+<li class="pointer"><a data-currency-toggle="">HUF</a></li>
+<li class="pointer"><a data-currency-toggle="">NOK</a></li>
+<li class="pointer"><a data-currency-toggle="">THB</a></li>
+<li class="pointer"><a data-currency-toggle="">CLP</a></li>
+<li class="pointer"><a data-currency-toggle="">IDR</a></li>
+<li class="pointer"><a data-currency-toggle="">NZD</a></li>
+<li class="pointer"><a data-currency-toggle="">TRY</a></li>
+<li class="pointer"><a data-currency-toggle="">CNY</a></li>
+<li class="pointer"><a data-currency-toggle="">ILS</a></li>
+<li class="pointer"><a data-currency-toggle="">PHP</a></li>
+<li class="pointer"><a data-currency-toggle="">TWD</a></li>
+<li class="pointer"><a data-currency-toggle="">CZK</a></li>
+<li class="pointer"><a data-currency-toggle="">INR</a></li>
+<li class="pointer"><a data-currency-toggle="">PKR</a></li>
+<li class="pointer"><a data-currency-toggle="">ZAR</a></li>
+</ul>
+</div>
+</div>
+<p class="navbar-text">
+<a href="https://www.facebook.com/CoinMarketCap" target="_blank" rel="noopener"><img src="https://s2.coinmarketcap.com/static/cloud/img/facebook_logo.png" alt="twitter" class="icon-social"></a>
+&#x200A;
+<a href="https://twitter.com/CoinMarketCap" target="_blank" rel="noopener"><img src="https://s2.coinmarketcap.com/static/cloud/img/twitter_logo.png" alt="twitter" class="icon-social"></a>
+</p>
+</div>
+</div>
+</nav>
+<div class="global-stats mobile visible-xs" data-global-stats-container="">
+<ul class="list-group">
+<li class="list-group-item">
+Market Cap: <strong><a href="/charts/"><span data-global-stats-market-cap="" data-global-currency-market-cap=""></span></a></strong>
+<button class="pull-right dropdown-toggle" data-toggle="collapse" data-target="#global-stats-mobile" aria-expanded="false" aria-controls="global-stats-mobile"><span class="caret"></span></button>
+</li>
+</ul>
+<div id="global-stats-mobile" class="collapse">
+<ul class="list-group">
+<li class="list-group-item">24h Vol: <strong><a href="/charts/"><span data-global-stats-volume="" data-global-currency-volume=""></span></a></strong></li>
+<li class="list-group-item">BTC Dominance: <strong><a href="/charts/#dominance-percentage"><span data-global-stats-btc-dominance=""></span>%</a></strong></li>
+<li class="list-group-item">Cryptocurrencies: <strong><a href="/all/views/all/"><span data-global-stats-cryptocurrencies=""></span></a></strong></li>
+<li class="list-group-item">Markets: <strong><a href="/currencies/volume/24-hour/"><span data-global-stats-markets=""></span></a></strong></li>
+</ul>
+</div>
+</div>
+<div class="outer-container global-stats desktop hidden-xs">
+<div class="container global-stats desktop">
+<div class="row">
+<div class="col-sm-3">
+<ul class="list-inline stat-counters hidden" data-global-stats-container="">
+ <li>Cryptocurrencies: <strong><a href="/all/views/all/"><span data-global-stats-cryptocurrencies=""></span></a></strong></li>
+<li>/ Markets: <strong><a href="/currencies/volume/24-hour/"><span data-global-stats-markets=""></span></a></strong></li>
+</ul>
+</div>
+<div class="col-sm-6 text-center">
+<ul class="list-inline stat-counters hidden" data-global-stats-container="">
+<li>Market Cap: <strong><a href="/charts/"><span data-global-stats-market-cap="" data-global-currency-market-cap=""></span></a></strong></li>
+<li> / 24h Vol: <strong><a href="/charts/"><span data-global-stats-volume="" data-global-currency-volume=""></span></a></strong> / BTC Dominance: <strong><a href="/charts/#dominance-percentage"><span data-global-stats-btc-dominance=""></span>%</a></strong></li>
+</ul>
+</div>
+<div class="col-sm-3 text-right">
+<div class="btn-group">
+<button type="button" class="btn btn-xs dropdown-toggle language-dropdown" data-toggle="dropdown">
+<span data-language-dropdown="">English</span> <span class="caret"></span>
+</button>
+<ul class="dropdown-menu language-dropdown-menu text-center" role="menu">
+<li class="pointer"><a href="/de/currencies/bitshares/" data-language-toggle="de">Deutsch</a></li>
+<li class="pointer"><a href="/currencies/bitshares/" data-language-toggle="en">English</a></li>
+<li class="pointer"><a href="/es/currencies/bitshares/" data-language-toggle="es">Espa&#xF1;ol</a></li>
+<li class="pointer"><a href="/fil/currencies/bitshares/" data-language-toggle="fil">Filipino</a></li>
+<li class="pointer"><a href="/fr/currencies/bitshares/" data-language-toggle="fr">Fran&#xE7;ais</a></li>
+<li class="pointer"><a href="/hi/currencies/bitshares/" data-language-toggle="hi">&#x939;&#x93F;&#x928;&#x94D;&#x926;&#x940;</a></li>
+<li class="pointer"><a href="/it/currencies/bitshares/" data-language-toggle="it">Italiano</a></li>
+<li class="pointer"><a href="/ja/currencies/bitshares/" data-language-toggle="ja">&#x65E5;&#x672C;&#x8A9E;</a></li>
+<li class="pointer"><a href="/ko/currencies/bitshares/" data-language-toggle="ko">&#xD55C;&#xAD6D;&#xC5B4;</a></li>
+<li class="pointer"><a href="/pt-br/currencies/bitshares/" data-language-toggle="pt-br">Portugu&#xEA;s Brasil</a></li>
+<li class="pointer"><a href="/ru/currencies/bitshares/" data-language-toggle="ru">&#x420;&#x443;&#x441;&#x441;&#x43A;&#x438;&#x439;</a></li>
+<li class="pointer"><a href="/vi/currencies/bitshares/" data-language-toggle="vi">Ti&#x1EBF;ng Vi&#x1EC7;t</a></li>
+<li class="pointer"><a href="/zh/currencies/bitshares/" data-language-toggle="zh">&#x7B80;&#x4F53;&#x4E2D;&#x6587;</a></li>
+</ul>
+</div>
+<div data-global-currency-switch="" class="btn-group global-currency-dropdown-container">
+<button type="button" class="btn btn-xs dropdown-toggle global-currency-dropdown" data-toggle="dropdown">
+<span data-currency-display="">USD</span> <span class="caret"></span>
+</button>
+<ul class="dropdown-menu global-currency-dropdown-menu text-center" role="menu">
+<li class="pointer"><a data-currency-toggle="">USD</a></li>
+<li class="pointer"><a data-currency-toggle="">DKK</a></li>
+<li class="pointer"><a data-currency-toggle="">JPY</a></li>
+<li class="pointer"><a data-currency-toggle="">PLN</a></li>
+<li class="pointer"><a data-currency-toggle="">AUD</a></li>
+<li class="pointer"><a data-currency-toggle="">EUR</a></li>
+<li class="pointer"><a data-currency-toggle="">KRW</a></li>
+<li class="pointer"><a data-currency-toggle="">RUB</a></li>
+<li class="pointer"><a data-currency-toggle="">BRL</a></li>
+<li class="pointer"><a data-currency-toggle="">GBP</a></li>
+<li class="pointer"><a data-currency-toggle="">MXN</a></li>
+<li class="pointer"><a data-currency-toggle="">SEK</a></li>
+<li class="pointer"><a data-currency-toggle="">CAD</a></li>
+<li class="pointer"><a data-currency-toggle="">HKD</a></li>
+<li class="pointer"><a data-currency-toggle="">MYR</a></li>
+<li class="pointer"><a data-currency-toggle="">SGD</a></li>
+<li class="pointer"><a data-currency-toggle="">CHF</a></li>
+<li class="pointer"><a data-currency-toggle="">HUF</a></li>
+<li class="pointer"><a data-currency-toggle="">NOK</a></li>
+<li class="pointer"><a data-currency-toggle="">THB</a></li>
+<li class="pointer"><a data-currency-toggle="">CLP</a></li>
+<li class="pointer"><a data-currency-toggle="">IDR</a></li>
+<li class="pointer"><a data-currency-toggle="">NZD</a></li>
+<li class="pointer"><a data-currency-toggle="">TRY</a></li>
+<li class="pointer"><a data-currency-toggle="">CNY</a></li>
+<li class="pointer"><a data-currency-toggle="">ILS</a></li>
+<li class="pointer"><a data-currency-toggle="">PHP</a></li>
+<li class="pointer"><a data-currency-toggle="">TWD</a></li>
+<li class="pointer"><a data-currency-toggle="">CZK</a></li>
+<li class="pointer"><a data-currency-toggle="">INR</a></li>
+<li class="pointer"><a data-currency-toggle="">PKR</a></li>
+<li class="pointer"><a data-currency-toggle="">ZAR</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-lg-10">
+<div id="title" class="hidden-xs"><a href="/">Cryptocurrency Market Capitalizations</a></div>
+<hr class="divider-under-title">
+<div id="leaderboard" class="text-center">
+
+<div id="div-gpt-ad-1488495260324-9" class="centered leaderboard">
+<script>
+                                    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1488495260324-9'); });
+                                    </script>
+</div>
+</div>
+<nav class="navbar desktop navbar-default hidden-xs">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+</div>
+<div class="collapse navbar-collapse" id="navbar-collapse-1">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Market Cap <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="/">All</a></li>
+<li><a href="/coins/">Coins</a></li>
+<li><a href="/tokens/">Tokens</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Trade Volume <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="/currencies/volume/24-hour/">24 Hour Volume Rankings (Currency)</a></li>
+<li><a href="/exchanges/volume/24-hour/">24 Hour Volume Rankings (Exchange)</a></li>
+<li><a href="/currencies/volume/monthly/">Monthly Volume Rankings (Currency)</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Trending <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="/gainers-losers/">Gainers and Losers</a></li>
+<li><a href="/new/">Recently Added</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="/charts/">Global Charts</a></li>
+<li><a href="/historical/">Historical Snapshots</a></li>
+<li><a href="/calculator/">Currency Converter Calculator</a></li>
+<li><a href="/widget/">Website Widgets</a></li>
+</ul>
+</li>
+</ul>
+<form action="/search/" class="navbar-form navbar-right quick-search-container" role="search">
+<div class="form-group">
+<input type="text" class="form-control quick-search-box js-quick-search" placeholder="Search" name="q">
+</div>
+<button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+</form>
+<div class="bottom-margin-1x hidden-sm hidden-md hidden-lg"></div>
+</div>
+</nav>
+<div class="row bottom-margin-1x">
+<div class="col-xs-6 col-sm-4 col-md-4">
+<h1 class="text-large">
+<img src="https://s2.coinmarketcap.com/static/img/coins/32x32/463.png" class="logo-32x32" alt="BitShares">
+<small class="bold hidden-sm hidden-md hidden-lg">(BTS)</small>
+<span class="clearfix visible-xs"></span>
+BitShares
+<small class="bold hidden-xs">(BTS)</small>
+</h1>
+</div>
+<div class="col-xs-6 col-sm-8 col-md-4 text-left">
+<span id="quote_price" data-currency-price="" data-usd="0.255342">
+<span class="text-large2" data-currency-value="">0.255342</span>
+<span class="details-text-medium" data-currency-code="">USD</span>
+</span>
+<span class="text-large2  negative_change">
+(<span data-format-percentage="" data-format-value="-11.4525">-11.45</span>%)
+</span>
+<br>
+<span class="text-gray details-text-medium">
+<span data-format-price-crypto="" data-format-value="2.85014e-05">
+0.00002850
+</span>
+BTC
+</span>
+<span class="details-text-medium  negative_change">
+(<span data-format-percentage="" data-format-value="-7.74322">-7.74</span>%)
+</span>
+</div>
+<div class="col-xs-push-6 col-sm-push-4 col-md-push-0 col-md-4 text-left">
+
+<div id="div-gpt-ad-1520101567641-0">
+<script>
+            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1520101567641-0'); });
+            </script>
+</div>
+</div>
+</div>
+ <div class="row bottom-margin-2x">
+<div class="col-sm-8 col-sm-push-4">
+<div class="coin-summary-item col-xs-6  col-md-3">
+<div class="coin-summary-item-header">
+<h3 class="details-text-medium">Market Cap</h3>
+</div>
+<div class="coin-summary-item-detail details-text-medium">
+<span data-currency-market-cap="" data-usd="668664095.4">
+<span data-currency-value="">668,664,095</span>
+<span data-currency-code="">USD</span>
+</span><br>
+<span class="text-gray">
+<span data-format-market-cap="" data-format-value="74636.61618">
+74,637
+</span>
+BTC
+<br>
+</span>
+</div>
+</div>
+<div class="coin-summary-item col-xs-6  col-md-3">
+<div class="coin-summary-item-header">
+<h3 class="details-text-medium">Volume (24h)</h3>
+</div>
+<div class="coin-summary-item-detail details-text-medium">
+<span data-currency-volume="" data-usd="41752800.0">
+<span data-currency-value="">41,752,800</span>
+<span data-currency-code="">USD</span>
+</span><br>
+<span class="text-gray">
+<span data-format-volume-crypto="" data-format-value="4660.47">
+4,660
+</span>
+BTC
+</span>
+</div>
+</div>
+<div class="vertical-spacer col-xs-12 hidden-md hidden-lg"></div>
+<div class="coin-summary-item col-xs-6  col-md-3">
+<div class="coin-summary-item-header">
+<h3 class="details-text-medium">Circulating Supply</h3>
+</div>
+<div class="coin-summary-item-detail details-text-medium">
+<span data-format-supply="" data-format-value="2618700000.0">
+2,618,700,000
+</span>
+BTS
+</div>
+</div>
+<div class="coin-summary-item col-xs-6  col-md-3 ">
+<div class="coin-summary-item-header">
+<h3 class="details-text-medium">Max Supply</h3>
+</div>
+<div class="coin-summary-item-detail details-text-medium">
+<span data-format-supply="" data-format-value="3600570502">
+3,600,570,502
+</span>
+BTS
+</div>
+</div>
+<div class="clearfix visible-xs"></div>
+</div>
+<div class="col-sm-4 col-sm-pull-8">
+<ul class="list-unstyled">
+<li><span class="glyphicon glyphicon-link text-gray" title="Website"></span> <a href="https://bitshares.org" target="_blank" rel="noopener">Website</a></li>
+<li><span class="glyphicon glyphicon-bullhorn text-gray" title="Announcement"></span> <a href="https://bitcointalk.org/index.php?topic=1949828" target="_blank" rel="noopener">Announcement</a></li>
+<li><span class="glyphicon glyphicon-search text-gray" title="Explorer"></span> <a href="http://cryptofresh.com/" target="_blank" rel="noopener">Explorer</a></li>
+<li><span class="glyphicon glyphicon-search text-gray" title="Explorer"></span> <a href="http://open-explorer.io/" target="_blank" rel="noopener">Explorer 2</a></li>
+<li><span class="glyphicon glyphicon-search text-gray" title="Explorer"></span> <a href="http://bts.ai/" target="_blank" rel="noopener">Explorer 3</a></li>
+<li><span class="glyphicon glyphicon-list text-gray" title="Message Board"></span> <a href="https://bitsharestalk.org/" target="_blank" rel="noopener">Message Board</a></li>
+<li><span class="glyphicon glyphicon-globe text-gray" title="Chat"></span> <a href="https://t.me/BitSharesDEX" target="_blank" rel="noopener">Chat</a></li>
+<li><span class="glyphicon glyphicon-hdd text-gray" title="Source Code"></span> <a href="https://github.com/bitshares" target="_blank" rel="noopener">Source Code</a></li>
+<li><span class="glyphicon glyphicon glyphicon-star text-gray" title="Rank"></span>
+<small><span class="label label-success"> Rank 33</span></small>
+</li>
+<li><span class="glyphicon glyphicon glyphicon-tag text-gray" title="Tags"></span>
+<small>
+<span class="label label-warning">Coin</span>
+</small>
+</li>
+</ul>
+</div>
+</div>
+<div class="row bottom-margin-1x">
+<div class="col-xs-12">
+<ul class="nav nav-tabs text-left" role="tablist">
+<li><a href="#charts" role="tab" data-toggle="tab"> <span class="glyphicon glyphicon-stats text-gray"></span> Charts</a></li>
+<li><a href="#markets" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-transfer text-gray"></span> Markets</a></li>
+<li><a href="#social" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-globe text-gray"></span> Social</a></li>
+<li><a href="#tools" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-wrench text-gray"></span> Tools</a></li>
+<li><a href="/currencies/bitshares/historical-data/"><span class="glyphicon glyphicon-calendar text-gray"></span>&#xA0;Historical Data</a></li>
+</ul>
+</div>
+<div class="col-xs-12 tab-content">
+<div id="charts" class="tab-pane active">
+<div class="tab-header">
+<div id="highcharts-loading" class="text-center">Loading data from server...<div><span class="loading"></span></div></div>
+<div id="highcharts-nodata" class="hidden text-center">No chart data found</div>
+<div class="clear"></div>
+</div>
+<div id="highcharts-graph"></div>
+<br>
+</div>
+<div id="markets" class="tab-pane">
+<div class="tab-header">
+<h2 class="pull-left">BitShares Markets</h2><br>
+<div class="pull-right">
+<div class="clear"></div>
+<div id="currency-switch" class="btn-group">
+<button id="currency-switch-button" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+USD <span class="caret"></span>
+</button>
+<ul class="dropdown-menu text-center" role="menu">
+<li class="pointer" data-fiat-item=""><a class="price-toggle" data-currency="usd" data-fiat="">USD</a></li>
+<li class="divider" data-fiat-item=""></li>
+<li class="pointer"><a class="price-toggle" data-currency="usd">USD</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="btc" data-currencyid="bitcoin">BTC</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="eth" data-currencyid="ethereum">ETH</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="xrp" data-currencyid="ripple">XRP</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="bch" data-currencyid="bitcoin-cash">BCH</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="ltc" data-currencyid="litecoin">LTC</a></li>
+<li class="divider"></li>
+<li class="pointer"><a class="price-toggle" data-currency="native">Native</a></li>
+</ul>
+</div>
+</div>
+<div class="table-responsive">
+<table id="markets-table" class="table no-border table-condensed">
+<thead>
+<tr>
+<th class="text-right sortable">#</th>
+<th id="th-source" class="sortable">Source</th>
+<th id="th-pair" class="sortable">Pair</th>
+<th class="text-right sortable">Volume (24h)</th>
+<th class="text-right sortable">Price</th>
+<th class="text-right sortable">Volume (%)</th>
+<th class="text-right sortable">Updated</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-right">1</td>
+<td data-sort="ZB.COM"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/326.png" class="logo" alt="ZB.COM"><a href="/exchanges/zb-com/">ZB.COM</a></td>
+<td data-sort="BTS/USDT"><a href="https://trans.zb.com/btsusdt" target="_blank">BTS/USDT</a></td>
+<td class="text-right" data-sort="7062510.0">
+<span class="volume" data-usd="7062510.0" data-btc="788.32" data-native="28189800.0">
+$7,062,510
+</span>
+</td>
+<td class="text-right" data-sort="0.250535">
+<span class="price" data-usd="0.250535" data-btc="2.79648e-05" data-native="0.2503">
+$0.250535
+</span>
+</td>
+<td class="text-right" data-sort="16.9150571938">
+<span data-format-percentage="" data-format-value="16.9150571938">16.92</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">2</td>
+<td data-sort="BitShares Asset Exchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/57.png" class="logo" alt="BitShares Asset Exchange"><a href="/exchanges/bitshares-asset-exchange/">BitShares Asset Exchange</a></td>
+<td data-sort="BITCNY/BTS"><a href="https://bitshares.openledger.info/market/BITCNY_BTS" target="_blank">BITCNY/BTS</a></td>
+<td class="text-right" data-sort="6096620.0">
+<span class="volume" data-usd="6096620.0" data-btc="680.507" data-native="41789300.0">
+$6,096,620
+ </span>
+</td>
+<td class="text-right" data-sort="0.272807">
+<span class="price" data-usd="0.272807" data-btc="3.04508e-05" data-native="0.578031">
+$0.272807
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">11 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">3</td>
+<td data-sort="Binance"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/270.png" class="logo" alt="Binance"><a href="/exchanges/binance/">Binance</a></td>
+<td data-sort="BTS/BTC"><a href="https://www.binance.com/trade.html?symbol=BTS_BTC" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="5046860.0">
+<span class="volume" data-usd="5046860.0" data-btc="563.333" data-native="20011800.0">
+$5,046,860
+</span>
+</td>
+<td class="text-right" data-sort="0.252194">
+<span class="price" data-usd="0.252194" data-btc="2.815e-05" data-native="2.815e-05">
+$0.252194
+</span>
+</td>
+<td class="text-right" data-sort="12.087476768">
+<span data-format-percentage="" data-format-value="12.087476768">12.09</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">4</td>
+<td data-sort="Huobi"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/102.png" class="logo" alt="Huobi"><a href="/exchanges/huobi/">Huobi</a></td>
+<td data-sort="BTS/USDT"><a href="https://www.huobi.pro/ko-kr/bts_usdt/exchange/" target="_blank">BTS/USDT</a></td>
+<td class="text-right" data-sort="4663240.0">
+<span class="volume" data-usd="4663240.0" data-btc="520.513" data-native="18436400.0">
+$4,663,240
+</span>
+</td>
+<td class="text-right" data-sort="0.252937">
+<span class="price" data-usd="0.252937" data-btc="2.82329e-05" data-native="0.2527">
+$0.252937
+</span>
+ </td>
+<td class="text-right" data-sort="11.168688088">
+<span data-format-percentage="" data-format-value="11.168688088">11.17</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">5</td>
+<td data-sort="Huobi"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/102.png" class="logo" alt="Huobi"><a href="/exchanges/huobi/">Huobi</a></td>
+<td data-sort="BTS/BTC"><a href="https://www.huobi.pro/ko-kr/bts_btc/exchange/" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="3880460.0">
+<span class="volume" data-usd="3880460.0" data-btc="433.139" data-native="15392300.0">
+$3,880,460
+</span>
+</td>
+<td class="text-right" data-sort="0.252105">
+<span class="price" data-usd="0.252105" data-btc="2.814e-05" data-native="2.814e-05">
+$0.252105
+</span>
+</td>
+<td class="text-right" data-sort="9.29389166715">
+<span data-format-percentage="" data-format-value="9.29389166715">9.29</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">6</td>
+<td data-sort="ZB.COM"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/326.png" class="logo" alt="ZB.COM"><a href="/exchanges/zb-com/">ZB.COM</a></td>
+<td data-sort="BTS/BTC"><a href="https://trans.zb.com/btsbtc" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="3738420.0">
+<span class="volume" data-usd="3738420.0" data-btc="417.284" data-native="14739800.0">
+$3,738,420
+</span>
+</td>
+<td class="text-right" data-sort="0.253628">
+<span class="price" data-usd="0.253628" data-btc="2.831e-05" data-native="2.831e-05">
+$0.253628
+</span>
+</td>
+<td class="text-right" data-sort="8.95369891361">
+<span data-format-percentage="" data-format-value="8.95369891361">8.95</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+
+<tr>
+<td class="text-right">7</td>
+<td data-sort="Poloniex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/16.png" class="logo" alt="Poloniex"><a href="/exchanges/poloniex/">Poloniex</a></td>
+<td data-sort="BTS/BTC"><a href="https://poloniex.com/exchange/#btc_bts" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="2768230.0">
+<span class="volume" data-usd="2768230.0" data-btc="308.991" data-native="11007900.0">
+$2,768,230
+</span>
+</td>
+<td class="text-right" data-sort="0.251477">
+<span class="price" data-usd="0.251477" data-btc="2.807e-05" data-native="2.807e-05">
+$0.251477
+</span>
+</td>
+<td class="text-right" data-sort="6.63004636815">
+<span data-format-percentage="" data-format-value="6.63004636815">6.63</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">8</td>
+<td data-sort="Huobi"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/102.png" class="logo" alt="Huobi"><a href="/exchanges/huobi/">Huobi</a></td>
+<td data-sort="BTS/ETH"><a href="https://www.huobi.pro/ko-kr/bts_eth/exchange/" target="_blank">BTS/ETH</a></td>
+<td class="text-right" data-sort="2228820.0">
+<span class="volume" data-usd="2228820.0" data-btc="248.782" data-native="8841280.0">
+$2,228,820
+</span>
+</td>
+<td class="text-right" data-sort="0.252093">
+<span class="price" data-usd="0.252093" data-btc="2.81387e-05" data-native="0.00040668">
+$0.252093
+</span>
+</td>
+<td class="text-right" data-sort="5.33813301144">
+<span data-format-percentage="" data-format-value="5.33813301144">5.34</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">9</td>
+<td data-sort="Gate.io"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/302.png" class="logo" alt="Gate.io"><a href="/exchanges/gate-io/">Gate.io</a></td>
+<td data-sort="BTS/USDT"><a href="https://gate.io/trade/bts_usdt" target="_blank">BTS/USDT</a></td>
+<td class="text-right" data-sort="1347960.0">
+<span class="volume" data-usd="1347960.0" data-btc="150.46" data-native="5386790.0">
+$1,347,960
+</span>
+</td>
+<td class="text-right" data-sort="0.250234">
+<span class="price" data-usd="0.250234" data-btc="2.79313e-05" data-native="0.25">
+$0.250234
+</span>
+</td>
+<td class="text-right" data-sort="3.22843018911">
+<span data-format-percentage="" data-format-value="3.22843018911">3.23</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">10</td>
+<td data-sort="RightBTC"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/323.png" class="logo" alt="RightBTC"><a href="/exchanges/rightbtc/">RightBTC</a></td>
+<td data-sort="BTS/BTC"><a href="https://www.rightbtc.com/" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="1252620.0">
+<span class="volume" data-usd="1252620.0" data-btc="139.817" data-native="4975710.0">
+$1,252,620
+</span>
+</td>
+<td class="text-right" data-sort="0.251746">
+<span class="price" data-usd="0.251746" data-btc="2.81e-05" data-native="2.81e-05">
+$0.251746
+</span>
+</td>
+<td class="text-right" data-sort="3.00008622176">
+<span data-format-percentage="" data-format-value="3.00008622176">3.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">11</td>
+<td data-sort="BitShares Asset Exchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/57.png" class="logo" alt="BitShares Asset Exchange"><a href="/exchanges/bitshares-asset-exchange/">BitShares Asset Exchange</a></td>
+<td data-sort="BITUSD/BTS"><a href="https://bitshares.openledger.info/market/BITUSD_BTS" target="_blank">BITUSD/BTS</a></td>
+<td class="text-right" data-sort="892256.0">
+<span class="volume" data-usd="892256.0" data-btc="99.5939" data-native="938090.0">
+$892,256
+</span>
+ </td>
+<td class="text-right" data-sort="0.272494">
+<span class="price" data-usd="0.272494" data-btc="3.04159e-05" data-native="3.76853">
+$0.272494
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">11 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">12</td>
+<td data-sort="Binance"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/270.png" class="logo" alt="Binance"><a href="/exchanges/binance/">Binance</a></td>
+<td data-sort="BTS/ETH"><a href="https://www.binance.com/trade.html?symbol=BTS_ETH" target="_blank">BTS/ETH</a></td>
+<td class="text-right" data-sort="831553.0">
+<span class="volume" data-usd="831553.0" data-btc="92.8183" data-native="3300710.0">
+$831,553
+</span>
+</td>
+<td class="text-right" data-sort="0.251932">
+<span class="price" data-usd="0.251932" data-btc="2.81207e-05" data-native="0.00040642">
+$0.251932
+</span>
+</td>
+<td class="text-right" data-sort="1.99161014351">
+<span data-format-percentage="" data-format-value="1.99161014351">1.99</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">13</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="BTC/BTS"><a href="https://openledger.io" target="_blank">BTC/BTS</a></td>
+<td class="text-right" data-sort="389869.0">
+<span class="volume" data-usd="389869.0" data-btc="43.5173" data-native="44.3021">
+$389,869
+</span>
+</td>
+<td class="text-right" data-sort="0.256942">
+<span class="price" data-usd="0.256942" data-btc="2.868e-05" data-native="34867.5">
+$0.256942
+</span>
+</td>
+
+<td class="text-right" data-sort="0.933755340959">
+<span data-format-percentage="" data-format-value="0.933755340959">0.93</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">14</td>
+<td data-sort="Lbank"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/333.png" class="logo" alt="Lbank"><a href="/exchanges/lbank/">Lbank</a></td>
+<td data-sort="BTS/ETH"><a href="https://www.lbank.info/trading/bts/eth" target="_blank">BTS/ETH</a></td>
+<td class="text-right" data-sort="366046.0">
+<span class="volume" data-usd="366046.0" data-btc="40.8582" data-native="1457760.0">
+$366,046
+</span>
+</td>
+<td class="text-right" data-sort="0.251101">
+<span class="price" data-usd="0.251101" data-btc="2.8028e-05" data-native="0.00040508">
+$0.251101
+</span>
+</td>
+<td class="text-right" data-sort="0.876698089709">
+<span data-format-percentage="" data-format-value="0.876698089709">0.88</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">15</td>
+<td data-sort="Livecoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/107.png" class="logo" alt="Livecoin"><a href="/exchanges/livecoin/">Livecoin</a></td>
+<td data-sort="BTS/BTC"><a href="https://www.livecoin.net/" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="194872.0">
+<span class="volume" data-usd="194872.0" data-btc="21.7517" data-native="777122.0">
+$194,872
+</span>
+</td>
+<td class="text-right" data-sort="0.250761">
+<span class="price" data-usd="0.250761" data-btc="2.799e-05" data-native="2.799e-05">
+$0.250761
+</span>
+</td>
+<td class="text-right" data-sort="0.46672797992">
+<span data-format-percentage="" data-format-value="0.46672797992">0.47</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+ <tr>
+<td class="text-right">16</td>
+<td data-sort="Binance"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/270.png" class="logo" alt="Binance"><a href="/exchanges/binance/">Binance</a></td>
+<td data-sort="BTS/BNB"><a href="https://www.binance.com/trade.html?symbol=BTS_BNB" target="_blank">BTS/BNB</a></td>
+<td class="text-right" data-sort="173258.0">
+<span class="volume" data-usd="173258.0" data-btc="19.3392" data-native="689642.0">
+$173,258
+</span>
+</td>
+<td class="text-right" data-sort="0.251229">
+<span class="price" data-usd="0.251229" data-btc="2.80423e-05" data-native="0.01853">
+$0.251229
+</span>
+</td>
+<td class="text-right" data-sort="0.414961391811">
+<span data-format-percentage="" data-format-value="0.414961391811">0.41</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">17</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="EOS/BTS"><a href="https://openledger.io" target="_blank">EOS/BTS</a></td>
+<td class="text-right" data-sort="159401.0">
+<span class="volume" data-usd="159401.0" data-btc="17.7924" data-native="11497.9">
+$159,401
+</span>
+</td>
+<td class="text-right" data-sort="0.261388">
+<span class="price" data-usd="0.261388" data-btc="2.91762e-05" data-native="54.929">
+$0.261388
+</span>
+</td>
+<td class="text-right" data-sort="0.381773198444">
+<span data-format-percentage="" data-format-value="0.381773198444">0.38</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">18</td>
+<td data-sort="CoinTiger"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/391.png" class="logo" alt="CoinTiger"><a href="/exchanges/cointiger/">CoinTiger</a></td>
+<td data-sort="BTS/BTC"><a href="" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="144273.0">
+<span class="volume" data-usd="144273.0" data-btc="16.1039" data-native="573703.0">
+$144,273
+</span>
+</td>
+<td class="text-right" data-sort="0.251477">
+<span class="price" data-usd="0.251477" data-btc="2.807e-05" data-native="2.807e-05">
+$0.251477
+</span>
+</td>
+<td class="text-right" data-sort="0.345540897856">
+<span data-format-percentage="" data-format-value="0.345540897856">0.35</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">19</td>
+<td data-sort="Lbank"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/333.png" class="logo" alt="Lbank"><a href="/exchanges/lbank/">Lbank</a></td>
+<td data-sort="BTS/BTC"><a href="https://www.lbank.info/trading/bts/btc" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="92352.5">
+<span class="volume" data-usd="92352.5" data-btc="10.3084" data-native="366196.0">
+$92,353
+</span>
+</td>
+<td class="text-right" data-sort="0.252194">
+<span class="price" data-usd="0.252194" data-btc="2.815e-05" data-native="2.815e-05">
+$0.252194
+</span>
+</td>
+<td class="text-right" data-sort="0.221188758598">
+<span data-format-percentage="" data-format-value="0.221188758598">0.22</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">20</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="W3C/BTS"><a href="https://openledger.io" target="_blank">W3C/BTS</a></td>
+<td class="text-right" data-sort="92042.0">
+<span class="volume" data-usd="92042.0" data-btc="10.2738" data-native="429047000.0">
+$92,042
+</span>
+</td>
+<td class="text-right" data-sort="0.18719">
+
+<span class="price" data-usd="0.18719" data-btc="2.08942e-05" data-native="0.00084998">
+$0.187190
+</span>
+</td>
+<td class="text-right" data-sort="0.220445095898">
+<span data-format-percentage="" data-format-value="0.220445095898">0.22</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">21</td>
+<td data-sort="Indodax"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/68.png" class="logo" alt="Indodax"><a href="/exchanges/indodax/">Indodax</a></td>
+<td data-sort="BTS/BTC"><a href="https://indodax.com/" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="68221.5">
+<span class="volume" data-usd="68221.5" data-btc="7.61491" data-native="269745.0">
+$68,222
+</span>
+</td>
+<td class="text-right" data-sort="0.252911">
+<span class="price" data-usd="0.252911" data-btc="2.823e-05" data-native="2.823e-05">
+$0.252911
+</span>
+</td>
+<td class="text-right" data-sort="0.16339383227">
+<span data-format-percentage="" data-format-value="0.16339383227">0.16</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">22</td>
+<td data-sort="Gate.io"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/302.png" class="logo" alt="Gate.io"><a href="/exchanges/gate-io/">Gate.io</a></td>
+<td data-sort="BTS/BTC"><a href="https://gate.io/trade/bts_btc" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="42746.7">
+<span class="volume" data-usd="42746.7" data-btc="4.77141" data-native="169319.0">
+$42,747
+</span>
+</td>
+<td class="text-right" data-sort="0.252463">
+<span class="price" data-usd="0.252463" data-btc="2.818e-05" data-native="2.818e-05">
+$0.252463
+</span>
+</td>
+<td class="text-right" data-sort="0.102380439156">
+<span data-format-percentage="" data-format-value="0.102380439156">0.10</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">23</td>
+<td data-sort="CryptoBridge"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/304.png" class="logo" alt="CryptoBridge"><a href="/exchanges/cryptobridge/">CryptoBridge</a></td>
+<td data-sort="BTC/BTS"><a href="https://wallet.crypto-bridge.org/market/BRIDGE.BTC_BRIDGE.BTS" target="_blank">BTC/BTS</a></td>
+<td class="text-right" data-sort="32055.9">
+<span class="volume" data-usd="32055.9" data-btc="3.57809" data-native="3.61048">
+$32,056
+</span>
+</td>
+<td class="text-right" data-sort="0.254675">
+<span class="price" data-usd="0.254675" data-btc="2.84269e-05" data-native="35177.9">
+$0.254675
+</span>
+</td>
+<td class="text-right" data-sort="0.0767754497902">
+<span data-format-percentage="" data-format-value="0.0767754497902">0.08</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">24</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="ETH/BTS"><a href="https://openledger.io" target="_blank">ETH/BTS</a></td>
+<td class="text-right" data-sort="29095.2">
+<span class="volume" data-usd="29095.2" data-btc="3.24762" data-native="47.9195">
+$29,095
+</span>
+</td>
+<td class="text-right" data-sort="0.257675">
+<span class="price" data-usd="0.257675" data-btc="2.87617e-05" data-native="2405.67">
+$0.257675
+</span>
+</td>
+<td class="text-right" data-sort="0.0696844283497">
+<span data-format-percentage="" data-format-value="0.0696844283497">0.07</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">25</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="ZEN/BTS"><a href="https://openledger.io" target="_blank">ZEN/BTS</a></td>
+<td class="text-right" data-sort="27915.5">
+<span class="volume" data-usd="27915.5" data-btc="3.11594" data-native="849.171">
+$27,916
+</span>
+</td>
+<td class="text-right" data-sort="0.254106">
+<span class="price" data-usd="0.254106" data-btc="2.83634e-05" data-native="130.25">
+$0.254106
+</span>
+</td>
+<td class="text-right" data-sort="0.0668589890977">
+<span data-format-percentage="" data-format-value="0.0668589890977">0.07</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">26</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="CVCOIN/BTS"><a href="https://openledger.io" target="_blank">CVCOIN/BTS</a></td>
+<td class="text-right" data-sort="15997.4">
+<span class="volume" data-usd="15997.4" data-btc="1.78563" data-native="13887.7">
+$15,997
+</span>
+</td>
+<td class="text-right" data-sort="0.209021">
+<span class="price" data-usd="0.209021" data-btc="2.3331e-05" data-native="4.564">
+$0.209021
+</span>
+</td>
+<td class="text-right" data-sort="0.0383145561495">
+<span data-format-percentage="" data-format-value="0.0383145561495">0.04</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">27</td>
+<td data-sort="Vebitcoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/355.png" class="logo" alt="Vebitcoin"><a href="/exchanges/vebitcoin/">Vebitcoin</a></td>
+<td data-sort="BTS/TRY"><a href="https://www.vebitcoin.com/" target="_blank">BTS/TRY</a></td>
+<td class="text-right" data-sort="10460.6">
+ <span class="volume" data-usd="10460.6" data-btc="1.16762" data-native="39529.4">
+$10,461
+</span>
+</td>
+<td class="text-right" data-sort="0.26463">
+<span class="price" data-usd="0.26463" data-btc="2.95381e-05" data-native="1.08">
+$0.264630
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">1 hour ago</td>
+</tr>
+<tr>
+<td class="text-right">28</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="STEEM/BTS"><a href="https://openledger.io" target="_blank">STEEM/BTS</a></td>
+<td class="text-right" data-sort="9556.44">
+<span class="volume" data-usd="9556.44" data-btc="1.06669" data-native="2829.87">
+$9,556
+</span>
+</td>
+<td class="text-right" data-sort="0.266044">
+<span class="price" data-usd="0.266044" data-btc="2.96959e-05" data-native="13.38">
+$0.266044
+</span>
+</td>
+<td class="text-right" data-sort="0.0228881416336">
+<span data-format-percentage="" data-format-value="0.0228881416336">0.02</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">29</td>
+<td data-sort="BuyUcoin"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/377.png" class="logo" alt="BuyUcoin"><a href="/exchanges/buyucoin/">BuyUcoin</a></td>
+<td data-sort="BTS/INR"><a href="https://www.buyucoin.com/trade?currency=bts" target="_blank">BTS/INR</a></td>
+<td class="text-right" data-sort="8904.85">
+<span class="volume" data-usd="8904.85" data-btc="0.993962" data-native="39698.0">
+$8,905
+</span>
+</td>
+<td class="text-right" data-sort="0.224315">
+<span class="price" data-usd="0.224315" data-btc="2.50381e-05" data-native="15.0">
+$0.224315
+</span>
+</td>
+<td class="text-right" data-sort="0.0213275516852">
+<span data-format-percentage="" data-format-value="0.0213275516852">0.02</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">30</td>
+<td data-sort="BitShares Asset Exchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/57.png" class="logo" alt="BitShares Asset Exchange"><a href="/exchanges/bitshares-asset-exchange/">BitShares Asset Exchange</a></td>
+<td data-sort="PPY/BTS"><a href="https://bitshares.openledger.info/market/PPY_BTS" target="_blank">PPY/BTS</a></td>
+<td class="text-right" data-sort="8188.73">
+<span class="volume" data-usd="8188.73" data-btc="0.914029" data-native="1568.56">
+$8,189
+</span>
+</td>
+<td class="text-right" data-sort="0.249925">
+<span class="price" data-usd="0.249925" data-btc="2.78967e-05" data-native="20.6844">
+$0.249925
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">11 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">31</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="ZEPH/BTS"><a href="https://openledger.io" target="_blank">ZEPH/BTS</a></td>
+<td class="text-right" data-sort="6762.48">
+<span class="volume" data-usd="6762.48" data-btc="0.75483" data-native="223188.0">
+$6,762
+</span>
+</td>
+<td class="text-right" data-sort="0.251347">
+<span class="price" data-usd="0.251347" data-btc="2.80555e-05" data-native="0.12005">
+$0.251347
+</span>
+</td>
+<td class="text-right" data-sort="0.0161964706559">
+<span data-format-percentage="" data-format-value="0.0161964706559">0.02</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">32</td>
+<td data-sort="BigONE"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/330.png" class="logo" alt="BigONE"><a href="/exchanges/bigone/">BigONE</a></td>
+<td data-sort="BTS/BTC"><a href="https://big.one/trade/BTS-BTC" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="6200.09">
+<span class="volume" data-usd="6200.09" data-btc="0.692056" data-native="23782.0">
+$6,200
+</span>
+</td>
+<td class="text-right" data-sort="0.260705">
+<span class="price" data-usd="0.260705" data-btc="2.91e-05" data-native="2.91e-05">
+$0.260705
+</span>
+</td>
+<td class="text-right" data-sort="0.0148495190742">
+<span data-format-percentage="" data-format-value="0.0148495190742">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">33</td>
+<td data-sort="RuDEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/369.png" class="logo" alt="RuDEX"><a href="/exchanges/rudex/">RuDEX</a></td>
+<td data-sort="PPY/BTS"><a href="https://market.rudex.org/#/market/BTS_PPY" target="_blank">PPY/BTS</a></td>
+<td class="text-right" data-sort="5514.84">
+<span class="volume" data-usd="5514.84" data-btc="0.615569" data-native="1056.37">
+$5,515
+</span>
+</td>
+<td class="text-right" data-sort="0.249925">
+<span class="price" data-usd="0.249925" data-btc="2.78967e-05" data-native="20.6844">
+$0.249925
+</span>
+</td>
+<td class="text-right" data-sort="0.0132083117779">
+<span data-format-percentage="" data-format-value="0.0132083117779">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">34</td>
+<td data-sort="RuDEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/369.png" class="logo" alt="RuDEX"><a href="/exchanges/rudex/">RuDEX</a></td>
+<td data-sort="KRM/BTS"><a href="https://market.rudex.org/#/market/BTS_KRM" target="_blank">KRM/BTS</a></td>
+<td class="text-right" data-sort="4657.27">
+<span class="volume" data-usd="4657.27" data-btc="0.519846" data-native="443040.0">
+$4,657
+</span>
+</td>
+<td class="text-right" data-sort="0.222191">
+<span class="price" data-usd="0.222191" data-btc="2.4801e-05" data-native="0.04165">
+$0.222191
+</span>
+</td>
+<td class="text-right" data-sort="0.0111543896457">
+<span data-format-percentage="" data-format-value="0.0111543896457">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">35</td>
+<td data-sort="Lbank"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/333.png" class="logo" alt="Lbank"><a href="/exchanges/lbank/">Lbank</a></td>
+<td data-sort="YOYOW/BTS"><a href="https://www.lbank.info/trading/yoyow/bts" target="_blank">YOYOW/BTS</a></td>
+<td class="text-right" data-sort="4298.1">
+<span class="volume" data-usd="4298.1" data-btc="0.479756" data-native="30778.5">
+$4,298
+</span>
+</td>
+<td class="text-right" data-sort="0.212482">
+<span class="price" data-usd="0.212482" data-btc="2.37174e-05" data-native="0.553295">
+$0.212482
+</span>
+</td>
+<td class="text-right" data-sort="0.0102941599126">
+<span data-format-percentage="" data-format-value="0.0102941599126">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">36</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="OBITS/BTS"><a href="https://openledger.io" target="_blank">OBITS/BTS</a></td>
+<td class="text-right" data-sort="4287.46">
+<span class="volume" data-usd="4287.46" data-btc="0.478567" data-native="9035.85">
+$4,287
+</span>
+</td>
+<td class="text-right" data-sort="0.236472">
+<span class="price" data-usd="0.236472" data-btc="2.63951e-05" data-native="1.88">
+$0.236472
+</span>
+</td>
+<td class="text-right" data-sort="0.0102686765917">
+<span data-format-percentage="" data-format-value="0.0102686765917">0.01</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">37</td>
+<td data-sort="CoinEgg"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/328.png" class="logo" alt="CoinEgg"><a href="/exchanges/coinegg/">CoinEgg</a></td>
+<td data-sort="BTS/BTC"><a href="https://www.coinegg.com/bts/" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="2735.79">
+<span class="volume" data-usd="2735.79" data-btc="0.340902" data-native="18939.0">
+$2,736
+</span>
+</td>
+<td class="text-right" data-sort="0.144453">
+<span class="price" data-usd="0.144453" data-btc="1.8e-05" data-native="1.8e-05">
+$0.144453
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">702 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">38</td>
+<td data-sort="BitShares Asset Exchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/57.png" class="logo" alt="BitShares Asset Exchange"><a href="/exchanges/bitshares-asset-exchange/">BitShares Asset Exchange</a></td>
+<td data-sort="BITGOLD/BTS"><a href="https://bitshares.openledger.info/market/BITGOLD_BTS" target="_blank">BITGOLD/BTS</a></td>
+<td class="text-right" data-sort="2528.78">
+<span class="volume" data-usd="2528.78" data-btc="0.282263" data-native="1.84986">
+$2,529
+</span>
+</td>
+<td class="text-right" data-sort="0.273802">
+<span class="price" data-usd="0.273802" data-btc="3.05619e-05" data-native="5416.25">
+ $0.273802
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">11 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">39</td>
+<td data-sort="BitShares Asset Exchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/57.png" class="logo" alt="BitShares Asset Exchange"><a href="/exchanges/bitshares-asset-exchange/">BitShares Asset Exchange</a></td>
+<td data-sort="BITBTC/BTS"><a href="https://bitshares.openledger.info/market/BITBTC_BTS" target="_blank">BITBTC/BTS</a></td>
+<td class="text-right" data-sort="2224.15">
+<span class="volume" data-usd="2224.15" data-btc="0.24826" data-native="0.172382">
+$2,224
+</span>
+</td>
+<td class="text-right" data-sort="0.278528">
+<span class="price" data-usd="0.278528" data-btc="3.10894e-05" data-native="51120.8">
+$0.278528
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">11 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">40</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="HERO/BTS"><a href="https://openledger.io" target="_blank">HERO/BTS</a></td>
+<td class="text-right" data-sort="2077.96">
+<span class="volume" data-usd="2077.96" data-btc="0.231942" data-native="11.2962">
+$2,078
+</span>
+</td>
+<td class="text-right" data-sort="0.249252">
+<span class="price" data-usd="0.249252" data-btc="2.78217e-05" data-native="728.839">
+$0.249252
+</span>
+</td>
+<td class="text-right" data-sort="0.00497681592612">
+<span data-format-percentage="" data-format-value="0.00497681592612">0.00</span>%
+ </td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">41</td>
+<td data-sort="EXX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/331.png" class="logo" alt="EXX"><a href="/exchanges/exx/">EXX</a></td>
+<td data-sort="BTS/ETH"><a href="https://www.exx.com/trade/bts_eth" target="_blank">BTS/ETH</a></td>
+<td class="text-right" data-sort="2049.09">
+<span class="volume" data-usd="2049.09" data-btc="0.22872" data-native="8121.93">
+$2,049
+</span>
+</td>
+<td class="text-right" data-sort="0.252291">
+<span class="price" data-usd="0.252291" data-btc="2.81608e-05" data-native="0.000407">
+$0.252291
+</span>
+</td>
+<td class="text-right" data-sort="0.00490767086279">
+<span data-format-percentage="" data-format-value="0.00490767086279">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">42</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="LTC/BTS"><a href="https://openledger.io" target="_blank">LTC/BTS</a></td>
+<td class="text-right" data-sort="1642.78">
+<span class="volume" data-usd="1642.78" data-btc="0.183368" data-native="11.2806">
+$1,643
+</span>
+</td>
+<td class="text-right" data-sort="0.252027">
+<span class="price" data-usd="0.252027" data-btc="2.81314e-05" data-native="577.0">
+$0.252027
+</span>
+</td>
+<td class="text-right" data-sort="0.00393453852197">
+<span data-format-percentage="" data-format-value="0.00393453852197">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">43</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="SMOKE/BTS"><a href="https://openledger.io" target="_blank">SMOKE/BTS</a></td>
+<td class="text-right" data-sort="1350.43">
+<span class="volume" data-usd="1350.43" data-btc="0.150736" data-native="25478.9">
+$1,350
+</span>
+</td>
+<td class="text-right" data-sort="0.251751">
+<span class="price" data-usd="0.251751" data-btc="2.81006e-05" data-native="0.21">
+$0.251751
+</span>
+</td>
+<td class="text-right" data-sort="0.00323434596003">
+<span data-format-percentage="" data-format-value="0.00323434596003">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">44</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="MAID/BTS"><a href="https://openledger.io" target="_blank">MAID/BTS</a></td>
+<td class="text-right" data-sort="1317.82">
+<span class="volume" data-usd="1317.82" data-btc="0.147095" data-native="3291.28">
+$1,318
+</span>
+</td>
+<td class="text-right" data-sort="0.224255">
+<span class="price" data-usd="0.224255" data-btc="2.50314e-05" data-native="1.58642">
+$0.224255
+</span>
+</td>
+<td class="text-right" data-sort="0.00315624341362">
+<span data-format-percentage="" data-format-value="0.00315624341362">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">45</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="KRM/BTS"><a href="https://openledger.io" target="_blank">KRM/BTS</a></td>
+<td class="text-right" data-sort="1215.73">
+<span class="volume" data-usd="1215.73" data-btc="0.1357" data-native="107041.0">
+$1,216
+</span>
+</td>
+<td class="text-right" data-sort="0.20565">
+<span class="price" data-usd="0.20565" data-btc="2.29547e-05" data-native="0.045">
+$0.205650
+</span>
+</td>
+<td class="text-right" data-sort="0.00291173286582">
+<span data-format-percentage="" data-format-value="0.00291173286582">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">46</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="YOYOW/BTS"><a href="https://openledger.io" target="_blank">YOYOW/BTS</a></td>
+<td class="text-right" data-sort="1146.68">
+<span class="volume" data-usd="1146.68" data-btc="0.127993" data-native="10222.4">
+$1,147
+</span>
+</td>
+<td class="text-right" data-sort="0.264522">
+*
+<span class="price" data-usd="0.264522" data-btc="2.95261e-05" data-native="0.444444">
+$0.264522
+</span>
+</td>
+<td class="text-right" data-sort="0.00274635473549">
+<span data-format-percentage="" data-format-value="0.00274635473549">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">47</td>
+<td data-sort="CryptoBridge"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/304.png" class="logo" alt="CryptoBridge"><a href="/exchanges/cryptobridge/">CryptoBridge</a></td>
+<td data-sort="BCO/BTS"><a href="https://wallet.crypto-bridge.org/market/BRIDGE.BCO_BRIDGE.BTS" target="_blank">BCO/BTS</a></td>
+<td class="text-right" data-sort="842.462">
+<span class="volume" data-usd="842.462" data-btc="0.0940359" data-native="468.81">
+$842
+</span>
+</td>
+<td class="text-right" data-sort="0.301415">
+<span class="price" data-usd="0.301415" data-btc="3.36441e-05" data-native="7.12001">
+ $0.301415
+</span>
+</td>
+<td class="text-right" data-sort="0.00201773773256">
+<span data-format-percentage="" data-format-value="0.00201773773256">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">48</td>
+<td data-sort="BitShares Asset Exchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/57.png" class="logo" alt="BitShares Asset Exchange"><a href="/exchanges/bitshares-asset-exchange/">BitShares Asset Exchange</a></td>
+<td data-sort="BITEUR/BTS"><a href="https://bitshares.openledger.info/market/BITEUR_BTS" target="_blank">BITEUR/BTS</a></td>
+<td class="text-right" data-sort="661.036">
+<span class="volume" data-usd="661.036" data-btc="0.0737851" data-native="576.203">
+$661
+</span>
+</td>
+<td class="text-right" data-sort="0.272807">
+<span class="price" data-usd="0.272807" data-btc="3.04508e-05" data-native="4.54545">
+$0.272807
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">11 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">49</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="SBD/BTS"><a href="https://openledger.io" target="_blank">SBD/BTS</a></td>
+<td class="text-right" data-sort="629.404">
+<span class="volume" data-usd="629.404" data-btc="0.0702543" data-native="214.285">
+$629
+</span>
+</td>
+<td class="text-right" data-sort="0.277385">
+<span class="price" data-usd="0.277385" data-btc="3.09618e-05" data-native="11.6376">
+$0.277385
+</span>
+</td>
+<td class="text-right" data-sort="0.00150745339235">
+<span data-format-percentage="" data-format-value="0.00150745339235">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">50</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="DASH/BTS"><a href="https://openledger.io" target="_blank">DASH/BTS</a></td>
+<td class="text-right" data-sort="611.571">
+<span class="volume" data-usd="611.571" data-btc="0.0682637" data-native="1.27801">
+$612
+</span>
+</td>
+<td class="text-right" data-sort="0.243474">
+<span class="price" data-usd="0.243474" data-btc="2.71767e-05" data-native="1896.01">
+$0.243474
+</span>
+</td>
+<td class="text-right" data-sort="0.00146474248434">
+<span data-format-percentage="" data-format-value="0.00146474248434">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">51</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="DOGE/BTS"><a href="https://openledger.io" target="_blank">DOGE/BTS</a></td>
+<td class="text-right" data-sort="521.957">
+<span class="volume" data-usd="521.957" data-btc="0.058261" data-native="112407.0">
+$522
+</span>
+</td>
+<td class="text-right" data-sort="0.276206">
+<span class="price" data-usd="0.276206" data-btc="3.08302e-05" data-native="0.0183979">
+$0.276206
+</span>
+</td>
+<td class="text-right" data-sort="0.0012501125673">
+<span data-format-percentage="" data-format-value="0.0012501125673">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">52</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="LISK/BTS"><a href="https://openledger.io" target="_blank">LISK/BTS</a></td>
+<td class="text-right" data-sort="439.002">
+<span class="volume" data-usd="439.002" data-btc="0.0490016" data-native="35.3287">
+$439
+</span>
+</td>
+<td class="text-right" data-sort="0.223224">
+<span class="price" data-usd="0.223224" data-btc="2.49163e-05" data-native="49.2341">
+$0.223224
+</span>
+</td>
+<td class="text-right" data-sort="0.00105143128126">
+<span data-format-percentage="" data-format-value="0.00105143128126">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">53</td>
+<td data-sort="RuDEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/369.png" class="logo" alt="RuDEX"><a href="/exchanges/rudex/">RuDEX</a></td>
+<td data-sort="STEEM/BTS"><a href="https://market.rudex.org/#/market/BTS_STEEM" target="_blank">STEEM/BTS</a></td>
+<td class="text-right" data-sort="183.851">
+<span class="volume" data-usd="183.851" data-btc="0.0205215" data-native="55.606">
+$184
+</span>
+</td>
+<td class="text-right" data-sort="0.271731">
+<span class="price" data-usd="0.271731" data-btc="3.03307e-05" data-native="13.1">
+$0.271731
+</span>
+</td>
+<td class="text-right" data-sort="0.000440332145389">
+<span data-format-percentage="" data-format-value="0.000440332145389">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">54</td>
+<td data-sort="RuDEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/369.png" class="logo" alt="RuDEX"><a href="/exchanges/rudex/">RuDEX</a></td>
+<td data-sort="GOLOS/BTS"><a href="https://market.rudex.org/#/market/BTS_GOLOS" target="_blank">GOLOS/BTS</a></td>
+<td class="text-right" data-sort="84.4953">
+<span class="volume" data-usd="84.4953" data-btc="0.00943139" data-native="797.523">
+$84
+</span>
+</td>
+<td class="text-right" data-sort="0.226074">
+<span class="price" data-usd="0.226074" data-btc="2.52345e-05" data-native="0.419775">
+$0.226074
+</span>
+</td>
+<td class="text-right" data-sort="0.000202370379951">
+<span data-format-percentage="" data-format-value="0.000202370379951">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">55</td>
+<td data-sort="YoBit"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/100.png" class="logo" alt="YoBit"><a href="/exchanges/yobit/">YoBit</a></td>
+<td data-sort="BTS/BTC"><a href="https://yobit.net/en/trade/BTS/BTC" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="84.3268">
+<span class="volume" data-usd="84.3268" data-btc="0.00941259" data-native="220.953">
+$84
+</span>
+</td>
+<td class="text-right" data-sort="0.381651">
+<span class="price" data-usd="0.381651" data-btc="4.26e-05" data-native="4.26e-05">
+$0.381651
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">3 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">56</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="FUNC/BTS"><a href="https://openledger.io" target="_blank">FUNC/BTS</a></td>
+<td class="text-right" data-sort="55.3521">
+<span class="volume" data-usd="55.3521" data-btc="0.00617842" data-native="4386.23">
+$55
+</span>
+</td>
+<td class="text-right" data-sort="0.323724">
+<span class="price" data-usd="0.323724" data-btc="3.61342e-05" data-native="0.05">
+$0.323724
+ </span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">19 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">57</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="MUSE/BTS"><a href="https://openledger.io" target="_blank">MUSE/BTS</a></td>
+<td class="text-right" data-sort="45.8995">
+<span class="volume" data-usd="45.8995" data-btc="0.00512332" data-native="58.3088">
+$46
+</span>
+</td>
+<td class="text-right" data-sort="0.240576">
+<span class="price" data-usd="0.240576" data-btc="2.68532e-05" data-native="3.1189">
+$0.240576
+</span>
+</td>
+<td class="text-right" data-sort="0.000109931549501">
+<span data-format-percentage="" data-format-value="0.000109931549501">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">58</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="HEAT/BTS"><a href="https://openledger.io" target="_blank">HEAT/BTS</a></td>
+<td class="text-right" data-sort="45.3906">
+<span class="volume" data-usd="45.3906" data-btc="0.00506651" data-native="150.233">
+$45
+</span>
+</td>
+<td class="text-right" data-sort="0.213262">
+<span class="price" data-usd="0.213262" data-btc="2.38044e-05" data-native="1.19709">
+$0.213262
+</span>
+</td>
+<td class="text-right" data-sort="0.000108712709088">
+<span data-format-percentage="" data-format-value="0.000108712709088">0.00</span>%
+</td>
+ <td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">59</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="WAVES/BTS"><a href="https://openledger.io" target="_blank">WAVES/BTS</a></td>
+<td class="text-right" data-sort="42.2835">
+<span class="volume" data-usd="42.2835" data-btc="0.00476104" data-native="7.89548">
+$42
+</span>
+</td>
+<td class="text-right" data-sort="0.262441">
+<span class="price" data-usd="0.262441" data-btc="2.95503e-05" data-native="20.0">
+$0.262441
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">92 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">60</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="CLOAK/BTS"><a href="https://openledger.io" target="_blank">CLOAK/BTS</a></td>
+<td class="text-right" data-sort="31.7759">
+<span class="volume" data-usd="31.7759" data-btc="0.00354684" data-native="2.518">
+$32
+</span>
+</td>
+<td class="text-right" data-sort="0.250093">
+<span class="price" data-usd="0.250093" data-btc="2.79155e-05" data-native="50.0">
+$0.250093
+</span>
+</td>
+<td class="text-right" data-sort="7.61048360828e-05">
+<span data-format-percentage="" data-format-value="7.61048360828e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">61</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+ <td data-sort="BTWTY/BTS"><a href="https://openledger.io" target="_blank">BTWTY/BTS</a></td>
+<td class="text-right" data-sort="29.54">
+<span class="volume" data-usd="29.54" data-btc="0.00329726" data-native="3.1026e-05">
+$30
+</span>
+</td>
+<td class="text-right" data-sort="0.251752">
+<span class="price" data-usd="0.251752" data-btc="2.81006e-05" data-native="3772350.0">
+$0.251752
+</span>
+</td>
+<td class="text-right" data-sort="7.07497461248e-05">
+<span data-format-percentage="" data-format-value="7.07497461248e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">62</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="BLOCKPAY/BTS"><a href="https://openledger.io" target="_blank">BLOCKPAY/BTS</a></td>
+<td class="text-right" data-sort="28.2658">
+<span class="volume" data-usd="28.2658" data-btc="0.00315504" data-native="416.018">
+$28
+</span>
+</td>
+<td class="text-right" data-sort="0.251751">
+<span class="price" data-usd="0.251751" data-btc="2.81006e-05" data-native="0.269201">
+$0.251751
+</span>
+</td>
+<td class="text-right" data-sort="6.76979747466e-05">
+<span data-format-percentage="" data-format-value="6.76979747466e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">63</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="OMG/BTS"><a href="https://openledger.io" target="_blank">OMG/BTS</a></td>
+<td class="text-right" data-sort="23.5971">
+<span class="volume" data-usd="23.5971" data-btc="0.00263391" data-native="1.46827">
+$24
+ </span>
+</td>
+<td class="text-right" data-sort="0.240748">
+<span class="price" data-usd="0.240748" data-btc="2.68724e-05" data-native="63.6764">
+$0.240748
+</span>
+</td>
+<td class="text-right" data-sort="5.65162096913e-05">
+<span data-format-percentage="" data-format-value="5.65162096913e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">64</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="GRC/BTS"><a href="https://openledger.io" target="_blank">GRC/BTS</a></td>
+<td class="text-right" data-sort="15.1156">
+<span class="volume" data-usd="15.1156" data-btc="0.00168721" data-native="241.162">
+$15
+</span>
+</td>
+<td class="text-right" data-sort="0.209839">
+<span class="price" data-usd="0.209839" data-btc="2.34223e-05" data-native="0.248339">
+$0.209839
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">18 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">65</td>
+<td data-sort="CryptoBridge"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/304.png" class="logo" alt="CryptoBridge"><a href="/exchanges/cryptobridge/">CryptoBridge</a></td>
+<td data-sort="MUE/BTS"><a href="https://wallet.crypto-bridge.org/market/BRIDGE.MUE_BRIDGE.BTS" target="_blank">MUE/BTS</a></td>
+<td class="text-right" data-sort="12.7147">
+<span class="volume" data-usd="12.7147" data-btc="0.00141922" data-native="92.3587">
+$13
+</span>
+</td>
+<td class="text-right" data-sort="0.230564">
+<span class="price" data-usd="0.230564" data-btc="2.57356e-05" data-native="0.54545">
+$0.230564
+</span>
+ </td>
+<td class="text-right" data-sort="3.04523289456e-05">
+<span data-format-percentage="" data-format-value="3.04523289456e-05">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">66</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="XEM/BTS"><a href="https://openledger.io" target="_blank">XEM/BTS</a></td>
+<td class="text-right" data-sort="9.32206">
+<span class="volume" data-usd="9.32206" data-btc="0.00104964" data-native="24.8669">
+$9
+</span>
+</td>
+<td class="text-right" data-sort="0.281051">
+<span class="price" data-usd="0.281051" data-btc="3.16458e-05" data-native="1.4">
+$0.281051
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">92 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">67</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="ETP/BTS"><a href="https://openledger.io" target="_blank">ETP/BTS</a></td>
+<td class="text-right" data-sort="0.895994">
+<span class="volume" data-usd="0.895994" data-btc="0.000100011" data-native="0.542513">
+$1
+</span>
+</td>
+<td class="text-right" data-sort="0.151199">
+<span class="price" data-usd="0.151199" data-btc="1.68769e-05" data-native="6.54368">
+$0.151199
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">11 hours ago</td>
+ </tr>
+<tr>
+<td class="text-right">68</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="USDT/BTS"><a href="https://openledger.io" target="_blank">USDT/BTS</a></td>
+<td class="text-right" data-sort="0.83749">
+<span class="volume" data-usd="0.83749" data-btc="9.38461e-05" data-native="0.87951">
+$1
+</span>
+</td>
+<td class="text-right" data-sort="0.283217">
+<span class="price" data-usd="0.283217" data-btc="3.17364e-05" data-native="3.52941">
+$0.283217
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">63 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">69</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="ZENGOLD/BTS"><a href="https://openledger.io" target="_blank">ZENGOLD/BTS</a></td>
+<td class="text-right" data-sort="0.37591">
+<span class="volume" data-usd="0.37591" data-btc="4.19592e-05" data-native="5.50244">
+$0
+</span>
+</td>
+<td class="text-right" data-sort="0.0851167">
+<span class="price" data-usd="0.0851167" data-btc="9.50076e-06" data-native="0.27068">
+$0.085117
+</span>
+</td>
+<td class="text-right" data-sort="9.00322852599e-07">
+<span data-format-percentage="" data-format-value="9.00322852599e-07">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">70</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="INCNT/BTS"><a href="https://openledger.io" target="_blank">INCNT/BTS</a></td>
+<td class="text-right" data-sort="0.180571">
+<span class="volume" data-usd="0.180571" data-btc="2.03549e-05" data-native="0.461849">
+$0
+</span>
+</td>
+<td class="text-right" data-sort="0.287832">
+<span class="price" data-usd="0.287832" data-btc="3.24459e-05" data-native="1.445">
+$0.287832
+</span>
+</td>
+<td class="text-right" data-sort="0">
+<span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">78 hours ago</td>
+</tr>
+<tr>
+<td class="text-right">71</td>
+<td data-sort="OpenLedger DEX"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/138.png" class="logo" alt="OpenLedger DEX"><a href="/exchanges/openledger/">OpenLedger DEX</a></td>
+<td data-sort="ICOO/BTS"><a href="https://openledger.io" target="_blank">ICOO/BTS</a></td>
+<td class="text-right" data-sort="0.126195">
+<span class="volume" data-usd="0.126195" data-btc="1.4086e-05" data-native="0.0689788">
+$0
+</span>
+</td>
+<td class="text-right" data-sort="0.241263">
+<span class="price" data-usd="0.241263" data-btc="2.69299e-05" data-native="7.2486">
+$0.241263
+</span>
+</td>
+<td class="text-right" data-sort="3.02243202851e-07">
+<span data-format-percentage="" data-format-value="3.02243202851e-07">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">72</td>
+<td data-sort="Tidex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/219.png" class="logo" alt="Tidex"><a href="/exchanges/tidex/">Tidex</a></td>
+<td data-sort="BTS/BTC"><a href="https://tidex.com/#/exchange/BTS_BTC" target="_blank">BTS/BTC</a></td>
+<td class="text-right" data-sort="0.0">
+<span class="volume" data-usd="0.0" data-btc="0.0" data-native="0.0">
+$0
+</span>
+</td>
+<td class="text-right" data-sort="0.492742">
+<span class="price" data-usd="0.492742" data-btc="5.5e-05" data-native="5.5e-05">
+$0.492742
+</span>
+</td>
+<td class="text-right" data-sort="0.0">
+<span data-format-percentage="" data-format-value="0.0">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">73</td>
+<td data-sort="Tidex"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/219.png" class="logo" alt="Tidex"><a href="/exchanges/tidex/">Tidex</a></td>
+<td data-sort="BTS/WAVES"><a href="https://tidex.com/#/exchange/BTS_WAVES" target="_blank">BTS/WAVES</a></td>
+<td class="text-right" data-sort="0.0">
+<span class="volume" data-usd="0.0" data-btc="0.0" data-native="0.0">
+$0
+</span>
+</td>
+<td class="text-right" data-sort="0.156007">
+<span class="price" data-usd="0.156007" data-btc="1.74136e-05" data-native="0.03">
+$0.156007
+</span>
+</td>
+<td class="text-right" data-sort="0.0">
+<span data-format-percentage="" data-format-value="0.0">0.00</span>%
+</td>
+<td class="text-right ">Recently</td>
+</tr>
+<tr>
+<td class="text-right">74</td>
+<td data-sort="BitShares Asset Exchange"><img src="https://s2.coinmarketcap.com/static/img/exchanges/16x16/57.png" class="logo" alt="BitShares Asset Exchange"><a href="/exchanges/bitshares-asset-exchange/">BitShares Asset Exchange</a></td>
+<td data-sort="BITSILVER/BTS"><a href="https://bitshares.openledger.info/market/BITSILVER_BTS" target="_blank">BITSILVER/BTS</a></td>
+<td class="text-right" data-sort="0.0">
+<span class="volume" data-usd="0.0" data-btc="0.0" data-native="0.0">
+$0
+</span>
+</td>
+<td class="text-right" data-sort="0.256922">
+<span class="price" data-usd="0.256922" data-btc="2.86777e-05" data-native="94.3423">
+$0.256922
+</span>
+</td>
+<td class="text-right" data-sort="0">
+ <span data-format-percentage="" data-format-value="0">0.00</span>%
+</td>
+<td class="text-right stale-box">11 hours ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="clear"></div>
+* Price Excluded<br>
+** Volume Excluded - No Trading Fees<br>
+*** Price/Volume Excluded - Outlier Detected
+</div>
+</div>
+<div id="social" class="tab-pane">
+<div class="tab-header">
+<h2 class="pull-left">BitShares Social Media Feeds</h2>
+<div class="clear"></div>
+</div>
+<div class="row">
+<div class="col-sm-6 text-left">
+<a class="twitter-timeline" href="https://twitter.com/BitShares" data-widget-id="506520279636377601" data-screen-name="BitShares">Tweets by @BitShares</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<div id="reddit" class="col-sm-6 text-left">
+</div>
+</div>
+</div>
+<div id="tools" class="tab-pane">
+<div class="tab-header">
+<h2 class="pull-left">Tools for BitShares</h2>
+<div class="clear bottom-margin-1x"></div>
+</div>
+<div class="row">
+<div class="col-md-2">
+<strong>Website Widget</strong>
+</div>
+<div class="col-md-6">
+<textarea class="form-control" rows="6" data-snippet-container="">&lt;script type=&quot;text/javascript&quot; src=&quot;https://files.coinmarketcap.com/static/widget/currency.js&quot;&gt;&lt;/script&gt;
+&lt;div class=&quot;coinmarketcap-currency-widget&quot; data-currencyid=&quot;463&quot; data-base=&quot;USD&quot;  data-secondary=&quot;BTC&quot;&gt;&lt;/div&gt;</textarea>
+<br>
+<a class="btn btn-primary pull-right" href="/widget/?c=bitshares" target="_blank" role="button" style="width:100%">Customize this widget</a>
+<div class="clear"></div>
+</div>
+<div class="col-md-4">
+<div class="coinmarketcap-currency-widget" data-currencyid="463" data-base="USD" data-secondary="BTC" data-ticker="true" style=""></div>
+</div>
+</div>
+<div class="row">
+<div class="clear bottom-margin-2x"></div>
+<div class="col-md-12"><hr></div>
+<div class="clear bottom-margin-2x"></div>
+<div class="col-md-2">
+<strong>API Ticker</strong>
+</div>
+<div class="col-md-6">
+<a href="https://api.coinmarketcap.com/v1/ticker/bitshares/" target="_blank">https://api.coinmarketcap.com/v1/ticker/bitshares/</a>
+</div>
+<div class="col-md-4">
+<a href="/api/" target="_blank" class="text-small">[API Docs]</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="metadata" class="hidden" data-slug="bitshares" data-platformsymbol="" data-apidomain="https://graphs2.coinmarketcap.com" data-mobile="False" data-platform="False">
+</div>
+<hr>
+<div id="leaderboard-bottom" class="row text-center">
+
+<div id="div-gpt-ad-1488495260324-8" class="centered leaderboard">
+<script>
+                                    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1488495260324-8'); });
+                                    </script>
+</div>
+</div>
+<hr>
+<div id="footer" class="row">
+<div class="col-xs-12 col-md-5">
+<div>
+&#xA9; 2018 CoinMarketCap |
+<a href="/advertising/" target="_blank">Advertise</a> |
+<a href="/api/">API</a> |
+<a href="/disclaimer/">Disclaimer</a> |
+<a href="/privacy/">Privacy Policy</a> |
+<a href="/faq/">FAQ</a> |
+<a href="/request/" target="_blank">Request Form</a>
+</div>
+<br>
+<div>
+Night Mode:
+<div class="btn-group" data-toggle="buttons">
+<label class="btn btn-default btn-sm" data-night-mode-off="">
+<input type="radio"> Off
+</label>
+<label class="btn btn-default btn-sm" data-night-mode-on="">
+<input type="radio"> On
+</label>
+</div>
+</div>
+<div class="visible-sm visible-xs"><br></div>
+</div>
+<div class="clearfix visible-sm visible-xs"></div>
+<div class="col-md-1 text-center">
+<a href="https://www.facebook.com/CoinMarketCap" target="_blank" rel="noopener"><img src="https://s2.coinmarketcap.com/static/cloud/img/facebook_logo.png" alt="twitter" class="icon-social"></a>
+<a href="https://twitter.com/CoinMarketCap" target="_blank" rel="noopener"><img src="https://s2.coinmarketcap.com/static/cloud/img/twitter_logo.png" alt="twitter" class="icon-social"></a>
+</div>
+<div class="clearfix visible-sm visible-xs"><br></div>
+<div class="col-xs-12 col-md-6 text-right">
+Donate BTC: <a class="pointer" data-toggle="modal" data-target="#donate_btc">3CMCRgEm8HVz3DrWaCCid3vAANE42jcEv9</a><br>
+Donate LTC: <a class="pointer" data-toggle="modal" data-target="#donate_ltc">LTdsVS8VDw6syvfQADdhf2PHAm3rMGJvPX</a><br>
+Donate ETH: <a class="pointer" data-toggle="modal" data-target="#donate_eth">0x0074709077B8AE5a245E4ED161C971Dc4c3C8E2B</a><br>
+Donate BCH: <a class="pointer" data-toggle="modal" data-target="#donate_bch">1LVXG4Z4oF6TrJfmUfSuLX8nqb8c5eCwha</a>
+</div>
+</div>
+
+<div class="modal fade" id="donate_btc" tabindex="-1" role="dialog" aria-labelledby="donate_btc_label" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header text-center">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#xD7;</button>
+<h4 class="modal-title" id="donate_btc_label">Donate Bitcoin</h4>
+</div>
+<div class="modal-body text-center">
+<strong>3CMCRgEm8HVz3DrWaCCid3vAANE42jcEv9</strong> <br> <img src="https://s2.coinmarketcap.com/static/cloud/img/qrcodes/donate_bitcoin.png" alt="Donate Bitcoin"><br>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="donate_ltc" tabindex="-1" role="dialog" aria-labelledby="donate_ltc_label" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header text-center">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#xD7;</button>
+<h4 class="modal-title" id="donate_ltc_label">Donate Litecoin</h4>
+</div>
+<div class="modal-body text-center">
+<strong>LTdsVS8VDw6syvfQADdhf2PHAm3rMGJvPX</strong> <br> <img src="https://s2.coinmarketcap.com/static/cloud/img/qrcodes/donate_litecoin.png" alt="Donate Litecoin"><br>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="donate_eth" tabindex="-1" role="dialog" aria-labelledby="donate_eth_label" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header text-center">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#xD7;</button>
+<h4 class="modal-title" id="donate_eth_label">Donate Ethereum</h4>
+</div>
+<div class="modal-body text-center">
+<strong>0x0074709077B8AE5a245E4ED161C971Dc4c3C8E2B</strong> <br> <img src="https://s2.coinmarketcap.com/static/cloud/img/qrcodes/donate_ethereum.png" alt="Donate Ethereum"><br>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="donate_bch" tabindex="-1" role="dialog" aria-labelledby="donate_bch_label" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header text-center">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#xD7;</button>
+<h4 class="modal-title" id="donate_bch_label">Donate Bitcoin Cash</h4>
+</div>
+<div class="modal-body text-center">
+<strong>1LVXG4Z4oF6TrJfmUfSuLX8nqb8c5eCwha</strong> <br> <img src="https://s2.coinmarketcap.com/static/cloud/img/qrcodes/donate_bitcoin_cash.png" alt="Donate Bitcoin Cash"><br>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-2 hidden-xs hidden-sm hidden-md">
+<div style="margin-top:200px;float:right;">
+<div style="width:160px; height:600px;">
+
+ <div id="div-gpt-ad-1488495260324-10" class="skyscraper">
+<script>
+                                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1488495260324-10'); });
+                                </script>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="currency-exchange-rates" data-usd="1" data-eur="1.2202309409078762" data-cny="0.15815675263698706" data-gbp="1.3948246426459265" data-cad="0.7768215104983544" data-rub="0.016161063224713588" data-hkd="0.12741694008218393" data-jpy="0.009169793877464139" data-aud="0.7577135236709704" data-brl="0.2879196681092402" data-inr="0.014954333204975308" data-krw="0.000924727205474385" data-mxn="0.052650976675617335" data-idr="7.20782343740964e-05" data-chf="1.0176118075533254" data-clp="0.0016703553681045643" data-czk="0.047939399230160364" data-dkk="0.16385786968383623" data-huf="0.0038997605547019414" data-ils="0.27866990852660256" data-myr="0.2554249057162817" data-nok="0.1258577995651613" data-nzd="0.7088191993603615" data-php="0.01913033497216536" data-pkr="0.008637443316778234" data-pln="0.28928112194790334" data-sek="0.11700136271487155" data-sgd="0.7531997809695037" data-thb="0.031670123988535415" data-try="0.24502753374396682" data-twd="0.03366524685732396" data-zar="0.08027529287838542" data-btc="8967.57" data-eth="621.305" data-ltc="145.712" data-xrp="0.810525" data-bch="1282.82"></div>
+<div class="scroll-to-top">
+<button class="btn"><span class="glyphicon glyphicon-chevron-up"></span></button>
+</div>
+<script>
+            var LANG_CODE = 'en';
+            var STATIC_DOMAIN = 's2.coinmarketcap.com';
+        </script>
+<script src="https://s2.coinmarketcap.com/static/cloud/compressed/base.da168f5e.min.js"></script>
+<script src="https://s2.coinmarketcap.com/static/cloud/compressed/highcharts.c76bd9fb.js"></script>
+<script src="https://s2.coinmarketcap.com/static/cloud/compressed/detail.6f7c8004.min.js"></script>
+<script>
+$(document).ready(function() {
+    
+        /* Reddit lazy load hack */
+        var oScript = document.createElement("script");
+        document.write = function(text) {
+            document.getElementById("reddit").innerHTML += text;
+        };
+        oScript.src = "https://www.reddit.com/r/bitshares.embed?limit=9";
+        document.body.appendChild(oScript);
+    
+
+    setTimeout(function() {
+        document.title = "BitShares (BTS) $0.255342 (-11.45%) | CoinMarketCap";
+    }, 10000);
+
+
+});
+
+const PHRASES = {
+    contextButtonTitle: "Chart context menu",
+    downloadCSV: "Download CSV",
+    downloadJPEG: "Download JPEG image",
+    downloadPDF: "Download PDF document",
+    downloadPNG: "Download PNG image",
+    downloadSVG: "Download SVG vector image",
+    downloadXLS: "Download XLS",
+    drillUpText: "Back to {series.name}",
+    loading: "Loading...",
+    noData: "No data to display",
+    printChart: "Print chart",
+    resetZoom: "Reset zoom",
+    resetZoomTitle: "Reset zoom level 1:1",
+    viewData: "View data table",
+    '1d': "1d",
+    '7d': "7d",
+    '1m': "1m",
+    '3m': "3m",
+    '1y': "1y",
+    'ytd': "YTD",
+    'all': "ALL",
+    dateFormat: "%A, %b %d %Y, %H:%M:%S UTC",
+    months: {
+        full: {mar: 'March',feb: 'February',aug: 'August',sep: 'September',apr: 'April',jun: 'June',jul: 'July',jan: 'January',may: 'May',nov: 'November',dec: 'December',oct: 'October'},
+        short: {mar: 'Mar',feb: 'Feb',aug: 'Aug',sep: 'Sep',apr: 'Apr',jun: 'Jun',jul: 'Jul',jan: 'Jan',may: 'May',nov: 'Nov',dec: 'Dec',oct: 'Oct'}
+    },
+    weekdays: {
+        full: {wed: 'Wednesday',sun: 'Sunday',thu: 'Thursday',mon: 'Monday',fri: 'Friday',tue: 'Tuesday',sat: 'Saturday'},
+        short: {wed: 'Wed',sun: 'Sun',thu: 'Thu',mon: 'Mon',fri: 'Fri',tue: 'Tue',sat: 'Sat'}
+    },
+    emptyTable: "No data available in table",
+    zeroRecords: "No matching records found",
+    sortAscending: ": activate to sort column ascending",
+    sortDescending: ": activate to sort column descending",
+    'K': "K",
+    'M': "M",
+    'B': "B",
+    'T': "T",
+    chartTitle: "BitShares Charts",
+    marketCap: "Market Cap",
+    priceUSD: "Price (USD)",
+    priceBTC: "Price (BTC)",
+    pricePlatform: "",
+    volume: "24h Vol",
+    linearScale: "Linear Scale",
+    logScale: "Log Scale"
+};
+var polyglot = new Polyglot({phrases: PHRASES});
+</script>
+<script>
+            $( document ).ready(function() {
+                // GTM Session Set
+                var maxExpire = new Date('2038-01-19 00:00:00');
+                if (Cookies.get("gtm_session_first") === undefined) {
+                    Cookies.set("gtm_session_first", new Date(), {expires: maxExpire})
+                }            
+
+                Cookies.set("gtm_session_last", new Date(), {expires: maxExpire})
+                
+                // Header Banner Prefs
+                $(".header-banner-close").on('click', function () {
+                    Cookies.set("header-banner-noshow", "1", {expires: 1})
+                    $('#header-banner-wrapper').fadeOut();
+                    dataLayer.push({
+                        'event': 'customEvent',
+                        'eventCategory': 'Header Banner',
+                        'eventAction': 'Close',
+                    });
+                });
+
+            });
+
+            (function () {
+                var polyglot = new Polyglot({phrases: {
+                    cryptocurrencies: "Cryptocurrencies",
+                    exchanges: "Exchanges"
+                }});
+
+                initQuickSearch({
+                    currencyDataURL: 'https://' + STATIC_DOMAIN + '/generated/search/quick_search.json',
+                    exchangeDataURL: 'https://' + STATIC_DOMAIN + '/generated/search/quick_search_exchanges.json',
+                    currencySuggestionTemplate: function (context) {
+                        var template = "/currencies/%25s/";
+                        context.url = template.replace('%25s', context.slug);
+                        return Handlebars.templates['quick_search'](context);
+                    },
+                    exchangeSuggestionTemplate: function (context) {
+                        var template = "/exchanges/%25s/";
+                        context.url = template.replace('%25s', context.slug);
+                        return Handlebars.templates['quick_search_exchanges'](context);
+                    },
+                    currencyLimit: 6,
+                    exchangeLimit: 4
+                }, polyglot);
+
+                $('[data-language-toggle]').on('click', function () {
+                    dataLayer.push({
+                        'event': 'customEvent',
+                        'eventCategory': 'Language Dropdown',
+                        'eventAction': 'Language Selected',
+                        'eventLabel': $(this).data('language-toggle')
+                    });
+                });
+
+                var language = $('[data-language-toggle="' + 'en' + '"]').html();
+                $('[data-language-dropdown]').html(language);
+
+                NightMode.initSwitch();
+
+                ScrollToTop('.scroll-to-top');
+            })();
+        </script>
+
+</body></html>

@@ -28,9 +28,10 @@ const repoSchema = new mongoose.Schema({
   isFork: Boolean,      // is a fork of another repo?
   commit: String,       // current commit
   project: String,      // project name
-  forkedFrom: String,   // what project/repo was the repo forked from
-  firstCommit: String,  // the projects first commit excluding any fork history
+  forkedFrom: String,   // what project/repo was the repo forked from (github project name not coinmarketcap)
+  ferstCommit: String,  // the projects first commit excluding any fork history
   githubObject: String, // github api repo object
+  defaultBranch: String,
   githubRepoName: String,
   githubProjectName: String,
 });

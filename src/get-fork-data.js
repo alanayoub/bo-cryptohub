@@ -33,13 +33,13 @@ module.exports = async function getForkData() {
     // forkMapFull: repo:parent (null if not a fork)
     // ---------------------------------------------
     // 'bitcoin/bitcoin': null,
-    // 'litecoin/litecoin': 'bitcoin/bitcoin',
-    // 'reddcoin/reddcoin': 'litecoin/litecoin'
+    // 'litecoin-project/litecoin': 'bitcoin/bitcoin',
+    // 'reddcoin/reddcoin': 'litecoin-project/litecoin'
     //
     const repoList = [];
     const forkMapFull = {};
     for (const [i, repo] of repos.entries()) {
-      const project = repo.project;
+      const project = repo.githubProjectName;
       const repoName = repo.githubRepoName;
       const octokitOptions = {
         owner: repo.githubProjectName,
@@ -47,8 +47,8 @@ module.exports = async function getForkData() {
         per_page: 30
       };
       const cacheKey = `forks-${octokitOptions.owner}-${octokitOptions.repo}`;
-      const [error, forks] = await to(paginate(octokit.repos.getForks, octokitOptions, cacheKey, 30));
-      repoList.push(repo._id);
+      const [error, forks] = await to(paginate(octokit.repos.getForks, octokitOptions, cacheKey, global.cacheForGithubForks));
+      repoList.push(join(project, repoName));
       if (error) throw new Error(error);
       forks.forEach(fork => {
         forkMapFull[fork.full_name] = join(project, repoName);
@@ -67,7 +67,7 @@ module.exports = async function getForkData() {
 
     // Save repo.forkedFrom
     for (const [i, repo] of repos.entries()) {
-      repo.forkedFrom = forkMap[repo._id];
+      repo.forkedFrom = forkMap[join(repo.githubProjectName, repo.githubRepoName)];
       const [error, updated] = await to(repo.save());
       if (error) {
         console.log(`getForkData(): Error saving forkedFrom field for repo ${repo._id}: ${error}`);

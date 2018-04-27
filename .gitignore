@@ -11,3 +11,6 @@ node_modules
 *.swp
 *.swo
 *.swm
+
+# Cloned repos
+projects/*

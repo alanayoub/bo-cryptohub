@@ -7,16 +7,27 @@ require('./db-connect');
 const scrape = require('./scrape.js');
 const hashFiles = require('./hash-files');
 const cloneRepos = require('./clone-repos');
+const getLogData = require('./get-log-data');
 const getRepoData = require('./get-repo-data');
 const getForkData = require('./get-fork-data');
 const Cache = require('./cache');
+const logger = require('./log.js');
 
+// settings
 global.cache = new Cache('cache', true);
 global.githubClientId = 'c7a2c111a27dee50bba0';
 global.githubClientSecret = '5e4b8b348c8165536391bdbf6041685f270503f0';
 
-// TODO: do this
-// process.on('warning', e => console.warn(e.stack));
+global.cacheForGitlog = 7;
+global.cacheForGithubRepo = 7;
+global.cacheForGithubForks = 30;
+global.cacheForCoinmarketcapProjectsJson = 1;
+global.cacheForCoinmarketcapProjectHtml = 30;
+
+process.on('warning', error => {
+  debugger;
+  logger.warn(error.stack);
+});
 
 (async function doStuffYo() {
 
@@ -25,26 +36,52 @@ global.githubClientSecret = '5e4b8b348c8165536391bdbf6041685f270503f0';
   //
   try {
 
-    const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 3, requestDelay: 2000}));
+    //
+    // Scrape Coinmarketcap
+    // Get list of projects and links to their Githubs
+    //
+    const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 100, requestDelay: 2000}));
     if (scrapeError) {
       throw new Error(scrapeError);
     };
 
-    const [repoError, repoResults]  = await to(getRepoData());
+    //
+    // Itterate Coinmarketcap projects
+    // Fetch all Github repos for each project
+    //
+    const [repoError, repoResults] = await to(getRepoData());
     if (repoError) {
       throw new Error(repoError);
     };
 
-    const [cloneError, cloneResults]  = await to(cloneRepos());
+    //
+    // Clone all repos
+    //
+    const [cloneError, cloneResults] = await to(cloneRepos());
     if (cloneError) {
       throw new Error(cloneError);
     };
 
-    const [forkError, forkResults]  = await to(getForkData());
+    //
+    // For each repo checkout the latest commit on the default branch and save the log
+    //
+    const [logError, logResults] = await to(getLogData());
+    if (logError) {
+      throw new Error(logError);
+    };
+
+    //
+    // Get forks list for each repo
+    // Set repo.forkedFrom fields
+    //
+    const [forkError, forkResults] = await to(getForkData());
     if (forkError) {
       throw new Error(forkError);
     };
 
+    //
+    // Set first 'real' commit based on fork data
+    //
 
     // const [hash, hashError] = await to(hashFiles());
     // if (hashError) {
@@ -52,7 +89,7 @@ global.githubClientSecret = '5e4b8b348c8165536391bdbf6041685f270503f0';
     // }
   }
   catch(error) {
-    console.log('Um some error happened yo: ', error);
+    logger.error(`Um some error happened yo: ${error}`);
     process.exit(1);
   }
 

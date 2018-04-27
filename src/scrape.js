@@ -35,10 +35,7 @@ async function getGithubUrls(slug) {
   let $;
   let error;
   let [file, age] = global.cache.get(key);
-  //
-  // TODO: put age in config file
-  //
-  if (!file || age > 30) {
+  if (!file || age > global.cacheForCoinmarketcapProjectHtml) {
     [error, $] = await to(rp(options));
     if (!$) {
       return console.log(`getGithubUrls(): Error fetching getGithubUrls: ${error}`);
@@ -165,7 +162,7 @@ module.exports = async function scrape({requestLimit = Infinity, requestDelay = 
 
     let error;
     let [file, age] = global.cache.get(key);
-    if (!file || age > 1) {
+    if (!file || age > global.cacheForCoinmarketcapProjectsJson) {
       // TODO: replace with get?
       [error, file] = await to(rp({uri, json: true}));
       if (!file) return console.log(`scrape(): ${error}`);
@@ -179,6 +176,9 @@ module.exports = async function scrape({requestLimit = Infinity, requestDelay = 
 
     let slugs = file.map(v => v.slug);
     let results = {};
+    //
+    // TODO: skip cached stuff
+    //
     (async function scrapeGitUrlsForAllProjects(idx = 0) {
       const slug = slugs.shift();
 
@@ -191,7 +191,7 @@ module.exports = async function scrape({requestLimit = Infinity, requestDelay = 
         setTimeout(() => {
           console.log('Scrape(): Waiting 2000ms and incrementing counter now lets do next scrape...');
           scrapeGitUrlsForAllProjects(idx);
-        }, requestDelay);
+        }, 1);
       }
       else {
         resolve(results);

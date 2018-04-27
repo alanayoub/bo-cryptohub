@@ -2,6 +2,7 @@
 const { to } = require('await-to-js');
 
 // CryptoHub
+const logger = require('./log.js');
 const { Project } = require('./db-schema');
 const { get, logHeader } = require('./utils.js');
 
@@ -11,6 +12,13 @@ const { get, logHeader } = require('./utils.js');
  *
  */
 module.exports = async function* itterateWebRepos(message) {
+
+  //
+  // TODO: Fix this error
+  //
+  // itterateWebRepos(): itterateWebRepos() error fetching https://api.github.com/orgs/monero-project/repos:
+  // StatusCodeError: 404 - {"message":"Not Found","documentation_url":"https://developer.github.com/v3/repos/#list-organization-repositories"}
+  //
 
   try {
 
@@ -35,17 +43,22 @@ module.exports = async function* itterateWebRepos(message) {
         let error;
         let [file, age] = global.cache.get(key);
 
-        if (!file || age > 30) {
+        if (!file || age > global.cacheForGithubRepo) {
           [error, file] = await to(get(uri));
           if (error) {
-            throw `itterateWebRepos() error fetching ${uri}: ${error}`;
+            if (error.statusCode === 404) {
+              logger.error(`error fetching ${uri}: ${error}`);
+            }
           }
-          global.cache.set(key, JSON.stringify(file));
+          else {
+            global.cache.set(key, JSON.stringify(file));
+          }
         }
         else {
           file = JSON.parse(file);
         }
 
+        if (!Array.isArray(file)) file = [];
         numRepos = file.length;
 
         // Iterate repos

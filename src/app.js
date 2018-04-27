@@ -4,14 +4,16 @@ const { to } = require('await-to-js');
 
 // CryptoHub
 require('./db-connect');
+const Cache = require('./cache');
+const logger = require('./log.js');
+
 const scrape = require('./scrape.js');
 const hashFiles = require('./hash-files');
 const cloneRepos = require('./clone-repos');
 const getLogData = require('./get-log-data');
 const getRepoData = require('./get-repo-data');
 const getForkData = require('./get-fork-data');
-const Cache = require('./cache');
-const logger = require('./log.js');
+const setFirstCommit = require('./set-first-commit');
 
 // settings
 global.cache = new Cache('cache', true);
@@ -40,7 +42,7 @@ process.on('warning', error => {
     // Scrape Coinmarketcap
     // Get list of projects and links to their Githubs
     //
-    const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 100, requestDelay: 2000}));
+    const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 500, requestDelay: 2000}));
     if (scrapeError) {
       throw new Error(scrapeError);
     };
@@ -82,6 +84,10 @@ process.on('warning', error => {
     //
     // Set first 'real' commit based on fork data
     //
+    // const [firstCommitError] = await to(setFirstCommit());
+    // if (firstCommitError) {
+    //   throw new Error(firstCommitError);
+    // };
 
     // const [hash, hashError] = await to(hashFiles());
     // if (hashError) {

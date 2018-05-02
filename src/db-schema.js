@@ -26,7 +26,7 @@ const repoSchema = new mongoose.Schema({
     ref: 'Commit'
   }],
   isFork: Boolean,      // is a fork of another repo?
-  commit: String,       // current commit
+  commit: String,       // current commit hash (should probably change this)
   project: String,      // project name
   forkedFrom: String,   // what project/repo was the repo forked from (github project name not coinmarketcap)
   firstCommit: String,  // the projects first commit excluding any fork history
@@ -34,6 +34,7 @@ const repoSchema = new mongoose.Schema({
   defaultBranch: String,
   githubRepoName: String,
   githubProjectName: String,
+  numberOfCommits: Number, // the real number of commits
 });
 
 const fileSchema = new mongoose.Schema({
@@ -49,6 +50,7 @@ const fileSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
+    repo: String,
     project: String,
   }],
   project: String,

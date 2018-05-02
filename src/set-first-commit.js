@@ -29,32 +29,63 @@ module.exports = async function setFirstCommit() {
       if (parent === null) continue;
 
       // Load both logs
-      const [childProject, childRepo] = child.split('/');
-      const [parentProject, parentRepo] = parent.split('/');
+      const [childProjectName, childRepoName] = child.split('/');
+      const [parentProjectName, parentRepoName] = parent.split('/');
       const query = {
         $or: [
-          {$and: [{githubProjectName: childProject}, {githubRepoName: childRepo}]},
-          {$and: [{githubProjectName: parentProject}, {githubRepoName: parentRepo}]}
+          {$and: [{githubProjectName: childProjectName, githubRepoName: childRepoName}]},
+          {$and: [{githubProjectName: parentProjectName, githubRepoName: parentRepoName}]}
         ]
       }
       const [error, repos] = await to(Repo.find(query));
-      if (error || repos.length !== 2) throw new Error('ahhh');
+      if (error || repos.length !== 2) {
+        //
+        // Find out what repos have been assigned to multiple projects
+        //
+        const map = {};
+        repos.forEach((repo, i) => {
+          const github = `${repos[i].githubProjectName}/${repos[i].githubRepoName}`;
+          if (!Array.isArray(map[github])) map[github] = [];
+          map[github].push(repo._id);
+        });
+        for (let [key, github] of Object.entries(map)) {
+          if (github.length < 2) delete map[key];
+        }
+        const msg = `setFirstCommit(): The following Github repos have been assigned to multiple projects in Coinmarketcap:\n${JSON.stringify(map)}`;
+        global.notes.push(msg);
+        logger.warn(msg);
+      }
 
+      // Get both repos
+      // NOTE: any extra repos are ignored
       let parentRepo, childRepo;
-      repos[0].githubProjectName === parentProject
+      repos[0].githubProjectName === parentProjectName
         ? [parentRepo, childRepo] = repos
         : [childRepo, parentRepo] = repos;
 
-      // findThingy(parentRepo.logs, childRepo.logs);
-
-      debugger;
-      // Find when commits diverge
-      console.log('setFirstCommit(): chlid -> parent: ', repos[0]._id, repos[1]._id);
-
-      // Set first real commit
-
+      //
+      // Find when commits diverge and save repo.firstCommit hash
+      //
+      // NOTE: We can't do a binary search because commits could always be merged back in,
+      // so we need to find the first instance of a divergence
+      //
+      for (let [i, commit] of parentRepo.log.entries()) {
+        if (!childRepo.log[i] || commit.hash === childRepo.log[i].hash) {
+          continue;
+        }
+        else {
+          childRepo.firstCommit = childRepo.log[i].hash;
+          let [error, updated] = await to(childRepo.save());
+          if (error) {
+            logger.error(`setFirstCommit(): Error saving repo.firstCommit for ${childProjectName}/${childRepoName}: ${error}`);
+          }
+          else {
+            logger.info(`setFirstCommit(): Updated repo.firstCommit for ${childProjectName}/${childRepoName} to: ${updated.firstCommit}`);
+          }
+          break;
+        }
+      }
     }
-
 
   }
   catch(error) {

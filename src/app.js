@@ -11,6 +11,7 @@ const scrape = require('./scrape.js');
 const hashFiles = require('./hash-files');
 const cloneRepos = require('./clone-repos');
 const getLogData = require('./get-log-data');
+const syncCommits = require('./sync-commits');
 const getRepoData = require('./get-repo-data');
 const getForkData = require('./get-fork-data');
 const setFirstCommit = require('./set-first-commit');
@@ -26,11 +27,33 @@ global.cacheForGithubForks = 30;
 global.cacheForCoinmarketcapProjectsJson = 1;
 global.cacheForCoinmarketcapProjectHtml = 30;
 
+// Leave in execution order
+// global.settingsScrape = true;
+// global.settingsGetRepoData = true;
+// global.settingsCloneRepos = true;
+// global.settingsGetLogData = true;
+// global.settingsGetForkData = true;
+// global.settingsSetFirstCommit = true;
+// global.settingsSyncCommits = true;
+global.settingsHashFiles = true;
+
+// Stuff we found while parsing the data
+global.notes = [];
+
 process.on('warning', error => {
   debugger;
   logger.warn(error.stack);
 });
 
+//
+// TODO:
+// add overrides for extra repos, like bitcoin cash
+// 'bitcoin-cash': ['https://github.com/Bitcoin-ABC/bitcoin-abc']
+//
+
+//
+// TODO: move sync commits out to separate file/function
+//
 (async function doStuffYo() {
 
   //
@@ -38,61 +61,59 @@ process.on('warning', error => {
   //
   try {
 
-    //
+    let error;
+
     // Scrape Coinmarketcap
     // Get list of projects and links to their Githubs
-    //
-    const [scrapeError, scrapeResults] = await to(scrape({requestLimit: 500, requestDelay: 2000}));
-    if (scrapeError) {
-      throw new Error(scrapeError);
-    };
+    if (global.settingsScrape) {
+      [error] = await to(scrape({requestLimit: 500, requestDelay: 2000}));
+      if (error) throw new Error(error);
+    }
 
-    //
     // Itterate Coinmarketcap projects
     // Fetch all Github repos for each project
-    //
-    const [repoError, repoResults] = await to(getRepoData());
-    if (repoError) {
-      throw new Error(repoError);
-    };
+    if (global.settingsGetRepoData) {
+      [error] = await to(getRepoData());
+      if (error) throw new Error(error);
+    }
 
-    //
     // Clone all repos
-    //
-    const [cloneError, cloneResults] = await to(cloneRepos());
-    if (cloneError) {
-      throw new Error(cloneError);
-    };
+    if (global.settingsCloneRepos) {
+      [error] = await to(cloneRepos());
+      if (error) throw new Error(error);
+    }
 
-    //
     // For each repo checkout the latest commit on the default branch and save the log
-    //
-    const [logError, logResults] = await to(getLogData());
-    if (logError) {
-      throw new Error(logError);
-    };
+    if (global.settingsGetLogData) {
+      [error] = await to(getLogData());
+      if (error) throw new Error(error);
+    }
 
-    //
     // Get forks list for each repo
     // Set repo.forkedFrom fields
-    //
-    const [forkError, forkResults] = await to(getForkData());
-    if (forkError) {
-      throw new Error(forkError);
-    };
+    if (global.settingsGetForkData) {
+      [error] = await to(getForkData());
+      if (error) throw new Error(error);
+    }
 
-    //
-    // Set first 'real' commit based on fork data
-    //
-    // const [firstCommitError] = await to(setFirstCommit());
-    // if (firstCommitError) {
-    //   throw new Error(firstCommitError);
-    // };
+    // Set repo.firstCommit (the first 'real' commit based on fork data & logs)
+    if (global.settingsSetFirstCommit) {
+      [error] = await to(setFirstCommit());
+      if (error) throw new Error(error);
+    }
 
-    // const [hash, hashError] = await to(hashFiles());
-    // if (hashError) {
-    //   throw new Error(hashError);
-    // }
+    // Make sure every repo is at repo.commit (the last processed commit)
+    if (global.settingsSyncCommits) {
+      [error] = await to(syncCommits());
+      if (error) throw new Error(error);
+    }
+
+    // Continue hashing files from repo.commit onwards
+    if (global.settingsHashFiles) {
+      [error] = await to(hashFiles());
+      if (error) throw new Error(error);
+    }
+
   }
   catch(error) {
     logger.error(`Um some error happened yo: ${error}`);

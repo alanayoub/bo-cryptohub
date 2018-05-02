@@ -189,7 +189,7 @@ module.exports = async function scrape({requestLimit = Infinity, requestDelay = 
       idx++;
       if (slugs.length && idx < requestLimit) {
         setTimeout(() => {
-          console.log('Scrape(): Waiting 2000ms and incrementing counter now lets do next scrape...');
+          console.log(`Scrape(): Waiting ${requestDelay}ms and incrementing counter now lets do next scrape...`);
           scrapeGitUrlsForAllProjects(idx);
         }, 1);
       }

@@ -8,8 +8,9 @@ const { join, dirname, basename } = require('path');
 const { to } = require('await-to-js');
 
 // CryptoHub
+const logger = require('./log.js');
 const { Project, File, Repo } = require('./db-schema');
-const { arrayDiff, logHeader, getDirs, gitCheckout, gitCheckoutBranch, gitLog } = require('./utils.js');
+const { arrayDiff, logHeader, getDirs, gitDiff, gitCheckout, gitCheckoutBranch, gitLog } = require('./utils.js');
 
 /**
  *
@@ -26,7 +27,7 @@ function generateFileData(projectName, repo, path, commit) {
     const md5 = crypto.createHash('md5');
     const hash = md5.update(file).digest('hex');
     return {
-      _id: hashFile(path),
+      _id: hash,
       ext: path.split('.').pop(),
       path,
       repo,
@@ -42,37 +43,69 @@ function generateFileData(projectName, repo, path, commit) {
   }
 }
 
-
-/**
- *
- * @param {String} path
- * @return {String}
- *
- */
-function hashFile(path) {
-  const file = fs.readFileSync(path, 'utf8');
-  const md5 = crypto.createHash('md5');
-  const hash = md5.update(file).digest('hex');
-  return hash;
-}
-
 /**
  *
  * This function should be called on the first commit of any repo, it parse
  * all the files in the repo not just the changed ones
  *
+ * @param {Object} repo
+ * @param {Object} commitObj
+ *
  */
 async function firstCommit(repo, commitObj) {
-
-  let error;
-  let newFile;
-  let oldFile;
   const files = await glob(`projects/${repo._id}/**/*.*`);
-
-  console.log(`firstCommit(): ${files.length} files to hash`);
+  logger.info(`firstCommit(): ${files.length} files to hash`);
   for (let [i, path] of files.entries()) {
+    await hashAndSave(repo.project, repo._id, path, commitObj);
+  }
+}
 
-    newFile = generateFileData(repo.project, repo._id, path, commitObj);
+/**
+ *
+ * @param {Object} repo
+ * @param {Array} log
+ * @param {Number} commitIdx
+ *
+ */
+async function allOtherCommits(repo, log, commitIdx) {
+  const path = join('projects', repo._id);
+  const hash1 = log[commitIdx - 1].hash;
+  const hash2 = log[commitIdx].hash;
+  const [error, diff] = await to(gitDiff(path, hash1, hash2));
+  if (error) {
+    logger.error(error);
+    debugger;
+    return false;
+  }
+  if (diff.added) {
+    diff.added.forEach(async file => {
+      await hashAndSave(repo.project, repo._id, join(path, file), log[commitIdx]);
+    });
+  }
+  if (diff.deleted) {
+    // do nothing
+  }
+  if (diff.modified) {
+    diff.modified.forEach(async modified => {
+      await hashAndSave(repo.project, repo._id, join(path, modified.path), log[commitIdx]);
+    });
+  }
+}
+
+/**
+ *
+ *
+ *
+ */
+async function hashAndSave(projectName, repo, path, commit) {
+
+  try {
+
+    let error;
+    let newFile;
+    let oldFile;
+
+    newFile = generateFileData(projectName, repo, path, commit);
     [error, oldFile] = await to(File.findOne({_id: newFile._id}));
     if (error) throw new Error(error);
 
@@ -126,7 +159,13 @@ async function firstCommit(repo, commitObj) {
       if (error) throw new Error(error);
       console.log(`hashAllfiles(): Added new file to DB: ${newFile.path}`);
     }
+
   }
+  catch(error) {
+    debugger;
+    logger.error(`hash(): ${error}`);
+  }
+
 }
 
 /**
@@ -235,21 +274,42 @@ module.exports = async function hashFiles() {
        console.log(`Working on repo # ${i}: ${repo._id}`);
        const log = repo.log;
        console.log(`log lengh = ${log.length}`);
+
+       // tmp only apply to this repo
+       if (repo._id !== 'bitcoin/bitcoin') return;
+
        if (!log.length) continue;
-       const commit = repo.commit === null
-         ? repo.firstCommit || log[0].hash
-         : repo.commit;
-       const idx = log.findIndex(c => c.hash === commit);
-       [error] = await to(gitCheckout(`projects/${repo._id}`, log[idx].hash));
-       if (error) throw new Error(error);
-       if (!repo.commit) {
-         await firstCommit(repo, log[0]);
-         repo.commit = log[idx].hash;
+
+       // const commit = repo.commit === null
+       //   ? repo.firstCommit || log[0].hash
+       //   : repo.commit;
+       // const idx = log.findIndex(c => c.hash === commit);
+
+       const commitIdx = log.findIndex(c => {
+         return c.hash === (repo.commit === null ? repo.firstCommit : repo.commit);
+       });
+
+       // Loop through all commits from the last one that was parsed to the end
+       // commitIdx could be -1 if no commits have been parsed yet
+       for (let i = commitIdx; i < log.length - 1; i++) {
+
+         [error] = await to(gitCheckout(`projects/${repo._id}`, log[i + 1].hash));
+         if (error) throw new Error(error);
+
+         // [error] = await to(gitCheckout(`projects/${repo._id}`, log[idx].hash));
+         // if (error) throw new Error(error);
+         if (i === -1) {
+           await firstCommit(repo, log[0]);
+           repo.commit = log[0].hash;
+         }
+         else {
+           // hash changed files
+           const commitIndex = i + 1;
+           await allOtherCommits(repo, log, commitIndex);
+           // repo.commit = log[idx].hash;
+         }
        }
-       else {
-         // hash changed files
-         repo.commit = log[idx].hash;
-       }
+
      }
      return true;
    }

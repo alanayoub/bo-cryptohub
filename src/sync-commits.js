@@ -19,19 +19,19 @@ module.exports = async function syncCommits() {
     let repos;
     logHeader('Sync commits');
     [error, repos] = await to(Repo.find({}));
-    if (error) throw new Error(`Repo.find(): ${error}`);
+    if (error) throw new Error(`syncCommits(): ${error}`);
     for (let [i, repo] of repos.entries()) {
       path = `projects/${repo._id}`;
-      [error] = await to(gitCheckoutBranch(path, 'master'));
-      if (error) throw new Error(`gitCheckoutBranch(): ${error}`);
+      [error] = await to(gitCheckoutBranch(path, repo.defaultBranch));
+      if (error) throw new Error(`syncCommits(): ${error}`);
       if (repo.commit) {
         [error] = await to(gitCheckout(path, commit));
-        if (error) throw new Error(`gitCheckout(): ${error}`);
+        if (error) throw new Error(`syncCommits(): ${error}`);
       }
       [error] = await to(repo.save());
       if (error) throw new Error(`repo.save(): ${error}`);
       else {
-        logger.info(`syncCommits(): Saved repo.commit and repo.log for ${path}`);
+        logger.info(`syncCommits(): set ${repo._id} to branch ${repo.defaultBranch} and to commit ${repo.commit || '[first]'}`);
       }
     }
     return true;

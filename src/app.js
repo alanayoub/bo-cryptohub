@@ -102,7 +102,7 @@ process.on('warning', error => {
       if (error) throw new Error(error);
     }
 
-    // Make sure every repo is at repo.commit (the last processed commit)
+    // Make sure every repo is at repo.commit (the last processed commit) on repo.defaultBranch
     if (global.settingsSyncCommits) {
       [error] = await to(syncCommits());
       if (error) throw new Error(error);

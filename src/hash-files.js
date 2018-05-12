@@ -198,12 +198,6 @@ async function hashAndSave(projectName, repo, path, commit) {
 async function doOtherSTuff() {
 
   //
-  // For each repo
-  //  go to Master
-  //    do stuff...
-  //
-
-  //
   // What do we want to see?
   // -----------------------
   //
@@ -219,34 +213,46 @@ async function doOtherSTuff() {
   // 10. documentation, how many and length of md files
   // 11. WE NEED ALL THIS INFO FROM WHEN THE PROJECT WAS FORKED. WE NEED TO KNOW ORIGINAL CODE
   // 12. team member ratings, from github?
-  // 13. cryptocompaire rankings?
+  // 13. cryptocompaire rankings? // thats for projects
   // 14. Get youtube crypto peeps predictions and check for correlations
   // 15. Whitespace, comments, authors
   //
 
   // const schema = {
   //   bitcoin: {
+  //
   //     history: [
   //       // ...all this same info for each commit
   //     ],
+  //
   //     commits: 32,
-  //     avgCommitMsgLen: 10,
+  //     coreTeam: [{
+  //       name: String,
+  //       rating: Number
+  //     }],
+  //     contributors: [],
   //     testCoverage: 50,
-  //     numFiles: 2
+  //     avgCommitMsgLen: 10,
+  //     numFiles: 2,
   //     size: 123,
-  //     loc: 23
+  //     loc: 23,
+  //     whiteSpaceSize: 4,
+  //     commentsSize: 32,
   //     files: {
   //       js: {
-  //         numFiles: 2
+  //         quality: 43,
+  //         numFiles: 2,
   //         size: 123,
-  //         loc: 23
+  //         loc: 23,
   //       },
   //       h: {
+  //         quality: 43,
   //         numFiles: 2
   //         size: 123,
   //         loc: 23
   //       },
   //       cpp: {
+  //         quality: 43,
   //         numFiles: 2
   //         size: 123,
   //         loc: 23

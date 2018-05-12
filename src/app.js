@@ -29,13 +29,13 @@ global.cacheForCoinmarketcapProjectHtml = 30;
 
 // Leave in execution order
 // global.settingsScrape = true;
-// global.settingsGetRepoData = true;
+global.settingsGetRepoData = true;
 // global.settingsCloneRepos = true;
 // global.settingsGetLogData = true;
 // global.settingsGetForkData = true;
 // global.settingsSetFirstCommit = true;
 // global.settingsSyncCommits = true;
-global.settingsHashFiles = true;
+// global.settingsHashFiles = true;
 
 // Stuff we found while parsing the data
 global.notes = [];

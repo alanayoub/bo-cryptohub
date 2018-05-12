@@ -25,16 +25,28 @@ const repoSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Commit'
   }],
+  size: Number,
+  forks: Number,
   isFork: Boolean,      // is a fork of another repo?
   commit: String,       // current commit hash (should probably change this)
   project: String,      // project name
+  hasWiki: Boolean,
+  watchers: Number,
+  hasPages: Boolean,
+  hasIssues: Boolean,
   forkedFrom: String,   // what project/repo was the repo forked from (github project name not coinmarketcap)
+  openIssues: Number,
+  forksCount: Number,
   firstCommit: String,  // the projects first commit excluding any fork history
-  githubObject: String, // github api repo object
+  hasProjects: Boolean,
+  hasDownloads: Boolean,
+  watchersCount: Number,
   defaultBranch: String,
   githubRepoName: String,
-  githubProjectName: String,
+  openIssuesCount: Number,
+  stargazersCount: Number,
   numberOfCommits: Number, // the real number of commits
+  githubProjectName: String,
 });
 
 const fileSchema = new mongoose.Schema({

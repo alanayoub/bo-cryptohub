@@ -26,7 +26,7 @@ const readFileAsync = promisify(fs.readFile);
  */
 async function getGithubUrls(slug) {
   const uri = `https://coinmarketcap.com/currencies/${slug}/`;
-  const key = `coinmarketcap.com-currencies-${slug}.html`;
+  const key = `/coinmarketcap/details/${slug}.html`;
   const urls = [];
   const options = {
     uri,
@@ -158,7 +158,7 @@ module.exports = async function scrape({requestLimit = Infinity, requestDelay = 
 
     console.log(logHeader('Scraping CoinMarketCap.com'));
     const uri = 'https://s2.coinmarketcap.com/generated/search/quick_search.json';
-    const key = 'coinmarketcap.com-api-quick_search.json';
+    const key = '/coinmarketcap/search/coins.json';
 
     let error;
     let [file, age] = global.cache.get(key);

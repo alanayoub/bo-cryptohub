@@ -39,7 +39,7 @@ module.exports = async function* itterateWebRepos(message) {
 
         const [projectPage, repo] = githubUrl.split('https://github.com/')[1].split('/');
         const uri = `https://api.github.com/orgs/${projectPage}/repos`;
-        const key = `api.github.com-${projectPage}-repos`;
+        const key = `/github/repos/api.github.com-${projectPage}-repos`;
         let error;
         let [file, age] = global.cache.get(key);
 

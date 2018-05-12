@@ -68,15 +68,29 @@ async function firstCommit(repo, commitObj) {
  *
  */
 async function allOtherCommits(repo, log, commitIdx) {
+
   const path = join('projects', repo._id);
   const hash1 = log[commitIdx - 1].hash;
   const hash2 = log[commitIdx].hash;
-  const [error, diff] = await to(gitDiff(path, hash1, hash2));
-  if (error) {
-    logger.error(error);
-    debugger;
-    return false;
+
+  let diff;
+  let error;
+  let key = `/git/diff/${repo._id}/diff-${hash1}-${hash2}`;
+  [diff] = global.cache.get(key);
+
+  if (diff) {
+    diff = JSON.parse(diff);
   }
+  else {
+    [error, diff] = await to(gitDiff(path, hash1, hash2));
+    if (error) {
+      logger.error(error);
+      debugger;
+      return false;
+    }
+    global.cache.set(key, JSON.stringify(diff));
+  }
+
   if (diff.added) {
     diff.added.forEach(async file => {
       await hashAndSave(repo.project, repo._id, join(path, file), log[commitIdx]);
@@ -90,6 +104,7 @@ async function allOtherCommits(repo, log, commitIdx) {
       await hashAndSave(repo.project, repo._id, join(path, modified.path), log[commitIdx]);
     });
   }
+
 }
 
 /**
@@ -107,6 +122,7 @@ async function hashAndSave(projectName, repo, path, commit) {
 
     newFile = generateFileData(projectName, repo, path, commit);
     [error, oldFile] = await to(File.findOne({_id: newFile._id}));
+    if (newFile.path.split('.')[1] === 'gitignore' && oldFile === void 0) debugger;
     if (error) throw new Error(error);
 
     // If file already exists
@@ -122,24 +138,29 @@ async function hashAndSave(projectName, repo, path, commit) {
           // If newFile is older update file and set the old file and any copies as copies
           // Don't add copies for files in the same project
           if (oldFile.project !== newFile.project) {
-            newFile.copies = [...oldFile.copies, {date: oldFile.date, project: oldFile.project, repo: oldFile.repo}];
+            newFile.copies = [...oldfile.copies, {date: oldFile.date, project: oldFile.project, repo: oldFile.repo}];
           }
-          File.update({_id: newFile._id}, newFile);
+          for (let [key, val] of Object.entries(newFile)) {
+            oldFile[key] = val;
+          }
 
         case oldDate < newDate:
-          // if oldFile is older leave as is but update copies
-          const newCopy = {date: newFile.date, project: newFile.project, repo: newFile.repo};
+          // If oldFile is older leave as is but update file.copies
+          // Also only update copies if this copy doesn't already exist the project
           const exists = oldCopies.some(copy =>  {
-            return copy.project === newFile.project && copy.date === newFile.date && copy.repo === newFile.repo;
+            return copy.project === newFile.project && +copy.date === +newFile.date && copy.repo === newFile.repo;
           });
-          if (!exists) {
-            oldFile.copies = [...oldCopies, newCopy];
+          if (!exists && (oldFile.project !== newFile.project)) {
+            oldFile.copies = [...oldCopies, {date: newFile.date, project: newFile.project, repo: newFile.repo}];
           }
 
         case oldDate > newDate || oldDate < newDate:
-          // If either of the above, save and break
+          // If either of the above, save oldFile and break
           [error] = await to(oldFile.save());
-          if (error) throw new Error(error);
+          if (error) {
+            debugger
+            throw new Error(error);
+          }
           else {
             console.log(`hashAllFiles(): update old file from (${oldFile.project} -> ${newFile.project})`);
           }
@@ -156,7 +177,10 @@ async function hashAndSave(projectName, repo, path, commit) {
     // If file doesn't already exist add it
     else {
       [error] = await to(File.create(newFile));
-      if (error) throw new Error(error);
+      if (error) {
+        debugger;
+        throw new Error(error);
+      }
       console.log(`hashAllfiles(): Added new file to DB: ${newFile.path}`);
     }
 

@@ -46,7 +46,7 @@ module.exports = async function getForkData() {
         repo: repoName,
         per_page: 30
       };
-      const cacheKey = `forks-${octokitOptions.owner}-${octokitOptions.repo}`;
+      const cacheKey = `/github/forks/forks-${octokitOptions.owner}-${octokitOptions.repo}`;
       const [error, forks] = await to(paginate(octokit.repos.getForks, octokitOptions, cacheKey, global.cacheForGithubForks));
       repoList.push(join(project, repoName));
       if (error) throw new Error(error);
@@ -62,8 +62,8 @@ module.exports = async function getForkData() {
       forkMap[repo] = forkMapFull[repo] || null;
     });
 
-    global.cache.set('forkmap', JSON.stringify(forkMap));
-    global.cache.set('forkmapFull', JSON.stringify(forkMapFull));
+    global.cache.set('/github/forkmap/forkmap', JSON.stringify(forkMap));
+    global.cache.set('/github/forkmapFull/forkmapFull', JSON.stringify(forkMapFull));
 
     // Save repo.forkedFrom
     for (const [i, repo] of repos.entries()) {

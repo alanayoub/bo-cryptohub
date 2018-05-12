@@ -28,7 +28,7 @@ module.exports = async function getLogData() {
       for (let [j, repo] of repos.entries()) {
 
         const _id = repo._id;
-        const key = `gitlog-${repo.project}-${repo.githubRepoName}`;
+        const key = `/git/log/gitlog-${repo.project}-${repo.githubRepoName}`;
         let error;
         let commits;
         let [log, age] = global.cache.get(key);

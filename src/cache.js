@@ -1,5 +1,5 @@
 // Node
-const fs = require('fs');
+const fs = require('fs-extra');
 const glob = require('glob');
 const { join } = require('path');
 
@@ -55,7 +55,7 @@ module.exports = class Cache {
   set(key, data) {
     try {
       const date = wrapDate(getISODate());
-      fs.writeFileSync(join(this.dir, `${key}${date}`), data);
+      fs.outputFileSync(join(this.dir, `${key}${date}`), data);
       if (this.debug) console.log(`Cache.set(): saved ${key}${date} to ${this.dir}`);
     }
     catch(error) {
@@ -74,23 +74,3 @@ module.exports = class Cache {
   }
 
 }
-
-
-
-
-
-
-
-
-//
-// Redis cache
-// TODO: move somewhere incase we want to use Redis for something later
-//
-// const redis = require('redis');
-// const client = Promise.promisifyAll(redis.createClient());
-
-// client.on('error', error => {
-//   console.log(`Error: ${error}`);
-// });
-
-// module.exports = client;

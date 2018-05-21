@@ -14,7 +14,7 @@ const { paginate } = require('./utils-github');
  * Get and save all github repo fork information for all projects
  *
  */
-module.exports = async function getForkData() {
+module.exports = async function getForkData(regex = /.*/) {
 
   try {
 
@@ -24,7 +24,7 @@ module.exports = async function getForkData() {
       secret: global.githubClientSecret
     });
 
-    const repos = await Repo.find({});
+    const repos = await Repo.find({_id: regex});
 
     //
     // 1. Get forks for each repo

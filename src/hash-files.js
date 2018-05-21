@@ -26,6 +26,15 @@ function generateFileData(projectName, repo, path, commit) {
     const file = fs.readFileSync(path, 'utf8');
     const md5 = crypto.createHash('md5');
     const hash = md5.update(file).digest('hex');
+
+
+    debugger;
+    // comments: Number,     // number of comment characters
+    // language: String,
+    // whiteSpace: Number,   // number of whitespace characters
+    // blankLines: Number,
+
+
     return {
       _id: hash,
       ext: path.split('.').pop(),
@@ -293,13 +302,13 @@ async function doOtherSTuff() {
  * ---------------------------------
  *
  */
-module.exports = async function hashFiles() {
+module.exports = async function hashFiles(regex = /.*/) {
 
    try {
      let error;
      let repos;
      logHeader('Hashing Files');
-     [error, repos] = await to(Repo.find({}));
+     [error, repos] = await to(Repo.find({_id: regex}));
      for (let [i, repo] of repos.entries()) {
        console.log(`Working on repo # ${i}: ${repo._id}`);
        const log = repo.log;

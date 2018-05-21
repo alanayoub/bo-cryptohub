@@ -33,6 +33,7 @@ const repoSchema = new mongoose.Schema({
   hasWiki: Boolean,
   watchers: Number,
   hasPages: Boolean,
+  cloneUrl: String,
   hasIssues: Boolean,
   forkedFrom: String,   // what project/repo was the repo forked from (github project name not coinmarketcap)
   openIssues: Number,
@@ -69,6 +70,7 @@ const fileSchema = new mongoose.Schema({
   comments: Number,     // number of comment characters
   language: String,
   whiteSpace: Number,   // number of whitespace characters
+  blankLines: Number,   // number of blank lines
 });
 
 // const lineSchema = new mongoose.Schema({

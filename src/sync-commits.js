@@ -11,20 +11,22 @@ const logger = require('./log.js');
  * Make sure every repo is at the correct commit as defined in the DB.
  *
  */
-module.exports = async function syncCommits() {
+module.exports = async function syncCommits(regex = /.*/) {
 
   try {
     let path;
     let error;
     let repos;
+    let commit;
     logHeader('Sync commits');
-    [error, repos] = await to(Repo.find({}));
+    [error, repos] = await to(Repo.find({_id: regex}));
     if (error) throw new Error(`syncCommits(): ${error}`);
     for (let [i, repo] of repos.entries()) {
       path = `projects/${repo._id}`;
       [error] = await to(gitCheckoutBranch(path, repo.defaultBranch));
       if (error) throw new Error(`syncCommits(): ${error}`);
-      if (repo.commit) {
+      commit = repo.commit || repo.firstCommit;
+      if (commit) {
         [error] = await to(gitCheckout(path, commit));
         if (error) throw new Error(`syncCommits(): ${error}`);
       }

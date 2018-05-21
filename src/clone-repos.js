@@ -15,39 +15,36 @@ const { logHeader } = require('./utils.js');
  * Clone all repos in DB
  *
  */
-module.exports = async function cloneRepos() {
+module.exports = async function cloneRepos(regex = /.*/) {
 
   try {
 
+    //
+    // Delete the flipping thing instead of skipping so we dont have to deal with pulling :/
+    //
     logHeader('Cloning repos');
-    const repos = await Repo.find();
+    const repos = await Repo.find({_id: regex});
     const numRepos = repos.length;
 
     for (let [j, repo] of repos.entries()) {
 
-      const repoObj = JSON.parse(repo.githubObject);
-
-      if (repoObj && repoObj.clone_url) {
-
-        const url = repoObj.clone_url;
-        const path = `./projects/${repo._id}`;
-        const options = {
-          fetchOpts: {
-            callbacks: {
-              certificateCheck: () => 1
-            }
+      const url = repo.cloneUrl;
+      const path = `./projects/${repo._id}`;
+      const options = {
+        fetchOpts: {
+          callbacks: {
+            certificateCheck: () => 1
           }
-        };
-
-        if (!fs.existsSync(path)) {
-          logger.info(`cloneRepos(): Cloning ${url} repo`);
-          let [error] = await to(git.Clone(url, path, options));
-          if (error) logger.error(`cloneRepos(): ${error}`);
         }
-        else {
-          logger.info(`cloneRepos(): Skipping ${url}, repo already exists`);
-        }
+      };
 
+      if (!fs.existsSync(path)) {
+        logger.info(`cloneRepos(): Cloning ${url} repo`);
+        let [error] = await to(git.Clone(url, path, options));
+        if (error) logger.error(`cloneRepos(): ${error}`);
+      }
+      else {
+        logger.info(`cloneRepos(): Skipping ${url}, repo already exists`);
       }
 
       if (numRepos === j + 1) {

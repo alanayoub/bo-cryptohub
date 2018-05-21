@@ -224,110 +224,65 @@ async function gitLog(path, branch) {
   const git = require('nodegit');
   const { to } = require('await-to-js');
 
-  try {
-    // TODO: at the moment if an incorrect path is used nothing is returned and it hangs
-    console.log(`gitLog(): Getting log for ${path}`);
-    // let repository;
+  return new Promise(async resolve => {
 
-    let repo;
-    let error;
-    let commit;
+    try {
+      // TODO: at the moment if an incorrect path is used nothing is returned and it hangs
+      console.log(`gitLog(): Getting log for ${path}`);
+      // let repository;
 
-    [error, repo] = await to(git.Repository.open(path));
-    if (error) throw new Error(`gitLog(): Repository.open(): ${error}`);
-    [error] = await to(repo.fetch('origin'));
-    if (error) throw new Error(`gitLog(): repo.fetch(): ${error}`);
-    [error] = await to(repo.mergeBranches(branch, `origin/${branch}`));
-    if (error) throw new Error(`gitLog(): repo.mergeBranches(): ${error}`);
-    if (repo.isEmpty()) {
-      return [];
-    }
-    [error, commit] = await to(repo.getBranchCommit(`refs/remotes/origin/${branch}`));
-    if (error) throw new Error(`gitLog(): repo.getBranchCommit(): ${error}`);
+      let repo;
+      let error;
+      let commit;
 
-    if (!commit) return [];
-
-    const history = commit.history();
-    history.on('commit', commit => {});
-    history.on('end', commits => {
-      const results = [];
-      let author;
-      let details;
-      for (let [i, commit] of commits.entries()) {
-        author = commit.author();
-        details = {
-          hash: commit.sha(),
-          date: commit.date(),
-          author: {
-            name: author.name(),
-            email: author.email(),
-          },
-          message: commit.message(),
-        };
-        results.unshift(details);
+      [error, repo] = await to(git.Repository.open(path));
+      if (error) throw new Error(`gitLog(): Repository.open(): ${error}`);
+      [error] = await to(repo.fetch('origin'));
+      if (error) throw new Error(`gitLog(): repo.fetch(): ${error}`);
+      [error] = await to(repo.mergeBranches(branch, `origin/${branch}`));
+      if (error) throw new Error(`gitLog(): repo.mergeBranches(): ${error}`);
+      if (repo.isEmpty()) {
+        resolve([]);
+        return false;
       }
-      console.log(`gitLog(): Got log for ${path} (${results.length} items)`);
-      return results;
-    });
-    history.on('error', error => {
-      return {error: true, message: error}
-    });
-    history.start();
+      [error, commit] = await to(repo.getBranchCommit(`refs/remotes/origin/${branch}`));
+      if (error) throw new Error(`gitLog(): repo.getBranchCommit(): ${error}`);
 
-    // git.Repository
-    //   .open(path)
-    //   .then(repo => {
-    //     repository = repo;
-    //     repository.fetch('origin');
-    //   })
-    //   .then(() => {
-    //     repository.mergeBranches(branch, `origin/${branch}`);
-    //   })
-    //   .then(() => {
-    //     if (repository.isEmpty()) {
-    //       resolve([]);
-    //       return false;
-    //     }
-    //     return repository.getBranchCommit(`refs/remotes/origin/${branch}`);
-    //   })
-    //   .then(commit => {
+      if (!commit) resolve([]);
 
-    //     if (!commit) resolve([]);
+      const history = commit.history();
+      history.on('commit', commit => {});
+      history.on('end', commits => {
+        const results = [];
+        let author;
+        let details;
+        for (let [i, commit] of commits.entries()) {
+          author = commit.author();
+          details = {
+            hash: commit.sha(),
+            date: commit.date(),
+            author: {
+              name: author.name(),
+              email: author.email(),
+            },
+            message: commit.message(),
+          };
+          results.unshift(details);
+        }
+        console.log(`gitLog(): Got log for ${path} (${results.length} items)`);
+        resolve(results);
+      });
+      history.on('error', error => {
+        resolve({error: true, message: error});
+      });
+      history.start();
 
-    //     const history = commit.history();
+    }
+    catch(error) {
+      console.log(`gitLog(): ${error}`);
+    }
 
-    //     history.on('commit', commit => {});
-
-    //     history.on('end', commits => {
-    //       const results = [];
-    //       let author;
-    //       let details;
-    //       for (let [i, commit] of commits.entries()) {
-    //         author = commit.author();
-    //         details = {
-    //           hash: commit.sha(),
-    //           date: commit.date(),
-    //           author: {
-    //             name: author.name(),
-    //             email: author.email(),
-    //           },
-    //           message: commit.message(),
-    //         };
-    //         results.unshift(details);
-    //       }
-    //       console.log(`gitLog(): Got log for ${path} (${results.length} items)`);
-    //       resolve(results);
-    //     });
-
-    //     history.on('error', error => resolve({error: true, message: error}));
-
-    //     history.start();
-
-    //   });
-  }
-  catch(error) {
-    console.log(`gitLog(): ${error}`);
-  }
+  });
 
 }
 

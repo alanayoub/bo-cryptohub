@@ -34,6 +34,7 @@ module.exports = async function getRepoData() {
         isFork: repo.data.fork,
         hasWiki: repo.data.has_wiki,
         project: repo.projectId,
+        cloneUrl: repo.data.clone_url,
         watchers: repo.data.watchers,
         hasPages: repo.data.has_pages,
         hasIssues: repo.data.has_issues,

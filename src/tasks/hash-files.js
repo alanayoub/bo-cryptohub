@@ -8,9 +8,10 @@ const { join, dirname, basename } = require('path');
 const { to } = require('await-to-js');
 
 // CryptoHub
-const logger = require('./log.js');
-const { Project, File, Repo } = require('./db-schema');
-const { arrayDiff, logHeader, getDirs, gitDiff, gitCheckout, gitCheckoutBranch, gitLog } = require('./utils.js');
+const logger = require('../logger');
+const { Project, File, Repo } = require('../db-schema');
+const { arrayDiff, logHeader, getDirs } = require('../utils.js');
+const { gitDiff, gitCheckout, gitCheckoutBranch, gitLog } = require('../utils/index.js');
 
 /**
  *

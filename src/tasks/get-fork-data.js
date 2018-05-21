@@ -6,8 +6,8 @@ const { to } = require('await-to-js');
 const octokit = require('@octokit/rest')();
 
 // CryptoHub
-const { Repo } = require('./db-schema');
-const { paginate } = require('./utils-github');
+const { Repo } = require('../db-schema');
+const { paginate } = require('../utils-github');
 
 /**
  *

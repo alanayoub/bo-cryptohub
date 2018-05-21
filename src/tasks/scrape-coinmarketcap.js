@@ -11,9 +11,9 @@ const { to } = require('await-to-js');
 const cheerio = require('cheerio');
 
 // CryptoHub
-const Cache = require('./cache');
-const { getCurrentDate, typeOfData, logHeader } = require('./utils.js');
-const { Project } = require('./db-schema');
+const Cache = require('../cache');
+const { getCurrentDate, typeOfData, logHeader } = require('../utils.js');
+const { Project } = require('../db-schema');
 
 // Local
 // What is this for????
@@ -151,7 +151,7 @@ async function saveGithubUrls({_id, urls}) {
  * @param {Number} requestDelay - How long to wait inbetween requests so coinmarketcap doesn't crap out (in ms)
  *
  */
-module.exports = async function scrape({requestLimit = Infinity, requestDelay = 2000}) {
+module.exports = async function scrapeCoinmarketcap({requestLimit = Infinity, requestDelay = 2000}) {
 
   // TODO: remove this new Promise shit, its an async function dumbass
   return new Promise(async resolve => {

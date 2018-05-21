@@ -5,8 +5,8 @@ const { join } = require('path');
 const { to } = require('await-to-js');
 
 // CryptoHub
-const { Repo } = require('./db-schema');
-const itterateWebRepos = require('./itterate-web-repos');
+const { Repo } = require('../db-schema');
+const itterateWebRepos = require('../itterate-web-repos');
 
 /**
  *

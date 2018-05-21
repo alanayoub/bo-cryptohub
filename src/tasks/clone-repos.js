@@ -3,12 +3,12 @@ const fs = require('fs');
 
 // Libs
 const git = require('nodegit');
-const logger = require('./log.js');
+const logger = require('../logger');
 const { to } = require('await-to-js');
 
 // CryptoHub
-const { Repo } = require('./db-schema');
-const { logHeader } = require('./utils.js');
+const { Repo } = require('../db-schema');
+const { logHeader } = require('../utils.js');
 
 /**
  *

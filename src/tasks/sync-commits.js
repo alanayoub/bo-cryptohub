@@ -2,9 +2,10 @@
 const { to } = require('await-to-js');
 
 // CryptoHub
-const { Repo } = require('./db-schema');
-const { logHeader, gitCheckout, gitCheckoutBranch } = require('./utils.js');
-const logger = require('./log.js');
+const { Repo } = require('../db-schema');
+const { logHeader } = require('../utils.js');
+const { gitCheckout, gitCheckoutBranch } = require('../utils/index.js');
+const logger = require('../logger');
 
 /**
  *

@@ -2,7 +2,7 @@
 const { to } = require('await-to-js');
 
 // CryptoHub
-const logger = require('./log.js');
+const logger = require('./logger');
 const { Project } = require('./db-schema');
 const { get, logHeader } = require('./utils.js');
 

@@ -7,8 +7,9 @@ const git = require('nodegit');
 const { to } = require('await-to-js');
 
 // CryptoHub
-const { Repo } = require('./db-schema');
-const { gitLog, dbSaveCommits, logHeader } = require('./utils.js');
+const { Repo } = require('../db-schema');
+const { dbSaveCommits, logHeader } = require('../utils.js');
+const { gitLog } = require('../utils/index.js');
 
 /**
  *

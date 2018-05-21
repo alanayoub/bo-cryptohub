@@ -1,9 +1,9 @@
 // Libs
-const logger = require('./log.js');
+const logger = require('../logger');
 const { to } = require('await-to-js');
 
 // CryptoHub
-const { Repo } = require('./db-schema');
+const { Repo } = require('../db-schema');
 
 /**
  *
@@ -51,7 +51,9 @@ module.exports = async function setFirstCommit() {
         for (let [key, github] of Object.entries(map)) {
           if (github.length < 2) delete map[key];
         }
-        const msg = `setFirstCommit(): The following Github repos have been assigned to multiple projects in Coinmarketcap:\n${JSON.stringify(map)}`;
+        const msg = Object.keys(map).length
+          ? `setFirstCommit(): The following Github repos have been assigned to multiple projects in Coinmarketcap:\n${JSON.stringify(map)}`
+          : `setFirstCommit(): Either the child or parent repo doesn\'t exist`;
         global.notes.push(msg);
         logger.warn(msg);
       }

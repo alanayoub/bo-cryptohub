@@ -5,16 +5,16 @@ const { to } = require('await-to-js');
 // CryptoHub
 require('./db-connect');
 const Cache = require('./cache');
-const logger = require('./log.js');
+const logger = require('./logger');
 
-const scrape = require('./scrape.js');
-const hashFiles = require('./hash-files');
-const cloneRepos = require('./clone-repos');
-const getLogData = require('./get-log-data');
-const syncCommits = require('./sync-commits');
-const getRepoData = require('./get-repo-data');
-const getForkData = require('./get-fork-data');
-const setFirstCommit = require('./set-first-commit');
+const scrapeCoinmarketcap = require('./tasks/scrape-coinmarketcap');
+const hashFiles = require('./tasks/hash-files');
+const cloneRepos = require('./tasks/clone-repos');
+const getLogData = require('./tasks/get-log-data');
+const syncCommits = require('./tasks/sync-commits');
+const getRepoData = require('./tasks/get-repo-data');
+const getForkData = require('./tasks/get-fork-data');
+const setFirstCommit = require('./tasks/set-first-commit');
 
 // settings
 global.cache = new Cache('cache', true);
@@ -28,11 +28,11 @@ global.cacheForCoinmarketcapProjectsJson = 1;
 global.cacheForCoinmarketcapProjectHtml = 30;
 
 // Leave in execution order
-// global.settingsScrape = true;
+// global.settingsScrapeCoinmarketcap = true;
 // global.settingsGetRepoData = true;
 // global.settingsCloneRepos = true;
-global.settingsGetLogData = true;
-// global.settingsGetForkData = true;
+// global.settingsGetLogData = true;
+global.settingsGetForkData = true;
 // global.settingsSetFirstCommit = true;
 // global.settingsSyncCommits = true;
 // global.settingsHashFiles = true;
@@ -51,14 +51,8 @@ process.on('warning', error => {
 // 'bitcoin-cash': ['https://github.com/Bitcoin-ABC/bitcoin-abc']
 //
 
-//
-// TODO: move sync commits out to separate file/function
-//
 (async function doStuffYo() {
 
-  //
-  // Each task is completely independent
-  //
   try {
 
     const regex = /litecoin\/litecoin$|bitcoin\/bitcoin$|reddcoin\/reddcoin$/;
@@ -66,8 +60,8 @@ process.on('warning', error => {
 
     // Scrape Coinmarketcap
     // Get list of projects and links to their Githubs
-    if (global.settingsScrape) {
-      [error] = await to(scrape({requestLimit: 500, requestDelay: 2000}));
+    if (global.settingsScrapeCoinmarketcap) {
+      [error] = await to(scrapeCoinmarketcap({requestLimit: 500, requestDelay: 2000}));
       if (error) throw new Error(error);
     }
 

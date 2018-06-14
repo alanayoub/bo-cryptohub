@@ -62,8 +62,20 @@ module.exports = async function getForkData(regex = /.*/) {
       forkMap[repo] = forkMapFull[repo] || null;
     });
 
-    global.cache.set('/github/forkmap/forkmap', JSON.stringify(forkMap));
-    global.cache.set('/github/forkmapFull/forkmapFull', JSON.stringify(forkMapFull));
+    //
+    // We need something like this:
+    //
+    // const forks = {
+    //   reddcoin: [
+    //     ["litecoin-project/litecoin", "bitcoin/bitcoin"],
+    //     [another forked repo]
+    //   ]
+    // }
+    //
+
+
+    global.cache.set('/cryptohub/forkmap/forkmap', JSON.stringify(forkMap));
+    global.cache.set('/cryptohub/forkmapFull/forkmapFull', JSON.stringify(forkMapFull));
 
     // Save repo.forkedFrom
     for (const [i, repo] of repos.entries()) {

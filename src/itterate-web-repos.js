@@ -1,9 +1,11 @@
 // Libs
 const { to } = require('await-to-js');
+const octokit = require('@octokit/rest')();
 
 // CryptoHub
 const logger = require('./logger');
 const { Project } = require('./db-schema');
+const { paginate } = require('./utils-github');
 const { get, logHeader } = require('./utils.js');
 
 /**
@@ -23,6 +25,13 @@ module.exports = async function* itterateWebRepos(message) {
   try {
 
     logHeader(message);
+
+    await octokit.authenticate({
+      type: 'oauth',
+      key: global.githubClientId,
+      secret: global.githubClientSecret
+    });
+
     const projects = await Project.find({githubUrls: {$exists: true, $not: {$size: 0}}});
     const numProjects = projects.length;
     let numGithubUrls;
@@ -38,31 +47,72 @@ module.exports = async function* itterateWebRepos(message) {
       for (let [j, githubUrl] of project.githubUrls.entries()) {
 
         const [projectPage, repo] = githubUrl.split('https://github.com/')[1].split('/');
-        const uri = `https://api.github.com/orgs/${projectPage}/repos`;
-        const key = `/github/repos/api.github.com-${projectPage}-repos`;
+        const projectKey = `/github/projects/api.github.com-${projectPage}`;
+        const repoKey = `/github/repos/api.github.com-${projectPage}-repos`;
         let error;
-        let [file, age] = global.cache.get(key);
+        let repoFile;
+        let projectFile;
+        let age;
 
-        if (!file || age > global.cacheForGithubRepo) {
-          [error, file] = await to(get(uri));
+        //
+        // These are basically exactly the same, get the file
+        //
+
+        [projectFile, age] = global.cache.get(projectKey);
+        if (!projectFile || true) { //age > global.cacheForGithubRepo) {
+
+          [error, projectFile] = await to(paginate(octokit.users.getForUser, {username: projectPage}, projectKey, global.cacheForGithubForks));
+          // [error, projectFile] = await to(get(`https://api.github.com/users/${projectPage}`));
           if (error) {
-            if (error.statusCode === 404) {
-              logger.error(`error fetching ${uri}: ${error}`);
-            }
+            console.log('error', error);
+            debugger
+            logger.error(`itterateWebRepos(): ${error}`);
           }
           else {
-            global.cache.set(key, JSON.stringify(file));
+            global.cache.set(projectKey, JSON.stringify(projectFile));
           }
         }
         else {
-          file = JSON.parse(file);
+          projectFile = JSON.parse(projectFile);
         }
 
-        if (!Array.isArray(file)) file = [];
-        numRepos = file.length;
+        [repoFile, age] = global.cache.get(repoKey);
+        if (!repoFile || true) { //age > global.cacheForGithubRepo) {
+
+          if (projectFile.type === 'Organization') {
+            const options = {
+              org: projectPage,
+              type: 'public',
+              per_page: 30
+            };
+            [error, repoFile] = await to(paginate(octokit.repos.getForOrg, options, repoKey, global.cacheForGithubForks));
+          }
+          else if (projectFile.type === 'User') {
+            const options = {
+              username: projectPage,
+              type: 'public',
+              per_page: 30
+            };
+            [error, repoFile] = await to(paginate(octokit.repos.getForUser, options, repoKey, global.cacheForGithubForks));
+          }
+
+          if (error) {
+            debugger;
+            logger.error(`itterateWebRepos(): ${error}`);
+          }
+          else {
+            global.cache.set(repoKey, JSON.stringify(repoFile));
+          }
+        }
+        else {
+          repoFile = JSON.parse(repoFile);
+        }
+
+        if (!Array.isArray(repoFile)) repoFile = [];
+        numRepos = repoFile.length;
 
         // Iterate repos
-        for (let [k, repoObj] of file.entries()) {
+        for (let [k, repoObj] of repoFile.entries()) {
 
           yield {
             githubUrl,

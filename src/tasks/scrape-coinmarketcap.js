@@ -25,18 +25,26 @@ const readFileAsync = promisify(fs.readFile);
  *
  */
 async function getGithubUrls(slug) {
-  const uri = `https://coinmarketcap.com/currencies/${slug}/`;
-  const key = `/coinmarketcap/details/${slug}.html`;
+  // const uri = `https://coinmarketcap.com/currencies/${slug}/`;
+  // const key = `/coinmarketcap/details/${slug}.html`;
   const urls = [];
+
+  const token = 'btc';
+  const uri = `https://www.cryptocompare.com/coins/eth/influence/${token}`;
+  const key = `/cryptocompare/coins/${token}/influence.html`;
+
   const options = {
     uri,
     transform: html => cheerio.load(html)
   };
+
   let $;
   let error;
   let [file, age] = global.cache.get(key);
-  if (!file || age > global.cacheForCoinmarketcapProjectHtml) {
+  if (true || !file || age > global.cacheForCoinmarketcapProjectHtml) {
+
     [error, $] = await to(rp(options));
+    debugger
     if (!$) {
       return console.log(`getGithubUrls(): Error fetching getGithubUrls: ${error}`);
     }

@@ -14,7 +14,6 @@ async function paginate(method, octokitOptions, cacheKey, cacheFor) {
   let response;
   let [data, age] = global.cache.get(cacheKey);
 
-  // TODO: dont set age here!
   if (!data || age > cacheFor) {
     console.log('paginate(): Fetching lots of data, this could take a while...');
     let count = 0;

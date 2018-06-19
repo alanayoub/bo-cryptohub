@@ -15,13 +15,6 @@ const { get, logHeader } = require('./utils.js');
  */
 module.exports = async function* itterateWebRepos(message) {
 
-  //
-  // TODO: Fix this error
-  //
-  // itterateWebRepos(): itterateWebRepos() error fetching https://api.github.com/orgs/monero-project/repos:
-  // StatusCodeError: 404 - {"message":"Not Found","documentation_url":"https://developer.github.com/v3/repos/#list-organization-repositories"}
-  //
-
   try {
 
     logHeader(message);
@@ -54,15 +47,9 @@ module.exports = async function* itterateWebRepos(message) {
         let projectFile;
         let age;
 
-        //
-        // These are basically exactly the same, get the file
-        //
-
         [projectFile, age] = global.cache.get(projectKey);
         if (!projectFile || true) { //age > global.cacheForGithubRepo) {
-
           [error, projectFile] = await to(paginate(octokit.users.getForUser, {username: projectPage}, projectKey, global.cacheForGithubForks));
-          // [error, projectFile] = await to(get(`https://api.github.com/users/${projectPage}`));
           if (error) {
             console.log('error', error);
             debugger
@@ -78,24 +65,12 @@ module.exports = async function* itterateWebRepos(message) {
 
         [repoFile, age] = global.cache.get(repoKey);
         if (!repoFile || true) { //age > global.cacheForGithubRepo) {
-
-          if (projectFile.type === 'Organization') {
-            const options = {
-              org: projectPage,
-              type: 'public',
-              per_page: 30
-            };
-            [error, repoFile] = await to(paginate(octokit.repos.getForOrg, options, repoKey, global.cacheForGithubForks));
-          }
-          else if (projectFile.type === 'User') {
-            const options = {
-              username: projectPage,
-              type: 'public',
-              per_page: 30
-            };
-            [error, repoFile] = await to(paginate(octokit.repos.getForUser, options, repoKey, global.cacheForGithubForks));
-          }
-
+          const options = {
+            org: projectPage,
+            per_page: 30
+          };
+          const type = projectFile.type === 'User' ? 'User' : 'Org';
+          [error, repoFile] = await to(paginate(octokit.repos.getFor[type], options, repoKey, global.cacheForGithubForks));
           if (error) {
             debugger;
             logger.error(`itterateWebRepos(): ${error}`);

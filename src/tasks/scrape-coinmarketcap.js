@@ -25,13 +25,10 @@ const readFileAsync = promisify(fs.readFile);
  *
  */
 async function getGithubUrls(slug) {
-  // const uri = `https://coinmarketcap.com/currencies/${slug}/`;
-  // const key = `/coinmarketcap/details/${slug}.html`;
-  const urls = [];
 
-  const token = 'btc';
-  const uri = `https://www.cryptocompare.com/coins/eth/influence/${token}`;
-  const key = `/cryptocompare/coins/${token}/influence.html`;
+  const uri = `https://coinmarketcap.com/currencies/${slug}/`;
+  const key = `/coinmarketcap/details/${slug}.html`;
+  const urls = [];
 
   const options = {
     uri,
@@ -42,9 +39,7 @@ async function getGithubUrls(slug) {
   let error;
   let [file, age] = global.cache.get(key);
   if (true || !file || age > global.cacheForCoinmarketcapProjectHtml) {
-
     [error, $] = await to(rp(options));
-    debugger
     if (!$) {
       return console.log(`getGithubUrls(): Error fetching getGithubUrls: ${error}`);
     }
@@ -55,6 +50,14 @@ async function getGithubUrls(slug) {
     $ = cheerio.load(file);
   }
   const githubs = $('a[href^="https://github"]').toArray();
+
+  if (global.githubOverrides[slug]) {
+    if (!githubs.length) {
+      console.log('NOTE: Found a github url that didn\'t exist before');
+    }
+    githubs.push(global.githubOverrides[slug]);
+  }
+
   githubs.forEach(a => {
     urls.push(a.attribs.href);
   });
@@ -164,47 +167,55 @@ module.exports = async function scrapeCoinmarketcap({requestLimit = Infinity, re
   // TODO: remove this new Promise shit, its an async function dumbass
   return new Promise(async resolve => {
 
-    console.log(logHeader('Scraping CoinMarketCap.com'));
-    const uri = 'https://s2.coinmarketcap.com/generated/search/quick_search.json';
-    const key = '/coinmarketcap/search/coins.json';
+    try {
 
-    let error;
-    let [file, age] = global.cache.get(key);
-    if (!file || age > global.cacheForCoinmarketcapProjectsJson) {
-      // TODO: replace with get?
-      [error, file] = await to(rp({uri, json: true}));
-      if (!file) return console.log(`scrape(): ${error}`);
-      global.cache.set(key, JSON.stringify(file));
-      const [saveError] = await to(saveCoreCoinData(file));
-      if (saveError) return console.log(`scrape(): error saving: ${saveError}`);
-    }
-    else {
-      file = JSON.parse(file);
-    }
+      console.log(logHeader('Scraping CoinMarketCap.com'));
+      const uri = 'https://s2.coinmarketcap.com/generated/search/quick_search.json';
+      const key = '/coinmarketcap/search/coins.json';
 
-    let slugs = file.map(v => v.slug);
-    let results = {};
-    //
-    // TODO: skip cached stuff
-    //
-    (async function scrapeGitUrlsForAllProjects(idx = 0) {
-      const slug = slugs.shift();
-
-      // TODO: Do error checking here
-      results[slug] = await getGithubUrls(slug);
-      await saveGithubUrls({_id: slug, urls: results[slug]});
-
-      idx++;
-      if (slugs.length && idx < requestLimit) {
-        setTimeout(() => {
-          console.log(`Scrape(): Waiting ${requestDelay}ms and incrementing counter now lets do next scrape...`);
-          scrapeGitUrlsForAllProjects(idx);
-        }, 1);
+      let error;
+      let [file, age] = global.cache.get(key);
+      if (!file || age > global.cacheForCoinmarketcapProjectsJson) {
+        // TODO: replace with get?
+        [error, file] = await to(rp({uri, json: true}));
+        if (!file) return console.log(`scrape(): ${error}`);
+        global.cache.set(key, JSON.stringify(file));
+        const [saveError] = await to(saveCoreCoinData(file));
+        if (saveError) return console.log(`scrape(): error saving: ${saveError}`);
       }
       else {
-        resolve(results);
+        file = JSON.parse(file);
       }
-    })();
+
+      let slugs = file.map(v => v.slug);
+      let results = {};
+      //
+      // TODO: skip cached stuff
+      //
+      (async function scrapeAndSaveGitUrlsForAllProjects(idx = 0) {
+        const slug = slugs.shift();
+
+        // TODO: Do error checking here
+        results[slug] = await getGithubUrls(slug);
+        await saveGithubUrls({_id: slug, urls: results[slug]});
+
+        idx++;
+        if (slugs.length && idx < requestLimit) {
+          setTimeout(() => {
+            console.log(`Scrape(): Waiting ${requestDelay}ms and incrementing counter now lets do next scrape...`);
+            scrapeAndSaveGitUrlsForAllProjects(idx);
+          }, 1);
+        }
+        else {
+          resolve(results);
+        }
+      })();
+
+    }
+    catch(error) {
+      console.log(`scrapeCoinmarketcap(): ${error}`);
+      return {error: true, message: `scrapeCoinmarketcap(): ${error}`};
+    }
 
   });
 

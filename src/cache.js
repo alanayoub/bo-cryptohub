@@ -3,6 +3,9 @@ const fs = require('fs-extra');
 const glob = require('glob');
 const { join } = require('path');
 
+// CryptoHub
+const logger = require('./logger');
+
 /**
  *
  * @param {Object} date
@@ -39,10 +42,11 @@ module.exports = class Cache {
       const dateNow = +new Date();
       const age = ((dateNow - +new Date(newestFileDate)) / (1000*60*60*24));
       const file = fs.readFileSync(newestFile);
+      logger.info(`Cache.get(): Fetching cached data for ${key}`);
       return [file.toString(), age];
     }
     catch(error) {
-      if (this.debug) console.log(`Cache.get(): ${error}`);
+      if (this.debug) logger.info(`Cache.get(): ${error}`);
     }
   }
 
@@ -56,10 +60,10 @@ module.exports = class Cache {
     try {
       const date = wrapDate(getISODate());
       fs.outputFileSync(join(this.dir, `${key}${date}`), data);
-      if (this.debug) console.log(`Cache.set(): saved ${key}${date} to ${this.dir}`);
+      if (this.debug) logger.info(`Cache.set(): saved ${key}${date} to ${this.dir}`);
     }
     catch(error) {
-      if (this.debug) console.log(`Cache.set(): ${error}`);
+      if (this.debug) logger.info(`Cache.set(): ${error}`);
     }
   }
 

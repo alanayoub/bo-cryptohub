@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "clear && node --inspect --harmony_async_iteration --use-strict ./src/app.js"
+    "code": "clear && node --inspect --harmony_async_iteration --use-strict ./src/app-code.js",
+    "scrape": "clear && node --inspect --harmony_async_iteration --use-strict ./src/app-scrape.js",
+    "analytics": "clear && node --inspect --harmony_async_iteration --use-strict ./src/app-analytics.js"
   },
   "author": "",
   "license": "ISC",

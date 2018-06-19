@@ -3,8 +3,8 @@ const rp = require('request-promise');
 const { to } = require('await-to-js');
 
 // CryptoHub
+require('./settings');
 require('./db-connect');
-const Cache = require('./cache');
 const logger = require('./logger');
 const hashFiles = require('./tasks/hash-files');
 const cloneRepos = require('./tasks/clone-repos');
@@ -14,54 +14,11 @@ const getRepoData = require('./tasks/get-repo-data');
 const getForkData = require('./tasks/get-fork-data');
 const setFirstCommit = require('./tasks/set-first-commit');
 const scrapeCoinmarketcap = require('./tasks/scrape-coinmarketcap');
-const scrapeOtherStuff = require('./tasks/scrape-otherstuff');
-
-// Settings
-global.cache = new Cache('cache', true);
-global.githubClientId = 'c7a2c111a27dee50bba0';
-global.githubClientSecret = '5e4b8b348c8165536391bdbf6041685f270503f0';
-
-// Cache for days
-global.cacheForGitlog = 7;
-global.cacheForGithubRepo = 7;
-global.cacheForGithubForks = 30;
-global.cacheForCryptoCompare = 30;
-global.cacheForCoinmarketcapProjectsJson = 1;
-global.cacheForCoinmarketcapProjectHtml = 30;
-
-// Leave in execution order
-global.settingsScrapeOtherStuff = true;
-// global.settingsScrapeCoinmarketcap = true;
-// global.settingsGetRepoData = true;
-// global.settingsCloneRepos = true;
-// global.settingsGetLogData = true;
-// global.settingsGetForkData = true;
-// global.settingsSetFirstCommit = true;
-// global.settingsSyncCommits = true;
-// global.settingsHashFiles = true;
-
-// Stuff we found while parsing the data
-global.notes = [];
 
 process.on('warning', error => {
   debugger;
   logger.warn(error.stack);
 });
-
-//
-// Github:
-// BAT: https://github.com/brave-intl?utf8=%E2%9C%93&q=&type=&language=
-// FUN: https://github.com/funfair-tech
-// KIN: https://github.com/kinecosystem
-// GAS: https://github.com/neo-project
-// PAY: https://github.com/tenx-tech
-// ANT: https://github.com/aragon/aragon-network-token
-// GNO: https://github.com/gnosis
-//
-// Bitbucket :/
-// Ardor: https://bitbucket.org/Jelurida/ardor/src
-// NXT: https://bitbucket.org/JeanLucPicard/nxt/src
-//
 
 //
 // TODO:
@@ -77,17 +34,10 @@ process.on('warning', error => {
     const regex = /.*/;
     let error;
 
-    // Scrape Other stuff
-    if (global.settingsScrapeOtherStuff) {
-      [error] = await to(scrapeOtherStuff({requestLimit: 999999, requestDelay: 2000}));
-      if (error) throw new Error(error);
-    }
-
     // Scrape Coinmarketcap
     // Get list of projects and links to their Githubs
     if (global.settingsScrapeCoinmarketcap) {
-      [error] = await to(scrapeCoinmarketcap({requestLimit: 5000, requestDelay: 2000}));
-      if (error) throw new Error(error);
+      await to(scrapeCoinmarketcap({requestLimit: 5000, requestDelay: 2000}));
     }
 
     // Itterate Coinmarketcap projects

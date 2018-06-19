@@ -42,7 +42,6 @@ module.exports = async function cloneRepos(regex = /.*/) {
         logger.info(`cloneRepos(): Cloning ${url} repo`);
         let [error] = await to(git.Clone(url, path, options));
         if (error) {
-          debugger;
           logger.error(`
             cloneRepos(): ${error}\n
             -> Sometimes the repos api returns more repos that actually exist, so this repo may have been deleted`

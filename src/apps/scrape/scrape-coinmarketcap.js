@@ -24,7 +24,7 @@ module.exports = async function scrapeCoinmarketcap({requestLimit = Infinity, re
       logHeader('Scraping CoinMarketCap.com');
       const uri = settings.uriCoinmarketcapList;
       const key = settings.keyCoinmarketcapList;
-      const file = await scrapeJSON(uri, key, 0); //global.cacheForCoinmarketcapProjectsJson);
+      const file = await scrapeJSON(uri, key, global.cacheForCoinmarketcapProjectsJson);
       let ids = file.data.map(v => v.id);
       let slugs = file.data.map(v => v.website_slug);
       let results = {
@@ -35,8 +35,8 @@ module.exports = async function scrapeCoinmarketcap({requestLimit = Infinity, re
 
         const id = ids.shift();
         const slug = slugs.shift();
-        await scrapeJSON(settings.tagUriCoinmarketcapDetailsJSON`${id}`, settings.tagKeyCoinmarketcapDetailsJSON`${id}`, 0); // global.cacheForCoinmarketcapProjectHtml);
-        await scrapeHTML(settings.tagUriCoinmarketcapDetailsHTML`${slug}`, settings.tagKeyCoinmarketcapDetailsHTML`${slug}`, 0); // global.cacheForCoinmarketcapProjectHtml);
+        await scrapeJSON(settings.tagUriCoinmarketcapDetailsJSON`${id}`, settings.tagKeyCoinmarketcapDetailsJSON`${id}`, global.cacheForCoinmarketcapProjectHtml);
+        await scrapeHTML(settings.tagUriCoinmarketcapDetailsHTML`${slug}`, settings.tagKeyCoinmarketcapDetailsHTML`${slug}`, global.cacheForCoinmarketcapProjectHtml);
 
         idx++;
         if (ids.length && idx < requestLimit) {

@@ -1,8 +1,17 @@
 module.exports = {
 
-  formatterJSONToTxt: require('./formatter-json-to-txt'),
-  formatterCryptocompareSnapshot: require('./formatter-cryptocompare-snapshot'),
-  formatterCryptocompareSocialstats: require('./formatter-cryptocompare-socialstats'),
+  analyticsMapCmcToCc:       require('./analytics-map-cmc-to-cc'),
+  analyticsMergeDataByKey:   require('./analytics-merge-data-by-key'),
+  analyticsUSDCurrencyTable: require('./analytics-usd-currency-table'),
+
+  commonDelay:          require('./common-delay'),
+  commonSwapObjectKeys: require('./common-swap-object-keys'),
+
+  formatterJSONToTxt:                  require('./formatter-json-to-txt'),
+  formatterCryptocompareSnapshot:      require('./formatter-cryptocompare-snapshot'),
+  formatterCryptocompareAllCoins:      require('./formatter-cryptocompare-all-coins'),
+  formatterCryptocompareSocialstats:   require('./formatter-cryptocompare-socialstats'),
+  formatterCryptocompareFiatVolumeUSD: require('./formatter-cryptocompare-fiat-volume-usd'),
 
   gitLog:            require('./git-log'),
   gitDiff:           require('./git-diff'),
@@ -12,5 +21,7 @@ module.exports = {
 
   scrapeHTML: require('./scrape-html'),
   scrapeJSON: require('./scrape-json'),
+
+  itterateCryptocompareExchangePairs: require('./itterate-cryptocompare-exchange-pairs'),
 
 };

@@ -28,6 +28,26 @@ module.exports = class Cache {
   }
 
   /**
+   * @param {String} key
+   * @return {Array} [Boolean, age]
+   */
+  check(key) {
+    try {
+      const files = glob.sync(`${join(this.dir, key)}-<*>`, {});
+      if (!files.length) return [false];
+      const newestFile = files.sort().pop();
+      const newestFileDate = newestFile.replace(/.*<(.*)>$/, '$1');
+      const dateNow = +new Date();
+      const age = ((dateNow - +new Date(newestFileDate)) / (1000*60*60*24));
+      logger.info(`Cache.check(): Checking if ${key} is cached`);
+      return [true, age];
+    }
+    catch(error) {
+      if (this.debug) logger.info(`Cache.check(): ${error}`);
+    }
+  }
+
+  /**
    *
    * @param {String} key
    * @return {Array} [file, age] - age is in days

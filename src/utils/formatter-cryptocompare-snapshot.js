@@ -3,7 +3,7 @@
  * @return {Object} snapshot
  *
  */
-const logger = require('../logger');
+const logger = require.main.require('./logger');
 module.exports = function formatterCryptocompareSnapshot(snapshot) {
   try {
     const data = {};
@@ -11,16 +11,15 @@ module.exports = function formatterCryptocompareSnapshot(snapshot) {
       const pairs = val.Data.Subs.map(a => a.split('~')[1]);
       const exchanges = Array.from(new Set(pairs));
       data[key] = {
-        '_id':                 val.Data.General.Symbol,
-        'Proof':               val.Data.General.ProofType,
-        'Algorithm':           val.Data.General.Algorithm,
-        'Start Date':          val.Data.General.StartDate,
-        'Total Supply':        val.Data.General.TotalCoinSupply,
-        'Hashes Per Second':   val.Data.General.NetHashesPerSecond,
-        'Total coins Minted':  val.Data.General.TotalCoinsMined,
-        'ICO':                 val.Data.ICO ? val.Data.ICO.Status : 'False',
-        'Number of Pairs':     pairs.length,
-        'Number of Exchanges': exchanges.length,
+        'ICO':                   val.Data.ICO ? val.Data.ICO.Status : 'False',
+        'Algorithm':             val.Data.General.Algorithm,
+        'Proof Type':            val.Data.General.ProofType,
+        'Start Date':            val.Data.General.StartDate,
+        'Number of Pairs':       pairs.length,
+        'Total Coin Supply':     val.Data.General.TotalCoinSupply,
+        'Total coins Minted':    val.Data.General.TotalCoinsMined,
+        'Number of Exchanges':   exchanges.length,
+        'Net Hashes Per Second': val.Data.General.NetHashesPerSecond,
       }
     }
     return data;

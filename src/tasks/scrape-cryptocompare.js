@@ -41,11 +41,6 @@ module.exports = async function scrapeCryptocompare(cacheFor) {
       snapshot = formatterCryptocompareSnapshot(data);
     }
 
-    //
-    // Scrape wallets
-    //
-    // https://www.cryptocompare.com/wallets/#/overview
-
     return {
       social, snapshot
     };

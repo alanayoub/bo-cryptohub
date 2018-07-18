@@ -45,6 +45,33 @@ global.githubOverrides = {
   'basic-attention-token': 'https://github.com/brave-intl',
 }
 
+/**
+ *
+ *  uriCryptocompareList:
+ *    Returns all the coins that CryptoCompare has added to the website
+ *
+ *  uriCryptocompareExchanges:
+ *    Returns all the exchanges that CryptoCompare has integrated with
+ *
+ *  uriCryptocompareExchangeStatus:
+ *    Returns all the exchanges that CryptoCompare has integrated with and their status,
+ *    including whether or not they are excluded from pricing and volumes
+ *
+ *  tagUriCryptocompareTradingInfoSingle:
+ *    Compute the current trading info (price, vol, open, high, low etc) of the
+ *    requested pair as a volume weighted average based on the exchanges requested
+ *
+ *
+ *
+ *  tagUriCryptocompareSnapshot:
+ *    Get the general, subs (used to connect to the streamer and to figure out what exchanges we have
+ *    data for and what are the exact coin pairs of the coin) and the aggregated prices for all pairs available
+ *
+ *  tagUriCryptocompareSocialstats:
+ *    Get CryptoCompare website, Facebook, code repository, Twitter and Reddit data for coins
+ *    If called with the id of a cryptopian you just get data from Cryptocompare website that is available to the public
+ *
+ */
 const Settings = {
 
   appRoot: path.resolve(__dirname),
@@ -59,12 +86,19 @@ const Settings = {
   keyCryptocompareExchanges:                     '/cryptocompare/exchanges/exchanges.json',
   uriCryptocompareExchangeStatus:                'https://min-api.cryptocompare.com/data/all/cccaggexchanges',
   keyCryptocompareExchangeStatus:                '/cryptocompare/exchange/status.json',
+
+  tagUriCryptocompareTradingInfoSingle: (str, ob) => `https://min-api.cryptocompare.com/data/generateAvg?fsym=${ob.symbol1}&tsym=${ob.symbol2}&e=${ob.exchange}`,
+  tagKeyCryptocompareTradingInfoSingle: (str, ob) => `/cryptocompare/exchange/${ob.exchange}/pairs/${ob.symbol1}-${ob.symbol2}.json`,
+
+  tagUriCryptocompareTradingInfoMulti: (str, ob) => `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ob.list1}&tsyms=${ob.list2}&e=${ob.exchange || 'CCCAGG'}`,
+  tagKeyCryptocompareTradingInfoMulti: (str, ob) => `/cryptocompare/trading-info/${ob.exchange || 'CCCAGG'}/${ob.cacheKey}.json`,
+  limitsCryptocompareTradingInfoMultiArr1: 300,
+  limitsCryptocompareTradingInfoMultiArr2: 100,
+
   tagUriCryptocompareSnapshot:      (str, id) => `https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id=${id}`,
   tagKeyCryptocompareSnapshot:      (str, id) => `/cryptocompare/snapshot/${id}.json`,
   tagUriCryptocompareSocialstats:   (str, id) => `https://www.cryptocompare.com/api/data/socialstats/?id=${id}`,
   tagKeyCryptocompareSocialstats:   (str, id) => `/cryptocompare/socialstats/${id}.json`,
-  tagUriCryptocompareExchangePairs: (str, ob) => `https://min-api.cryptocompare.com/data/generateAvg?fsym=${ob.symbol1}&tsym=${ob.symbol2}&e=${ob.exchange}`,
-  tagKeyCryptocompareExchangePairs: (str, ob) => `/cryptocompare/exchange/${ob.exchange}/pairs/${ob.symbol1}-${ob.symbol2}.json`,
 
   // Coinmarketcap
   uriCoinmarketcapList:                          'https://api.coinmarketcap.com/v2/listings/',

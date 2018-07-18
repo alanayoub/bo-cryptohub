@@ -11,11 +11,8 @@ module.exports = async function* itterateCryptocompareExchangePairs() {
     for (const [exchange, exchangeObject] of Object.entries(exchanges)) {
       for (const [symbol1, pairArray] of Object.entries(exchangeObject)) {
         for (const symbol2 of pairArray) {
-          const data = {symbol1, symbol2, exchange};
-          const uri = settings.tagUriCryptocompareExchangePairs`${data}`;
-          const key = settings.tagKeyCryptocompareExchangePairs`${data}`;
           yield {
-            uri, key, exchange, from: symbol1, to: symbol2
+            exchange, symbol1, symbol2
           };
         }
       }

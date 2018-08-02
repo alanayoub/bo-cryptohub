@@ -20,7 +20,8 @@ global.cacheForCoinmarketcapProjectHtml = 30;
 
 // Leave in execution order
 global.settingsScrapeCryptocompare = true;
-global.settingsScrapeCoinmarketcap = true;
+global.settingsScrapeCoinmarketcap = false;
+global.settingsScrapeXe = false;
 // global.settingsGetRepoData = true;
 // global.settingsCloneRepos = true;
 // global.settingsGetLogData = true;
@@ -72,26 +73,33 @@ global.githubOverrides = {
  *    If called with the id of a cryptopian you just get data from Cryptocompare website that is available to the public
  *
  */
-const Settings = {
+const settings = {
 
+  debug: true, // TODO: Change this to an env var
   appRoot: path.resolve(__dirname),
 
   // Cache
   cache: new Cache('cache', true),
 
+  // Queues: rateLimit
+  queueCryptocompare: 100,
+  queueCoinmarketcap: 1000 * 60 * 60,
+
   // Cryptocompare
-  uriCryptocompareList:                          'https://min-api.cryptocompare.com/data/all/coinlist',
-  keyCryptocompareList:                          '/cryptocompare/coinlist/coinlist.json',
-  uriCryptocompareExchanges:                     'https://min-api.cryptocompare.com/data/all/exchanges',
-  keyCryptocompareExchanges:                     '/cryptocompare/exchanges/exchanges.json',
-  uriCryptocompareExchangeStatus:                'https://min-api.cryptocompare.com/data/all/cccaggexchanges',
-  keyCryptocompareExchangeStatus:                '/cryptocompare/exchange/status.json',
+  uriCryptocompareList:           'https://min-api.cryptocompare.com/data/all/coinlist',
+  keyCryptocompareList:           '/cryptocompare/coinlist/coinlist.json',
+  uriCryptocompareExchanges:      'https://min-api.cryptocompare.com/data/all/exchanges',
+  keyCryptocompareExchanges:      '/cryptocompare/exchanges/exchanges.json',
+  uriCryptocompareExchangeStatus: 'https://min-api.cryptocompare.com/data/all/cccaggexchanges',
+  keyCryptocompareExchangeStatus: '/cryptocompare/exchange/status.json',
 
-  tagUriCryptocompareTradingInfoSingle: (str, ob) => `https://min-api.cryptocompare.com/data/generateAvg?fsym=${ob.symbol1}&tsym=${ob.symbol2}&e=${ob.exchange}`,
-  tagKeyCryptocompareTradingInfoSingle: (str, ob) => `/cryptocompare/exchange/${ob.exchange}/pairs/${ob.symbol1}-${ob.symbol2}.json`,
+  tagUriCryptocompareTradingInfoSingle:        (str, ob) => `https://min-api.cryptocompare.com/data/generateAvg?fsym=${ob.symbol1}&tsym=${ob.symbol2}&e=${ob.exchange}`,
+  tagKeyCryptocompareTradingInfoSingle:        (str, ob) => `/cryptocompare/exchange/${ob.exchange}/pairs/${ob.symbol1}-${ob.symbol2}.json`,
+  tagKeyCryptocompareTradingInfoSingleGrouped: (str, ob) => `/cryptocompare/exchange-grouped/data.json`,
 
-  tagUriCryptocompareTradingInfoMulti: (str, ob) => `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ob.list1}&tsyms=${ob.list2}&e=${ob.exchange || 'CCCAGG'}`,
-  tagKeyCryptocompareTradingInfoMulti: (str, ob) => `/cryptocompare/trading-info/${ob.exchange || 'CCCAGG'}/${ob.cacheKey}.json`,
+  tagUriCryptocompareTradingInfoMulti:         (str, ob) => `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ob.list1}&tsyms=${ob.list2}&e=${ob.exchange || 'CCCAGG'}`,
+  tagKeyCryptocompareTradingInfoMulti:         (str, ob) => `/cryptocompare/trading-info/${ob.exchange || 'CCCAGG'}/${ob.cacheKey}.json`,
+  tagKeyCryptocompareTradingInfoMultiGrouped:  (str, ob) => `/cryptocompare/trading-info/${ob.exchange || 'CCCAGG'}-grouped/data.json`,
   limitsCryptocompareTradingInfoMultiArr1: 300,
   limitsCryptocompareTradingInfoMultiArr2: 100,
 
@@ -120,4 +128,4 @@ const Settings = {
 
 }
 
-module.exports = Settings;
+module.exports = settings;

@@ -8,6 +8,7 @@ module.exports = {
   commonSwapObjectKeys: require('./common-swap-object-keys'),
 
   formatterJSONToTxt:                  require('./formatter-json-to-txt'),
+  formatterCryptocomparePrice:         require('./formatter-cryptocompare-price'),
   formatterCryptocompareSnapshot:      require('./formatter-cryptocompare-snapshot'),
   formatterCryptocompareAllCoins:      require('./formatter-cryptocompare-all-coins'),
   formatterCryptocompareSocialstats:   require('./formatter-cryptocompare-socialstats'),
@@ -23,5 +24,7 @@ module.exports = {
   scrapeJSON: require('./scrape-json'),
 
   itterateCryptocompareExchangePairs: require('./itterate-cryptocompare-exchange-pairs'),
+
+  mapDbFields: require('./map-db-fields'),
 
 };

@@ -7,6 +7,7 @@
 const logger = require('../logger');
 module.exports = function delay(milliseconds) {
   try {
+    logger.info(`delay(): Waiting ${milliseconds} milliseconds`);
     return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
   catch(error) {

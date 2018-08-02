@@ -1,7 +1,140 @@
+// Libs
 const mongoose = require('mongoose');
 
+// Cryptohub
+const { mapDbFields } = require.main.require('./utils/');
+
+/**
+ *
+ * Shorten keys in schema objects to save space
+ *
+ */
+function convertKeys(schemaOptions) {
+  const len = Object.keys(schemaOptions).length;
+  const result = {};
+  let count = 0;
+  for (let [key, val] of Object.entries(schemaOptions)) {
+    const shortKey = mapDbFields.fullToShort[key];
+    if (key === 'DATA') {
+      val = convertKeys(val[0]);
+      result[shortKey] = [val];
+    }
+    else {
+      result[shortKey] = val;
+    }
+    if (++count === len) return result;
+  }
+}
+
 //
-// NOTES: _id fields get indexed by default
+// These names map directly to cryptocompare
+//
+const schemaOptions = {
+  _id: Number, // timestamp_hour: "20131010230101" (YYYYMMDDHHMMSS)
+  TYPE: String,
+  FLAGS: String,
+  MARKET: String,
+  TOSYMBOL: String,
+  SYMBOLID: String,
+  FROMSYMBOL: String,
+  DATA: [{
+    PRICE: {
+      type: Number
+    },
+    LASTUPDATE: {
+      type: Number
+    },
+    LASTVOLUME: {
+      type: Number
+    },
+    LASTVOLUMETO: {
+      type: Number
+    },
+    LASTTRADEID: String,
+    VOLUMEDAY: {
+      type: Number
+    },
+    VOLUMEDAYTO: {
+      type: Number
+    },
+    VOLUME24HOUR: {
+      type: Number
+    },
+    VOLUME24HOURTO: {
+      type: Number
+    },
+    OPENDAY: {
+      type: Number
+    },
+    HIGHDAY: {
+      type: Number
+    },
+    LOWDAY: {
+      type: Number
+    },
+    OPEN24HOUR: {
+      type: Number
+    },
+    HIGH24HOUR: {
+      type: Number
+    },
+    LOW24HOUR: {
+      type: Number
+    },
+    LASTMARKET: String,
+    CHANGE24HOUR: {
+      type: Number
+    },
+    CHANGEPCT24HOUR: {
+      type: Number
+    },
+    CHANGEDAY: {
+      type: Number
+    },
+    CHANGEPCTDAY: {
+      type: Number
+    },
+    SUPPLY: {
+      type: Number
+    },
+    MKTCAP: {
+      type: Number
+    },
+    TOTALVOLUME24H: {
+      type: Number
+    },
+    TOTALVOLUME24HTO: {
+      type: Number
+    },
+  }],
+}
+
+const generatedSchemaOptions = convertKeys(schemaOptions);
+
+const timeseriesSchemaFast = new mongoose.Schema(generatedSchemaOptions);
+
+// const timeseriesDataSlow = new mongoose.Schema({
+//   _id: Date,           // Date of commit
+//   name: String,
+//   symbol:  String,
+//   githubUrls: [String],
+//   original: {           // original files (this project wrote this code)
+//     active: [String],   // hashes of active files
+//     old: [String],      // changed or deleted files
+//   },
+//   copies: {             // copied files (this project copied/forked this code)
+//     active: [String],
+//     old: [String],
+//   }
+// });
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+//
+//
+// BELOW IS ALL FOR GITHUB REPO ANALYSIS WHICH HAS BEEN PUT ON HOLD
+//
 //
 
 const projectSchema = new mongoose.Schema({
@@ -102,11 +235,12 @@ const autoPopulate = function (next) {
 repoSchema.pre('findOne', autoPopulate);
 repoSchema.pre('find', autoPopulate);
 
+const TimeseriesFast = mongoose.model('TimeseriesFast', timeseriesSchemaFast);
 const Project = mongoose.model('Project', projectSchema);
 const Commit = mongoose.model('Commit', commitSchema);
 const Repo = mongoose.model('Repo', repoSchema);
 const File = mongoose.model('File', fileSchema);
 
 module.exports = {
-  Project, Commit, Repo, File
+  TimeseriesFast, Project, Commit, Repo, File
 }

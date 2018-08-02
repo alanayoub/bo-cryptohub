@@ -17,7 +17,7 @@
     "cheerio": "^1.0.0-rc.2",
     "fs-extra": "^6.0.0",
     "globby": "^8.0.1",
-    "mongoose": "^5.0.8",
+    "mongoose": "^5.2.5",
     "nodegit": "^0.21.1",
     "redis": "^2.8.0",
     "request": "^2.83.0",

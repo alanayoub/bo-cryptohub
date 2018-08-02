@@ -3,6 +3,8 @@ const { to }        = require('await-to-js');
 const cheerio       = require('cheerio');
 
 // CryptoHub
+require('./settings');
+require('./db-connect');
 const logger        = require.main.require('./logger');
 const settings      = require.main.require('./settings');
 const cryptocompare = require.main.require('./apps/analytics/cryptocompare');
@@ -29,6 +31,7 @@ process.on('warning', error => {
     logger.info('Analytics');
 
     let cc  = await cryptocompare();
+    return
     let cmc = await coinmarketcap();
 
     let map = analyticsMapCmcToCc(cmc, cc);

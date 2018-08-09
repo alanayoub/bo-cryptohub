@@ -31,18 +31,19 @@ function convertKeys(schemaOptions) {
 //
 const schemaOptions = {
   _id: Number, // timestamp_hour: "20131010230101" (YYYYMMDDHHMMSS)
-  TYPE: String,
-  FLAGS: String,
   MARKET: String,
   TOSYMBOL: String,
-  SYMBOLID: String,
-  FROMSYMBOL: String,
   DATA: [{
+    TYPE: String,
+    FLAGS: String,
+    FROMSYMBOL: {
+      type: String
+    },
     PRICE: {
       type: Number
     },
     LASTUPDATE: {
-      type: Number
+      type: Date
     },
     LASTVOLUME: {
       type: Number

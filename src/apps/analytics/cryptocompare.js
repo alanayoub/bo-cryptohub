@@ -25,6 +25,10 @@ const { mapDbFields: { fullToShort:m } } = require.main.require('./utils/');
  *
  * This function is currently still in a test state
  *
+ * NOTE: testing some queries
+ * db.timeseriesfasts.find({}, {'D.1182.P', 1}).sort({_id: -1}).limit(5)
+ *
+ *
  */
 const saveToDB = async function(data, timestamp) {
 
@@ -45,12 +49,8 @@ const saveToDB = async function(data, timestamp) {
   const update = {
     $set: {
       [m['_id']]:        _id,
-      [m['TYPE']]:       data[m['TYPE']],
-      [m['FLAGS']]:      data[m['FLAGS']],
       [m['MARKET']]:     data[m['MARKET']],
       [m['TOSYMBOL']]:   data[m['TOSYMBOL']],
-      [m['SYMBOLID']]:   data[m['SYMBOLID']],
-      [m['FROMSYMBOL']]: data[m['FROMSYMBOL']],
     },
   };
 
@@ -67,7 +67,6 @@ const saveToDB = async function(data, timestamp) {
 
   const [error, timeseries] = await to(TimeseriesFast.findOneAndUpdate(query, update, options).exec());
   if (error) {
-    debugger
     return {error: true, message: error};
     console.log(`saveToDB() error saving new data : ${error}`);
   }

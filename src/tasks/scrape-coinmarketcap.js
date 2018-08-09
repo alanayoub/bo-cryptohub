@@ -2,7 +2,6 @@
 const fs = require('fs');
 const glob = require('glob');
 const crypto = require('crypto');
-const { promisify } = require('util');
 const EventEmitter = require('events');
 
 // Libs
@@ -14,10 +13,6 @@ const cheerio = require('cheerio');
 const Cache = require('../cache');
 const { getCurrentDate, typeOfData, logHeader } = require('../utils.js');
 const { Project } = require('../db-schema');
-
-// Local
-// What is this for????
-const readFileAsync = promisify(fs.readFile);
 
 /**
  *

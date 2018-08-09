@@ -4,8 +4,9 @@ module.exports = {
   analyticsMergeDataByKey:   require('./analytics-merge-data-by-key'),
   analyticsUSDCurrencyTable: require('./analytics-usd-currency-table'),
 
-  commonDelay:          require('./common-delay'),
-  commonSwapObjectKeys: require('./common-swap-object-keys'),
+  commonDelay:                 require('./common-delay'),
+  commonSwapObjectKeys:        require('./common-swap-object-keys'),
+  commonBinaryStringConverter: require('./common-binary-string-converter'),
 
   formatterJSONToTxt:                  require('./formatter-json-to-txt'),
   formatterCryptocomparePrice:         require('./formatter-cryptocompare-price'),

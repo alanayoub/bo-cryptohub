@@ -13,8 +13,12 @@
   "license": "ISC",
   "dependencies": {
     "@octokit/rest": "^15.2.6",
+    "ag-grid": "^18.1.2",
     "await-to-js": "^2.0.1",
     "cheerio": "^1.0.0-rc.2",
+    "cookie-parser": "^1.4.3",
+    "es6-promisify": "^6.0.0",
+    "express": "^4.16.3",
     "fs-extra": "^6.0.0",
     "globby": "^8.0.1",
     "mongoose": "^5.2.5",
@@ -23,6 +27,7 @@
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "single-line-log": "^1.1.2",
+    "socket.io": "^2.1.1",
     "winston": "^3.0.0-rc5"
   },
   "devDependencies": {

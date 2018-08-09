@@ -28,7 +28,7 @@ process.on('warning', error => {
 
   try {
 
-    logger.info('Analytics');
+    logger.info('Starting Analytics');
 
     let cc  = await cryptocompare();
     return

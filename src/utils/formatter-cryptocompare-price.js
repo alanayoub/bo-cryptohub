@@ -24,18 +24,18 @@ module.exports = function formatterCryptocomparePrice(price, symbolIdMap) {
         id = symbolIdMap[symbol];
         if (id && val.USD) {
           val = val.USD;
-          if (!result[m['TYPE']]) {
+          if (!result[m['TOSYMBOL']]) {
             result = {
-              [m['TYPE'           ]]: val.TYPE,
               [m['MARKET'         ]]: val.MARKET,
-              [m['FROMSYMBOL'     ]]: val.FROMSYMBOL,
               [m['TOSYMBOL'       ]]: val.TOSYMBOL,
-              [m['FLAGS'          ]]: val.FLAGS,
               [m['DATA'           ]]: {}
             };
           }
           result[m['DATA']][id] = {
             [m['PRICE'            ]]: val.PRICE,
+            [m['TYPE'             ]]: val.TYPE,
+            [m['FLAGS'            ]]: val.FLAGS,
+            [m['FROMSYMBOL'       ]]: val.FROMSYMBOL,
             [m['LASTUPDATE'       ]]: val.LASTUPDATE,
             [m['LASTVOLUME'       ]]: val.LASTVOLUME,
             [m['LASTVOLUMETO'     ]]: val.LASTVOLUMETO,
@@ -51,11 +51,11 @@ module.exports = function formatterCryptocomparePrice(price, symbolIdMap) {
             [m['HIGH24HOUR'       ]]: val.HIGH24HOUR,
             [m['LOW24HOUR'        ]]: val.LOW24HOUR,
             [m['LASTMARKET'       ]]: val.LASTMARKET,
-            [m['CHANGE24HOUR'     ]]: val.CHANGEPCT24HOUR,
+            [m['CHANGE24HOUR'     ]]: val.CHANGE24HOUR,
             [m['CHANGEPCT24HOUR'  ]]: val.CHANGEPCT24HOUR,
             [m['CHANGEDAY'        ]]: val.CHANGEDAY,
             [m['CHANGEPCTDAY'     ]]: val.CHANGEPCTDAY,
-            [m['SUPPLY'           ]]: val.SYPPLY,
+            [m['SUPPLY'           ]]: val.SUPPLY,
             [m['MKTCAP'           ]]: val.MKTCAP,
             [m['TOTALVOLUME24H'   ]]: val.TOTALVOLUME24H,
             [m['TOTALVOLUME24HTO' ]]: val.TOTALVOLUME24HTO,

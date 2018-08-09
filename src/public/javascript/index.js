@@ -26,15 +26,29 @@ let gridOptions = {
           minimumFractionDigits: 2
       });
       return usdFormatter.format(params.value);
-    }
+    },
+    numberFormatter: function (params) {
+      const number = params.value;
+      return Math.floor(number).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    },
   },
   defaultColDef: {
     editable: false,
     filter: 'agTextColumnFilter'
-    // filter: 'agNumberColumnFilter'
+  },
+  columnTypes: {
+    numericColumn: {
+      filter: 'agNumberColumnFilter',
+    },
+    usdColumn: {
+      filter: 'agNumberColumnFilter',
+      cellRenderer: 'currencyCellRenderer',
+    },
+    dateColumn: {
+      filter: 'agDateColumnFilter',
+    }
   },
   columnDefs: [
-
     // { headerName: '_id'             , field: '_id'                                                     },
     // { headerName: 'MARKET'          , field: 'M'          , type: 'numericColumn'                      },
     // { headerName: 'TOSYMBOL'        , field: 'TS'         , type: 'numericColumn'                      },
@@ -63,10 +77,8 @@ let gridOptions = {
     {
       headerName:    'Price (USD)',
       field:         'P',
-      type:          'numericColumn',
-      filter:        'agNumberColumnFilter',
+      type:          ['numericColumn', 'usdColumn'],
       headerTooltip: 'Price (USD)',
-      cellRenderer:  'currencyCellRenderer',
     },
     {
       headerName:    'Market Cap (USD)',
@@ -97,6 +109,9 @@ let gridOptions = {
       type: 'numericColumn',
       filter: 'agNumberColumnFilter',
       headerTooltip: 'Circulating Supply',
+      cellRenderer:  'numberFormatter',
+      // valueParser: numberValueParser
+      // valueFormatter: numberValueParser
     },
     // {
     //   headerName: 'VOLUME24HOUR',
@@ -172,8 +187,7 @@ let gridOptions = {
     {
       headerName: 'Last Update',
       field: 'LU',
-      type: ['dateColumn', 'nonEditableColumn'],
-      filter: 'agDateColumnFilter',
+      type: 'dateColumn',
       headerTooltip: 'Last Update Time',
     },
     {

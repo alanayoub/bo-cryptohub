@@ -3,6 +3,7 @@ const fs = require('fs');
 
 // Libs
 const { to } = require('await-to-js');
+const { commonDelay } = require.main.require('./utils/');
 
 // CryptoHub
 const logger   = require.main.require('./logger');
@@ -23,6 +24,82 @@ const { mapDbFields: { fullToShort:m } } = require.main.require('./utils/');
 
 /**
  *
+ * Watch a folder for files
+ * Parse and save file data via handlers
+ * Delete files
+ *
+ */
+class Watcher {
+
+  constructor(options) {
+    this.options = options;
+    this.queue = new Set([]);
+    this.delay = options.delay || 1000;
+    this.symbolIdMap = options.symbolIdMap;
+    this.run();
+  }
+
+  addToQueue(files) {
+    const len = Object.keys(files).length;
+    if (len) {
+      for (const [fileName, currentFile] of Object.entries(files)) {
+        const fingerprint = JSON.stringify({[fileName]: currentFile});
+        if (!this.queue.has(fingerprint)) {
+          logger.info(`Adding to queue: ${fileName}`);
+          this.queue.add(fingerprint);
+        }
+      }
+    }
+  }
+
+  async parseQueueItems() {
+    const formatHandler = this.options.formatHandler;
+    const saveHandler = this.options.saveHandler;
+    for (let itemStr of this.queue) {
+      const itemObj = JSON.parse(itemStr);
+      const fileName = Object.keys(itemObj)[0];
+      const dataStr = itemObj[fileName];
+      const dataObj = JSON.parse(dataStr);
+      const timestamp = fileName.replace(/^cache.*<([0-9TZ:.-]*)>$/, '$1');
+      const formattedData = formatHandler(dataObj, this.symbolIdMap);
+      const [error, saved] = await to(saveHandler(formattedData, timestamp));
+      if (!!formattedData && saved) {
+        logger.info(`Deleting file and removing from queue: ${fileName}`);
+        this.queue.delete(itemStr);
+        fs.unlink(fileName, async error => {
+          if (error) {
+            logger.error(`Unable to delete ${fileName}: ${error}`);
+            debugger;
+            throw error;
+          }
+        });
+      }
+      else {
+        logger.error(`Error saving ${fileName}: ${error}`);
+      }
+    }
+  }
+
+  async run() {
+
+    logger.info('WatchFolder(): START ------------------------------------------- /');
+    const files = settings.cache.get(...this.options.cacheArgs);
+
+    if (files[0] !== false) {
+      this.addToQueue(files);
+      await this.parseQueueItems();
+    }
+
+    await commonDelay(this.options.delay);
+    logger.info('WatchFolder(): END --------------------------------------------- /\n\n');
+    this.run();
+
+  }
+
+}
+
+/**
+ *
  * This function is currently still in a test state
  *
  * NOTE: testing some queries
@@ -30,7 +107,7 @@ const { mapDbFields: { fullToShort:m } } = require.main.require('./utils/');
  *
  *
  */
-const saveToDB = async function(data, timestamp) {
+const saveCryptocomparePrice = async function(data, timestamp) {
 
   const pad = n => `0${n}`.substr(-2);
   const date = new Date(timestamp);
@@ -67,11 +144,12 @@ const saveToDB = async function(data, timestamp) {
 
   const [error, timeseries] = await to(TimeseriesFast.findOneAndUpdate(query, update, options).exec());
   if (error) {
+    logger.error(`saveCryptocomparePrice() error saving new data : ${error}`);
     return {error: true, message: error};
-    console.log(`saveToDB() error saving new data : ${error}`);
   }
   else {
-    console.log(`saveToDB(): Saved new data`);
+    logger.info(`saveCryptocomparePrice(): Saved new data`);
+    return true;
   }
 
 }
@@ -100,60 +178,123 @@ module.exports = async function cryptocompare() {
       };
     }
 
+    // // Coinlist
+    // new Watcher({
+    //   symbolIdMap,
+    //   delay: 1000,
+    //   cacheArgs: [settings.keyCryptocompareList, 'all'],
+    //   formatHandler: (data, symbolIdMap) => {
+    //     console.log(data);
+    //     debugger
+    //     let result = {};
+    //     // Algorithm : "SHA256"
+    //     // BuiltOn : "N/A"
+    //     // CoinName : "Bitcoin"
+    //     // FullName : "Bitcoin (BTC)"
+    //     // FullyPremined : "0"
+    //     // Id : "1182"
+    //     // ImageUrl : "/media/19633/btc.png"
+    //     // IsTrading : true
+    //     // Name : "BTC"
+    //     // PreMinedValue : "N/A"
+    //     // ProofType : "PoW"
+    //     // SmartContractAddress : "N/A"
+    //     // SortOrder : "1"
+    //     // Sponsored : false
+    //     // Symbol : "BTC"
+    //     // TotalCoinSupply : "21000000"
+    //     // TotalCoinsFreeFloat : "N/A"
+    //     // Url : "/coins/btc/overview"
+
+    //     let id;
+    //     for ([symbol, val] of Object.entries(data.Data)) {
+    //       id = symbolIdMap[symbol];
+    //       if (id) {
+    //         // if (!result[m['TOSYMBOL']]) {
+    //         //   result = {
+    //         //     [m['DATA'           ]]: {}
+    //         //   };
+    //         // }
+    //         // result[m['DATA']][id] = {
+    //         //   [m['PRICE'            ]]: val.PRICE,
+    //         // }
+    //       }
+    //       else {
+    //         throw error;
+    //       }
+    //     }
+    //   },
+    //   saveHandler: () => {},
+    // });
+
+    // Price
+    new Watcher({
+      symbolIdMap,
+      delay: 100,
+      cacheArgs: [settings.tagKeyCryptocompareTradingInfoMultiGrouped`${{}}`, 'all'],
+      formatHandler: formatterCryptocomparePrice,
+      saveHandler: saveCryptocomparePrice,
+    });
+
     //
-    // Watch folder x and y folders for new files
-    // Currently just watching price folder, this is a test
+    // Watch folder new files
+    // Add files to queue to be parsed
+    // Parse files
     //
+    // const queue = new Set([]);
+    // const delay = 100;
+    // let files;
+    // async function watchFolder() {
 
-    const queue = new Set([]);
-    const delay = 100;
-    let files;
-    const parseData = async (data, fileName) => {
-      logger.info(`parsing ${fileName}`);
-      data = JSON.parse(data);
-      const timestamp = fileName.replace(/^cache.*<([0-9TZ:.-]*)>$/, '$1');
-      const parsedData = formatterCryptocomparePrice(data, symbolIdMap);
-      const saved = saveToDB(parsedData, timestamp);
-      return !!parsedData;
-    };
-    //
-    setInterval(() => {
+    //   logger.info('WatchFolder(): START ------------------------------------------- /');
+    //   files = settings.cache.get(settings.tagKeyCryptocompareTradingInfoMultiGrouped`${{}}`, 'all');
 
-      files = settings.cache.get(settings.tagKeyCryptocompareTradingInfoMultiGrouped`${{}}`, 'all');
-      if (files[0] === false) return;
+    //   if (files[0] !== false) {
 
-      // Add files to queue
-      const len = Object.keys(files).length;
-      if (len) {
-        for (const [fileName, currentFile] of Object.entries(files)) {
-          logger.info(`Adding to queue: ${fileName}`);
-          const fingerprint = JSON.stringify({[fileName]: currentFile});
-          if (!queue.has(fingerprint)) {
-            queue.add(fingerprint);
-          }
-        }
-      }
+    //     // Add files to queue
+    //     const len = Object.keys(files).length;
+    //     if (len) {
+    //       for (const [fileName, currentFile] of Object.entries(files)) {
+    //         const fingerprint = JSON.stringify({[fileName]: currentFile});
+    //         if (!queue.has(fingerprint)) {
+    //           logger.info(`Adding to queue: ${fileName}`);
+    //           queue.add(fingerprint);
+    //         }
+    //       }
+    //     }
 
-      // Parse queue items
-      for (let item of queue) {
-        const obj = JSON.parse(item);
-        const fileName = Object.keys(obj)[0];
-        const data = obj[fileName];
-        const parsedOK = parseData(data, fileName);
-        if (parsedOK) {
-          queue.delete(item);
-          fs.unlink(fileName, error => {
-            if (error) {
-              throw error;
-            }
-          });
-        }
-        else {
-          // try again
-        }
-      }
+    //     // Parse queue items
+    //     for (let itemStr of queue) {
+    //       const itemObj = JSON.parse(itemStr);
+    //       const fileName = Object.keys(itemObj)[0];
+    //       const dataStr = itemObj[fileName];
+    //       const dataObj = JSON.parse(dataStr);
+    //       const timestamp = fileName.replace(/^cache.*<([0-9TZ:.-]*)>$/, '$1');
+    //       const formattedData = formatterCryptocomparePrice(dataObj, symbolIdMap);
+    //       const [error, saved] = await to(saveCryptocomparePrice(formattedData, timestamp));
+    //       if (!!formattedData && saved) {
+    //         logger.info(`Deleting file and removing from queue: ${fileName}`);
+    //         queue.delete(itemStr);
+    //         fs.unlink(fileName, async error => {
+    //           if (error) {
+    //             logger.error(`Unable to delete ${fileName}: ${error}`);
+    //             debugger;
+    //             throw error;
+    //           }
+    //         });
+    //       }
+    //       else {
+    //         logger.error(`Error saving ${fileName}: ${error}`);
+    //       }
+    //     }
 
-    }, delay);
+    //   }
+
+    //   await commonDelay(delay);
+    //   logger.info('WatchFolder(): END --------------------------------------------- /\n\n');
+    //   watchFolder();
+    // }
+    // watchFolder();
 
     // TODO: parse data in queue
     //       stick in DB

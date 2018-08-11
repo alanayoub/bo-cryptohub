@@ -8,6 +8,7 @@ module.exports = function formatterCryptocompareSnapshot(snapshot) {
   try {
     const data = {};
     for (let [key, val] of Object.entries(snapshot)) {
+      if (!val.Data) continue;
       const pairs = val.Data.Subs.map(a => a.split('~')[1]);
       const exchanges = Array.from(new Set(pairs));
       data[key] = {

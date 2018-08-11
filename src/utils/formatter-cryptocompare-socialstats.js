@@ -8,6 +8,9 @@ module.exports = function formatterCryptocompareSocialstats(socialstats) {
   try {
     const data = {};
     for (let [key, val] of Object.entries(socialstats)) {
+      if (!val.Data) {
+        continue;
+      }
       data[key] = {
         'Name':                                 val.Data.General.Name,
         'Reddit Points':                        val.Data.Reddit.Points,

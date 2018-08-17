@@ -17,10 +17,6 @@ module.exports = async function scrapeCryptocompare(cacheForDays, rateLimitDelay
     const coinList = await scrapeJSON(settings.uriCryptocompareList, settings.keyCryptocompareList, cacheForDays);
 
     //
-    // NOTE: NEED TO RATE LIMIT ALL THESE THINGS
-    //
-
-    //
     // Intercept 'shift'
     // If last item in array call getJobs()
     // Calls function only after interval has elapsed
@@ -65,42 +61,26 @@ module.exports = async function scrapeCryptocompare(cacheForDays, rateLimitDelay
     const proxies = {};
 
 
-    // //
-    // // Get the full list of coins with IDs
-    // //
-    // //
-    // //
-    // queues.coinList = [];
-    // queues.coinList.name = 'coinList';
-    // queues.coinList.interval = 1000 * 5;
-    // queues.coinList.getJobs = () => {
-    //   queues.coinList.push({uri: settings.uriCryptocompareList, key: settings.keyCryptocompareList, cacheForDays});
-    // };
-    // queues.coinList.saveToDb = () => {
-    //   logger.info(`Save ${queues.coinList.name} data to DB`);
-    // };
-    // proxies.coinList = new Proxy(queues.coinList, handler);
-
-
-    // //
-    // // Other simple single requests
-    // //
-    // //
-    // //
-    // queues.other = [];
-    // queues.other.name = 'other';
-    // queues.other.interval = 1000 * 10;
-    // queues.other.getJobs = () => {
-    //   queues.other.push({uri: settings.uriCryptocompareExchanges,      key: settings.keyCryptocompareExchanges,      cacheForDays});
-    //   queues.other.push({uri: settings.uriCryptocompareExchangeStatus, key: settings.keyCryptocompareExchangeStatus, cacheForDays});
-    // };
-    // queues.other.saveToDb = () => {
-    //   logger.info(`Save ${queues.other.name} data to DB`);
-    // };
-    // proxies.other = new Proxy(queues.other, handler);
+    //
+    // COINLIST
+    // Get the full list of coins with IDs
+    //
+    //
+    //
+    queues.coinList = [];
+    queues.coinList.name = 'coinList';
+    queues.coinList.interval = 1000 * 5;
+    queues.coinList.getJobs = () => {
+      queues.coinList.push({uri: settings.uriCryptocompareList, key: settings.keyCryptocompareList, cacheForDays});
+    };
+    queues.coinList.saveToDb = () => {
+      logger.info(`Save ${queues.coinList.name} data to DB`);
+    };
+    proxies.coinList = new Proxy(queues.coinList, handler);
 
 
     //
+    // PRICE
     // Get every token in USD only (batched requests)
     //
     //
@@ -153,33 +133,114 @@ module.exports = async function scrapeCryptocompare(cacheForDays, rateLimitDelay
     proxies.price = new Proxy(queues.price, handler);
 
 
+    //
+    // Get all the exchange pairs (individual requests per pair per exchange. No we can't batch them)
+    // NOTE: 1000s of requests, only do this once a day
+    //
+    //
+    //
+    queues.exchangePairs = [];
+    queues.exchangePairs.name = 'ExchangePairs';
+    queues.exchangePairs.interval = 1000 * 60 * 60 * 24;
+    queues.exchangePairs.getJobs = async () => {
+      let jobs = 0;
+      const groupKey = settings.tagKeyCryptocompareTradingInfoSingleGrouped`${{}}`;
+      for await (const obj of itterateCryptocompareExchangePairs()) {
+        if (obj === false) break;
+        const { symbol1, symbol2, exchange, last } = obj;
+        const data = {symbol1, symbol2, exchange};
+        const uri = settings.tagUriCryptocompareTradingInfoSingle`${data}`;
+        const key = settings.tagKeyCryptocompareTradingInfoSingle`${data}`;
+        queues.exchangePairs.push({uri, key, cacheForDays, groupKey, last});
+        jobs++;
+      }
+      logger.info(`Number of jobs: ${jobs} jobs created for tagUriCryptocompareTradingInfoSingle`);
+    };
+    queues.exchangePairs.saveToDb = () => {
+      logger.info(`Save ${queues.exchangePairs.name} data to DB`);
+    };
+    proxies.exchangePairs = new Proxy(queues.exchangePairs, handler);
+
+
+    //
+    // SOCIAL STATS
+    // NOTE: 1000s of requests, only do this once a day
+    //
+    //
+    //
+    queues.socialStats = [];
+    queues.socialStats.name = 'SocialStats';
+    queues.socialStats.interval = 1000 * 60 * 60 * 24;
+    queues.socialStats.getJobs = async () => {
+      let jobs = 0;
+      let counter = 0;
+      const groupKey = settings.tagKeyCryptocompareSocialStatsGrouped`${{}}`;
+      const ids = Object.values(coinList.Data).map(v => v.Id);
+      const length = ids.length;
+      for (const id of ids) {
+        counter++;
+        const last = counter === length;
+        const uri = settings.tagUriCryptocompareSocialstats`${id}`;
+        const key = settings.tagKeyCryptocompareSocialstats`${id}`;
+        queues.socialStats.push({uri, key, cacheForDays, groupKey, last});
+        jobs++;
+      }
+      logger.info(`${jobs} jobs created for tagUriCryptocompareSocialstats`);
+    };
+    queues.socialStats.saveToDb = () => {
+      logger.info(`Save ${queues.socialStats.name} data to DB`);
+    };
+    proxies.socialStats = new Proxy(queues.socialStats, handler);
+
+
+    //
+    // SNAPSHOT
+    // NOTE: 1000s of requests, only do this once a day
+    //
+    //
+    //
+    queues.snapshot = [];
+    queues.snapshot.name = 'Snapshot';
+    queues.snapshot.interval = 1000 * 60 * 60 * 24;
+    queues.snapshot.getJobs = async () => {
+      let jobs = 0;
+      let counter = 0;
+      const groupKey = settings.tagKeyCryptocompareSnapshotGrouped`${{}}`;
+      const ids = Object.values(coinList.Data).map(v => v.Id);
+      const length = ids.length;
+      for (const id of ids) {
+        counter++;
+        const last = counter === length;
+        const uri = settings.tagUriCryptocompareSnapshot`${id}`;
+        const key = settings.tagKeyCryptocompareSnapshot`${id}`;
+        queues.snapshot.push({uri, key, cacheForDays, groupKey, last});
+        jobs++;
+      }
+      logger.info(`${jobs} jobs created for tagUriCryptocompareSocialstats`);
+    };
+    queues.snapshot.saveToDb = () => {
+      logger.info(`Save ${queues.snapshot.name} data to DB`);
+    };
+    proxies.snapshot = new Proxy(queues.snapshot, handler);
+
+
     // //
-    // // Get all the exchange pairs (individual requests per pair per exchange)
-    // // NOTE: Lots of requests, only do this once a day?
+    // // OTHER
+    // // Simple single requests
     // //
     // //
     // //
-    // queues.exchangePairs = [];
-    // queues.exchangePairs.name = 'ExchangePairs';
-    // queues.exchangePairs.interval = 1000 * 60 * 60 * 24;
-    // queues.exchangePairs.getJobs = async () => {
-    //   let jobs = 0;
-    //   const groupKey = settings.tagKeyCryptocompareTradingInfoSingleGrouped`${{}}`;
-    //   for await (const obj of itterateCryptocompareExchangePairs()) {
-    //     if (obj === false) break;
-    //     const { symbol1, symbol2, exchange, last } = obj;
-    //     const data = {symbol1, symbol2, exchange};
-    //     const uri = settings.tagUriCryptocompareTradingInfoSingle`${data}`;
-    //     const key = settings.tagKeyCryptocompareTradingInfoSingle`${data}`;
-    //     queues.exchangePairs.push({uri, key, cacheForDays, groupKey, last});
-    //     jobs++;
-    //   }
-    //   logger.info(`Number of jobs: ${jobs} jobs created for tagUriCryptocompareTradingInfoSingle`);
+    // queues.other = [];
+    // queues.other.name = 'other';
+    // queues.other.interval = 1000 * 10;
+    // queues.other.getJobs = () => {
+    //   queues.other.push({uri: settings.uriCryptocompareExchanges,      key: settings.keyCryptocompareExchanges,      cacheForDays});
+    //   queues.other.push({uri: settings.uriCryptocompareExchangeStatus, key: settings.keyCryptocompareExchangeStatus, cacheForDays});
     // };
-    // queues.exchangePairs.saveToDb = () => {
-    //   logger.info(`Save ${queues.exchangePairs.name} data to DB`);
+    // queues.other.saveToDb = () => {
+    //   logger.info(`Save ${queues.other.name} data to DB`);
     // };
-    // proxies.exchangePairs = new Proxy(queues.exchangePairs, handler);
+    // proxies.other = new Proxy(queues.other, handler);
 
 
     //
@@ -228,34 +289,6 @@ module.exports = async function scrapeCryptocompare(cacheForDays, rateLimitDelay
     };
 
     init();
-
-    // //
-    // // Get all the exchange pairs (individual requests per pair per exchange)
-    // // NOTE: Lots of requests, only do this once a day?
-    // //
-    // {
-    //   let requests = 0;
-    //   for await (const obj of itterateCryptocompareExchangePairs()) {
-    //     if (obj === false) break;
-    //     const { symbol1, symbol2, exchange } = obj;
-    //     const data = {symbol1, symbol2, exchange};
-    //     const uri = settings.tagUriCryptocompareTradingInfoSingle`${data}`;
-    //     const key = settings.tagKeyCryptocompareTradingInfoSingle`${data}`;
-    //     await scrapeJSON(uri, key, cacheForDays);
-    //     await commonDelay(rateLimitDelayMs);
-    //     requests++;
-    //   }
-    //   logger.info(`Number of requests: ${requests} requests made for tagUriCryptocompareTradingInfoSingle`);
-    // }
-
-    // const ids = Object.values(coinList.Data).map(v => v.Id);
-    // for (const id of ids) {
-    //   logger.info(`ScrapeCryptocompare: Scraping ${id}`);
-    //   await scrapeJSON(settings.tagUriCryptocompareSnapshot`${id}`,    settings.tagKeyCryptocompareSnapshot`${id}`,    cacheForDays);
-    //   await commonDelay(rateLimitDelayMs);
-    //   await scrapeJSON(settings.tagUriCryptocompareSocialstats`${id}`, settings.tagKeyCryptocompareSocialstats`${id}`, cacheForDays);
-    //   await commonDelay(rateLimitDelayMs);
-    // }
 
     return true;
   }

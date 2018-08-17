@@ -4,26 +4,44 @@
  *
  */
 const logger = require.main.require('./logger');
-module.exports = function formatterCryptocompareSnapshot(snapshot) {
+module.exports = function formatterCryptocompareSnapshot(data) {
   try {
-    const data = {};
-    for (let [key, val] of Object.entries(snapshot)) {
-      if (!val.Data) continue;
-      const pairs = val.Data.Subs.map(a => a.split('~')[1]);
-      const exchanges = Array.from(new Set(pairs));
-      data[key] = {
-        'ICO':                   val.Data.ICO ? val.Data.ICO.Status : 'False',
-        'Algorithm':             val.Data.General.Algorithm,
-        'Proof Type':            val.Data.General.ProofType,
-        'Start Date':            val.Data.General.StartDate,
-        'Number of Pairs':       pairs.length,
-        'Total Coin Supply':     val.Data.General.TotalCoinSupply,
-        'Total coins Minted':    val.Data.General.TotalCoinsMined,
-        'Number of Exchanges':   exchanges.length,
-        'Net Hashes Per Second': val.Data.General.NetHashesPerSecond,
+
+    let obj, key, val, id, i;
+    let pairs, exchanges, section, baseImageUrl, symbolUrl;
+    const result = {};
+    const prefix = 'cc-snapshot-';
+    const sections = ['General', 'SEO', 'ICO'];
+
+    for (i = 0; i < data.length; i++) {
+
+      obj = {};
+      id = data[i].Data.General.Id;
+      baseImageUrl = data[i].Data.SEO.BaseImageUrl;
+
+      for (section of sections) {
+
+        for ([key, val] of Object.entries(data[i].Data[section])) {
+
+          obj[`${prefix}${section}-${key}`] = val;
+          if (`${section}-${key}` === 'General-ImageUrl') {
+            symbolUrl = `${baseImageUrl}${val}`;
+          }
+
+        }
+
       }
+
+      // Extra cryptohub fields
+      pairs = data[i].Data.Subs.map(a => a.split('~')[1]);
+      exchanges = Array.from(new Set(pairs));
+      obj['cryptohub-symbolUrl']         = symbolUrl;
+      obj['cryptohub-NumberOfPairs']     =  pairs.length;
+      obj['cryptohub-NumberOfExchanges'] =  exchanges.length;
+      result[id] = obj;
+
     }
-    return data;
+    return result;
   }
   catch(error) {
     const message = `formatterCryptocompareSnapshot(): ${error}`;

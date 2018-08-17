@@ -54,8 +54,10 @@ process.on('warning', error => {
     let results;
     let count = 0;
     async function getData() {
-      [error, results] = await to(TimeseriesFast.findOne(query, fields, sort));
-      results = results.toJSON();
+      let [results] = settings.cache.get(settings.keyCryptohubAnalytics);
+      results = JSON.parse(results);
+      // [error, results] = await to(TimeseriesFast.findOne(query, fields, sort));
+      // results = results.toJSON();
       console.log('data', ++count);
       if (socket) {
         socket.emit('data', results);

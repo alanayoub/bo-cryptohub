@@ -103,10 +103,13 @@ const settings = {
   limitsCryptocompareTradingInfoMultiArr1: 300,
   limitsCryptocompareTradingInfoMultiArr2: 100,
 
-  tagUriCryptocompareSnapshot:      (str, id) => `https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id=${id}`,
-  tagKeyCryptocompareSnapshot:      (str, id) => `/cryptocompare/snapshot/${id}.json`,
-  tagUriCryptocompareSocialstats:   (str, id) => `https://www.cryptocompare.com/api/data/socialstats/?id=${id}`,
-  tagKeyCryptocompareSocialstats:   (str, id) => `/cryptocompare/socialstats/${id}.json`,
+  tagUriCryptocompareSnapshot:           (str, id) => `https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id=${id}`,
+  tagKeyCryptocompareSnapshot:           (str, id) => `/cryptocompare/snapshot/${id}.json`,
+  tagKeyCryptocompareSnapshotGrouped:    (str, ob) => `/cryptocompare/snapshot-grouped/data.json`,
+
+  tagUriCryptocompareSocialstats:        (str, id) => `https://www.cryptocompare.com/api/data/socialstats/?id=${id}`,
+  tagKeyCryptocompareSocialstats:        (str, id) => `/cryptocompare/socialstats/${id}.json`,
+  tagKeyCryptocompareSocialStatsGrouped: (str, ob) => `/cryptocompare/socialstats-grouped/data.json`,
 
   // Coinmarketcap
   uriCoinmarketcapList:                          'https://api.coinmarketcap.com/v2/listings/',

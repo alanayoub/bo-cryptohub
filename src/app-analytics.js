@@ -30,15 +30,22 @@ process.on('warning', error => {
 
     logger.info('Starting Analytics');
 
-    let cc  = await cryptocompare();
+    let cc = await cryptocompare();
+    cc.on('data', data => {
+      const d = JSON.stringify(data);
+      // debugger
+      settings.cache.set(settings.keyCryptohubAnalytics, d);
+    });
+
     return
-    let cmc = await coinmarketcap();
+    // let cmc = await coinmarketcap();
+    // let map = analyticsMapCmcToCc(cmc, cc);
+    // cmc = commonSwapObjectKeys(cmc, map);
 
-    let map = analyticsMapCmcToCc(cmc, cc);
-    cmc = commonSwapObjectKeys(cmc, map);
-    let json = analyticsMergeDataByKey([cc, cmc]);
+    // let json = analyticsMergeDataByKey([cc, cmc]);
+    // settings.cache.set(settings.keyCryptohubAnalytics, json);
 
-    settings.cache.set(settings.keyCryptohubAnalytics, json);
+
 
     //
     // Shouldn't change, fetch every month
@@ -155,7 +162,5 @@ process.on('warning', error => {
     process.exit(1);
 
   }
-
-  process.exit(0);
 
 })();

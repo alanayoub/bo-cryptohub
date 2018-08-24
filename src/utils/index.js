@@ -28,4 +28,7 @@ module.exports = {
 
   mapDbFields: require('./map-db-fields'),
 
+  classWatcher:   require('./class-watcher'),
+  classDataStore: require('./class-data-store'),
+
 };

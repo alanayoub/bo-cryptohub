@@ -1,27 +1,28 @@
-/* #4c88b7 */
-/* #6699c1 */
-/* #7faacc */
-/* #99bbd6 */
-/* #b2cce0 */
-/* #ccddea */
-/* #e5eef4 */
-
 .cryptohub-analytics-priceGroup {
-  background: #7faacc;
+  background: #176087;
+  color: #fff;
 }
 
 .cryptohub-analytics-supplyGroup {
-  background: #99bbd6;
+  background: #189155;
+  color: #fff;
 }
 
 .cryptohub-analytics-technicalGroup {
-  background: #b2cce0;
+  background: #c18610;
+  color: #fff;
 }
 
 .cryptohub-analytics-fundamentalsGroup {
-  background: #ccddea;
+  background: #871616;
+  color: #fff;
 }
 
-.cryptohub-analytics-socialGroup {
-  background: #e5eef4;
+.cryptohub-analytics-linksGroup {
+  background: #601DAD;
+  color: #fff;
+}
+
+.cryptohub-align-right {
+  text-align: right;
 }

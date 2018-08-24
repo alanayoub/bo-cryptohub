@@ -30,11 +30,17 @@ process.on('warning', error => {
 
     logger.info('Starting Analytics');
 
-    let cc = await cryptocompare();
-    cc.on('data', data => {
+    // let cc = await cryptocompare();
+    // cc.on('data', data => {
+    //   const d = JSON.stringify(data);
+    //   // debugger
+    //   settings.cache.set(settings.keyCryptohubAnalytics, d);
+    // });
+
+    let cmc = await coinmarketcap();
+    cmc.on('data', data => {
       const d = JSON.stringify(data);
-      // debugger
-      settings.cache.set(settings.keyCryptohubAnalytics, d);
+      // settings.cache.set(settings.keyCryptohubAnalytics, d);
     });
 
     return

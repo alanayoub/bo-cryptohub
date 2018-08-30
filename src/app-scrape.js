@@ -37,7 +37,7 @@ process.on('warning', error => {
     }
 
     if (global.settingsScrapeCoinmarketcap) {
-      await to(scrapeCoinmarketcap({requestLimit: 5000, requestDelay: 3000})); // TODO: don't wait while retrieving cache
+      await to(scrapeCoinmarketcap(global.cacheForCoinmarketcap, 500)); // TODO: don't wait while retrieving cache
     }
 
     if (global.settingsScrapeXe) {

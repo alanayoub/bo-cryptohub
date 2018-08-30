@@ -1,6 +1,7 @@
 // Node
 const cookieParser = require('cookie-parser');
-const { join } = require('path');
+const { join }     = require('path');
+const crypto       = require('crypto');
 
 // Libs
 const { to }  = require('await-to-js');
@@ -53,15 +54,26 @@ process.on('warning', error => {
     let socket;
     let results;
     let count = 0;
+    let md5;
+    let fingerprintOld;
+    let fingerprintNew;
     async function getData() {
-      let [results] = settings.cache.get(settings.keyCryptohubAnalytics);
-      results = JSON.parse(results);
-      // [error, results] = await to(TimeseriesFast.findOne(query, fields, sort));
-      // results = results.toJSON();
-      console.log('data', ++count);
-      if (socket) {
-        socket.emit('data', results);
-      }
+      let [results, age] = settings.cache.get(settings.keyCryptohubAnalytics);
+      md5 = crypto.createHash('md5');
+      fingerprintNew = md5.update(results).digest('hex');
+      // if (fingerprintNew === fingerprintOld) {
+      //   logger.info('Stream: no change in data');
+      // }
+      // else {
+        fingerprintOld = fingerprintNew;
+        results = JSON.parse(results);
+        // [error, results] = await to(TimeseriesFast.findOne(query, fields, sort));
+        // results = results.toJSON();
+        console.log('data', ++count);
+        if (socket) {
+          socket.emit('data', results);
+        }
+      // }
       await commonDelay(2000);
       getData();
     }

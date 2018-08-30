@@ -26,3 +26,29 @@
 .cryptohub-align-right {
   text-align: right;
 }
+
+.cryptohub-cell-worst {
+  background: rgba(216, 0, 0, 0.75)
+}
+
+.cryptohub-cell-bad {
+  background: rgba(216, 0, 0, 0.5)
+}
+
+.cryptohub-cell-default {}
+
+.cryptohub-cell-good {
+  background: rgba(0, 148, 26, 0.5)
+}
+
+.cryptohub-cell-best {
+  background: rgba(0, 148, 26, 0.75)
+}
+
+.cryptohub-text-bad {
+  color: #e00909;
+}
+
+.cryptohub-text-good {
+  color: #019c0d;
+}

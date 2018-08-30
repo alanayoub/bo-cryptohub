@@ -28,7 +28,8 @@ module.exports = {
 
   mapDbFields: require('./map-db-fields'),
 
-  classWatcher:   require('./class-watcher'),
-  classDataStore: require('./class-data-store'),
+  classWatcher:     require('./class-watcher'),
+  classDataStore:   require('./class-data-store'),
+  classScrapeQueue: require('./class-scrape-queue'),
 
 };

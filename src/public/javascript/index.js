@@ -33,20 +33,30 @@ let gridOptions = {
     checkboxRenderer: bool => {
       return `<input type='checkbox' ${bool ? 'checked' : ''} />`;
     },
-    currencyCellRenderer: function (params) {
-      const usdFormatter = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 2
-      });
-      return usdFormatter.format(params.value);
+    usdCellRenderer: function (params) {
+      const number = params.value;
+      if (number === null || number === void 0) return '-';
+      const usdFormatter = new Intl
+        .NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2})
+        .format(params.value);
+      return usdFormatter;
+    },
+    btcCellRenderer: function (params) {
+      const number = params.value;
+      if (number === null || number === void 0) return '-';
+      const usdFormatter = new Intl
+        .NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 8})
+        .format(params.value)
+        .replace('$', 'Ƀ');
+      return usdFormatter;
     },
     numberRenderer: function (params) {
-      const numString = params.value;
-      return +numString;
+      const num = +params.value;
+      return isNaN(num) ? void 0 : num;
     },
     numberFormattedRenderer: function (params) {
       const number = params.value;
+      if (number === null || number === void 0) return '-';
       return Math.floor(number).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
     },
     imageRenderer(params) {
@@ -58,13 +68,16 @@ let gridOptions = {
     nameRenderer(params) {
       const imgUrl = params.data['cryptohub-symbolUrl'];
       const css = 'width: 22px; height: 22px; margin: 1px; margin: 1px 5px 1px 2px; vertical-align: bottom;';
-      return `<img src="${imgUrl}" style="${css}" />${params.value}`;
+      const img = `<img src="${imgUrl}" style="${css}" />${params.value}`;
+      return imgUrl && img;
     },
-    percentRenderer(params) {
-      const num = +Number.parseFloat(params.value).toFixed(2);
-      const color = num > 0 ? '#019c0d' : '#e00909';
-      const css = num === 0 ? '' : `color: ${color}`;
-      return `<span style="${css}">${num}</span>`;
+    percentChangeRenderer(params) {
+      const num = Number.parseFloat(params.value).toFixed(2);
+      return isNaN(num) ? '-' : `${num}%`;
+    },
+    twitterRenderer(params) {
+      if (!params.value) return '-';
+      return `<a href="https://twitter.com/${params.value}" targer="_blank">${params.value}</a>`;
     }
   },
   defaultColDef: {
@@ -102,37 +115,61 @@ let gridOptions = {
     textColumn: {
       filter: 'agTextColumnFilter',
     },
-    percentColumn: {
-      filter: 'agNumberColumnFilter',
-      cellRenderer: 'percentRenderer',
-    },
     usdColumn: {
       filter: 'agNumberColumnFilter',
-      cellRenderer: 'currencyCellRenderer',
+      cellRenderer: 'usdCellRenderer',
+    },
+    btcColumn: {
+      filter: 'agNumberColumnFilter',
+      cellRenderer: 'btcCellRenderer',
     },
     hiddenColumn: {
       hide: true
     },
+    percentChangeColumn: {
+      cellClassRules: {
+        'cryptohub-text-bad' : 'x < 0',
+        'cryptohub-text-good' : 'x > 0',
+      }
+    },
+    percentCirculatingColumn: {
+      cellClassRules: {
+        'cryptohub-text-bad' : 'x < 50',
+        'cryptohub-text-good' : 'x > 75',
+      }
+    }
   },
   columnDefs: [
 
-    // Hidden
-    // {field: 'cc-coinlist-Id'                                             , type: ['hiddenColumn']                        , headerName: ''                           , headerTooltip: ''},                                                              // "925095"
-    // {field: 'cc-snapshot-SEO-BaseImageUrl'                               , type: ['hiddenColumn']                        , headerName: ''                           , headerTooltip: ''},                                                              // "https://www.cryptocompare.com"
-    // {field: 'cc-snapshot-SEO-BaseUrl'                                    , type: ['hiddenColumn']                        , headerName: ''                           , headerTooltip: ''},                                                              // "https://www.cryptocompare.com"
-    // {field: 'cc-snapshot-General-ImageUrl'                               , type: ['textColumn']                          , headerName: ''                           , headerTooltip: ''},                                                              // "/media/34478121/cdpt.png"
-    // {field: 'cryptohub-symbolUrl'                            , width: 70    , type: ['image']                               , headerName: ''                           , headerTooltip: ''},                                                              //
+    // Not used
+    //
+    // {field: 'cmc-rank'                                        , type: ['number']                              , headerName: '#'                          , headerTooltip: 'Coinmarketcap Sort Order'},
+    // {field: 'cc-coinlist-Id'                                  , type: ['hiddenColumn']                        , headerName: ''                           , headerTooltip: ''},
+    // {field: 'cc-snapshot-SEO-BaseImageUrl'                    , type: ['hiddenColumn']                        , headerName: ''                           , headerTooltip: ''},
+    // {field: 'cc-snapshot-SEO-BaseUrl'                         , type: ['hiddenColumn']                        , headerName: ''                           , headerTooltip: ''},
+    // {field: 'cc-snapshot-General-ImageUrl'                    , type: ['textColumn']                          , headerName: ''                           , headerTooltip: ''},
+    // {field: 'cryptohub-symbolUrl'                             , type: ['image']                               , headerName: ''                           , headerTooltip: ''},
+    // {field: 'cc-coinlist-SortOrder',                          , type: ['number']                              , headerName: '#'                          , headerTooltip: 'Cryptocompare Sort Order'},
+    // {field: 'cc-price-SUPPLY'                                 , type: ['numberFormatted']                     , headerName: 'Circulating Supply'         , headerTooltip: 'Data Source: Cryptocompare'},
+    // {field: 'cc-coinlist-TotalCoinSupply'                     , type: ['numberFormatted']                     , headerName: 'Max Supply'                 , headerTooltip: 'Data Source: Cryptocompare - Total Coin Supply'},
+    // {field: 'cc-snapshot-General-TotalCoinsMined'             , type: ['numberFormatted']                     , headerName: 'Total Supply'               , headerTooltip: 'Data Source: Cryptocompare - Total Coins Mined'},
+    // {field: 'cc-snapshot-General-PreviousTotalCoinsMined'     , type: ['numberColumn']                        , headerName: 'Previous Total Coins Mined' , headerTooltip: ''},
+    // {field: 'cc-price-PRICE'                                  , type: ['numberFormatted', 'usdColumn']        , headerName: 'Price'                      , headerTooltip: 'Data Source: Cryptocompare'},
+    // {field: 'cc-price-TOTALVOLUME24HTO'                       , type: ['numberFormatted', 'usdColumn']        , headerName: 'Volume 24h (USD)'           , headerTooltip: 'Data Source: Cryptocompare - The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD'},
+    // {field: 'cc-price-MKTCAP'                                 , type: ['numberFormatted', 'usdColumn']        , headerName: 'Market Cap'                 , headerTooltip: 'Data Source: Cryptocompare - The price in USD multiplied by the number of coins or tokens'},
+    // {field: 'cc-price-CHANGEPCT24HOUR'                        , type: ['numberFormatted']                     , headerName: '% 24h'                      , headerTooltip: 'Percent change in the last 24 hours'},
+    //
+    // White paper data is not reliable
+    // {field: 'cc-snapshot-ICO-WhitePaperLink'            , columngroupshow: 'closed'     , type: ['linkColumn']                                                                      , headerName: 'White Paper'                , headerTooltip: ''},                                                              // "https://ternion.io/TernionWhitepaper_en.pdf"
+    //
 
-
-
-
-    // Basic data
-    { headerName: '',
+    {
+      headerName: '',
       headerClass: '',
       children: [
-        {field: 'cc-coinlist-SortOrder', pinned: 'left', width: 70                 , type: ['number']                              , headerName: '#'                          , headerTooltip: 'Cryptocompare Sort Order'},                                      // "3223"
-        {field: 'cc-coinlist-CoinName' , pinned: 'left'                            , type: ['name']                                , headerName: 'Name'                       , headerTooltip: ''},                                                              // "Ethereum"
-        {field: 'cc-coinlist-Symbol'   , pinned: 'left', width: 90                 , type: ['textColumn']                          , headerName: 'Symbol'                     , headerTooltip: ''},                                                              // "CDPT"
+        {field: 'cryptohub-rank'       , pinned: 'left', width: 50 , sort: 'asc'             , type: ['number']                                                                          , headerName: '#'                          , headerTooltip: 'Coinmarketcap rank backfilled by Cryptocompare sortOrder\n\nData Source: Cryptohub'},
+        {field: 'cc-coinlist-CoinName' , pinned: 'left'                                      , type: ['name']                                                                            , headerName: 'Name'                       , headerTooltip: ''},
+        {field: 'cc-coinlist-Symbol'   , pinned: 'left', width: 90                           , type: ['textColumn']                                                                      , headerName: 'Symbol'                     , headerTooltip: ''},
       ]
     },
 
@@ -140,10 +177,13 @@ let gridOptions = {
       headerName: 'Price',
       headerClass: 'cryptohub-analytics-priceGroup',
       children: [
-        {field: 'cc-price-PRICE'                              , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']        , headerName: 'Price'                      , headerTooltip: ''},                                                              // 7470.67
-        {field: 'cc-price-MKTCAP'                             , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']        , headerName: 'Market Cap'                 , headerTooltip: 'The price in USD multiplied by the number of coins or tokens'},  // 128184833776.04001
-        {field: 'cc-price-CHANGEPCT24HOUR'                    , columnGroupShow: 'both'      , type: ['numberFormatted', 'percentColumn']    , headerName: '% 24h'                      , headerTooltip: 'Percent change in the last 24 hours'},                           // 1.741018108821805
-        {field: 'cc-price-TOTALVOLUME24HTO'                   , columnGroupShow: 'closed'    , type: ['numberFormatted', 'usdColumn']        , headerName: 'Volume 24h (USD)'           , headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD'},  // 4981342812.399607
+        {field: 'cmc-quotes-USD-price'                        , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']                                                         , headerName: 'Price (USD)'                 , headerTooltip: 'Data Source: Coinmarketcap'},
+        {field: 'cryptohub-price-btc'                         , columnGroupShow: 'both'      , type: ['numberFormatted', 'btcColumn']                                                         , headerName: 'Price (BTC)'                 , headerTooltip: 'Data Source: Cryptohub, calculated from Coinmarketcap data'},
+        {field: 'cmc-quotes-USD-volume_24h'                   , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']                                                         , headerName: 'Volume 24h (USD)'            , headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Coinmarketcap'},
+        {field: 'cmc-quotes-USD-market_cap'                   , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']                                                         , headerName: 'Market Cap (USD)'            , headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Coinmarketcap'},
+        {field: 'cmc-quotes-USD-percent_change_1h'            , columnGroupShow: 'both'      , type: ['numberFormatted', 'percentChangeColumn']      , cellRenderer: 'percentChangeRenderer'  , headerName: '% 1h'                        , headerTooltip: 'Percent change in the last hour'},
+        {field: 'cmc-quotes-USD-percent_change_24h'           , columnGroupShow: 'both'      , type: ['numberFormatted', 'percentChangeColumn']      , cellRenderer: 'percentChangeRenderer'  , headerName: '% 24h'                       , headerTooltip: 'Percent change in the last 24 hours'},
+        {field: 'cmc-quotes-USD-percent_change_7d'            , columnGroupShow: 'both'      , type: ['numberFormatted', 'percentChangeColumn']      , cellRenderer: 'percentChangeRenderer'  , headerName: '% 7d'                        , headerTooltip: 'Percent change in the last 7 days'},
       ]
     },
 
@@ -151,12 +191,13 @@ let gridOptions = {
       headerName: 'Supply',
       headerClass: 'cryptohub-analytics-supplyGroup',
       children: [
-        {field: 'cc-price-SUPPLY'                             , columnGroupShow: 'both'      , type: ['numberFormatted']                     , headerName: 'Circulating Supply'         , headerTooltip: ''},                                                              // 17158412
-        {field: 'cc-coinlist-TotalCoinSupply'                 , columnGroupShow: 'both'      , type: ['numberFormatted']                     , headerName: 'Coin Supply'                , headerTooltip: 'Total Coin Supply'},                                                              // "3,400,000,000"
-        {field: 'cc-snapshot-General-TotalCoinsMined'         , columnGroupShow: 'closed'    , type: ['numberFormatted']                     , headerName: 'Coins Mined'                , headerTooltip: 'Total Coins Mined'},                                                              // ""
-        {field: 'cc-coinlist-FullyPremined'                   , columnGroupShow: 'closed'    , type: ['boolColumn']                          , headerName: 'Premined'                   , headerTooltip: ''},                                                              // "0"
-        {field: 'cc-coinlist-PreMinedValue'                   , columnGroupShow: 'closed'    , type: ['textColumn']                          , headerName: 'Pre Mined Amount'           , headerTooltip: ''},                                                              // "N/A"
-        // {field: 'cc-snapshot-General-PreviousTotalCoinsMined' , columnGroupShow: 'closed'    , type: ['numberColumn']                        , headerName: 'Previous Total Coins Mined' , headerTooltip: ''},                                                              // ""
+        {field: 'cmc-circulating_supply'                      , columnGroupShow: 'both'      , type: ['numberFormatted']                                                                       , headerName: 'Circulating Supply'         , headerTooltip: 'Data Source: Coinmarketcap'},
+        {field: 'cryptohub-circulating-percent-total'         , columnGroupShow: 'both'      , type: ['numberFormatted', 'percentCirculatingColumn'] , cellRenderer: 'percentChangeRenderer'   , headerName: 'CS % of Total'              , headerTooltip: 'Circulating Supply % of Total\n\nData Source: Cryptohub'},
+        {field: 'cmc-max_supply'                              , columnGroupShow: 'both'      , type: ['numberFormatted']                                                                       , headerName: 'Max Supply'                 , headerTooltip: 'Data Source: Coinmarketcap - Total Coin Supply'},
+        {field: 'cryptohub-circulating-percent-max'           , columnGroupShow: 'both'      , type: ['numberFormatted', 'percentCirculatingColumn'] , cellRenderer: 'percentChangeRenderer'   , headerName: 'CS % of Max'                , headerTooltip: 'Circulating Supply % of Max\n\nData Source: Cryptohub'},
+        {field: 'cmc-total_supply'                            , columnGroupShow: 'both'      , type: ['numberFormatted']                                                                       , headerName: 'Total Supply'               , headerTooltip: 'Data Source: Coinmarketcap - Total Coins Mined'},
+        {field: 'cc-coinlist-FullyPremined'                   , columnGroupShow: 'closed'    , type: ['boolColumn']                                                                            , headerName: 'Premined'                   , headerTooltip: 'Premined'},
+        {field: 'cc-coinlist-PreMinedValue'                   , columnGroupShow: 'closed'    , type: ['textColumn']                                                                            , headerName: 'Pre Mined Amount'           , headerTooltip: ''},
       ]
     },
 
@@ -164,8 +205,8 @@ let gridOptions = {
       headerName: 'Technical Data',
       headerClass: 'cryptohub-analytics-technicalGroup',
       children: [
-        {field: 'cc-coinlist-ProofType'                      , columnGroupShow: 'both'      , type: ['textColumn']                          , headerName: 'Proof Type'                 , headerTooltip: ''},                                                              // "PoA"
-        {field: 'cc-coinlist-Algorithm'                      , columnGroupShow: 'closed'    , type: ['textColumn']                          , headerName: 'Algorithm'                  , headerTooltip: ''},                                                              // "Ethash"
+        {field: 'cc-coinlist-ProofType'                      , columnGroupShow: 'both'      , type: ['textColumn']                                                                      , headerName: 'Proof Type'                 , headerTooltip: ''},                                                              // "PoA"
+        {field: 'cc-coinlist-Algorithm'                      , columnGroupShow: 'closed'    , type: ['textColumn']                                                                      , headerName: 'Algorithm'                  , headerTooltip: ''},                                                              // "Ethash"
       ]
     },
 
@@ -173,9 +214,9 @@ let gridOptions = {
       headerName: 'Fundamentals',
       headerClass: 'cryptohub-analytics-fundamentalsGroup',
       children: [
-        {field: 'cc-snapshot-General-NetHashesPerSecond'     , columngroupshow: 'both'      , type: ['numberFormatted']                     , headerName: 'Net Hashes per/s'           , headerTooltip: ''},                                                              // ""
-        {field: 'cryptohub-NumberOfExchanges'                , columngroupshow: 'closed'    , type: ['numberFormatted']                     , headerName: '# of Exchanges'             , headerTooltip: ''},                                                              // 0
-        {field: 'cryptohub-NumberOfPairs'                    , columngroupshow: 'closed'    , type: ['numberFormatted']                     , headerName: '# of Pairs'                 , headerTooltip: ''},                                                              // 0
+        {field: 'cc-snapshot-General-NetHashesPerSecond'     , columngroupshow: 'both'      , type: ['numberFormatted']                                                                 , headerName: 'Net Hashes per/s'           , headerTooltip: ''},                                                              // ""
+        {field: 'cryptohub-NumberOfExchanges'                , columngroupshow: 'closed'    , type: ['numberFormatted']                                                                 , headerName: '# of Exchanges'             , headerTooltip: ''},                                                              // 0
+        {field: 'cryptohub-NumberOfPairs'                    , columngroupshow: 'closed'    , type: ['numberFormatted']                                                                 , headerName: '# of Pairs'                 , headerTooltip: ''},                                                              // 0
       ]
     },
 
@@ -183,10 +224,9 @@ let gridOptions = {
       headerName: 'Links',
       headerClass: 'cryptohub-analytics-linksGroup',
       children: [
-        {field: 'cc-snapshot-General-WebsiteUrl'            , columngroupshow: 'both'       , type: ['linkColumn']                          , headerName: 'Website'                    , headerTooltip: ''},                                                              // "https://ternion.io/"
-        {field: 'cc-snapshot-ICO-WhitePaperLink'            , columngroupshow: 'closed'     , type: ['linkColumn']                          , headerName: 'White Paper'                , headerTooltip: ''},                                                              // "https://ternion.io/TernionWhitepaper_en.pdf"
-        {field: 'cc-snapshot-General-Twitter'               , columngroupshow: 'closed'     , type: ['linkColumn']                          , headerName: 'Twitter'                    , headerTooltip: ''},                                                              // "@ternionofficial"
-        {field: 'cc-snapshot-ICO-WebsiteLink'               , columngroupshow: 'closed'     , type: ['linkColumn']                          , headerName: 'ICO Website'                , headerTooltip: ''},                                                              // "https://ternion.io/"
+        {field: 'cc-snapshot-General-WebsiteUrl'            , columngroupshow: 'both'       , type: ['linkColumn']                                                                      , headerName: 'Website'                    , headerTooltip: ''},                                                              // "https://ternion.io/"
+        {field: 'cc-snapshot-General-Twitter'               , columngroupshow: 'closed'     , type: ['linkColumn']                        , cellRenderer: 'twitterRenderer'             , headerName: 'Twitter'                    , headerTooltip: ''},                                                              // "@ternionofficial"
+        {field: 'cc-snapshot-ICO-WebsiteLink'               , columngroupshow: 'closed'     , type: ['linkColumn']                                                                      , headerName: 'ICO Website'                , headerTooltip: ''},                                                              // "https://ternion.io/"
       ]
     },
     // Trading data?
@@ -218,6 +258,26 @@ let gridOptions = {
 
 
     //
+    // Coinmarketcap fields
+    //
+    // cmc-circulating_supply : 17229712
+    // cmc-id : 1
+    // cmc-last_updated : 1535190141
+    // cmc-max_supply : 21000000
+    // cmc-name : "Bitcoin"
+    // cmc-quotes.USD.market_cap : 115968369271
+    // cmc-quotes.USD.percent_change_1h : 0.16
+    // cmc-quotes.USD.percent_change_7d : 3.5
+    // cmc-quotes.USD.percent_change_24h : 2.79
+    // cmc-quotes.USD.price : 6730.72012293
+    // cmc-quotes.USD.volume_24h : 4153097746.2317
+    // cmc-rank : 1
+    // cmc-symbol : "BTC"
+    // cmc-total_supply : 17229712
+    // cmc-website_slug : "bitcoin"
+
+
+    //
     // NOTE: Not interested at least for now
     //
     // {field: 'cc-coinlist-FullName'                                , type: ['textColumn']                          , headerName: ''    , headerTooltip: ''},  //             : "Ethereum (ETH)"
@@ -225,9 +285,9 @@ let gridOptions = {
     // {field: 'cc-coinlist-Sponsored'                               , type: ['textColumn']                          , headerName: ''    , headerTooltip: ''},  //             : false
     // {field: 'cc-coinlist-Url'                                     , type: ['textColumn']                          , headerName: ''    , headerTooltip: ''},  //             : "/coins/cdpt/overview"
     //
-    // {field: 'cc-price-CHANGE24HOUR'                               , type: ['numberFormatted', 'usdColumn']          , headerName: ''    , headerTooltip: ''},  //             : 127.84000000000015
-    // {field: 'cc-price-CHANGEDAY'                                  , type: ['numberFormatted', 'usdColumn']          , headerName: ''    , headerTooltip: ''},  //             : 87.27999999999975
-    // {field: 'cc-price-CHANGEPCTDAY'                               , type: ['numberFormatted', 'percentColumn']      , headerName: ''    , headerTooltip: ''},  //             : 1.182112823513315
+    // {field: 'cc-price-CHANGE24HOUR'                               , type: ['numberFormatted', 'usdColumn']        , headerName: ''    , headerTooltip: ''},  //             : 127.84000000000015
+    // {field: 'cc-price-CHANGEDAY'                                  , type: ['numberFormatted', 'usdColumn']        , headerName: ''    , headerTooltip: ''},  //             : 87.27999999999975
+    // {field: 'cc-price-CHANGEPCTDAY'                               , type: ['numberFormatted']                     , headerName: ''    , headerTooltip: ''},  //             : 1.182112823513315
     // {field: 'cc-price-FLAGS'                                      , type: ['textColumn']                          , headerName: ''    , headerTooltip: ''},  //             : "1"
     // {field: 'cc-price-FROMSYMBOL'                                 , type: ['textColumn']                          , headerName: ''    , headerTooltip: ''},  //             : "BTC"
     // {field: 'cc-price-HIGH24HOUR'                                 , type: ['numberFormatted', 'usdColumn']          , headerName: ''    , headerTooltip: ''},  //             : 7521.64

@@ -13,6 +13,7 @@ const {
   analyticsMapCmcToCc,
   commonSwapObjectKeys,
   analyticsMergeDataByKey, // TODO: make this function common?
+  classDataStore:DataStore,
 }                   = require.main.require('./utils/');
 
 process.on('warning', error => {
@@ -29,18 +30,62 @@ process.on('warning', error => {
   try {
 
     logger.info('Starting Analytics');
+    const dataStore = new DataStore((dataArray, db) => { // merge handler
+      let cc, cmc, map, json;
+      if (dataArray.length === 2) {
+        cmc = db.coinmarketcap;
+        cc = db.cryptocompare;
+        if (!map) {
+          map = analyticsMapCmcToCc(cmc, cc);
+        }
+        cmc = commonSwapObjectKeys(cmc, map);
+        json = analyticsMergeDataByKey([cc, cmc]);
+        return json;
+      }
+    });
 
-    // let cc = await cryptocompare();
-    // cc.on('data', data => {
-    //   const d = JSON.stringify(data);
-    //   // debugger
-    //   settings.cache.set(settings.keyCryptohubAnalytics, d);
-    // });
+    let cc = await cryptocompare();
+    let ccLength;
+    cc.on('data', data => {
+      ccLength = Object.keys(data).length;
+      dataStore.data = {name: 'cryptocompare', data};
+    });
 
     let cmc = await coinmarketcap();
+    let cmcLength;
     cmc.on('data', data => {
-      const d = JSON.stringify(data);
-      // settings.cache.set(settings.keyCryptohubAnalytics, d);
+      cmcLength = Object.keys(data).length;
+      dataStore.data = {name: 'coinmarketcap', data};
+    });
+
+    dataStore.on('data', data => {
+      const btcId = 1182;
+      const btcItem = data[btcId];
+      const btcPrice = btcItem['cmc-quotes-USD-price'];
+      let ccRank;
+      let cmcRank;
+      let cmcPrice;
+      let maxSupply;
+      let totalSupply;
+      let circulatingSupply;
+      for (let [key, item] of Object.entries(data)) {
+        if (item['cc-coinlist-IsTrading'] === false) {
+          delete data[key];
+        }
+        else {
+          ccRank  = item['cc-coinlist-SortOrder'] || 10000;
+          cmcRank = item['cmc-rank'];
+          cmcPrice = item['cmc-quotes-USD-price'];
+          maxSupply = item['cmc-max_supply'];
+          totalSupply = item['cmc-total_supply'];
+          circulatingSupply = item['cmc-circulating_supply'];
+          item['cryptohub-rank'] = cmcRank || ccRank + cmcLength;
+          item['cryptohub-circulating-percent-total'] = (circulatingSupply / totalSupply) * 100;
+          item['cryptohub-circulating-percent-max'] = (circulatingSupply / maxSupply) * 100;
+          item['cryptohub-price-btc'] = 1 / (btcPrice / cmcPrice);
+        }
+      }
+      settings.cache.set(settings.keyCryptohubAnalytics, JSON.stringify(data));
     });
 
     return

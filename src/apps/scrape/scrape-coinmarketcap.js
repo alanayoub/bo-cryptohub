@@ -1,3 +1,6 @@
+// Node
+const crypto = require('crypto');
+
 // Libs
 const logger = require('../../logger');
 
@@ -5,6 +8,11 @@ const logger = require('../../logger');
 const settings = require('../../settings');
 const { logHeader } = require('../../utils.js');
 const { scrapeHTML, scrapeJSON } = require('../../utils/index.js');
+
+const {
+  commonDelay,
+  classScrapeQueue:ScrapeQueue
+} = require('../../utils/');
 
 /**
  *
@@ -15,48 +23,122 @@ const { scrapeHTML, scrapeJSON } = require('../../utils/index.js');
  * @param {Number} requestDelay - How long to wait inbetween requests so coinmarketcap doesn't crap out (in ms)
  *
  */
-module.exports = async function scrapeCoinmarketcap({requestLimit = Infinity, requestDelay = 2000}) {
+module.exports = async function scrapeCoinmarketcap(cacheForDays, rateLimitDelayMs) {
 
-  return new Promise(async resolve => {
+  try {
 
-    try {
-
-      logHeader('Scraping CoinMarketCap.com');
-      const uri = settings.uriCoinmarketcapList;
-      const key = settings.keyCoinmarketcapList;
-      const file = await scrapeJSON(uri, key, global.cacheForCoinmarketcapProjectsJson);
-      let ids = file.data.map(v => v.id);
-      let slugs = file.data.map(v => v.website_slug);
-      let results = {
-        githubUrls: {}
-      };
-
-      (async function scrapeGitUrlsForAllProjects(idx = 0) {
-
-        const id = ids.shift();
-        const slug = slugs.shift();
-        await scrapeJSON(settings.tagUriCoinmarketcapDetailsJSON`${id}`, settings.tagKeyCoinmarketcapDetailsJSON`${id}`, global.cacheForCoinmarketcapProjectHtml);
-        await scrapeHTML(settings.tagUriCoinmarketcapDetailsHTML`${slug}`, settings.tagKeyCoinmarketcapDetailsHTML`${slug}`, global.cacheForCoinmarketcapProjectHtml);
-
-        idx++;
-        if (ids.length && idx < requestLimit) {
-          setTimeout(() => {
-            logger.info(`scrapeCoinmarketcap(): Waiting ${requestDelay}ms before next job`);
-            scrapeGitUrlsForAllProjects(idx);
-          }, requestDelay);
+    const scrapeQueue = new ScrapeQueue({
+      rateLimit: settings.queueCryptocompare,
+      bootstrap: {
+        name: 'coinList',
+        async func() {
+          logger.info('Scraping CoinMarketCap.com');
+          const uri = settings.uriCoinmarketcapList;
+          const key = settings.keyCoinmarketcapList;
+          const file = await scrapeJSON(uri, key, global.cacheForCoinmarketcapProjectsJson);
+          let ids = file.data.map(v => v.id);
+          let slugs = file.data.map(v => v.website_slug);
+          return {
+            ids,
+            slugs,
+          }
         }
-        else {
-          resolve();
+      },
+    });
+
+    //
+    // TICKER
+    //
+    //
+    //
+    scrapeQueue.addToQueue({
+      name: 'ticker',
+      interval: 1000 * 10,
+      async getJobs(queue) {
+
+        const len = scrapeQueue.coinList.ids.length;
+        const sort = 'id';
+        let jobs = 0;
+        let start = 0;
+        let limit = 100;
+
+        const groupKey = settings.tagKeyCoinmarketcapTickerGrouped`${{}}`;
+        const iterations = Math.round(len / limit);
+        let counter = 0;
+
+        for (; start < len; start = start + 101) {
+          counter++;
+          const last = counter === iterations;
+          const md5 = crypto.createHash('md5');
+          const cacheKey = md5.update(start + limit + sort).digest('hex');
+          const data = {
+            cacheKey, start, limit, sort
+          }
+          const uri = settings.tagUriCoinmarketcapTicker`${data}`;
+          const key = settings.tagKeyCoinmarketcapTicker`${data}`;
+          queue.push({uri, key, cacheForDays, groupKey, last});
+          jobs++;
         }
-      })();
 
-    }
-    catch(error) {
-      const message = `scrapeCoinmarketcap(): ${error}`;
-      logger.info(message);
-      return {message, error: true};
-    }
+        logger.info(`Number of jobs: ${jobs} jobs created for coinmarketcap ticker API`);
 
-  });
+      },
+      save() {
+        logger.info(`Save price data to DB`);
+      },
+    });
+
+  }
+  catch(error) {
+    const message = `scrapeCoinmarketcap(): ${error}`;
+    logger.info(message);
+    return {message, error: true};
+  }
+
+
+  //
+  // use this old code to scrape all git urls
+  //
+  // return new Promise(async resolve => {
+
+  //   try {
+
+  //     logHeader('Scraping CoinMarketCap.com');
+  //     const uri = settings.uriCoinmarketcapList;
+  //     const key = settings.keyCoinmarketcapList;
+  //     const file = await scrapeJSON(uri, key, global.cacheForCoinmarketcapProjectsJson);
+  //     let ids = file.data.map(v => v.id);
+  //     let slugs = file.data.map(v => v.website_slug);
+  //     let results = {
+  //       githubUrls: {}
+  //     };
+
+  //     (async function scrapeGitUrlsForAllProjects(idx = 0) {
+
+  //       const id = ids.shift();
+  //       const slug = slugs.shift();
+  //       await scrapeJSON(settings.tagUriCoinmarketcapDetailsJSON`${id}`, settings.tagKeyCoinmarketcapDetailsJSON`${id}`, global.cacheForCoinmarketcapProjectHtml);
+  //       await scrapeHTML(settings.tagUriCoinmarketcapDetailsHTML`${slug}`, settings.tagKeyCoinmarketcapDetailsHTML`${slug}`, global.cacheForCoinmarketcapProjectHtml);
+
+  //       idx++;
+  //       if (ids.length && idx < requestLimit) {
+  //         setTimeout(() => {
+  //           logger.info(`scrapeCoinmarketcap(): Waiting ${requestDelay}ms before next job`);
+  //           scrapeGitUrlsForAllProjects(idx);
+  //         }, requestDelay);
+  //       }
+  //       else {
+  //         resolve();
+  //       }
+  //     })();
+
+  //   }
+  //   catch(error) {
+  //     const message = `scrapeCoinmarketcap(): ${error}`;
+  //     logger.info(message);
+  //     return {message, error: true};
+  //   }
+
+  // });
 
 }

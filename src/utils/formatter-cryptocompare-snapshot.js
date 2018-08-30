@@ -36,8 +36,8 @@ module.exports = function formatterCryptocompareSnapshot(data) {
       pairs = data[i].Data.Subs.map(a => a.split('~')[1]);
       exchanges = Array.from(new Set(pairs));
       obj['cryptohub-symbolUrl']         = symbolUrl;
-      obj['cryptohub-NumberOfPairs']     =  pairs.length;
-      obj['cryptohub-NumberOfExchanges'] =  exchanges.length;
+      obj['cryptohub-NumberOfPairs']     = pairs.length;
+      obj['cryptohub-NumberOfExchanges'] = exchanges.length;
       result[id] = obj;
 
     }

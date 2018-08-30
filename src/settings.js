@@ -15,12 +15,13 @@ global.cacheForGitlog = 7;
 global.cacheForGithubRepo = 7;
 global.cacheForGithubForks = 30;
 global.cacheForCryptocompare = 30;
+global.cacheForCoinmarketcap = 30;
 global.cacheForCoinmarketcapProjectsJson = 1;
 global.cacheForCoinmarketcapProjectHtml = 30;
 
 // Leave in execution order
 global.settingsScrapeCryptocompare = true;
-global.settingsScrapeCoinmarketcap = false;
+global.settingsScrapeCoinmarketcap = true;
 global.settingsScrapeXe = false;
 // global.settingsGetRepoData = true;
 // global.settingsCloneRepos = true;
@@ -112,6 +113,10 @@ const settings = {
   tagKeyCryptocompareSocialStatsGrouped: (str, ob) => `/cryptocompare/socialstats-grouped/data.json`,
 
   // Coinmarketcap
+  tagUriCoinmarketcapTicker:        (str, ob) => `https://api.coinmarketcap.com/v2/ticker/?start=${ob.start || 0}&limit=${ob.limit || 100}&sort=${ob.sort || 'id'}`,
+  tagKeyCoinmarketcapTicker:        (str, ob) => `/coinmarketcap/ticker/${ob.cacheKey}.json`,
+  tagKeyCoinmarketcapTickerGrouped: (str, ob) => `/coinmarketcap/ticker-grouped/data.json`,
+
   uriCoinmarketcapList:                          'https://api.coinmarketcap.com/v2/listings/',
   keyCoinmarketcapList:                          '/coinmarketcap/search/coins.json',
   tagUriCoinmarketcapDetailsJSON:   (str, id) => `https://api.coinmarketcap.com/v2/ticker/${id}/`,

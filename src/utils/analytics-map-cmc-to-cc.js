@@ -1,3 +1,6 @@
+// Cryptohub
+const logger = require.main.require('./logger');
+
 /**
  *
  * Map Coinmarketcap ids to Cryptocompare ids
@@ -17,12 +20,12 @@ module.exports = function mapCMCToCC(cmc, cc) {
 
     for (let [k1, v1] of Object.entries(cmc)) {
 
-      [symbol1, name1] = [v1.symbol, v1.name];
+      [symbol1, name1] = [v1['cmc-symbol'], v1['cmc-name']];
       name1 = name1.trim().replace(regexIgnoreSpace, '').toLowerCase();
 
       for (let [k2, v2] of Object.entries(cc)) {
 
-        [symbol2, name2] = [v2.Symbol, v2['Coin Name']];
+        [symbol2, name2] = [v2['cc-coinlist-Symbol'], v2['cc-coinlist-Name']];
         if (!symbol2) continue;
         symbol2b = symbol2.replace(regexNonAlphaNumeric, '');
         name2 = name2.trim().replace(regexIgnoreSpace, '').toLowerCase();

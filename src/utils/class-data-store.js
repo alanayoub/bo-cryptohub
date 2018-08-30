@@ -17,15 +17,16 @@ function isObject(object) {
  */
 module.exports = class DataStore extends EventEmitter {
 
-  constructor() {
+  constructor(mergeHandler = analyticsMergeDataByKey) {
     super();
     this.cc;
     this.db = {};
+    this.mergeHandler = mergeHandler;
   }
 
   mergeData() {
     const dataArray = Object.values(this.db);
-    this.cc = analyticsMergeDataByKey(dataArray);
+    this.cc = this.mergeHandler(dataArray, this.db);
     this.emit('data', this.cc);
   }
 

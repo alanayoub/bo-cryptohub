@@ -51,7 +51,10 @@ module.exports = class Watcher extends EventEmitter {
       const dataObj = JSON.parse(dataStr);
       const timestamp = fileName.replace(/^cache.*<([0-9TZ:.-]*)>$/, '$1');
       const [error, data] = await to(handler(dataObj, timestamp));
-      if (error) throw new Error(`Class Watcher: ${error}`);
+      if (error) {
+        console.log(data, dataObj, timestamp);
+        throw new Error(`Class Watcher: ${error}`);
+      }
       this.emit('data', data);
       if (data) {
         logger.info(`Deleting file and removing from queue: ${fileName}`);

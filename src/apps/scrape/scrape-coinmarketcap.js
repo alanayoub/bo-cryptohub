@@ -35,7 +35,7 @@ module.exports = async function scrapeCoinmarketcap(cacheForDays, rateLimitDelay
           logger.info('Scraping CoinMarketCap.com');
           const uri = settings.uriCoinmarketcapList;
           const key = settings.keyCoinmarketcapList;
-          const file = await scrapeJSON(uri, key, global.cacheForCoinmarketcapProjectsJson);
+          const file = await scrapeJSON(uri, key, settings.cacheForCoinmarketcapProjectsJson);
           let ids = file.data.map(v => v.id);
           let slugs = file.data.map(v => v.website_slug);
           return {
@@ -106,7 +106,7 @@ module.exports = async function scrapeCoinmarketcap(cacheForDays, rateLimitDelay
   //     logHeader('Scraping CoinMarketCap.com');
   //     const uri = settings.uriCoinmarketcapList;
   //     const key = settings.keyCoinmarketcapList;
-  //     const file = await scrapeJSON(uri, key, global.cacheForCoinmarketcapProjectsJson);
+  //     const file = await scrapeJSON(uri, key, settings.cacheForCoinmarketcapProjectsJson);
   //     let ids = file.data.map(v => v.id);
   //     let slugs = file.data.map(v => v.website_slug);
   //     let results = {
@@ -117,8 +117,8 @@ module.exports = async function scrapeCoinmarketcap(cacheForDays, rateLimitDelay
 
   //       const id = ids.shift();
   //       const slug = slugs.shift();
-  //       await scrapeJSON(settings.tagUriCoinmarketcapDetailsJSON`${id}`, settings.tagKeyCoinmarketcapDetailsJSON`${id}`, global.cacheForCoinmarketcapProjectHtml);
-  //       await scrapeHTML(settings.tagUriCoinmarketcapDetailsHTML`${slug}`, settings.tagKeyCoinmarketcapDetailsHTML`${slug}`, global.cacheForCoinmarketcapProjectHtml);
+  //       await scrapeJSON(settings.tagUriCoinmarketcapDetailsJSON`${id}`, settings.tagKeyCoinmarketcapDetailsJSON`${id}`, settings.cacheForCoinmarketcapProjectHtml);
+  //       await scrapeHTML(settings.tagUriCoinmarketcapDetailsHTML`${slug}`, settings.tagKeyCoinmarketcapDetailsHTML`${slug}`, settings.cacheForCoinmarketcapProjectHtml);
 
   //       idx++;
   //       if (ids.length && idx < requestLimit) {

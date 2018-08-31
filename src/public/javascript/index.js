@@ -163,6 +163,12 @@ let gridOptions = {
     // {field: 'cc-snapshot-ICO-WhitePaperLink'            , columngroupshow: 'closed'     , type: ['linkColumn']                                                                      , headerName: 'White Paper'                , headerTooltip: ''},                                                              // "https://ternion.io/TernionWhitepaper_en.pdf"
     //
 
+    // $ value per RP
+    // $ value per GP
+    // Code Repo Points
+    // Github
+    // General Points
+
     {
       headerName: '',
       headerClass: '',
@@ -180,7 +186,15 @@ let gridOptions = {
         {field: 'cmc-quotes-USD-price'                        , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']                                                         , headerName: 'Price (USD)'                 , headerTooltip: 'Data Source: Coinmarketcap'},
         {field: 'cryptohub-price-btc'                         , columnGroupShow: 'both'      , type: ['numberFormatted', 'btcColumn']                                                         , headerName: 'Price (BTC)'                 , headerTooltip: 'Data Source: Cryptohub, calculated from Coinmarketcap data'},
         {field: 'cmc-quotes-USD-volume_24h'                   , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']                                                         , headerName: 'Volume 24h (USD)'            , headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Coinmarketcap'},
+
+        // make a btc one
+        // {field: 'cmc-quotes-BTC-volume_24h'                   , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']                                                         , headerName: 'Volume 24h (USD)'            , headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Coinmarketcap'},
+
         {field: 'cmc-quotes-USD-market_cap'                   , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']                                                         , headerName: 'Market Cap (USD)'            , headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Coinmarketcap'},
+
+        // make a btc one
+        // {field: 'cmc-quotes-USD-market_cap'                   , columnGroupShow: 'both'      , type: ['numberFormatted', 'usdColumn']                                                         , headerName: 'Market Cap (USD)'            , headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Coinmarketcap'},
+
         {field: 'cmc-quotes-USD-percent_change_1h'            , columnGroupShow: 'both'      , type: ['numberFormatted', 'percentChangeColumn']      , cellRenderer: 'percentChangeRenderer'  , headerName: '% 1h'                        , headerTooltip: 'Percent change in the last hour'},
         {field: 'cmc-quotes-USD-percent_change_24h'           , columnGroupShow: 'both'      , type: ['numberFormatted', 'percentChangeColumn']      , cellRenderer: 'percentChangeRenderer'  , headerName: '% 24h'                       , headerTooltip: 'Percent change in the last 24 hours'},
         {field: 'cmc-quotes-USD-percent_change_7d'            , columnGroupShow: 'both'      , type: ['numberFormatted', 'percentChangeColumn']      , cellRenderer: 'percentChangeRenderer'  , headerName: '% 7d'                        , headerTooltip: 'Percent change in the last 7 days'},

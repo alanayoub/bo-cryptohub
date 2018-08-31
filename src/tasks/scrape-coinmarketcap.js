@@ -10,9 +10,10 @@ const { to } = require('await-to-js');
 const cheerio = require('cheerio');
 
 // CryptoHub
-const Cache = require('../cache');
-const { getCurrentDate, typeOfData, logHeader } = require('../utils.js');
-const { Project } = require('../db-schema');
+const Cache = require.main.require('./cache');
+const settings = require.main.require('./settings');
+const { Project } = require.main.require('./db-schema');
+const { getCurrentDate, typeOfData, logHeader } = require.main.require('./utils.js');
 
 /**
  *
@@ -33,7 +34,7 @@ async function getGithubUrls(slug) {
   let $;
   let error;
   let [file, age] = global.cache.get(key);
-  if (true || !file || age > global.cacheForCoinmarketcapProjectHtml) {
+  if (true || !file || age > settings.cacheForCoinmarketcapProjectHtml) {
     [error, $] = await to(rp(options));
     if (!$) {
       return console.log(`getGithubUrls(): Error fetching getGithubUrls: ${error}`);
@@ -169,8 +170,8 @@ module.exports = async function scrapeCoinmarketcap({requestLimit = Infinity, re
       const key = '/coinmarketcap/search/coins.json';
 
       let error;
-      let [file, age] = global.cache.get(key);
-      if (!file || age > global.cacheForCoinmarketcapProjectsJson) {
+      let [file, age] = settings.cache.get(key);
+      if (!file || age > settings.cacheForCoinmarketcapProjectsJson) {
         // TODO: replace with get?
         [error, file] = await to(rp({uri, json: true}));
         if (!file) return console.log(`scrape(): ${error}`);

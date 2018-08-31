@@ -33,15 +33,15 @@ process.on('warning', error => {
     // NOTE: Need to setup a que and rate limiter
     //
     if (global.settingsScrapeCryptocompare) {
-      await to(scrapeCryptocompare(global.cacheForCryptocompare, 100));
+      await to(scrapeCryptocompare(settings.cacheForCryptocompare, 100));
     }
 
     if (global.settingsScrapeCoinmarketcap) {
-      await to(scrapeCoinmarketcap(global.cacheForCoinmarketcap, 500)); // TODO: don't wait while retrieving cache
+      await to(scrapeCoinmarketcap(settings.cacheForCoinmarketcap, 500)); // TODO: don't wait while retrieving cache
     }
 
     if (global.settingsScrapeXe) {
-      await to(scrapeXe(global.cacheForXe, 1000));
+      await to(scrapeXe(settings.cacheForXe, 1000));
     }
 
   }

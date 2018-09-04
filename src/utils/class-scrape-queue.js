@@ -1,10 +1,13 @@
 // Node
 const EventEmitter = require('events');
 
+// Libs
+const { to }       = require('await-to-js');
+
 // CryptoHub
-const logger         = require.main.require('./logger');
-const commonDelay    = require.main.require('./utils/common-delay');
-const scrapeJSON     = require('./scrape-json');
+const logger       = require.main.require('./logger');
+const commonDelay  = require.main.require('./utils/common-delay');
+const scrapeJSON   = require('./scrape-json');
 
 /**
  *
@@ -80,7 +83,11 @@ module.exports = class ScrapeQueue extends EventEmitter {
       const item = queue.shift();
       if (item) {
         const { uri, key, cacheForDays, groupKey, last } = item;
-        const file = await scrapeJSON(uri, key, cacheForDays);
+
+        const [error, file] = await to(scrapeJSON(uri, key, cacheForDays));
+        if (error) debugger;
+        if (!Object.keys(file).length) debugger;
+
         const elapsedTime = +new Date() - this.timestamp;
         const name = queue.name;
         this.requests++;

@@ -25,6 +25,7 @@
     "mongoose": "^5.2.5",
     "nodegit": "^0.21.1",
     "redis": "^2.8.0",
+    "replace": "^1.0.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "single-line-log": "^1.1.2",

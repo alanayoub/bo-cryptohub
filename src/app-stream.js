@@ -16,7 +16,11 @@ require('./db-connect');
 const logger             = require.main.require('./logger');
 const settings           = require.main.require('./settings');
 const { TimeseriesFast } = require.main.require('./db-schema');
-const { commonDelay, mapDbFields: { shortToFull:m } } = require.main.require('./utils/');
+const {
+  commonDelay,
+  classWatcher:Watcher,
+  mapDbFields: { shortToFull:m }
+} = require.main.require('./utils/');
 
 const port = 3000;
 
@@ -47,43 +51,61 @@ process.on('warning', error => {
       logger.info(`listening on *: ${port}`);
     });
 
-    const sort = {_id: -1};
-    const query = {};
-    const fields = m['DATA'];
-    let error;
-    let socket;
-    let results;
-    let count = 0;
-    let md5;
-    let fingerprintOld;
-    let fingerprintNew;
-    async function getData() {
-      let [results, age] = settings.cache.get(settings.keyCryptohubAnalytics);
-      md5 = crypto.createHash('md5');
-      fingerprintNew = md5.update(results).digest('hex');
-      // if (fingerprintNew === fingerprintOld) {
-      //   logger.info('Stream: no change in data');
-      // }
-      // else {
-        fingerprintOld = fingerprintNew;
-        results = JSON.parse(results);
-        // [error, results] = await to(TimeseriesFast.findOne(query, fields, sort));
-        // results = results.toJSON();
-        console.log('data', ++count);
-        if (socket) {
-          socket.emit('data', results);
-        }
-      // }
-      await commonDelay(2000);
-      getData();
-    }
-    getData();
+    const fileWatcher = new Watcher({
+      delay: 100,
+      cacheArgs: [settings.keyCryptohubAnalytics],
+      handler: async (data, timestamp) => {
+        return {data, timestamp};
+      }
+    });
 
-    io.on('connection', function(sock) { //Communications established, now probably using websocket.
+    fileWatcher.on('data', ({data, timestamp}) => {
+      if (!socket || !data) return;
+      socket.emit('data', data);
+      logger.info('emiting price data');
+    });
+
+    let socket;
+    io.on('connection', sock => {
       socket = sock;
     });
 
-    app.get('/', function(req, res) {
+
+
+    // let error;
+    // let socket;
+    // let results;
+    // let count = 0;
+    // async function getData() {
+    //   let [results, age] = settings.cache.get(settings.keyCryptohubAnalytics, 'all');
+    //   results = JSON.parse(results);
+    //   console.log('data', ++count);
+    //   if (socket) {
+    //     console.log('price', results[1182]['cc-price-PRICE']);
+    //     socket.emit('data', results);
+    //   }
+    //   await commonDelay(2000);
+    //   getData();
+    // }
+    // getData();
+
+    const replace = require('replace');
+
+    let files = settings.cache.get(settings.keyCryptohubAnalytics, 'all');
+    let filesList = Object.keys(files).sort();
+    let newestFileName = filesList.pop();
+    let newestFile = files[newestFileName];
+
+    replace({
+        regex: '/GENERATED_START(.*)GENERATED_END/',
+        replacement: `GENERATED_START\n${newestFile}\nGENERATED_END`,
+        paths: [`${__dirname}/apps/stream/`],
+        recursive: false,
+        silent: false,
+    });
+    debugger;
+
+    app.get('/', (req, res) => {
       res.sendFile(`${__dirname}/apps/stream/index.html`);
     });
 

@@ -22,62 +22,62 @@ const {
 const { TimeseriesFast } = require.main.require('./db-schema');
 const { mapDbFields: { fullToShort:m } } = require.main.require('./utils/');
 
-/**
- *
- * This function is currently still in a test state
- *
- * NOTE: testing some queries
- * db.timeseriesfasts.find({}, {'D.1182.P', 1}).sort({_id: -1}).limit(5)
- *
- *
- */
-const saveCryptocomparePrice = async function(data, timestamp) {
-  return {data, timestamp};
+// /**
+//  *
+//  * This function is currently still in a test state
+//  *
+//  * NOTE: testing some queries
+//  * db.timeseriesfasts.find({}, {'D.1182.P', 1}).sort({_id: -1}).limit(5)
+//  *
+//  *
+//  */
+// const saveCryptocomparePrice = async function(data, timestamp) {
+//   return {data, timestamp};
 
-  const pad = n => `0${n}`.substr(-2);
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDay();
-  const hour = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
-  const _id = year + pad(month) + pad(day) + pad(hour) + pad(minutes) + pad(seconds);
+//   const pad = n => `0${n}`.substr(-2);
+//   const date = new Date(timestamp);
+//   const year = date.getFullYear();
+//   const month = date.getMonth() + 1;
+//   const day = date.getDay();
+//   const hour = date.getHours();
+//   const minutes = date.getMinutes();
+//   const seconds = date.getSeconds();
+//   const _id = year + pad(month) + pad(day) + pad(hour) + pad(minutes) + pad(seconds);
 
-  const query = {
-    _id,
-  };
+//   const query = {
+//     _id,
+//   };
 
-  const update = {
-    $set: {
-      [m['_id']]:        _id,
-      [m['MARKET']]:     data[m['MARKET']],
-      [m['TOSYMBOL']]:   data[m['TOSYMBOL']],
-    },
-  };
+//   const update = {
+//     $set: {
+//       [m['_id']]:        _id,
+//       [m['MARKET']]:     data[m['MARKET']],
+//       [m['TOSYMBOL']]:   data[m['TOSYMBOL']],
+//     },
+//   };
 
-  let path;
-  for (let [id, val] of Object.entries(data[m['DATA']])) {
-    path = `${m['DATA']}.${id}`;
-    update.$set[path] = val;
-  }
+//   let path;
+//   for (let [id, val] of Object.entries(data[m['DATA']])) {
+//     path = `${m['DATA']}.${id}`;
+//     update.$set[path] = val;
+//   }
 
-  const options = {
-    new: true,    // true to return the modified document rather than the original. defaults to false
-    upsert: true, // creates the object if it doesn't exist. defaults to false.
-  };
+//   const options = {
+//     new: true,    // true to return the modified document rather than the original. defaults to false
+//     upsert: true, // creates the object if it doesn't exist. defaults to false.
+//   };
 
-  const [error, timeseries] = await to(TimeseriesFast.findOneAndUpdate(query, update, options).exec());
-  if (error) {
-    logger.error(`saveCryptocomparePrice() error saving new data : ${error}`);
-    return {error: true, message: error};
-  }
-  else {
-    logger.info(`saveCryptocomparePrice(): Saved new data`);
-    return true;
-  }
+//   const [error, timeseries] = await to(TimeseriesFast.findOneAndUpdate(query, update, options).exec());
+//   if (error) {
+//     logger.error(`saveCryptocomparePrice() error saving new data : ${error}`);
+//     return {error: true, message: error};
+//   }
+//   else {
+//     logger.info(`saveCryptocomparePrice(): Saved new data`);
+//     return true;
+//   }
 
-}
+// }
 
 /**
  *
@@ -150,15 +150,11 @@ module.exports = async function cryptocompare() {
         for (id of Object.keys(idSymbolMap)) {
           obj = {};
           for ([key, val] of Object.entries(dataObj[idSymbolMap[id]])) {
-            // if (val.split('/')[3] == 'boom.png') debugger;
-            // if (val === '/media/20208/boom.png') debugger;
             if (key === 'SortOrder') {
-                val = +val; // Make SortOrder numeric
-                // if (isNaN(val)) debugger;
+              val = +val; // Make SortOrder numeric
             }
             obj[`${prefix}${key}`] = val;
             if (key === 'SortOrder' && isNaN(obj[`${prefix}${key}`])) debugger;
-
           }
           result[id] = obj;
         }
@@ -180,7 +176,7 @@ module.exports = async function cryptocompare() {
       cacheArgs: [settings.tagKeyCryptocompareTradingInfoMultiGrouped`${{}}`, 'all'],
       handler: async (data, timestamp) => {
         const fData = formatterCryptocomparePrice(data, symbolIdMap);
-        const [error, saved] = await to(saveCryptocomparePrice(fData, timestamp));
+        // const [error, saved] = await to(saveCryptocomparePrice(fData, timestamp));
         return {data: fData, timestamp};
       }
     });
@@ -259,7 +255,6 @@ module.exports = async function cryptocompare() {
     //
     const snapshotWatcher = new Watcher({
       delay: 100,
-      deleteFiles: false,
       cacheArgs: [settings.tagKeyCryptocompareSnapshotGrouped`${{}}`, 'all'],
       handler: async (data, timestamp) => {
         data = formatterCryptocompareSnapshot(data);
@@ -272,6 +267,13 @@ module.exports = async function cryptocompare() {
     });
 
     return cc;
+
+    // Calculate exchange points
+    //   for each exchange:
+    //     for each crypto:
+    //       get the number of exchanges it's on crypto1:100, crypto2:10, crypto3:1 = 111 points
+    //       get the number of different fiat currencies accepted. points? 10 points per fiat pair? or 2 points?
+    //       get the total number of pairs. points? 1 point per pair?
 
     // //
     // // Helper data

@@ -33,6 +33,10 @@ module.exports = class Watcher extends EventEmitter {
     const len = Object.keys(files).length;
     if (len) {
       for (const [fileName, currentFile] of Object.entries(files)) {
+        //
+        // The filename is now sufficiently unique so this isnt required
+        // Also we wont be sending the actual file anyway
+        //
         const fingerprint = JSON.stringify({[fileName]: currentFile});
         if (!this.queue.has(fingerprint)) {
           logger.info(`Adding to queue: ${fileName}`);
@@ -47,8 +51,11 @@ module.exports = class Watcher extends EventEmitter {
     for (let itemStr of this.queue) {
       const itemObj = JSON.parse(itemStr);
       const fileName = Object.keys(itemObj)[0];
+
+      // Change this to fetch the actual file
       const dataStr = itemObj[fileName];
       const dataObj = JSON.parse(dataStr);
+
       const timestamp = fileName.replace(/^cache.*<([0-9TZ:.-]*)>$/, '$1');
       const [error, data] = await to(handler(dataObj, timestamp));
       if (error) {
@@ -62,9 +69,7 @@ module.exports = class Watcher extends EventEmitter {
         if (this.deleteFiles) {
           fs.unlink(fileName, async error => {
             if (error) {
-              logger.error(`Unable to delete ${fileName}: ${error}`);
-              debugger;
-              throw error;
+              logger.info(`Unable to delete ${fileName}. NOTE: This is probably because it has been renamed due to it having the same hash as a new file. Safe to ignore`);
             }
           });
         }

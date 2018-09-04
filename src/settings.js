@@ -21,7 +21,7 @@ global.cacheForGithubForks = 30;
 
 // Leave in execution order
 global.settingsScrapeCryptocompare = true;
-global.settingsScrapeCoinmarketcap = true;
+global.settingsScrapeCoinmarketcap = false;
 global.settingsScrapeXe = false;
 // global.settingsGetRepoData = true;
 // global.settingsCloneRepos = true;
@@ -80,10 +80,11 @@ const settings = {
   appRoot:                                     path.resolve(__dirname),
 
   // Cache
+  // NOTE: we dont really need this if we are using rate limits. Using it for dev though
   cache:                                       new Cache('cache', true),
   cacheForXe:                                  1,  // Days
-  cacheForCryptocompare:                       30, // Days
-  cacheForCoinmarketcap:                       30, // Days
+  cacheForCryptocompare:                       0,  // Days
+  cacheForCoinmarketcap:                       1,  // Days
   cacheForCoinmarketcapProjectsJson:           1,  // Days
   cacheForCoinmarketcapProjectHtml:            30, // Days
 

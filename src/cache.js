@@ -1,6 +1,7 @@
 // Node
 const fs = require('fs-extra');
 const glob = require('glob');
+const crypto = require('crypto');
 const { join } = require('path');
 
 // CryptoHub
@@ -16,10 +17,6 @@ function getISODate(date = new Date()) {
   return date.toISOString();
 }
 
-function wrapDate(date) {
-  return `-<${date}>`;
-}
-
 module.exports = class Cache {
 
   constructor(dir = 'cache') {
@@ -28,18 +25,17 @@ module.exports = class Cache {
 
   /**
    * @param {String} key
-   * @return {Array} [Boolean, age]
+   * @return {Array} [Boolean, hash, date]
    */
   check(key) {
     try {
-      const files = glob.sync(`${join(this.dir, key)}-<*>`, {});
+      const files = glob.sync(`${join(this.dir, key)}-[*>`, {});
       if (!files.length) return [false];
       const newestFile = files.sort().pop();
-      const newestFileDate = newestFile.replace(/.*<(.*)>$/, '$1');
-      const dateNow = +new Date();
-      const age = ((dateNow - +new Date(newestFileDate)) / (1000*60*60*24));
+      const newestFileHash = newestFile.replace(/.*<(.*)>$/, '$1');
+      const newestFileDate = newestFile.replace(/.*-\[(.*)\]-<.*/, '$1');
       logger.info(`Cache.check(): Checking if ${key} is cached`);
-      return [true, age];
+      return [true, newestFileHash, newestFileDate];
     }
     catch(error) {
       logger.error(`Cache.check(): ${error}`);
@@ -55,9 +51,10 @@ module.exports = class Cache {
    */
   get(key, flag) {
     try {
-      const files = glob.sync(`${join(this.dir, key)}-<*>`, {});
+      const files = glob.sync(`${join(this.dir, key)}-[*>`, {});
       if (!files.length) return [false];
       const sortedFilesList = files.sort();
+      // TODO: This is shiit slow
       if (flag === 'all') {
         let sortedFiles = {};
         for (let i = 0; i < sortedFilesList.length; i++) {
@@ -67,15 +64,16 @@ module.exports = class Cache {
         return sortedFiles;
       }
       const newestFile = sortedFilesList.pop();
-      const newestFileDate = newestFile.replace(/.*<(.*)>$/, '$1');
+      const newestFileDate = newestFile.replace(/.*[(.*)]/, '$1');
       const dateNow = +new Date();
       const age = ((dateNow - +new Date(newestFileDate)) / (1000*60*60*24));
       const file = fs.readFileSync(newestFile);
-      logger.info(`Cache.get(): Fetching cached data for ${key}`);
+      logger.info(`Cache.get(): ${newestFile}`);
       return [file.toString(), age];
     }
     catch(error) {
       logger.error(`Cache.get(): ${error}`);
+      return [false];
     }
   }
 
@@ -88,14 +86,27 @@ module.exports = class Cache {
    * This is because separate node processes tend to read files
    * before they are finished saving regardless of using outputFileSync
    *
+   * Save files as key-hash-date
+   * If hash is the same just update the date on the old file
+   *
    */
   set(key, data) {
     try {
-      const date = wrapDate(getISODate());
-      const path = join(this.dir, `${key}${date}`);
-      fs.outputFileSync(`.${path}`, data);
-      fs.renameSync(`.${path}`, path);
-      logger.info(`Cache.set(): saved ${key}${date} to ${this.dir}`);
+      const md5 = crypto.createHash('md5');
+      const hash = md5.update(data).digest('hex');
+      const date = getISODate();
+      const path = join(this.dir, `${key}-[${date}]-<${hash}>`);
+      const [oldExists, oldHash, oldDate] = this.check(key);
+      const oldPath = join(this.dir, `${key}-[${oldDate}]-<${oldHash}>`);
+      if (oldExists && (oldHash === hash)) {
+        fs.renameSync(oldPath, path);
+        logger.info(`Cache.set(): (renamed) ${path}`);
+      }
+      else {
+        fs.outputFileSync(`.${path}`, data);
+        fs.renameSync(`.${path}`, path);
+        logger.info(`Cache.set(): (saved) ${path}`);
+      }
     }
     catch(error) {
       logger.error(`Cache.set(): ${error}`);

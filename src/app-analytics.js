@@ -32,6 +32,8 @@ process.on('warning', error => {
     logger.info('Starting Analytics');
     const dataStore = new DataStore((dataArray, db) => { // merge handler
       let cc, cmc, map, json;
+      // basically at the moment this is only if we are scraping coinmarketcap too
+      // we are probably going to retire cmc as the api rate limit sucks
       if (dataArray.length === 2) {
         cmc = db.coinmarketcap;
         cc = db.cryptocompare;
@@ -42,6 +44,7 @@ process.on('warning', error => {
         json = analyticsMergeDataByKey([cc, cmc]);
         return json;
       }
+      return dataArray[0];
     });
 
     let cc = await cryptocompare();
@@ -61,28 +64,28 @@ process.on('warning', error => {
     dataStore.on('data', data => {
       const btcId = 1182;
       const btcItem = data[btcId];
-      const btcPrice = btcItem['cmc-quotes-USD-price'];
+      const btcPrice = btcItem['cc-price-PRICE'];
       let ccRank;
       let cmcRank;
-      let cmcPrice;
-      let maxSupply;
+      let ccPrice;
       let totalSupply;
       let circulatingSupply;
       for (let [key, item] of Object.entries(data)) {
-        if (item['cc-coinlist-IsTrading'] === false) {
+        if (
+             item['cc-coinlist-IsTrading']     === false
+          || item['cc-price-TOTALVOLUME24HTO'] === 0
+        ) {
           delete data[key];
         }
         else {
           ccRank  = item['cc-coinlist-SortOrder'] || 10000;
           cmcRank = item['cmc-rank'];
-          cmcPrice = item['cmc-quotes-USD-price'];
-          maxSupply = item['cmc-max_supply'];
-          totalSupply = item['cmc-total_supply'];
-          circulatingSupply = item['cmc-circulating_supply'];
+          ccPrice = item['cc-price-PRICE'];
+          totalSupply = item['cc-coinlist-TotalCoinSupply'];
+          circulatingSupply = item['cc-price-SUPPLY'];
           item['cryptohub-rank'] = cmcRank || ccRank + cmcLength;
           item['cryptohub-circulating-percent-total'] = (circulatingSupply / totalSupply) * 100;
-          item['cryptohub-circulating-percent-max'] = (circulatingSupply / maxSupply) * 100;
-          item['cryptohub-price-btc'] = 1 / (btcPrice / cmcPrice);
+          item['cryptohub-price-btc'] = 1 / (btcPrice / ccPrice);
         }
       }
       settings.cache.set(settings.keyCryptohubAnalytics, JSON.stringify(data));

@@ -28,7 +28,7 @@ module.exports = async function scrapeCoinmarketcap(cacheForDays, rateLimitDelay
   try {
 
     const scrapeQueue = new ScrapeQueue({
-      rateLimit: settings.queueCryptocompare,
+      rateLimit: settings.queueCoinmarketcap,
       bootstrap: {
         name: 'coinList',
         async func() {

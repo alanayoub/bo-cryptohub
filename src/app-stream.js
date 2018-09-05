@@ -2,6 +2,7 @@
 const cookieParser = require('cookie-parser');
 const { join }     = require('path');
 const crypto       = require('crypto');
+const fs           = require('fs-extra');
 
 // Libs
 const { to }  = require('await-to-js');
@@ -53,8 +54,10 @@ process.on('warning', error => {
 
     const fileWatcher = new Watcher({
       delay: 100,
-      cacheArgs: [settings.keyCryptohubAnalytics],
+      deleteFiles: false,
+      cacheArgs: [settings.keyCryptohubAnalyticsTmp, 'newest'],
       handler: async (data, timestamp) => {
+        settings.cache.set(settings.keyCryptohubAnalyticsOut, JSON.stringify(data));
         return {data, timestamp};
       }
     });
@@ -70,40 +73,12 @@ process.on('warning', error => {
       socket = sock;
     });
 
-
-
-    // let error;
-    // let socket;
-    // let results;
-    // let count = 0;
-    // async function getData() {
-    //   let [results, age] = settings.cache.get(settings.keyCryptohubAnalytics, 'all');
-    //   results = JSON.parse(results);
-    //   console.log('data', ++count);
-    //   if (socket) {
-    //     console.log('price', results[1182]['cc-price-PRICE']);
-    //     socket.emit('data', results);
-    //   }
-    //   await commonDelay(2000);
-    //   getData();
-    // }
-    // getData();
-
-    const replace = require('replace');
-
-    let files = settings.cache.get(settings.keyCryptohubAnalytics, 'all');
-    let filesList = Object.keys(files).sort();
-    let newestFileName = filesList.pop();
-    let newestFile = files[newestFileName];
-
-    replace({
-        regex: '/GENERATED_START(.*)GENERATED_END/',
-        replacement: `GENERATED_START\n${newestFile}\nGENERATED_END`,
-        paths: [`${__dirname}/apps/stream/`],
-        recursive: false,
-        silent: false,
-    });
-    debugger;
+    const filesList = settings.cache.get(settings.keyCryptohubAnalyticsTmp, 'all');
+    const newestFileName = filesList.pop();
+    if (newestFileName) {
+      const newestFile = fs.readFileSync(newestFileName).toString();
+      fs.writeFileSync(`${__dirname}/public/javascript/init-data.js`, `const initData = ${newestFile}`);
+    }
 
     app.get('/', (req, res) => {
       res.sendFile(`${__dirname}/apps/stream/index.html`);

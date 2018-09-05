@@ -45,23 +45,22 @@ module.exports = class Cache {
   /**
    *
    * @param {String} key
-   * @param {String} flag - if 'all' get all files that match
+   * @param {String} flag - if 'all' get a sorted list of all files that match
    * @return {Array|Object} [file, age] or a map of filename to files
    *
    */
   get(key, flag) {
     try {
       const files = glob.sync(`${join(this.dir, key)}-[*>`, {});
-      if (!files.length) return [false];
+      if (!files.length) {
+        return [false];
+      }
       const sortedFilesList = files.sort();
-      // TODO: This is shiit slow
       if (flag === 'all') {
-        let sortedFiles = {};
-        for (let i = 0; i < sortedFilesList.length; i++) {
-          const fileString = fs.readFileSync(sortedFilesList[i]).toString();
-          sortedFiles[sortedFilesList[i]] = fileString;
-        }
-        return sortedFiles;
+        return sortedFilesList;
+      }
+      if (flag === 'newest') {
+        return [sortedFilesList.pop()];
       }
       const newestFile = sortedFilesList.pop();
       const newestFileDate = newestFile.replace(/.*[(.*)]/, '$1');

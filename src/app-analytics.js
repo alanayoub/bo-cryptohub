@@ -54,19 +54,18 @@ process.on('warning', error => {
       dataStore.data = {name: 'cryptocompare', data};
     });
 
-    let cmc = await coinmarketcap();
-    let cmcLength;
-    cmc.on('data', data => {
-      cmcLength = Object.keys(data).length;
-      dataStore.data = {name: 'coinmarketcap', data};
-    });
+    // let cmc = await coinmarketcap();
+    // let cmcLength;
+    // cmc.on('data', data => {
+    //   cmcLength = Object.keys(data).length;
+    //   dataStore.data = {name: 'coinmarketcap', data};
+    // });
 
     dataStore.on('data', data => {
       const btcId = 1182;
       const btcItem = data[btcId];
       const btcPrice = btcItem['cc-price-PRICE'];
       let ccRank;
-      let cmcRank;
       let ccPrice;
       let totalSupply;
       let circulatingSupply;
@@ -79,16 +78,23 @@ process.on('warning', error => {
         }
         else {
           ccRank  = item['cc-coinlist-SortOrder'] || 10000;
-          cmcRank = item['cmc-rank'];
           ccPrice = item['cc-price-PRICE'];
           totalSupply = item['cc-coinlist-TotalCoinSupply'];
           circulatingSupply = item['cc-price-SUPPLY'];
-          item['cryptohub-rank'] = cmcRank || ccRank + cmcLength;
+          item['cryptohub-rank'] = ccRank;
           item['cryptohub-circulating-percent-total'] = (circulatingSupply / totalSupply) * 100;
           item['cryptohub-price-btc'] = 1 / (btcPrice / ccPrice);
         }
       }
-      settings.cache.set(settings.keyCryptohubAnalytics, JSON.stringify(data));
+
+      // convert data to array
+      const arrayData = [];
+      for (let [id, obj] of Object.entries(data)) {
+        obj.id = obj.Id;
+        arrayData.push(obj);
+      }
+
+      settings.cache.set(settings.keyCryptohubAnalyticsTmp, JSON.stringify(arrayData));
     });
 
     return
@@ -97,7 +103,7 @@ process.on('warning', error => {
     // cmc = commonSwapObjectKeys(cmc, map);
 
     // let json = analyticsMergeDataByKey([cc, cmc]);
-    // settings.cache.set(settings.keyCryptohubAnalytics, json);
+    // settings.cache.set(settings.keyCryptohubAnalyticsTmp, json);
 
 
 

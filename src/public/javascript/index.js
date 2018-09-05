@@ -2,7 +2,7 @@ import { shortToFull } from '/javascript/utils/map-db-fields.js';
 
 const socket = io();
 let grid;
-let immutableStore;
+let immutableStore; // = initData || [];
 let oldValues;
 
 function diff(params, field) {
@@ -45,7 +45,7 @@ let gridOptions = {
     ]);
 
     // default rows
-    immutableStore = [];
+    immutableStore = initData || [];
     params.api.setRowData(immutableStore);
 
   },
@@ -693,14 +693,17 @@ let gridOptions = {
 
 const eGridDiv = document.querySelector('#myGrid');
 grid = new agGrid.Grid(eGridDiv, gridOptions);
+// gridOptions.api.setRowData(immutableStore);
 
 socket.on('data', data => {
 
-  const rowData = [];
-  for (let [id, obj] of Object.entries(data)) {
-    obj.id = obj.Id;
-    rowData.push(obj);
-  }
+  document.querySelector('#updated').innerHTML = `Last Updated: ${new Date()}`;
+
+  // const rowData = [];
+  // for (let [id, obj] of Object.entries(data)) {
+  //   obj.id = obj.Id;
+  //   rowData.push(obj);
+  // }
 
   //
   // TODO: Check if the columns change and update if nessisary
@@ -716,7 +719,7 @@ socket.on('data', data => {
   else {
     console.log('price: ', rowData[0]['cc-price-PRICE']);
 
-    const newStore = rowData;
+    const newStore = data;
     // immutableStore.forEach(function(item) {
     //     newStore.push({
     //         // use same symbol as last time, this is the unique id

@@ -24,58 +24,59 @@ module.exports = class Watcher extends EventEmitter {
     this.options = options;
     this.queue = new Set([]);
     this.delay = options.delay || 1000;
-    this.deleteFiles = options.deleteFiles === false ? false : true; // For debugging purposes
     this.symbolIdMap = options.symbolIdMap;
+    this.lastFileHash = null;
     this.run();
   }
 
-  addToQueue(files) {
-    const len = Object.keys(files).length;
-    if (len) {
-      for (const [fileName, currentFile] of Object.entries(files)) {
-        //
-        // The filename is now sufficiently unique so this isnt required
-        // Also we wont be sending the actual file anyway
-        //
-        const fingerprint = JSON.stringify({[fileName]: currentFile});
-        if (!this.queue.has(fingerprint)) {
-          logger.info(`Adding to queue: ${fileName}`);
-          this.queue.add(fingerprint);
-        }
+  addToQueue(fileList) {
+    if (!fileList.length) return;
+    let fileName;
+    for (fileName of fileList) {
+      if (!this.queue.has(fileName)) {
+        if (fileName.length > 400) debugger;
+        logger.info(`Adding to queue: ${fileName}`);
+        this.queue.add(fileName);
       }
     }
   }
 
+  //
+  // Parse data
+  // Emit data
+  // Delete from queue
+  // Delete file
+  //
   async parseQueueItems() {
     const handler = this.options.handler;
-    for (let itemStr of this.queue) {
-      const itemObj = JSON.parse(itemStr);
-      const fileName = Object.keys(itemObj)[0];
-
-      // Change this to fetch the actual file
-      const dataStr = itemObj[fileName];
-      const dataObj = JSON.parse(dataStr);
-
+    let fileName;
+    for (fileName of this.queue) {
+      let fileDataStr;
+      if (!fs.existsSync(fileName)) {
+        this.queue.delete(fileName);
+        logger.info(`Class Watcher: File no longer exists, deleting from queue: ${fileName}`);
+        return;
+      }
+      fileDataStr = fs.readFileSync(fileName).toString();
+      const fileDataObj = JSON.parse(fileDataStr);
       const timestamp = fileName.replace(/^cache.*<([0-9TZ:.-]*)>$/, '$1');
-      const [error, data] = await to(handler(dataObj, timestamp));
+      const [error, data] = await to(handler(fileDataObj, timestamp));
       if (error) {
-        console.log(data, dataObj, timestamp);
         throw new Error(`Class Watcher: ${error}`);
       }
       this.emit('data', data);
       if (data) {
-        logger.info(`Deleting file and removing from queue: ${fileName}`);
-        this.queue.delete(itemStr);
-        if (this.deleteFiles) {
-          fs.unlink(fileName, async error => {
-            if (error) {
-              logger.info(`Unable to delete ${fileName}. NOTE: This is probably because it has been renamed due to it having the same hash as a new file. Safe to ignore`);
-            }
-          });
-        }
+        logger.info(`Class Watcher: Removing from queue: ${fileName}`);
+        this.queue.delete(fileName);
+        logger.info(`Class Watcher: Deleting file ${fileName}`);
+        fs.unlink(fileName, async error => {
+          if (error) {
+            logger.info(`Class Watcher: Unable to delete ${fileName}. NOTE: This is probably because it has been renamed due to it having the same hash as a new file. Safe to ignore`);
+          }
+        });
       }
       else {
-        logger.error(`Error saving ${fileName}: ${error}`);
+        logger.error(`Class Watcher: Error saving ${fileName}: ${error}`);
       }
     }
   }
@@ -89,6 +90,29 @@ module.exports = class Watcher extends EventEmitter {
       this.addToQueue(files);
       await this.parseQueueItems();
     }
+
+    // //
+    // // NOTE: Currently no case for deleteFiles:true and files.length > 1
+    // //
+    // const hasFiles = files[0] !== false;
+    // let sameAsLast = false;
+    // if (hasFiles) {
+    //   if (this.deleteFiles === false && files.length === 1) {
+    //     const thisFileHash = files[0].replace(/^.*-<(.*)>$/, '$1');
+    //     if (thisFileHash === this.lastFileHash) {
+    //       sameAsLast = true;
+    //     }
+    //     else {
+    //       sameAsLast = false;
+    //       this.lastFileHash = thisFileHash;
+    //     }
+    //   }
+    //   if (!sameAsLast) {
+    //     this.addToQueue(files);
+    //     this.lastQueueItems = JSON.stringify(files);
+    //     await this.parseQueueItems();
+    //   }
+    // }
 
     await commonDelay(this.options.delay);
     logger.info('WatchFolder(): END --------------------------------------------- /\n\n');

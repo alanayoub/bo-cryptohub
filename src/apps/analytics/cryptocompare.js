@@ -161,15 +161,51 @@ module.exports = async function cryptocompare() {
         return {data: result, timestamp};
       },
     });
+    cc.data = {name: 'coinList', data: {}};
     coinListWatcher.on('data', ({data, timestamp}) => {
       cc.data = {name: 'coinList', data};
-      logger.info('emiting coinList data');
+      logger.debug('cryptocompare.js: emiting coinList data');
     });
 
     //
     // PRICE
     //
+    // Original Data
+    // -------------
     //
+    // TYPE:  "5"
+    // MARKET:  "CCCAGG"
+    // FROMSYMBOL:  "BTC"
+    // TOSYMBOL:  "USD"
+    // FLAGS:  "4"
+    // PRICE: 6429.49
+    // LASTUPDATE: 1536222722
+    // LASTVOLUME: 0.005
+    // LASTVOLUMETO: 32.1245925
+    // LASTTRADEID:  "290332570"
+    // VOLUMEDAY: 73331.62846431609
+    // VOLUMEDAYTO: 473214413.3407818
+    // VOLUME24HOUR: 164542.97725276044
+    // VOLUME24HOURTO: 1115586462.295549
+    // OPENDAY: 6705.03
+    // HIGHDAY: 6727.19
+    // LOWDAY: 6295.11
+    // OPEN24HOUR: 7385.55
+    // HIGH24HOUR: 7388.15
+    // LOW24HOUR: 6289.93
+    // LASTMARKET:  "Bitfinex"
+    // CHANGE24HOUR: -956.0600000000004
+    // CHANGEPCT24HOUR: -12.945007480824048
+    // CHANGEDAY: -275.53999999999996
+    // CHANGEPCTDAY: -4.109452157559324
+    // SUPPLY: 17252100
+    // MKTCAP: 110922204429
+    // TOTALVOLUME24H: 471769.84240143484
+    // TOTALVOLUME24HTO: 3090898519.5002995
+    //
+    // Prefix fields with "cc-price-"
+    // ----------------------------------------------
+    // PRICE -> cc-price-PRICE
     //
     const priceWatcher = new Watcher({
       delay: 100,
@@ -180,9 +216,10 @@ module.exports = async function cryptocompare() {
         return {data: fData, timestamp};
       }
     });
+    cc.data = {name: 'price', data: {}};
     priceWatcher.on('data', ({data, timestamp}) => {
       cc.data = {name: 'price', data};
-      logger.info('emiting price data');
+      logger.debug('cryptocompare.js: emiting price data');
     });
 
     //
@@ -261,9 +298,10 @@ module.exports = async function cryptocompare() {
         return {data, timestamp};
       },
     });
+    cc.data = {name: 'snapshot', data: {}};
     snapshotWatcher.on('data', ({data, timestamp}) => {
       cc.data = {name: 'snapshot', data};
-      logger.info('emiting snapshot data');
+      logger.debug('cryptocompare.js: emiting snapshot data');
     });
 
     return cc;
@@ -323,7 +361,7 @@ module.exports = async function cryptocompare() {
   }
   catch(error) {
     debugger;
-    logger.error(`cryptocompare: ${error}`);
+    logger.error(`cryptocompare.js: ${error}`);
     return false;
   }
 }

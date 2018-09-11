@@ -39,17 +39,17 @@ app.use(express.static(join(__dirname, '/public')));
 // app.use('/users', usersRouter);
 
 process.on('warning', error => {
-  logger.warn(error.stack);
+  logger.warning(error.stack);
 });
 
 (async function() {
 
   try {
 
-    logger.info('Starting Stream');
+    logger.info('app-stream.js: Starting app');
 
     server.listen(port, () => {
-      logger.info(`listening on *: ${port}`);
+      logger.info(`app-stream.js: listening on *: ${port}`);
     });
 
     const fileWatcher = new Watcher({
@@ -65,20 +65,14 @@ process.on('warning', error => {
     fileWatcher.on('data', ({data, timestamp}) => {
       if (!socket || !data) return;
       socket.emit('data', data);
-      logger.info('emiting price data');
+      fs.writeFileSync(`${__dirname}/public/javascript/init-data.generated.js`, `const initData = ${JSON.stringify(data)}`);
+      logger.info('app-stream.js: emiting data');
     });
 
     let socket;
     io.on('connection', sock => {
       socket = sock;
     });
-
-    const filesList = settings.cache.get(settings.keyCryptohubAnalyticsTmp, 'all');
-    const newestFileName = filesList.pop();
-    if (newestFileName) {
-      const newestFile = fs.readFileSync(newestFileName).toString();
-      fs.writeFileSync(`${__dirname}/public/javascript/init-data.js`, `const initData = ${newestFile}`);
-    }
 
     app.get('/', (req, res) => {
       res.sendFile(`${__dirname}/apps/stream/index.html`);
@@ -87,7 +81,7 @@ process.on('warning', error => {
   }
 
   catch(error) {
-    logger.error(`Um some error happened yo: ${error}`);
+    logger.error(`app-stream.js: Um some error happened yo: ${error}`);
     debugger
     process.exit(1);
   }

@@ -19,8 +19,9 @@ function getISODate(date = new Date()) {
 
 module.exports = class Cache {
 
-  constructor(dir = 'cache') {
+  constructor(dir = 'cache', allowEmpty = false) {
     this.dir = dir;
+    this.allowEmpty = allowEmpty;
   }
 
   /**
@@ -34,11 +35,11 @@ module.exports = class Cache {
       const newestFile = files.sort().pop();
       const newestFileHash = newestFile.replace(/.*<(.*)>$/, '$1');
       const newestFileDate = newestFile.replace(/.*-\[(.*)\]-<.*/, '$1');
-      logger.info(`Cache.check(): Checking if ${key} is cached`);
+      logger.debug(`cache.js: check(): Checking if ${key} is cached`);
       return [true, newestFileHash, newestFileDate];
     }
     catch(error) {
-      logger.error(`Cache.check(): ${error}`);
+      logger.error(`cache.js: check(): ${error}`);
     }
   }
 
@@ -63,15 +64,16 @@ module.exports = class Cache {
         return [sortedFilesList.pop()];
       }
       const newestFile = sortedFilesList.pop();
-      const newestFileDate = newestFile.replace(/.*[(.*)]/, '$1');
+      const newestFileDate = newestFile.replace(/.*\[(.*)\].*/, '$1');
       const dateNow = +new Date();
       const age = ((dateNow - +new Date(newestFileDate)) / (1000*60*60*24));
       const file = fs.readFileSync(newestFile);
-      logger.info(`Cache.get(): ${newestFile}`);
+      logger.debug(`cache.js: get(): ${newestFile}`);
+      if (isNaN(age)) debugger;
       return [file.toString(), age];
     }
     catch(error) {
-      logger.error(`Cache.get(): ${error}`);
+      logger.error(`cache.js: get(): ${error}`);
       return [false];
     }
   }
@@ -91,6 +93,12 @@ module.exports = class Cache {
    */
   set(key, data) {
     try {
+      if (!this.allowEmpty) {
+        const emptyStates = ['', '{}'];
+        if (emptyStates.includes(data)) {
+          return false;
+        }
+      }
       const md5 = crypto.createHash('md5');
       const hash = md5.update(data).digest('hex');
       const date = getISODate();
@@ -99,16 +107,16 @@ module.exports = class Cache {
       const oldPath = join(this.dir, `${key}-[${oldDate}]-<${oldHash}>`);
       if (oldExists && (oldHash === hash)) {
         fs.renameSync(oldPath, path);
-        logger.info(`Cache.set(): (renamed) ${path}`);
+        logger.debug(`cache.js: set(): (renamed) ${path}`);
       }
       else {
         fs.outputFileSync(`.${path}`, data);
         fs.renameSync(`.${path}`, path);
-        logger.info(`Cache.set(): (saved) ${path}`);
+        logger.debug(`cache.js: set(): (saved) ${path}`);
       }
     }
     catch(error) {
-      logger.error(`Cache.set(): ${error}`);
+      logger.error(`cache.js: set(): ${error}`);
     }
   }
 

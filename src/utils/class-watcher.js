@@ -35,7 +35,7 @@ module.exports = class Watcher extends EventEmitter {
     for (fileName of fileList) {
       if (!this.queue.has(fileName)) {
         if (fileName.length > 400) debugger;
-        logger.info(`Adding to queue: ${fileName}`);
+        logger.debug(`Class Watcher: Adding to queue: ${fileName}`);
         this.queue.add(fileName);
       }
     }
@@ -54,7 +54,7 @@ module.exports = class Watcher extends EventEmitter {
       let fileDataStr;
       if (!fs.existsSync(fileName)) {
         this.queue.delete(fileName);
-        logger.info(`Class Watcher: File no longer exists, deleting from queue: ${fileName}`);
+        logger.debug(`Class Watcher: File no longer exists, deleting from queue: ${fileName}`);
         return;
       }
       fileDataStr = fs.readFileSync(fileName).toString();
@@ -66,12 +66,12 @@ module.exports = class Watcher extends EventEmitter {
       }
       this.emit('data', data);
       if (data) {
-        logger.info(`Class Watcher: Removing from queue: ${fileName}`);
+        logger.debug(`Class Watcher: Removing from queue: ${fileName}`);
         this.queue.delete(fileName);
-        logger.info(`Class Watcher: Deleting file ${fileName}`);
+        logger.debug(`Class Watcher: Deleting file ${fileName}`);
         fs.unlink(fileName, async error => {
           if (error) {
-            logger.info(`Class Watcher: Unable to delete ${fileName}. NOTE: This is probably because it has been renamed due to it having the same hash as a new file. Safe to ignore`);
+            logger.notice(`Class Watcher: Unable to delete ${fileName}. NOTE: This is probably because it has been renamed due to it having the same hash as a new file. Safe to ignore`);
           }
         });
       }
@@ -83,7 +83,6 @@ module.exports = class Watcher extends EventEmitter {
 
   async run() {
 
-    logger.info('WatchFolder(): START ------------------------------------------- /');
     const files = settings.cache.get(...this.options.cacheArgs);
 
     if (files[0] !== false) {
@@ -91,31 +90,7 @@ module.exports = class Watcher extends EventEmitter {
       await this.parseQueueItems();
     }
 
-    // //
-    // // NOTE: Currently no case for deleteFiles:true and files.length > 1
-    // //
-    // const hasFiles = files[0] !== false;
-    // let sameAsLast = false;
-    // if (hasFiles) {
-    //   if (this.deleteFiles === false && files.length === 1) {
-    //     const thisFileHash = files[0].replace(/^.*-<(.*)>$/, '$1');
-    //     if (thisFileHash === this.lastFileHash) {
-    //       sameAsLast = true;
-    //     }
-    //     else {
-    //       sameAsLast = false;
-    //       this.lastFileHash = thisFileHash;
-    //     }
-    //   }
-    //   if (!sameAsLast) {
-    //     this.addToQueue(files);
-    //     this.lastQueueItems = JSON.stringify(files);
-    //     await this.parseQueueItems();
-    //   }
-    // }
-
     await commonDelay(this.options.delay);
-    logger.info('WatchFolder(): END --------------------------------------------- /\n\n');
     this.run();
 
   }

@@ -29,7 +29,7 @@ module.exports = async function scrapeJSON(uri, key, cacheFor) {
     return file;
   }
   catch(error) {
-    logger.error(`scrapeJSON(): Failed to scrape ${uri}`);
+    logger.error(`scrape-json.js: Failed to scrape ${uri}`);
     return {error: true, message: `scrapeJSON(): ${error}`};
   }
 }

@@ -9,7 +9,7 @@ const scrapeCryptocompare = require('./apps/scrape/scrape-cryptocompare');
 const scrapeCoinmarketcap = require('./apps/scrape/scrape-coinmarketcap');
 
 process.on('warning', error => {
-  logger.warn(error.stack);
+  logger.warning(`app-scrape.js:\n${error.stack}`);
 });
 
 (async function() {
@@ -33,7 +33,19 @@ process.on('warning', error => {
     // NOTE: Need to setup a que and rate limiter
     //
     if (global.settingsScrapeCryptocompare) {
-      await to(scrapeCryptocompare(settings.cacheForCryptocompare, 100));
+      const options = {
+        cacheForDays: settings.cacheForCryptocompare,
+        rateLimitDelayMs: 100,
+        scrape: [
+          'coinList',
+          'price',
+          'exchangePairs',
+          'socialStats',
+          'snapshot',
+          'other'
+        ]
+      }
+      const [error, scrapeQueue] = await to(scrapeCryptocompare(options));
     }
 
     if (global.settingsScrapeCoinmarketcap) {

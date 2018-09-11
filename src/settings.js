@@ -81,7 +81,7 @@ const settings = {
 
   // Cache
   // NOTE: we dont really need this if we are using rate limits. Using it for dev though
-  cache:                                       new Cache('cache', true),
+  cache:                                       new Cache('cache', false),
   cacheForXe:                                  1,  // Days
   cacheForCryptocompare:                       0,  // Days
   cacheForCoinmarketcap:                       1,  // Days

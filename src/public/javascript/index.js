@@ -1,20 +1,10 @@
-import { shortToFull } from '/javascript/utils/map-db-fields.js';
-
 const socket = io();
 let grid;
 let immutableStore; // = initData || [];
 let oldValues;
 
-function diff(params, field) {
-  let oldValue;
-  let newValue;
-  if (oldValues) {
-    const newRow = params.data;
-    const oldRow = oldValues[newRow['cc-coinlist-Id']];
-    oldValue = oldRow[params.colDef.field];
-    newValue = params.value;
-  }
-  return [oldValue, newValue];
+function getOldValue(id, field) {
+  return oldValues && oldValues[id] ? oldValues[id][field] : void 0;
 }
 
 let gridOptions = {
@@ -64,24 +54,43 @@ let gridOptions = {
       return `<input type='checkbox' ${bool ? 'checked' : ''} />`;
     },
 
-    usdCellRenderer: function (params) {
+    //
+    // Render numbers in the following format: $123,456,789.00
+    // Highlight changes between previous versions like so: <span>$123,45</span><span>1,789.00</span>
+    // Colour the changed part of the number in green or red depending on change direction
+    //
+    usdCellRenderer(params) {
 
-      const number = params.value;
-      if (number === null || number === void 0) return '-';
+      if (params.value === null || params.value === void 0) return '-';
+      let { value:newValue, colDef, data } = params;
 
-      const [oldValue, newValue] = diff(params, 'cc-coinlist-Id');
+      const id = data['cc-coinlist-Id'];
+      let oldValue = getOldValue(id, colDef.field);
+
+      if (!oldValue) return new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(newValue);
 
       const cssClass = newValue < oldValue
         ? 'cryptohub-text-default cryptohub-text-bad-fade'
         : newValue > oldValue
           ? 'cryptohub-text-default cryptohub-text-good-fade'
           : 'cryptohub-text-default';
+      oldValue = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(oldValue);
+      newValue = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format(newValue);
+      const len = oldValue.length;
+      let start = '';
+      let end = newValue;
+      let i = 0;
+      if (len === newValue.length) {
+        for (; i < len; i++) {
+          if (oldValue.charAt(i) !== newValue.charAt(i)) {
+            break
+          }
+        }
+        start = newValue.substring(0, i);
+        end = newValue.substring(i);
+      }
 
-      const formattedNumber = new Intl
-        .NumberFormat('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2})
-        .format(params.value);
-
-      return `<span class="${cssClass}">${formattedNumber}</span>`;
+      return `<span>${start}</span><span class="${cssClass}">${end}</span>`;
 
     },
 
@@ -679,81 +688,30 @@ let gridOptions = {
   rowData: immutableStore,
 };
 
+let lastUpdated;
+function updateLastUpdated(when) {
+  if (when === 'now') lastUpdated = new Date();
+  const time = timeago().format(lastUpdated);
+  document.querySelector('#updated').innerHTML = `Last Updated: ${time}`;
+}
 
+setInterval(() => {
+  updateLastUpdated();
+}, 1000 * 60);
+updateLastUpdated('now');
 
-
-
-
-
-
-
-
-
-
-
-const eGridDiv = document.querySelector('#myGrid');
-grid = new agGrid.Grid(eGridDiv, gridOptions);
-// gridOptions.api.setRowData(immutableStore);
+const gridElement = document.querySelector('#myGrid');
+grid = new agGrid.Grid(gridElement, gridOptions);
 
 socket.on('data', data => {
 
-  document.querySelector('#updated').innerHTML = `Last Updated: ${new Date()}`;
-
-  // const rowData = [];
-  // for (let [id, obj] of Object.entries(data)) {
-  //   obj.id = obj.Id;
-  //   rowData.push(obj);
-  // }
-
-  //
-  // TODO: Check if the columns change and update if nessisary
-  //
-  if (!grid) {
-    // gridOptions.rowData = rowData;
-    // gridOptions = {
-    //   columnDefs: columnDefs,
-    //   rowData: rowData
-    // };
-    console.log('price: ', rowData[0]['cc-price-PRICE']);
-  }
-  else {
-    console.log('price: ', rowData[0]['cc-price-PRICE']);
-
-    const newStore = data;
-    // immutableStore.forEach(function(item) {
-    //     newStore.push({
-    //         // use same symbol as last time, this is the unique id
-    //         symbol: item.symbol,
-    //         // group also stays the same
-    //         group: item.group,
-    //         // add random price
-    //         price: Math.floor(Math.random() * 100)
-    //     });
-    // });
-    immutableStore = newStore;
-    gridOptions.api.setRowData(immutableStore);
-    oldValues = newStore.reduce((acc, val) => {
-      acc[val['cc-coinlist-Id']] = val;
-      return acc;
-    }, {});
-
-    // gridOptions.api.setRowData(rowData);
-  }
-
-
-  // var newStore = [];
-  // immutableStore.forEach(function(item) {
-  //     newStore.push({
-  //         // use same symbol as last time, this is the unique id
-  //         symbol: item.symbol,
-  //         // group also stays the same
-  //         group: item.group,
-  //         // add random price
-  //         price: Math.floor(Math.random() * 100)
-  //     });
-  // });
-  // immutableStore = newStore;
-  // gridOptions.api.setRowData(immutableStore);
-
+  updateLastUpdated('now');
+  if (!grid) return;
+  immutableStore = data;
+  gridOptions.api.setRowData(immutableStore);
+  oldValues = data.reduce((acc, val) => {
+    acc[val['cc-coinlist-Id']] = val;
+    return acc;
+  }, {});
 
 });

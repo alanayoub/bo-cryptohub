@@ -22,6 +22,7 @@
     "flat": "^4.1.0",
     "fs-extra": "^6.0.0",
     "globby": "^8.0.1",
+    "javascript-time-ago": "^1.0.31",
     "mongoose": "^5.2.5",
     "nodegit": "^0.21.1",
     "redis": "^2.8.0",

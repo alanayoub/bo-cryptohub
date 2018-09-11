@@ -55,14 +55,13 @@
 
 .cryptohub-text-default {
   color: #000;
+  transition: color 2s ease-out;
 }
 
 .cryptohub-text-good-fade {
   color: #019c0d;
-  transition: background-color 2s ease-out;
 }
 
 .cryptohub-text-bad-fade {
   color: #e00909;
-  transition: background-color 2s ease-out;
 }

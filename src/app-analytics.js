@@ -20,6 +20,26 @@ process.on('warning', error => {
   logger.warn(error.stack);
 });
 
+function arrayToObject(data, field) {
+  var objData = {};
+  for (let obj of data) {
+    objData[obj[field]] = obj;
+  }
+  return objData;
+}
+
+function objectToArray(data) {
+  const arrayData = [];
+  for (let [id, obj] of Object.entries(data)) {
+    obj.id = obj.Id;
+    arrayData.push(obj);
+  }
+  return arrayData;
+}
+
+      // convert data to array
+
+      // convert data back to object
 //
 // 1. Parse all the data that has been scraped and convert into a single json document
 // 2. Update the document as data changes
@@ -51,7 +71,9 @@ process.on('warning', error => {
     let ccLength;
     cc.on('data', data => {
       ccLength = Object.keys(data).length;
-      dataStore.data = {name: 'cryptocompare', data};
+      if (ccLength) {
+        dataStore.data = {name: 'cryptocompare', data};
+      }
     });
 
     // let cmc = await coinmarketcap();
@@ -62,6 +84,25 @@ process.on('warning', error => {
     // });
 
     dataStore.on('data', data => {
+
+      //
+      // Backfill data
+      //
+      // When running a new instance of app-analytics the datastore starts off empty.
+      // Some data takes longer to scrape than other therefore some items in the
+      // datastore will stay empty for a while. To prevent this we backfill the datastore
+      // with the last output datasource if any of the stores are empty
+      //
+      for (const db of Object.values(cc.db)) {
+        if (Object.keys(db).length === 0) {
+          let [backFillData] = settings.cache.get(settings.keyCryptohubAnalyticsOut);
+          backFillData = JSON.parse(backFillData);
+          backFillData = arrayToObject(backFillData, 'cc-snapshot-General-Id');
+          data = Object.assign(backFillData, data);
+          break;
+        }
+      }
+
       const btcId = 1182;
       const btcItem = data[btcId];
       const btcPrice = btcItem['cc-price-PRICE'];
@@ -87,13 +128,7 @@ process.on('warning', error => {
         }
       }
 
-      // convert data to array
-      const arrayData = [];
-      for (let [id, obj] of Object.entries(data)) {
-        obj.id = obj.Id;
-        arrayData.push(obj);
-      }
-
+      const arrayData = objectToArray(data);
       settings.cache.set(settings.keyCryptohubAnalyticsTmp, JSON.stringify(arrayData));
     });
 

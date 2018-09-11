@@ -43,14 +43,14 @@ module.exports = class ScrapeQueue extends EventEmitter {
             obj.startTimestamp = +new Date();
           };
           if (timeLeft > 0) {
-            logger.info(`get ${obj.name} jobs in ${timeLeft}ms`);
+            logger.debug(`Class ScrapeQueue: waiting ${timeLeft}ms before getting more ${obj.name} jobs`);
             if (!obj.timeout) {
               obj.saveToDb();
               obj.timeout = setTimeout(reset, timeLeft);
             }
           }
           else {
-            logger.info(`get ${obj.name} jobs now because timeleft = ${timeLeft}ms`);
+            logger.debug(`Class ScrapeQueue: getting ${obj.name} jobs`);
             obj.saveToDb();
             reset();
           }
@@ -63,7 +63,7 @@ module.exports = class ScrapeQueue extends EventEmitter {
 
   addToQueue(config) {
     const name = config.name;
-    logger.info(`Starting ${name} scraper`);
+    logger.debug(`Class ScrapeQueue: Adding new ScrapeQueue (${name})`);
     this.queues[name] = [];
     this.queues[name].name = name;
     this.queues[name].interval = config.interval;
@@ -85,14 +85,23 @@ module.exports = class ScrapeQueue extends EventEmitter {
         const { uri, key, cacheForDays, groupKey, last } = item;
 
         const [error, file] = await to(scrapeJSON(uri, key, cacheForDays));
-        if (error) debugger;
-        if (!Object.keys(file).length) debugger;
 
-        const elapsedTime = +new Date() - this.timestamp;
+        // Response:  "Error"
+        // Message: "There is no data for any of the toSymbols JSE ."
+        // Type: 1
+        // Aggregated: false
+        //  Data: Array [0]
+        // Warning: "There is no data for the toSymbol/s JSE "
+        // HasWarning: true
+
+        if (error) debugger;
+
         const name = queue.name;
-        this.requests++;
-        logger.info(`time: ${elapsedTime/this.requests} ms per ${name} request`);
-        logger.info(`total ${name} requests: ${this.requests}`);
+        // This shit is wrong!
+        // const elapsedTime = +new Date() - this.timestamp;
+        // this.requests++;
+        // logger.debug(`Class ScrapeQueue: time: ${elapsedTime / this.requests}ms per ${name} request`);
+        // logger.debug(`Class ScrapeQueue: total ${name} requests: ${this.requests}`);
         //
         // Deal with paginated requests
         // Collect groups of files in an Array then save a master file

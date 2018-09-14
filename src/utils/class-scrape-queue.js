@@ -26,6 +26,7 @@ module.exports = class ScrapeQueue extends EventEmitter {
     this.timestamp = +new Date();
     this.requests = 0;
     this.options = options;
+    this.lastRequestTimestamp;
     //
     // Intercept 'shift'
     // If last item in array call getJobs()
@@ -34,9 +35,8 @@ module.exports = class ScrapeQueue extends EventEmitter {
     this.handler = {
       get: function (obj, prop) {
         if (prop === 'shift' && obj.length === 0) {
-          const t = +new Date();
-          const currentInterval = t - (obj.startTimestamp || 0);
-          const timeLeft = obj.interval - currentInterval;
+          const interval = +new Date() - (obj.startTimestamp || 0);
+          const timeLeft = obj.interval - interval;
           const reset = () => {
             obj.getJobs(obj);
             obj.timeout = void 0;
@@ -45,13 +45,13 @@ module.exports = class ScrapeQueue extends EventEmitter {
           if (timeLeft > 0) {
             logger.debug(`Class ScrapeQueue: waiting ${timeLeft}ms before getting more ${obj.name} jobs`);
             if (!obj.timeout) {
-              obj.saveToDb();
+              obj.save();
               obj.timeout = setTimeout(reset, timeLeft);
             }
           }
           else {
             logger.debug(`Class ScrapeQueue: getting ${obj.name} jobs`);
-            obj.saveToDb();
+            obj.save();
             reset();
           }
         }
@@ -68,40 +68,41 @@ module.exports = class ScrapeQueue extends EventEmitter {
     this.queues[name].name = name;
     this.queues[name].interval = config.interval;
     this.queues[name].getJobs = config.getJobs;
-    this.queues[name].saveToDb = config.save;
+    this.queues[name].save = config.save;
     this.proxies[name] = new Proxy(this.queues[name], this.handler);
   }
 
   async run() {
+
     // bootstrap
     if (this.options.bootstrap && !this.bootstraped) {
       this[this.options.bootstrap.name] = await this.options.bootstrap.func();
       this.bootstraped = true;
     }
-    // do scrape
+
+    //
+    // For each queue take one item and parse it
+    //
     for (let [name, queue] of Object.entries(this.proxies)) {
       const item = queue.shift();
       if (item) {
         const { uri, key, cacheForDays, groupKey, last } = item;
 
-        const [error, file] = await to(scrapeJSON(uri, key, cacheForDays));
+        // Wait before next request if required
+        const timeLapsedSinceLastRequest = +new Date() - this.lastRequestTimestamp;
+        const timeToWaitMs = this.rateLimit - timeLapsedSinceLastRequest;
+        console.group('time');
+        console.log('timeLapsedSinceLastRequest', timeLapsedSinceLastRequest);
+        console.log('timeToWaitMs', timeToWaitMs);
+        if (timeToWaitMs) await commonDelay(timeToWaitMs);
 
-        // Response:  "Error"
-        // Message: "There is no data for any of the toSymbols JSE ."
-        // Type: 1
-        // Aggregated: false
-        //  Data: Array [0]
-        // Warning: "There is no data for the toSymbol/s JSE "
-        // HasWarning: true
+        var t = +new Date();
+        const promise = scrapeJSON(uri, key, cacheForDays);
+        console.log('promise took', +new Date() - t);
+        console.log('making request now');
+        console.groupEnd('time');
+        this.lastRequestTimestamp = +new Date();
 
-        if (error) debugger;
-
-        const name = queue.name;
-        // This shit is wrong!
-        // const elapsedTime = +new Date() - this.timestamp;
-        // this.requests++;
-        // logger.debug(`Class ScrapeQueue: time: ${elapsedTime / this.requests}ms per ${name} request`);
-        // logger.debug(`Class ScrapeQueue: total ${name} requests: ${this.requests}`);
         //
         // Deal with paginated requests
         // Collect groups of files in an Array then save a master file
@@ -109,8 +110,10 @@ module.exports = class ScrapeQueue extends EventEmitter {
         if (groupKey) {
           if (last) {
             if (this.groups[name]) {
-              this.groups[name].push(file);
-              global.cache.set(groupKey, JSON.stringify(this.groups[name]));
+              this.groups[name].push(promise);
+              Promise.all(this.groups[name]).then(values => {
+                global.cache.set(groupKey, JSON.stringify(values));
+              });
               this.groups[name] = [];
             }
           }
@@ -118,12 +121,12 @@ module.exports = class ScrapeQueue extends EventEmitter {
             if (!this.groups[name]) {
               this.groups[name] = [];
             }
-            this.groups[name].push(file);
+            this.groups[name].push(promise);
           }
         }
       }
-      await commonDelay(50);
     }
+
     this.run();
     return true;
   }

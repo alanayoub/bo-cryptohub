@@ -15,7 +15,7 @@ module.exports = async function scrapeCryptocompare({cacheForDays, rateLimitDela
   try {
 
     const scrapeQueue = new ScrapeQueue({
-      rateLimit: settings.queueCryptocompare,
+      rateLimit: rateLimitDelayMs,
       bootstrap: {
         name: 'coinList',
         async func() {

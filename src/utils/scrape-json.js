@@ -11,9 +11,6 @@ const rp = require('request-promise');
 const { to } = require('await-to-js');
 const logger = require.main.require('./logger');
 
-//
-// Maybe the glob is making this slow, not the accessing of the file as we tested the below code
-//
 module.exports = async function scrapeJSON(uri, key, cacheFor) {
   try {
     let error;

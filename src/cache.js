@@ -4,8 +4,13 @@ const glob = require('glob');
 const crypto = require('crypto');
 const { join } = require('path');
 
+// Libs
+const Promise = require('bluebird');
+const { to }  = require('await-to-js');
+
 // CryptoHub
 const logger = require.main.require('./logger');
+const globPromise = Promise.promisify(glob);
 
 /**
  *
@@ -53,6 +58,12 @@ module.exports = class Cache {
   get(key, flag) {
     try {
       const files = glob.sync(`${join(this.dir, key)}-[*>`, {});
+
+      // debugger
+      // const p = globPromise(`${join(this.dir, key)}-[*>`, {});
+      // const [error, files] = await to(p);
+      // debugger
+
       if (!files.length) {
         return [false];
       }

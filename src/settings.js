@@ -89,7 +89,7 @@ const settings = {
   cacheForCoinmarketcapProjectHtml:            30, // Days
 
   // Queues: rateLimit
-  queueCryptocompare:                          100,
+  queueCryptocompare:                          50,
   queueCoinmarketcap:                          1000 * 60 * 60,
 
   // Cryptocompare

@@ -30,19 +30,17 @@ process.on('warning', error => {
     //   100000/60/60 = 27 requests per second
     //   1000/27      = 37 milliseconds between requests
     //
-    // NOTE: Need to setup a que and rate limiter
-    //
     if (global.settingsScrapeCryptocompare) {
       const options = {
         cacheForDays: settings.cacheForCryptocompare,
-        rateLimitDelayMs: 100,
+        rateLimitDelayMs: settings.queueCryptocompare,
         scrape: [
-          'coinList',
+          // 'coinList',
           'price',
-          'exchangePairs',
-          'socialStats',
-          'snapshot',
-          'other'
+          // 'exchangePairs',
+          // 'socialStats',
+          // 'snapshot',
+          // 'other'
         ]
       }
       const [error, scrapeQueue] = await to(scrapeCryptocompare(options));

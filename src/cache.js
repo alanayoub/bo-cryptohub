@@ -22,6 +22,15 @@ function getISODate(date = new Date()) {
   return date.toISOString();
 }
 
+/**
+ *
+ * Class Cache
+ *
+ * @param {String} dir
+ * @param {Boolean} allowEmpty - allow caching of 'empty' data, for example an empty object {}
+ * @return {Object} - an instance of Cache
+ *
+ */
 module.exports = class Cache {
 
   constructor(dir = 'cache', allowEmpty = false) {

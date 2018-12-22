@@ -10,7 +10,6 @@ const { to } = require('await-to-js');
 const cheerio = require('cheerio');
 
 // CryptoHub
-const Cache = require.main.require('./cache');
 const settings = require.main.require('./settings');
 const { Project } = require.main.require('./db-schema');
 const { getCurrentDate, typeOfData, logHeader } = require.main.require('./utils.js');

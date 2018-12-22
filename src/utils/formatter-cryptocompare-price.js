@@ -34,7 +34,7 @@ module.exports = function formatterCryptocomparePrice(price, symbolIdMap) {
           }
         }
         else {
-          throw new Error('formatterCryptocomparePrice(): No id or val.USD');
+          logger.error(`formatterCryptocomparePrice(): No id or val.USD for ${symbol}`);
         }
       }
     }

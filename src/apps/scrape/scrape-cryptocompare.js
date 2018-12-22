@@ -1,15 +1,15 @@
 // Node
-const crypto = require('crypto');
+const crypto         = require('crypto');
 
 // CryptoHub
-const settings       = require('../../settings');
-const logger         = require('../../logger');
-const { scrapeJSON } = require('../../utils/index.js');
+const logger         = require.main.require('./logger');
+const settings       = require.main.require('./settings');
+const { scrapeJSON } = require.main.require('./utils/index.js');
 const {
   commonDelay,
   itterateCryptocompareExchangePairs,
   classScrapeQueue:ScrapeQueue
-} = require('../../utils/');
+}                    = require.main.require('./utils/');
 
 module.exports = async function scrapeCryptocompare({cacheForDays, rateLimitDelayMs, scrape}) {
   try {

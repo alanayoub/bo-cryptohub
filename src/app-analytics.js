@@ -130,6 +130,7 @@ function objectToArray(data) {
 
       const arrayData = objectToArray(data);
       settings.cache.set(settings.keyCryptohubAnalyticsTmp, JSON.stringify(arrayData));
+      logger.info(`app-analytics.js: Saving file ${settings.keyCryptohubAnalyticsTmp}`);
     });
 
     return

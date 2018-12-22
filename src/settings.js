@@ -47,6 +47,8 @@ global.githubOverrides = {
   'basic-attention-token': 'https://github.com/brave-intl',
 }
 
+const scrapeDir = '/tmp-scraped';
+
 /**
  *
  *  uriCryptocompareList:
@@ -89,36 +91,42 @@ const settings = {
   cacheForCoinmarketcapProjectHtml:            30, // Days
 
   // Queues: rateLimit
-  queueCryptocompare:                          50,
+  queueCryptocompare:                          26784,
   queueCoinmarketcap:                          1000 * 60 * 60,
 
+  //
   // Cryptocompare
+  //
+  apiKey:                                      'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222',
+
   uriCryptocompareList:                        'https://min-api.cryptocompare.com/data/all/coinlist',
-  keyCryptocompareList:                        '/tmp-scraped/cryptocompare-coinlist/data.json',
+  keyCryptocompareList:                        `${scrapeDir}/cryptocompare-coinlist/data.json`,
   uriCryptocompareExchanges:                   'https://min-api.cryptocompare.com/data/all/exchanges',
-  keyCryptocompareExchanges:                   '/tmp-scraped/cryptocompare-exchanges-list/data.json',
+  keyCryptocompareExchanges:                   `${scrapeDir}/cryptocompare-exchanges-list/data.json`,
   uriCryptocompareExchangeStatus:              'https://min-api.cryptocompare.com/data/all/cccaggexchanges',
-  keyCryptocompareExchangeStatus:              '/tmp-scraped/cryptocompare-exchange-status/data.json',
+  keyCryptocompareExchangeStatus:              `${scrapeDir}/cryptocompare-exchange-status/data.json`,
 
   tagUriCryptocompareTradingInfoSingle:        (str, ob) => `https://min-api.cryptocompare.com/data/generateAvg?fsym=${ob.symbol1}&tsym=${ob.symbol2}&e=${ob.exchange}`,
-  tagKeyCryptocompareTradingInfoSingle:        (str, ob) => `/tmp-scraped/cryptocompare-exchange/${ob.exchange}-pairs-${ob.symbol1}-${ob.symbol2}.json`,
-  tagKeyCryptocompareTradingInfoSingleGrouped: (str, ob) => `/tmp-scraped/cryptocompare-exchange-grouped/data.json`,
+  tagKeyCryptocompareTradingInfoSingle:        (str, ob) => `${scrapeDir}/cryptocompare-exchange/${ob.exchange}-pairs-${ob.symbol1}-${ob.symbol2}.json`,
+  tagKeyCryptocompareTradingInfoSingleGrouped: (str, ob) => `${scrapeDir}/cryptocompare-exchange-grouped/data.json`,
 
   tagUriCryptocompareTradingInfoMulti:         (str, ob) => `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ob.list1}&tsyms=${ob.list2}&e=${ob.exchange || 'CCCAGG'}`,
-  tagKeyCryptocompareTradingInfoMulti:         (str, ob) => `/tmp-scraped/cryptocompare-trading-info-${ob.exchange || 'CCCAGG'}/${ob.cacheKey}.json`,
-  tagKeyCryptocompareTradingInfoMultiGrouped:  (str, ob) => `/tmp-scraped/cryptocompare-trading-info-${ob.exchange || 'CCCAGG'}-grouped/data.json`,
+  tagKeyCryptocompareTradingInfoMulti:         (str, ob) => `${scrapeDir}/cryptocompare-trading-info-${ob.exchange || 'CCCAGG'}/${ob.cacheKey}.json`,
+  tagKeyCryptocompareTradingInfoMultiGrouped:  (str, ob) => `${scrapeDir}/cryptocompare-trading-info-${ob.exchange || 'CCCAGG'}-grouped/data.json`,
   limitsCryptocompareTradingInfoMultiArr1:     300,
   limitsCryptocompareTradingInfoMultiArr2:     100,
 
   tagUriCryptocompareSnapshot:                 (str, id) => `https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id=${id}`,
-  tagKeyCryptocompareSnapshot:                 (str, id) => `/tmp-scraped/cryptocompare-snapshot/${id}.json`,
-  tagKeyCryptocompareSnapshotGrouped:          (str, ob) => `/tmp-scraped/cryptocompare-snapshot-grouped/data.json`,
+  tagKeyCryptocompareSnapshot:                 (str, id) => `${scrapeDir}/cryptocompare-snapshot/${id}.json`,
+  tagKeyCryptocompareSnapshotGrouped:          (str, ob) => `${scrapeDir}/cryptocompare-snapshot-grouped/data.json`,
 
   tagUriCryptocompareSocialstats:              (str, id) => `https://www.cryptocompare.com/api/data/socialstats/?id=${id}`,
-  tagKeyCryptocompareSocialstats:              (str, id) => `/tmp-scraped/cryptocompare-socialstats/${id}.json`,
-  tagKeyCryptocompareSocialStatsGrouped:       (str, ob) => `/tmp-scraped/cryptocompare-socialstats-grouped/data.json`,
+  tagKeyCryptocompareSocialstats:              (str, id) => `${scrapeDir}/cryptocompare-socialstats/${id}.json`,
+  tagKeyCryptocompareSocialStatsGrouped:       (str, ob) => `${scrapeDir}/cryptocompare-socialstats-grouped/data.json`,
 
+  //
   // Coinmarketcap
+  //
   // tagUriCoinmarketcapTicker:                   (str, ob) => `https://api.coinmarketcap.com/v2/ticker/?start=${ob.start || 0}&limit=${ob.limit || 100}&sort=${ob.sort || 'id'}`,
   // tagKeyCoinmarketcapTicker:                   (str, ob) => `/coinmarketcap/ticker/${ob.cacheKey}.json`,
   // tagKeyCoinmarketcapTickerGrouped:            (str, ob) => `/coinmarketcap/ticker-grouped/data.json`,
@@ -130,15 +138,21 @@ const settings = {
   // tagKeyCoinmarketcapDetailsJSON:              (str, id) => `/coinmarketcap/details/${id}.json`,
   // tagKeyCoinmarketcapDetailsHTML:              (str, id) => `/coinmarketcap/details/${id}.html`,
 
+  //
   // Cryptohub
+  //
   keyCryptohubAnalyticsTmp:                    '/tmp-generated/analytics/data.json',
   keyCryptohubAnalyticsOut:                    '/out/analytics/data.json',
 
+  //
   // XE
+  //
   tagUriXeCurrencyTables:                      (str, id) => `https://xe.com/currencytables/?from=${id}`,
-  tagKeyXeCurrencyTables:                      (str, id) => `/tmp-scraped/xe-currencytables/${id}.html`,
+  tagKeyXeCurrencyTables:                      (str, id) => `${scrapeDir}/xe-currencytables/${id}.html`,
 
+  //
   // ISO
+  //
   uriISO4217CurrencyCodes:                     `${path.resolve(__dirname)}/../iso/4217.txt`,
 
 }

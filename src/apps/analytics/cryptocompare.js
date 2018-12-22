@@ -143,20 +143,25 @@ module.exports = async function cryptocompare() {
       delay: 1000,
       cacheArgs: [settings.keyCryptocompareList, 'all'],
       handler: async (data, timestamp) => {
-        let obj, key, val, id;
+        let currentCoinOut, currentCoinIn, key, val, id;
         const prefix = 'cc-coinlist-';
-        const dataObj = data.Data;
+        const objAllCoins = data.Data;
         const result = {};
         for (id of Object.keys(idSymbolMap)) {
-          obj = {};
-          for ([key, val] of Object.entries(dataObj[idSymbolMap[id]])) {
+          currentCoinOut = {};
+          currentCoinIn = objAllCoins[idSymbolMap[id]];
+          if (currentCoinIn === void 0) {
+            logger.error(`coinListWatcher.handler(): ${idSymbolMap[id]} is not in objAllCoins`);
+            continue;
+          }
+          for ([key, val] of Object.entries(currentCoinIn)) {
             if (key === 'SortOrder') {
               val = +val; // Make SortOrder numeric
             }
-            obj[`${prefix}${key}`] = val;
-            if (key === 'SortOrder' && isNaN(obj[`${prefix}${key}`])) debugger;
+            currentCoinOut[`${prefix}${key}`] = val;
+            if (key === 'SortOrder' && isNaN(currentCoinOut[`${prefix}${key}`])) debugger;
           }
-          result[id] = obj;
+          result[id] = currentCoinOut;
         }
         return {data: result, timestamp};
       },

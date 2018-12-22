@@ -2,7 +2,7 @@
 const path = require('path');
 
 // cryptoHub
-const Cache = require('./cache');
+const Cache = require('./utils/class-cache');
 
 // Settings
 global.cache = new Cache('cache', true);

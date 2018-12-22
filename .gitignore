@@ -13,6 +13,8 @@ node_modules
 *.swm
 *.swn
 *.swl
+*.swk
+*.swj
 
 # Generated files
 *.generated.js
@@ -22,3 +24,7 @@ projects/*
 
 # Cache
 cache/*
+.cache/
+
+# Redis
+dump.rdb

@@ -18,7 +18,7 @@ node --harmony_async_iteration --use-strict ./src/app-stream.js
 Create one application that does all of the above. Can use separate applications if that makes sense but there should be one interface.
 
 ### Example interface
-```
+```javascript
 {
   scrape: {
     cryptocompare: {

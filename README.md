@@ -30,7 +30,7 @@ Create one application that does all of the above. Can use separate applications
           return await scrapeJSON(settings.uriCryptocompareList, settings.keyCryptocompareList, cacheFor)
         }
       },
-      scrape: [
+      items: [
         {
           name: 'coinList',
           interval: 1000 * 5,

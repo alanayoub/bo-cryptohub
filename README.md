@@ -34,11 +34,11 @@ Create one application that does all of the above. Can use separate applications
         {
           name: 'coinList',
           interval: 1000 * 5,
-          getJobs: getJobs(queue) => {
+          getJobs(queue) {
             // queue.push({uri, key, cacheFor}); // CURRENT
             return []                            // NEW, return jobs then add them to queue
           },
-          save: save() => {} // save handler
+          save() {}
         },
         {name: 'price',         interval: 1000 * 5, ...},
         {name: 'exchangePairs', interval: 1000 * 5, ...},

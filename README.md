@@ -22,7 +22,7 @@ Create one application that does all of the above. Can use separate applications
 {
   scrape: {
     cryptocompare: {
-      cacheForDays: settings.cacheForCryptocompare,
+      cacheFor: settings.cacheForCryptocompare,
       rateLimitDelayMs: settings.queueCryptocompare,
       bootstrap: {
         name: 'coinList',
@@ -49,11 +49,11 @@ Create one application that does all of the above. Can use separate applications
     },
     coinmarketcap: {
       cacheForDays: settings.cacheForCoinmarketcap,
-      rateLimitDelayMs: settings.queueCoinmarketcap,
+      rateLimitDelay: settings.queueCoinmarketcap,
     },
     coinmarketcap: {
       cacheForDays: settings.cacheForXe,
-      rateLimitDelayMs: settings.queueForXe,
+      rateLimitDelay: settings.queueForXe,
     }
   }
 }

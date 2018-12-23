@@ -25,12 +25,20 @@ Create one application that does all of the above. Can use separate applications
       cacheForDays: settings.cacheForCryptocompare,
       rateLimitDelayMs: settings.queueCryptocompare,
       scrape: [
-        'coinList',
-        'price',
-        'exchangePairs',
-        'socialStats',
-        'snapshot',
-        'other'
+        {
+          name: 'coinList',
+          interval: 1000 * 5,
+          getJobs: getJobs(queue) => {
+            // queue.push({uri, key, cacheFor}); // CURRENT
+            return [] // NEW, return jobs then add them to queue
+          },
+          save: save() => {} // save handler
+        },
+        {name: 'price',         interval: 1000 * 5, ...},
+        {name: 'exchangePairs', interval: 1000 * 5, ...},
+        {name: 'socialStats',   interval: 1000 * 5, ...},
+        {name: 'snapshot',      interval: 1000 * 5, ...},
+        {name: 'other',         interval: 1000 * 5, ...},
       ]
     },
     coinmarketcap: {

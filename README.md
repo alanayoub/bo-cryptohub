@@ -50,10 +50,14 @@ Create one application that does all of the above. Can use separate applications
     coinmarketcap: {
       cacheForDays: settings.cacheForCoinmarketcap,
       rateLimitDelay: settings.queueCoinmarketcap,
+      getJobs,
+      save
     },
     xe: {
       cacheForDays: settings.cacheForXe,
       rateLimitDelay: settings.queueForXe,
+      getJobs,
+      save
     }
   }
 }

@@ -51,7 +51,7 @@ Create one application that does all of the above. Can use separate applications
       cacheForDays: settings.cacheForCoinmarketcap,
       rateLimitDelay: settings.queueCoinmarketcap,
     },
-    coinmarketcap: {
+    xe: {
       cacheForDays: settings.cacheForXe,
       rateLimitDelay: settings.queueForXe,
     }

@@ -24,13 +24,19 @@ Create one application that does all of the above. Can use separate applications
     cryptocompare: {
       cacheForDays: settings.cacheForCryptocompare,
       rateLimitDelayMs: settings.queueCryptocompare,
+      bootstrap: {
+        name: 'coinList',
+        async func() {
+          return await scrapeJSON(settings.uriCryptocompareList, settings.keyCryptocompareList, cacheFor)
+        }
+      },
       scrape: [
         {
           name: 'coinList',
           interval: 1000 * 5,
           getJobs: getJobs(queue) => {
             // queue.push({uri, key, cacheFor}); // CURRENT
-            return [] // NEW, return jobs then add them to queue
+            return []                            // NEW, return jobs then add them to queue
           },
           save: save() => {} // save handler
         },

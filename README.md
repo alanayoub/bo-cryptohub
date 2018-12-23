@@ -20,6 +20,11 @@ Create one application that does all of the above. Can use separate applications
 ### Example interface
 ```javascript
 {
+  // Everytime new data is scraped this function will
+  // be used to merge it with the existing data
+  mergeHandler() {},
+
+  // Scrape from multiple sources
   scrape: {
     cryptocompare: {
       cacheFor: settings.cacheForCryptocompare,

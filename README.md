@@ -47,7 +47,7 @@ Create one application that does all of the above. Can use separate applications
             // queue.push({uri, key, cacheFor}); // CURRENT
             return []                            // NEW, return jobs then add them to queue
           },
-          handler(data, timestamp) {}
+          formatter(data, timestamp) {}
         },
         {name: 'price',         interval: 1000 * 5, ...},
         {name: 'exchangePairs', interval: 1000 * 5, ...},
@@ -64,7 +64,7 @@ Create one application that does all of the above. Can use separate applications
           name: 'ticker',
           interval: 1000,
           getJobs(queue) {},
-          handler(data, timestamp) {}
+          formatter(data, timestamp) {}
         }
       ]
     },
@@ -76,7 +76,7 @@ Create one application that does all of the above. Can use separate applications
           name: 'currency',
           interval: 1000,
           getJobs(queue) {},
-          handler(data, timestamp) {}
+          formatter(data, timestamp) {}
         }
       ]
     }

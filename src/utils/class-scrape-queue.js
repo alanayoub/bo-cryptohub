@@ -16,7 +16,7 @@ const scrapeJSON   = require('./scrape-json');
  */
 module.exports = class ScrapeQueue extends EventEmitter {
 
-  constructor(options) {
+  constructor(options = {}) {
     super();
     this.rateLimit = options.rateLimit;
     this.bootstraped = false;
@@ -68,14 +68,17 @@ module.exports = class ScrapeQueue extends EventEmitter {
     this.queues[name].name = name;
     this.queues[name].interval = config.interval;
     this.queues[name].getJobs = config.getJobs;
-    this.queues[name].save = config.save;
+    this.queues[name].save = config.save || function () {};
     this.proxies[name] = new Proxy(this.queues[name], this.handler);
   }
 
   async run() {
 
+    const startTime = +new Date();
+
     // bootstrap
-    if (this.options.bootstrap && !this.bootstraped) {
+    // TODO: remove this
+    if (this.options && this.options.bootstrap && this.options.bootstrap.name && !this.bootstraped) {
       this[this.options.bootstrap.name] = await this.options.bootstrap.func();
       this.bootstraped = true;
     }
@@ -127,7 +130,10 @@ module.exports = class ScrapeQueue extends EventEmitter {
       }
     }
 
+    const delay = 100 - (+new Date() - startTime);
+    if (delay) await commonDelay(delay);
     this.run();
+
     return true;
   }
 

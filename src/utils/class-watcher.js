@@ -60,9 +60,12 @@ module.exports = class Watcher extends EventEmitter {
       fileDataStr = fs.readFileSync(fileName).toString();
       const fileDataObj = JSON.parse(fileDataStr);
       const timestamp = fileName.replace(/^cache.*<([0-9TZ:.-]*)>$/, '$1');
-      const [error, data] = await to(handler(fileDataObj, timestamp));
-      if (error) {
-        throw new Error(`Class Watcher: ${error}`);
+      let data;
+      try {
+        data = handler(fileDataObj, timestamp);
+      }
+      catch(error) {
+        logger.error(`Class Watcher: ${error}`);
       }
       this.emit('data', data);
       if (data) {

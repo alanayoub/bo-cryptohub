@@ -90,8 +90,21 @@ const settings = {
   cacheForCoinmarketcapProjectsJson:           1,  // Days
   cacheForCoinmarketcapProjectHtml:            30, // Days
 
-  // Queues: rateLimit
-  queueCryptocompare:                          26784,
+  // RateLimits
+
+  //
+  // From the website:
+  //   Caching: 10 seconds
+  //   Rate limits:
+  //     Month  - 100000
+  //     Day    - 3200
+  //     Hour   - 130
+  //     Minute - 2
+  //     Second - 0.038
+  //
+  //  26784 ms between requests :(
+  //
+  rateLimitCryptocompare:                      26784,
   queueCoinmarketcap:                          1000 * 60 * 60,
 
   //

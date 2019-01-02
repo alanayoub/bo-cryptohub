@@ -1,11 +1,18 @@
+// Node
+const crypto   = require('crypto');
+
 // Cryptohub
-const logger     = require.main.require('./logger');
-const settings   = require.main.require('./settings');
+const logger   = require.main.require('./logger');
+const settings = require.main.require('./settings');
 
 /**
  *
  * @param {Array} queue
  * @param {Object} bootstrappedData
+ *
+ * TODO: CHANGE HOW THIS WORKS
+ * Update after every request. Change the active file with the new data and timestamp
+ * This way we will get updates quicker. At the moment 55 requests takes forever at 1 request per minute or so
  *
  */
 module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstrappedData) {

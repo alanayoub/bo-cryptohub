@@ -8,9 +8,6 @@
 // ╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝╚══════╝
 //
 
-// Node
-const crypto                                = require('crypto');
-
 // CryptoHub
 const logger                                = require.main.require('./logger');
 const settings                              = require.main.require('./settings');
@@ -55,7 +52,6 @@ try {
             // COINLIST
             // Get the full list of coins with IDs
             //
-            //
             // TODO: bootstrappedData needs to change when coinlist changes!!!!
             //
             name: 'coinList',
@@ -74,8 +70,7 @@ try {
             name: 'price',
             interval: 1000 * 10,
             cacheArgs: [settings.tagKeyCryptocompareTradingInfoMultiGrouped`${{}}`, 'all'],
-            getJobs(queue, bootstrappedData) {
-            },
+            getJobs: getJobsCryptocompareSectionPrice,
             formatter: formatterCryptocompareSectionPrice
           }
         ]

@@ -31,6 +31,9 @@ process.on('warning', error => {
 
 try {
 
+  //
+  // TODO: expand and collapse data so we dont repeat object labels
+  //
   new DataTable({
     server: {
       port: 3000
@@ -38,9 +41,9 @@ try {
     tmpDir: settings.keyCryptohubAnalyticsTmp,
     outDir: settings.keyCryptohubAnalyticsOut,
     cacheDir: 'cache',
-    defaultData: [],
-    mergeHandler,
     dataHandler,
+    mergeHandler,
+    defaultData: [],
     scrapeSites: {
       cryptocompare: {
         cacheFor: 0,

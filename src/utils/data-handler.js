@@ -53,8 +53,9 @@ module.exports = function dataHandler(data) {
         circulatingSupply = item['cc-price-SUPPLY'];
         item['cryptohub-rank'] = ccRank;
         item['cryptohub-circulating-percent-total'] = (circulatingSupply / totalSupply) * 100;
-        if (btcPrice) {
+        if (btcPrice && ccPrice) {
           item['cryptohub-price-btc'] = 1 / (btcPrice / ccPrice);
+          item['cryptohub-price-btc-timestamp'] = btcItem['cc-price-PRICE-timestamp'];
         }
       }
     }

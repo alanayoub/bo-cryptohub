@@ -32,11 +32,13 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
        throw new Error(`scrapeCryptocompare(): The items in the arr2 array need to be smaller than ${arr2MaxLength} in total length`);
      }
      let jobs = 0;
+     let tmpCounter = 0;
+     let tmpBtcDone = false;
      for (let [k, v] of Object.entries(bootstrappedData.coinList.Data)) {
        counter++;
        symbol1 = v.Symbol;
        arr1StrLen += symbol1.length + 1;
-       const last = counter === length;
+       let last = counter === length;
        if (arr1StrLen < arr1MaxLength) arr1.push(symbol1);
        if ((arr1StrLen > arr1MaxLength) || last) {
          const list1 = arr1.join();
@@ -48,10 +50,24 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
          }
          const uri = settings.tagUriCryptocompareTradingInfoMulti`${data}`;
          const key = settings.tagKeyCryptocompareTradingInfoMulti`${data}`;
+
+         //
+         // TMP turning off most requests so I can get updates quickly
+         //
+         if (arr1.includes('BTC')) tmpBtcDone = true;
+         if (!tmpBtcDone) {
+           arr1 = [];
+           arr1StrLen = 0;
+           continue;
+         }
+         if (tmpCounter++ > 2) last = true;
+
          queue.push({uri, key, cacheForDays: settings.cacheForCryptocompare, groupKey, last});
          jobs++;
          arr1 = [];
          arr1StrLen = 0;
+
+         if (tmpCounter > 2) break;
        }
      }
      logger.info(`getJobsCryptocompareSectionPrice(): ${jobs} price jobs created`);

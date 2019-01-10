@@ -32,10 +32,13 @@ module.exports = function dataHandler(data) {
     const btcId = 1182;
     const btcItem = data[btcId];
     let btcPrice;
+    let btcPriceTimestamp;
     if (btcItem) {
       btcPrice = btcItem['cc-price-PRICE'];
+      btcPriceTimestamp = btcItem['cc-price-PRICE-timestamp'];
     }
     let ccRank;
+    let ccRankTimestamp
     let ccPrice;
     let totalSupply;
     let circulatingSupply;
@@ -48,14 +51,16 @@ module.exports = function dataHandler(data) {
       }
       else {
         ccRank  = item['cc-coinlist-SortOrder'] || 10000;
+        ccRankTimestamp = item['cc-coinlist-SortOrder-timestamp'];
         ccPrice = item['cc-price-PRICE'];
         totalSupply = item['cc-coinlist-TotalCoinSupply'];
         circulatingSupply = item['cc-price-SUPPLY'];
         item['cryptohub-rank'] = ccRank;
         item['cryptohub-circulating-percent-total'] = (circulatingSupply / totalSupply) * 100;
+        item['cryptohub-circulating-percent-total-timestamp'] = ccRankTimestamp;
         if (btcPrice && ccPrice) {
           item['cryptohub-price-btc'] = 1 / (btcPrice / ccPrice);
-          item['cryptohub-price-btc-timestamp'] = btcItem['cc-price-PRICE-timestamp'];
+          item['cryptohub-price-btc-timestamp'] = btcPriceTimestamp;
         }
       }
     }

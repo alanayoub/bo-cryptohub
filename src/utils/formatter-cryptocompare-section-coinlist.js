@@ -56,6 +56,7 @@ module.exports = function formatterCryptocompareSectionCoinlist(data, timestamp,
         if (key === 'SortOrder') {
           val = +val; // Make SortOrder numeric
         }
+        currentCoinOut[`${prefix}${key}-timestamp`] = timestamp;
         currentCoinOut[`${prefix}${key}`] = val;
         if (key === 'SortOrder' && isNaN(currentCoinOut[`${prefix}${key}`])) debugger;
       }

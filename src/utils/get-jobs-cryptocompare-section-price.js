@@ -23,7 +23,6 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
      let arr1StrLen = 0;
      let symbol1;
      let counter = 0;
-     const length = Object.keys(bootstrappedData.coinList.Data).length;
      // Lowering by 10 so we don't need to worry about "can we add another in the remaining space" issue, come back and do it right laterz
      const arr1MaxLength = settings.limitsCryptocompareTradingInfoMultiArr1 - 10;
      const arr2MaxLength = settings.limitsCryptocompareTradingInfoMultiArr2;
@@ -32,9 +31,21 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
        throw new Error(`scrapeCryptocompare(): The items in the arr2 array need to be smaller than ${arr2MaxLength} in total length`);
      }
      let jobs = 0;
-     let tmpCounter = 0;
-     let tmpBtcDone = false;
-     for (let [k, v] of Object.entries(bootstrappedData.coinList.Data)) {
+
+     // filter first x by sortOrder
+     const limit = 200;
+     let items = [];
+     let order;
+     for (let item of Object.values(bootstrappedData.coinList.Data)) {
+       order = item['SortOrder'];
+       if (order < limit) {
+         items[order] = item;
+       }
+     }
+     items = items.filter(Boolean);
+     const length = items.length;
+
+     for (let v of items) {
        counter++;
        symbol1 = v.Symbol;
        arr1StrLen += symbol1.length + 1;
@@ -51,23 +62,11 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
          const uri = settings.tagUriCryptocompareTradingInfoMulti`${data}`;
          const key = settings.tagKeyCryptocompareTradingInfoMulti`${data}`;
 
-         //
-         // TMP turning off most requests so I can get updates quickly
-         //
-         if (arr1.includes('BTC')) tmpBtcDone = true;
-         if (!tmpBtcDone) {
-           arr1 = [];
-           arr1StrLen = 0;
-           continue;
-         }
-         if (tmpCounter++ > 2) last = true;
-
          queue.push({uri, key, cacheForDays: settings.cacheForCryptocompare, groupKey, last});
          jobs++;
          arr1 = [];
          arr1StrLen = 0;
 
-         if (tmpCounter > 2) break;
        }
      }
      logger.info(`getJobsCryptocompareSectionPrice(): ${jobs} price jobs created`);

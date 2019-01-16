@@ -19,15 +19,21 @@ module.exports = function dataHandler(data) {
     // datastore will stay empty for a while. To prevent this we backfill the datastore
     // with the last output datasource if any of the stores are empty
     //
-    // for (const db of Object.values(cc.db)) {
-    //   if (Object.keys(db).length === 0) {
-    //     let [ backFillData ] = settings.cache.get(settings.keyCryptohubAnalyticsOut);
-    //     backFillData = JSON.parse(backFillData);
-    //     backFillData = arrayToObject(backFillData, 'cc-snapshot-General-Id');
-    //     data = Object.assign(backFillData, data);
-    //     break;
-    //   }
-    // }
+    function arrayToObject(data, field) {
+      var objData = {};
+      for (let obj of data) {
+        objData[obj[field]] = obj;
+      }
+      return objData;
+    }
+    function isEmptyObject(obj) {
+      return Object.keys(obj).length;
+    }
+    if (!isEmptyObject(data)) {
+      [ data ] = settings.cache.get(settings.keyCryptohubAnalyticsOut);
+      data = JSON.parse(data);
+      data = arrayToObject(data, 'cc-coinlist-Id');
+    }
 
     const btcId = 1182;
     const btcItem = data[btcId];

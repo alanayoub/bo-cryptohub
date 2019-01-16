@@ -74,7 +74,11 @@ try {
             interval: 1000 * 10,
             cacheArgs: [settings.tagKeyCryptocompareTradingInfoMultiGrouped`${{}}`, 'all'],
             getJobs: getJobsCryptocompareSectionPrice,
-            formatter: formatterCryptocompareSectionPrice
+            formatter: formatterCryptocompareSectionPrice,
+            handler(oldData, newData) {
+              const merged = {...oldData, ...newData};
+              return merged;
+            },
           }
         ]
       },

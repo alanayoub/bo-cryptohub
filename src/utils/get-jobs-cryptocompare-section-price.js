@@ -10,10 +10,6 @@ const settings = require.main.require('./settings');
  * @param {Array} queue
  * @param {Object} bootstrappedData
  *
- * TODO: CHANGE HOW THIS WORKS
- * Update after every request. Change the active file with the new data and timestamp
- * This way we will get updates quicker. At the moment 55 requests takes forever at 1 request per minute or so
- *
  */
 module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstrappedData) {
   try {
@@ -33,7 +29,7 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
      let jobs = 0;
 
      // filter first x by sortOrder
-     const limit = 200;
+     const limit = 500;
      let items = [];
      let order;
      for (let item of Object.values(bootstrappedData.coinList.Data)) {
@@ -62,7 +58,7 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
          const uri = settings.tagUriCryptocompareTradingInfoMulti`${data}`;
          const key = settings.tagKeyCryptocompareTradingInfoMulti`${data}`;
 
-         queue.push({uri, key, cacheForDays: settings.cacheForCryptocompare, groupKey, last});
+         queue.push({uri, key: groupKey, cacheForDays: settings.cacheForCryptocompare});
          jobs++;
          arr1 = [];
          arr1StrLen = 0;

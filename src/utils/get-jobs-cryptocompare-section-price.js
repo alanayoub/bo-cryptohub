@@ -29,7 +29,7 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
      let jobs = 0;
 
      // filter first x by sortOrder
-     const limit = 500;
+     const limit = 400;
      let items = [];
      let order;
      for (let item of Object.values(bootstrappedData.coinList.Data)) {

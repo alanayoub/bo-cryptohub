@@ -60,6 +60,7 @@ module.exports = function formatterCryptocompareSectionPrice(price, timestamp, b
     let batchRequestData;
     const prefix = 'cc-price-';
     if (!Array.isArray(price)) price = [price];
+    console.log(`current price batch ${timestamp} length: ${price.length}`);
     for (i = 0; i < price.length; i++) {
       batchRequestData = price[i].RAW;
       if (!price[i].RAW) {

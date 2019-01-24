@@ -24,6 +24,7 @@ const formatterCryptocompareSectionCoinlist = require.main.require('./utils/form
 
 // Job fetchers
 const getJobsCryptocompareSectionPrice      = require.main.require('./utils/get-jobs-cryptocompare-section-price.js');
+const getJobsCryptocompareSectionSnapshot   = require.main.require('./utils/get-jobs-cryptocompare-section-snapshot.js');
 
 process.on('warning', error => {
   logger.warning(`index.js:\n${error.stack}`);
@@ -79,7 +80,23 @@ try {
               const merged = {...oldData, ...newData};
               return merged;
             },
-          }
+          },
+          // {
+          //   //
+          //   // TopTotalVolume
+          //   //
+          //   // @see https://min-api.cryptocompare.com/documentation?key=Toplists&cat=TopTotalVolumeEndpointFull
+          //   //
+          //   name: 'topTotalVolFull',
+          //   interval: 1000 * 10,
+          //   cacheArgs: [settings.tagKeyCryptocompareTotalVolFullSingleGrouped`${{}}`, 'all'],
+          //   getJobs: getJobsCryptocompareSectionTopTotalVolFull,
+          //   formatter: formatterCryptocompareSectionTopTotalVolFull,
+          //   handler(oldData, newData) {
+          //     const merged = {...oldData, ...newData};
+          //     return merged;
+          //   },
+          // }
         ]
       },
       // xe: {

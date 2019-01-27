@@ -83,6 +83,30 @@ const unpackData = function (data) {
 
 /**
  *
+ * Delete bad records
+ *
+ */
+function deleteBadRecords(data) {
+
+  let key;
+  let item;
+
+  // Delete records that we don't have sufficient data for
+  for ([key, item] of Object.entries(data)) {
+    if (
+         item['cc-total-vol-full-TOTALVOLUME24HTO'] === 0
+      || item['cc-total-vol-full-PRICE']            === void 0
+    ) {
+      delete data[key];
+    }
+  }
+
+  return data;
+
+}
+
+/**
+ *
  * Backfill and format data
  *
  * When running a new instance of the ap the datastore starts off empty.
@@ -99,16 +123,8 @@ module.exports = function dataHandler(data) {
     let key;
     let val;
 
-    // Delete records that we don't have sufficient data for
-    for ([key, item] of Object.entries(data)) {
-      if (
-           item['cc-coinlist-IsTrading']     === false
-        || item['cc-price-TOTALVOLUME24HTO'] === 0
-        || item['cc-price-PRICE']            === void 0
-      ) {
-        delete data[key];
-      }
-    }
+    // Delete here to trim down the noise
+    data = deleteBadRecords(data);
 
     // Merge new data with last data set
     {
@@ -128,31 +144,34 @@ module.exports = function dataHandler(data) {
       }
     }
 
+    // Also Delete here to remove any legacy records that slipped through
+    data = deleteBadRecords(data);
+
     // Create custom fields
     const btcId = 1182;
     const btcItem = data[btcId];
     let btcPrice;
     if (btcItem) {
-      btcPrice = btcItem['cc-price-PRICE'];
+      btcPrice = btcItem['cc-total-vol-full-PRICE'];
     }
-    let ccRank;
-    let ccRankTimestamp
+    // let ccRank;
+    // let ccRankTimestamp
     let ccPrice;
     let totalSupply;
     let circulatingSupply;
     for (let [key, item] of Object.entries(data)) {
-      ccRank  = item['cc-coinlist-SortOrder'] || 10000;
-      ccRankTimestamp = item['cc-coinlist-SortOrder-timestamp'];
-      ccPrice = item['cc-price-PRICE'];
+      // ccRank = item['cc-coinlist-SortOrder'] || 10000;
+      // ccRankTimestamp = item['cc-coinlist-SortOrder-timestamp'];
+      ccPrice = item['cc-total-vol-full-PRICE'];
       totalSupply = item['cc-coinlist-TotalCoinSupply'];
-      circulatingSupply = item['cc-price-SUPPLY'];
-      item['cryptohub-rank'] = ccRank;
-      item['cryptohub-rank-timestamp'] = ccRankTimestamp;
+      circulatingSupply = item['cc-total-vol-full-SUPPLY'];
+      // item['cryptohub-rank'] = ccRank;
+      // item['cryptohub-rank-timestamp'] = ccRankTimestamp;
       item['cryptohub-circulating-percent-total'] = (circulatingSupply / totalSupply) * 100;
-      item['cryptohub-circulating-percent-total-timestamp'] = ccRankTimestamp;
+      // item['cryptohub-circulating-percent-total-timestamp'] = ccRankTimestamp;
       if (btcPrice && ccPrice) {
         item['cryptohub-price-btc'] = 1 / (btcPrice / ccPrice);
-        item['cryptohub-price-btc-timestamp'] = item['cc-price-PRICE-timestamp'];
+        item['cryptohub-price-btc-timestamp'] = item['cc-total-vol-full-PRICE-timestamp'];
       }
     }
 

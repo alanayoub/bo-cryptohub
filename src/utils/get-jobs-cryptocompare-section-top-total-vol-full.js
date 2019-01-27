@@ -11,7 +11,7 @@ const settings = require.main.require('./settings');
  * @param {Object} bootstrappedData
  *
  */
-module.exports = async function getJobsCryptocompareSectionTopTotalVolFull(queue, bootstrappedData) {
+module.exports = async function getJobsCryptocompareSectionTotalVolFull(queue, bootstrappedData) {
   try {
 
      // let arr1 = [];
@@ -65,11 +65,11 @@ module.exports = async function getJobsCryptocompareSectionTopTotalVolFull(queue
 
      //   }
      // }
-     // logger.info(`getJobsCryptocompareSectionTopTotalVolFull(): ${jobs} price jobs created`);
+     // logger.info(`getJobsCryptocompareSectionTotalVolFull(): ${jobs} price jobs created`);
 
   }
   catch(error) {
-    const message = `getJobsCryptocompareSectionTopTotalVolFull(): ${error}`;
+    const message = `getJobsCryptocompareSectionTotalVolFull(): ${error}`;
     logger.error(message);
     return {message, error: true};
   }

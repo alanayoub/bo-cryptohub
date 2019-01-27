@@ -112,9 +112,9 @@ const settings = {
   //
   apiKey:                                      'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222',
 
-  tagUriCryptocompareTotalVolFull:              (str, obj) => `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=100&tsym=USD&page=${ob.page}`,
-  tagKeyCryptocompareTotalVolFullSingle:        (str, obj) => `${scrapeDir}/cryptocompare-totalvolfull/page-${ob.page}.json`,
-  tagKeyCryptocompareTotalVolFullSingleGrouped: (str, obj) => `${scrapeDir}/cryptocompare-totalvolfull-grouped/data.json`,
+  tagUriCryptocompareTotalVolFull:              (str, ob) => `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=${ob.limit}&tsym=USD&page=${ob.page}`,
+  tagKeyCryptocompareTotalVolFull:              (str, ob) => `${scrapeDir}/cryptocompare-totalvolfull/page-${ob.page}.json`,
+  tagKeyCryptocompareTotalVolFullGrouped:       (str, ob) => `${scrapeDir}/cryptocompare-totalvolfull-grouped/data.json`,
 
   uriCryptocompareList:                        'https://min-api.cryptocompare.com/data/all/coinlist',
   keyCryptocompareList:                        `${scrapeDir}/cryptocompare-coinlist/data.json`,

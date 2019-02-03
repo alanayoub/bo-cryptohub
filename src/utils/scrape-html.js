@@ -5,10 +5,12 @@
  * @param {String} cacheFor
  *
  */
+
 const rp = require('request-promise');
 const { to } = require('await-to-js');
-const logger = require('../logger');
+const logger = require('./logger');
 const cheerio = require('cheerio');
+
 module.exports = async function scrapeHTML(uri, key, cacheFor) {
   try {
     const options = {

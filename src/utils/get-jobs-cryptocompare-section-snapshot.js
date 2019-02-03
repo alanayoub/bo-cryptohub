@@ -5,16 +5,16 @@ const settings = require.main.require('./settings');
 /**
  *
  * @param {Array} queue
- * @param {Object} bootstrappedData
+ * @param {Object} bootstrapData
  *
  */
-module.exports = async function getJobsCryptocompareSectionSnapshot(queue, bootstrappedData) {
+module.exports = async function getJobsCryptocompareSectionSnapshot(queue, bootstrapData) {
   try {
 
     let jobs = 0;
     let counter = 0;
     const groupKey = settings.tagKeyCryptocompareSnapshotGrouped`${{}}`;
-    const ids = Object.values(bootstrappedData.coinList.Data).map(v => v.Id);
+    const ids = Object.values(bootstrapData.coinList.Data).map(v => v.Id);
     const length = ids.length;
     for (const id of ids) {
       counter++;

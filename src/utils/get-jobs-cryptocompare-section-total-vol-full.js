@@ -8,10 +8,10 @@ const settings = require.main.require('./settings');
 /**
  *
  * @param {Array} queue
- * @param {Object} bootstrappedData
+ * @param {Object} bootstrapData
  *
  */
-module.exports = async function getJobsCryptocompareSectionTotalVolFull(queue, bootstrappedData) {
+module.exports = async function getJobsCryptocompareSectionTotalVolFull(queue, bootstrapData) {
   try {
 
     let page = 0;

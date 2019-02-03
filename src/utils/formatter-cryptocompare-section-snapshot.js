@@ -4,7 +4,7 @@
  *
  */
 const logger = require.main.require('./logger');
-module.exports = function formatterCryptocompareSectionSnapshot(price, timestamp, bootstrappedData) {
+module.exports = function formatterCryptocompareSectionSnapshot(price, timestamp, bootstrapData) {
   try {
 
     let obj, key, val, id, i;

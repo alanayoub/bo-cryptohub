@@ -33,14 +33,14 @@ const logger = require.main.require('./logger');
  *
  * @param {String?} data
  * @param {String?} timestamp
- * @param {Object} bootstrappedData
+ * @param {Object} bootstrapData
  * @return {Object}
  *
  */
-module.exports = function formatterCryptocompareSectionCoinlist(data, timestamp, bootstrappedData) {
+module.exports = function formatterCryptocompareSectionCoinlist(data, timestamp, bootstrapData, appBootstrapData) {
   try {
 
-    const { idSymbolMap, symbolIdMap } = bootstrappedData;
+    const { idSymbolMap, symbolIdMap } = bootstrapData;
     const prefix = 'cc-coinlist-';
     const objAllCoins = data.Data;
     const result = {};

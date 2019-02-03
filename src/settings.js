@@ -55,9 +55,6 @@ const scrapeDir = '/tmp-scraped';
  *    Returns all the coins that CryptoCompare has added to the website
  *
  *  uriCryptocompareExchanges:
- *    Returns all the exchanges that CryptoCompare has integrated with
- *
- *  uriCryptocompareExchangeStatus:
  *    Returns all the exchanges that CryptoCompare has integrated with and their status,
  *    including whether or not they are excluded from pricing and volumes
  *
@@ -118,10 +115,10 @@ const settings = {
 
   uriCryptocompareList:                        'https://min-api.cryptocompare.com/data/all/coinlist',
   keyCryptocompareList:                        `${scrapeDir}/cryptocompare-coinlist/data.json`,
-  uriCryptocompareExchanges:                   'https://min-api.cryptocompare.com/data/all/exchanges',
+  uriCryptocompareExchanges:                   'https://min-api.cryptocompare.com/data/v2/all/exchanges',
   keyCryptocompareExchanges:                   `${scrapeDir}/cryptocompare-exchanges-list/data.json`,
-  uriCryptocompareExchangeStatus:              'https://min-api.cryptocompare.com/data/all/cccaggexchanges',
-  keyCryptocompareExchangeStatus:              `${scrapeDir}/cryptocompare-exchange-status/data.json`,
+  // uriCryptocompareExchangeStatus:              'https://min-api.cryptocompare.com/data/all/cccaggexchanges',
+  // keyCryptocompareExchangeStatus:              `${scrapeDir}/cryptocompare-exchange-status/data.json`,
 
   tagUriCryptocompareTradingInfoSingle:        (str, ob) => `https://min-api.cryptocompare.com/data/generateAvg?fsym=${ob.symbol1}&tsym=${ob.symbol2}&e=${ob.exchange}`,
   tagKeyCryptocompareTradingInfoSingle:        (str, ob) => `${scrapeDir}/cryptocompare-exchange/${ob.exchange}-pairs-${ob.symbol1}-${ob.symbol2}.json`,

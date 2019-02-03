@@ -70,17 +70,16 @@ const logger = require.main.require('./logger');
  *
  * @param {Array} price is an array of the responses of batched cryptocompare api price data
  * @param {String} timestamp
- * @param {Object} bootstrappedData
+ * @param {Object} bootstrapData
  * @return {Object}
  *
  */
-module.exports = function formatterCryptocompareSectionTotalVolFull(price, timestamp, bootstrappedData) {
+module.exports = function formatterCryptocompareSectionTotalVolFull(price, timestamp, bootstrapData) {
   try {
 
     const prefix = 'cc-total-vol-full-';
 
     let fData = {};
-    let batchRequestData;
     let idx;
     let dataItem;
     let RAW;

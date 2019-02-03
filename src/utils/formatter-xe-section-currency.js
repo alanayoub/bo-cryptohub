@@ -24,12 +24,11 @@ const settings = require.main.require('./settings');
 //  USD: {name: "US Dollar", unitsPerUSD": 1.0000000000", USDPerUnits: "1.0000000000"},
 //  EUR: {name: "Euro",      unitsPerUSD: "0.8576784390", USDPerUnits: "1.1659381355"}
 //
-module.exports = function USDCurrencyTable() {
+module.exports = function formatterXeSectionCurrency(response, timestamp, bootstrapData, appBootstrapData) {
   try {
+
     const data = {};
-    const currency = 'USD';
-    const [file] = settings.cache.get(settings.tagKeyXeCurrencyTables`${currency}`);
-    const $ = cheerio.load(file);
+    const $ = cheerio.load(response);
     const trs = $('#historicalRateTbl tbody tr').toArray();
     for (const tr of trs) {
       const tds = $(tr).find('td').toArray();
@@ -43,10 +42,12 @@ module.exports = function USDCurrencyTable() {
         USDPerUnits
       }
     }
-    return data;
+    appBootstrapData.currency = data;
+    return {data, timestamp};
   }
   catch(error) {
-    logger.error(`usdCurrencyTable: ${error}`);
-    return false;
+    const message = `formatterXeSectionCurrency(): ${error}`;
+    logger.error(message);
+    return {message, error: true};
   }
 }

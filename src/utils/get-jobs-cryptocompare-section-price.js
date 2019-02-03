@@ -8,10 +8,10 @@ const settings = require.main.require('./settings');
 /**
  *
  * @param {Array} queue
- * @param {Object} bootstrappedData
+ * @param {Object} bootstrapData
  *
  */
-module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstrappedData) {
+module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstrapData) {
   try {
 
      let arr1 = [];
@@ -32,7 +32,7 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
      const limit = 400;
      let items = [];
      let order;
-     for (let item of Object.values(bootstrappedData.coinList.Data)) {
+     for (let item of Object.values(bootstrapData.coinList.Data)) {
        order = item['SortOrder'];
        if (order < limit) {
          items[order] = item;

@@ -21,7 +21,9 @@ const dataHandler                               = require.main.require('./utils/
 const formatterCryptocompareBootstrap           = require.main.require('./utils/formatter-cryptocompare-bootstrap.js');
 const formatterCryptocompareSectionPrice        = require.main.require('./utils/formatter-cryptocompare-section-price.js');
 const formatterCryptocompareSectionCoinlist     = require.main.require('./utils/formatter-cryptocompare-section-coinlist.js');
+const formatterCryptocompareSectionExchanges    = require.main.require('./utils/formatter-cryptocompare-section-exchanges.js');
 const formatterCryptocompareSectionTotalVolFull = require.main.require('./utils/formatter-cryptocompare-section-total-vol-full.js');
+const formatterXeSectionCurrency                = require.main.require('./utils/formatter-xe-section-currency.js');
 
 // Job fetchers
 const getJobsCryptocompareSectionPrice          = require.main.require('./utils/get-jobs-cryptocompare-section-price.js');
@@ -43,8 +45,8 @@ try {
     tmpDir: settings.keyCryptohubAnalyticsTmp,
     outDir: settings.keyCryptohubAnalyticsOut,
     cacheDir: 'cache',
-    dataHandler,
-    mergeHandler,
+    mergeHandler, // merge data from different sites
+    dataHandler,  // handle merged data
     defaultData: [],
     scrapeSites: {
       cryptocompare: {
@@ -57,15 +59,28 @@ try {
             // COINLIST
             // Get the full list of coins with IDs
             //
-            // TODO: bootstrappedData needs to change when coinlist changes!!!!
+            // TODO: bootstrapData needs to change when coinlist changes!!!!
             //
             name: 'coinList',
             interval: 1000 * 5,
             cacheArgs: [settings.keyCryptocompareList, 'all'],
-            getJobs(queue, bootstrappedData) {
+            getJobs(queue, bootstrapData) {
               queue.push({uri: settings.uriCryptocompareList, key: settings.keyCryptocompareList, cacheForDays: 0});
             },
             formatter: formatterCryptocompareSectionCoinlist,
+          },
+          {
+            //
+            // EXCHANGES
+            // Get all the exchanges that CryptoCompare has integrated with
+            //
+            name: 'exchanges',
+            interval: 1000 * 60 * 60,
+            cacheArgs: [settings.keyCryptocompareExchanges, 'all'],
+            getJobs(queue, bootstrapData) {
+              queue.push({uri: settings.uriCryptocompareExchanges, key: settings.keyCryptocompareExchanges, cacheForDays: 0});
+            },
+            formatter: formatterCryptocompareSectionExchanges,
           },
           {
             //
@@ -86,8 +101,6 @@ try {
             //
             // TopTotalVolume
             //
-            // @see https://min-api.cryptocompare.com/data/top/totalvolfull?limit=100&tsym=USD&page=1
-            //
             name: 'totalVolFull',
             interval: 1000 * 10,
             cacheArgs: [settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`, 'all'],
@@ -97,21 +110,31 @@ try {
               const merged = {...oldData, ...newData};
               return merged;
             },
-          }
+          },
         ]
       },
-      // xe: {
-      //   cacheForDays: 1,
-      //   rateLimitDelay: 1000 * 60 * 60 * 24,
-      //   items: [
-      //     {
-      //       name: 'currency',
-      //       interval: 1000 * 60 * 60 * 24,
-      //       getJobs(queue) {},
-      //       formatter(data, timestamp) {}
-      //     }
-      //   ]
-      // }
+      xe: {
+        cacheFor: 0,
+        // rateLimitDelayMs: 1000 * 10,
+        rateLimitDelayMs: 1000 * 60 * 60 * 24,
+        bootstrap: () => {return {}},
+        sections: [
+          {
+            name: 'currency',
+            // interval: 1000 * 10,
+            interval: 1000 * 60 * 60 * 24,
+            cacheArgs: [settings.tagKeyXeCurrencyTables`${'USD'}`, 'all'],
+            getJobs(queue, bootstrapData) {
+              queue.push({
+                uri: settings.tagUriXeCurrencyTables`${'USD'}`,
+                key: settings.tagKeyXeCurrencyTables`${'USD'}`,
+                cacheForDays: 0
+              });
+            },
+            formatter: formatterXeSectionCurrency,
+          }
+        ]
+      }
     }
   });
 

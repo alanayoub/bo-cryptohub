@@ -45,11 +45,11 @@ const logger = require.main.require('./logger');
  *
  * @param {Array} price is an array of the responses of batched cryptocompare api price data
  * @param {String} timestamp
- * @param {Object} bootstrappedData
+ * @param {Object} bootstrapData
  * @return {Object}
  *
  */
-module.exports = function formatterCryptocompareSectionPrice(price, timestamp, bootstrappedData) {
+module.exports = function formatterCryptocompareSectionPrice(price, timestamp, bootstrapData) {
   try {
 
     let i;
@@ -69,7 +69,7 @@ module.exports = function formatterCryptocompareSectionPrice(price, timestamp, b
         continue;
       }
       for ([symbol, val] of Object.entries(batchRequestData)) {
-        id = bootstrappedData.symbolIdMap[symbol];
+        id = bootstrapData.symbolIdMap[symbol];
         if (id && val.USD) {
           val = val.USD;
           fData[id] = {};

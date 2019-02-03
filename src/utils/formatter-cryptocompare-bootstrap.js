@@ -35,7 +35,7 @@ const scrapeJSON = require.main.require('./utils/scrape-json.js');
  *
  * @param {String?} data
  * @param {String?} timestamp
- * @param {Object} bootstrappedData
+ * @param {Object} bootstrapData
  * @return {Object}
  *
  */

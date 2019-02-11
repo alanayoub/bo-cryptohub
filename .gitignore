@@ -16,6 +16,13 @@ node_modules
 *.swk
 *.swj
 
+*.seed
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
 # Generated files
 *.generated.js
 
@@ -28,3 +35,11 @@ cache/*
 
 # Redis
 dump.rdb
+
+lib-cov
+
+pids
+results
+
+coverage
+.DS_Store

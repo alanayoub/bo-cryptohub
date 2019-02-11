@@ -1,3 +1,10 @@
+// Libs
+import arrayToObject from '../libs/bo-utils/array-to-object';
+
+// Cryptohub
+import logger from '../logger';
+import settings from '../settings';
+
 /**
  *
  * Data Handler
@@ -6,21 +13,6 @@
  * @param {Array} data
  *
  */
-const logger   = require.main.require('./logger');
-const settings = require.main.require('./settings');
-
-/**
- *
- * arrayToObject
- *
- */
-function arrayToObject(data, field) {
-  var objData = {};
-  for (let obj of data) {
-    objData[obj[field]] = obj;
-  }
-  return objData;
-}
 
 /**
  *
@@ -120,7 +112,7 @@ function deleteBadRecords(data) {
  * @return {String} return the modified timeseries string
  *
  */
-function updateChPriceHistory(timeseries, newTimestamp, newPrice, limit = 100, maxAge = 7 * 24 * 60 * 60 * 1000) {
+function updateTimeseriesHistory(timeseries, newTimestamp, newPrice, newVolume, limit = 100, maxAge = 7 * 24 * 60 * 60 * 1000) {
 
   let tsArr = timeseries ? timeseries.split(',') : [];
 
@@ -149,7 +141,7 @@ function updateChPriceHistory(timeseries, newTimestamp, newPrice, limit = 100, m
   }
 
   // Add new timeseries item
-  tsArr.push(`${newTimestamp}|${newPrice}`);
+  tsArr.push(`${newTimestamp}|${newPrice}|${newVolume}`);
   timeseries = tsArr.join();
 
   return timeseries;
@@ -205,6 +197,7 @@ module.exports = function dataHandler(data) {
     data = deleteBadRecords(data);
 
     let ccPrice;
+    let ccVolume;
     let totalSupply;
     let ccPriceTimestamp;
     let circulatingSupply;
@@ -224,14 +217,17 @@ module.exports = function dataHandler(data) {
     for (let [key, item] of Object.entries(data)) {
 
       ccPrice = item['cc-total-vol-full-PRICE'];
+      ccVolume = item['cc-total-vol-full-TOTALVOLUME24HTO'];
       ccPriceTimestamp = +new Date(item['cc-total-vol-full-PRICE-timestamp']);
 
       //
-      // Update price history
+      // Update timeseries history
       //
       {
         const timeseries = item['cryptohub-price-history'];
-        item['cryptohub-price-history'] = updateChPriceHistory(timeseries, ccPriceTimestamp, ccPrice);
+        item['cryptohub-price-history'] = updateTimeseriesHistory(
+          timeseries, ccPriceTimestamp, ccPrice, ccVolume
+        );
       }
 
       {

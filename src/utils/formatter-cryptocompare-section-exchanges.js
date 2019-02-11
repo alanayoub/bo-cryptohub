@@ -3,7 +3,104 @@ const logger = require.main.require('./logger');
 
 /**
  *
+ * addSymbol
+ *
+ */
+function addSymbol(symbols, symbol) {
+  if (!symbols[symbol]) {
+    symbols[symbol] = {
+      pairs: new Set(),
+      exchangeList: new Set(),
+      _fiatCurrencies: new Set(),
+      _exchangesRank: 0,
+      _numberOfExchanges: 0,
+      _numberOfPairs: 0,
+      _numberOfFiatPairs: 0,
+      _numberOfFiatCurrencies: 0,
+    }
+  }
+}
+
+/**
+ *
+ * addExchange
+ *
+ */
+function addExchange(exchanges, exchange) {
+  exchanges[exchange] = {
+    pairs: new Set(),
+    _cryptoCurrencies: new Set(),
+    _fiatCurrencies: new Set(),
+    _points: 0,
+    _numberOfPairs: 0,
+    _numberOfFiatPairs: 0,
+    _numberOfCryptoPairs: 0,
+    _numberOfCurrencies: 0,
+    _numberOfCryptoCurrencies: 0,
+    _numberOfFiatCurrencies: 0,
+  };
+}
+
+/**
+ *
+ * addExchangeToSymbol
+ *
+ */
+function addExchangeToSymbol(symbols, symbol, exchange) {
+  symbols[symbol].exchangeList.add(exchange);
+}
+
+/**
+ *
+ * addPairsToSymbol
+ *
+ */
+function addPairsToSymbol(symbols, symbol, pair) {
+  symbols[symbol].pairs.add(pair);
+}
+
+/**
+ *
+ * addPairsToExchange
+ *
+ */
+function addPairsToExchange(exchanges, exchange, pair) {
+  exchanges[exchange].pairs.add(pair);
+}
+
+// TODO: val?
+// function addCryptoVolume(currencyCodes, symbol1, symbol2) {
+//   if (!(currencyCodes.includes(symbol2) || currencyCodes.includes(symbol1))) {
+//     // For each pair record the volume in each currency
+//     if (!cryptoVolume[symbol1])          cryptoVolume[symbol1]          = {};
+//     if (!cryptoVolume[symbol2])          cryptoVolume[symbol2]          = {};
+//     if (!cryptoVolume[symbol1][symbol2]) cryptoVolume[symbol1][symbol2] = 0;
+//     if (!cryptoVolume[symbol2][symbol1]) cryptoVolume[symbol2][symbol1] = 0;
+//     cryptoVolume[symbol1][symbol2] += val.VOLUME24HOURTO;
+//     cryptoVolume[symbol2][symbol1] += val.VOLUME24HOUR;
+//   }
+// }
+
+// TODO: val?
+// function addFiatVolume(currencyCodes, symbol1, symbol2) {
+//   if (currencyCodes.includes(symbol2)) {
+//     if (!fiatVolume[symbol1])          fiatVolume[symbol1]          = {};
+//     if (!fiatVolume[symbol1][symbol2]) fiatVolume[symbol1][symbol2] = 0;
+//     fiatVolume[symbol1][symbol2]                                   += val.VOLUME24HOURTO;
+//   }
+//   if (currencyCodes.includes(symbol1)) {
+//     if (!fiatVolume[symbol2])          fiatVolume[symbol2]          = {};
+//     if (!fiatVolume[symbol2][symbol1]) fiatVolume[symbol2][symbol1] = 0;
+//     fiatVolume[symbol2][symbol1]                                   += val.VOLUME24HOUR;
+//   }
+// }
+
+/**
+ *
  * EXCHANGES
+ *
+ * Format and save exchange data to appBootstrapData and return
+ * exchange data for symbols to be merged with the main dataset
  *
  * Original exchanges data is in the below format:
  *
@@ -18,7 +115,6 @@ const logger = require.main.require('./logger');
  *   }
  * ```
  *
- *
  * @param {Array} exchanges is an array of the responses of batched cryptocompare api exchanges data
  * @param {String} timestamp
  * @param {Object} bootstrapData
@@ -28,7 +124,7 @@ const logger = require.main.require('./logger');
 module.exports = function formatterCryptocompareSectionExchanges(response, timestamp, bootstrapData, appBootstrapData) {
   try {
 
-    if (!appBootstrapData.currency) return {data: {}, timestamp};
+    if (!appBootstrapData.currency || !response && !response.Data) return {data: {}, timestamp};
 
     //
     // STEP 1: Extract data into the below 2 object structures
@@ -46,81 +142,10 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
     // }
     //
 
-    if (!response && !response.Data) return {data: {}, timestamp};
-
     const symbols = {};
     const exchanges = {};
     // const fiatVolume = {};
     // const cryptoVolume = {};
-
-    function addSymbol(symbol) {
-      if (!symbols[symbol]) {
-        symbols[symbol] = {
-          pairs: new Set(),
-          exchangeList: new Set(),
-          _fiatCurrencies: new Set(),
-          _exchangesRank: 0,
-          _numberOfExchanges: 0,
-          _numberOfPairs: 0,
-          _numberOfFiatPairs: 0,
-          _numberOfFiatCurrencies: 0,
-        }
-      }
-    }
-
-    function addExchange(exchange) {
-      exchanges[exchange] = {
-        pairs: new Set(),
-        _cryptoCurrencies: new Set(),
-        _fiatCurrencies: new Set(),
-        _points: 0,
-        _numberOfPairs: 0,
-        _numberOfFiatPairs: 0,
-        _numberOfCryptoPairs: 0,
-        _numberOfCurrencies: 0,
-        _numberOfCryptoCurrencies: 0,
-        _numberOfFiatCurrencies: 0,
-      };
-    }
-
-    function addExchangeToSymbol(symbol, exchange) {
-      symbols[symbol].exchangeList.add(exchange);
-    }
-
-    function addPairsToSymbol(symbol, pair) {
-      symbols[symbol].pairs.add(pair);
-    }
-
-    function addPairsToExchange(exchange, pair) {
-      exchanges[exchange].pairs.add(pair);
-    }
-
-    // TODO: val?
-    function addCryptoVolume(currencyCodes, symbol1, symbol2) {
-      if (!(currencyCodes.includes(symbol2) || currencyCodes.includes(symbol1))) {
-        // For each pair record the volume in each currency
-        if (!cryptoVolume[symbol1])          cryptoVolume[symbol1]          = {};
-        if (!cryptoVolume[symbol2])          cryptoVolume[symbol2]          = {};
-        if (!cryptoVolume[symbol1][symbol2]) cryptoVolume[symbol1][symbol2] = 0;
-        if (!cryptoVolume[symbol2][symbol1]) cryptoVolume[symbol2][symbol1] = 0;
-        cryptoVolume[symbol1][symbol2] += val.VOLUME24HOURTO;
-        cryptoVolume[symbol2][symbol1] += val.VOLUME24HOUR;
-      }
-    }
-
-    // TODO: val?
-    function addFiatVolume(currencyCodes, symbol1, symbol2) {
-      if (currencyCodes.includes(symbol2)) {
-        if (!fiatVolume[symbol1])          fiatVolume[symbol1]          = {};
-        if (!fiatVolume[symbol1][symbol2]) fiatVolume[symbol1][symbol2] = 0;
-        fiatVolume[symbol1][symbol2]                                   += val.VOLUME24HOURTO;
-      }
-      if (currencyCodes.includes(symbol1)) {
-        if (!fiatVolume[symbol2])          fiatVolume[symbol2]          = {};
-        if (!fiatVolume[symbol2][symbol1]) fiatVolume[symbol2][symbol1] = 0;
-        fiatVolume[symbol2][symbol1]                                   += val.VOLUME24HOUR;
-      }
-    }
 
     let data;
     let list;
@@ -131,20 +156,20 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
     const exclude0xSymbols = true;
     for ([exchange, data] of Object.entries(response.Data)) {
       if (!data.is_active) continue;
-      if (!exchanges[exchange]) addExchange(exchange);
+      if (!exchanges[exchange]) addExchange(exchanges, exchange);
       data = data.pairs;
       for ([symbol1, list] of Object.entries(data)) {
         if (symbol1.startsWith('0x') && exclude0xSymbols) continue;
-        addSymbol(symbol1);
-        addExchangeToSymbol(symbol1, exchange);
+        addSymbol(symbols, symbol1);
+        addExchangeToSymbol(symbols, symbol1, exchange);
         for (symbol2 of Object.values(list)) {
           if (symbol2.startsWith('0x') && exclude0xSymbols) continue;
           pair = `${symbol1},${symbol2}`;
-          addSymbol(symbol2);
-          addExchangeToSymbol(symbol2, exchange);
-          addPairsToExchange(exchange, pair);
-          addPairsToSymbol(symbol1, pair);
-          addPairsToSymbol(symbol2, pair);
+          addSymbol(symbols, symbol2);
+          addExchangeToSymbol(symbols, symbol2, exchange);
+          addPairsToExchange(exchanges, exchange, pair);
+          addPairsToSymbol(symbols, symbol1, pair);
+          addPairsToSymbol(symbols, symbol2, pair);
         }
       }
     }
@@ -230,13 +255,14 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
 
     }
 
+    //
+    // Set bootstrap data
+    //
     appBootstrapData.exchanges = exchanges;
-
 
     //
     // Save exchange data to core dataset
     //
-
     let result = {};
     const map = bootstrapData['symbolIdMap'];
     if (bootstrapData.coinList.Data) {
@@ -247,6 +273,7 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
         if (symbols[symbol]) {
           id = map[symbol];
           result[id] = {
+
             // 'cryptohub-exchangesList': symbols[symbol].exchangesList,
             // 'cryptohub-pairs': symbols[symbol].pairs,
             // 'cryptohub-fiatCurrencies': symbols[symbol]._fiatCurrencies,

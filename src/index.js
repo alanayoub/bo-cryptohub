@@ -9,25 +9,25 @@
 //
 
 // CryptoHub
-const logger                                    = require.main.require('./logger');
-const settings                                  = require.main.require('./settings');
-const DataTable                                 = require.main.require('./libs/dataTable/src');
+import logger                                    from './logger';
+import settings                                  from './settings';
+import DataTable                                 from './libs/dataTable/src';
 
 // Handlers
-const mergeHandler                              = require.main.require('./utils/merge-handler.js');
-const dataHandler                               = require.main.require('./utils/data-handler.js');
+import mergeHandler                              from './utils/merge-handler';
+import dataHandler                               from './utils/data-handler';
 
 // Formatters
-const formatterCryptocompareBootstrap           = require.main.require('./utils/formatter-cryptocompare-bootstrap.js');
-const formatterCryptocompareSectionPrice        = require.main.require('./utils/formatter-cryptocompare-section-price.js');
-const formatterCryptocompareSectionCoinlist     = require.main.require('./utils/formatter-cryptocompare-section-coinlist.js');
-const formatterCryptocompareSectionExchanges    = require.main.require('./utils/formatter-cryptocompare-section-exchanges.js');
-const formatterCryptocompareSectionTotalVolFull = require.main.require('./utils/formatter-cryptocompare-section-total-vol-full.js');
-const formatterXeSectionCurrency                = require.main.require('./utils/formatter-xe-section-currency.js');
+import formatterCryptocompareBootstrap           from './utils/formatter-cryptocompare-bootstrap.js';
+import formatterCryptocompareSectionPrice        from './utils/formatter-cryptocompare-section-price.js';
+import formatterCryptocompareSectionCoinlist     from './utils/formatter-cryptocompare-section-coinlist.js';
+import formatterCryptocompareSectionExchanges    from './utils/formatter-cryptocompare-section-exchanges.js';
+import formatterCryptocompareSectionTotalVolFull from './utils/formatter-cryptocompare-section-total-vol-full.js';
+import formatterXeSectionCurrency                from './utils/formatter-xe-section-currency.js';
 
 // Job fetchers
-const getJobsCryptocompareSectionPrice          = require.main.require('./utils/get-jobs-cryptocompare-section-price.js');
-const getJobsCryptocompareSectionTotalVolFull   = require.main.require('./utils/get-jobs-cryptocompare-section-total-vol-full.js');
+import getJobsCryptocompareSectionPrice          from './utils/get-jobs-cryptocompare-section-price.js';
+import getJobsCryptocompareSectionTotalVolFull   from './utils/get-jobs-cryptocompare-section-total-vol-full.js';
 
 process.on('warning', error => {
   logger.warning(`index.js:\n${error.stack}`);
@@ -38,7 +38,7 @@ try {
   //
   // TODO: expand and collapse data so we dont repeat object labels
   //
-  new DataTable({
+  const dataTable = new DataTable({
     server: {
       port: 3000
     },
@@ -67,7 +67,7 @@ try {
             getJobs(queue, bootstrapData) {
               queue.push({uri: settings.uriCryptocompareList, key: settings.keyCryptocompareList, cacheForDays: 0});
             },
-            formatter: formatterCryptocompareSectionCoinlist,
+            formatter: formatterCryptocompareSectionCoinlist
           },
           {
             //
@@ -80,23 +80,23 @@ try {
             getJobs(queue, bootstrapData) {
               queue.push({uri: settings.uriCryptocompareExchanges, key: settings.keyCryptocompareExchanges, cacheForDays: 0});
             },
-            formatter: formatterCryptocompareSectionExchanges,
+            formatter: formatterCryptocompareSectionExchanges
           },
-          {
-            //
-            // PRICE
-            // Get every token in USD only (batched requests)
-            //
-            name: 'price',
-            interval: 1000 * 10,
-            cacheArgs: [settings.tagKeyCryptocompareTradingInfoMultiGrouped`${{}}`, 'all'],
-            getJobs: getJobsCryptocompareSectionPrice,
-            formatter: formatterCryptocompareSectionPrice,
-            handler(oldData, newData) {
-              const merged = {...oldData, ...newData};
-              return merged;
-            },
-          },
+          // {
+          //   //
+          //   // PRICE
+          //   // Get every token in USD only (batched requests)
+          //   //
+          //   name: 'price',
+          //   interval: 1000 * 10,
+          //   cacheArgs: [settings.tagKeyCryptocompareTradingInfoMultiGrouped`${{}}`, 'all'],
+          //   getJobs: getJobsCryptocompareSectionPrice,
+          //   formatter: formatterCryptocompareSectionPrice,
+          //   handler(oldData, newData) {
+          //     const merged = {...oldData, ...newData};
+          //     return merged;
+          //   },
+          // },
           {
             //
             // TopTotalVolume
@@ -109,19 +109,17 @@ try {
             handler(oldData, newData) {
               const merged = {...oldData, ...newData};
               return merged;
-            },
-          },
+            }
+          }
         ]
       },
       xe: {
         cacheFor: 0,
-        // rateLimitDelayMs: 1000 * 10,
         rateLimitDelayMs: 1000 * 60 * 60 * 24,
         bootstrap: () => {return {}},
         sections: [
           {
             name: 'currency',
-            // interval: 1000 * 10,
             interval: 1000 * 60 * 60 * 24,
             cacheArgs: [settings.tagKeyXeCurrencyTables`${'USD'}`, 'all'],
             getJobs(queue, bootstrapData) {
@@ -131,7 +129,7 @@ try {
                 cacheForDays: 0
               });
             },
-            formatter: formatterXeSectionCurrency,
+            formatter: formatterXeSectionCurrency
           }
         ]
       }
@@ -140,10 +138,9 @@ try {
 
 }
 
-catch(error) {
+catch (error) {
 
   logger.error(`Um some error happened yo: ${error}`);
   process.exit(1);
 
 }
-

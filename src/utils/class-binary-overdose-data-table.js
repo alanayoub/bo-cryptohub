@@ -14,6 +14,7 @@ const Cache        = require('./class-cache');
 const Watcher      = require('./class-watcher');
 const DataStore    = require('./class-data-store');
 const ScrapeQueue  = require('./class-scrape-queue');
+
 const logger       = require.main.require('./logger');
 
 /**

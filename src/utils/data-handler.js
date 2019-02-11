@@ -16,7 +16,10 @@ import settings from '../settings';
 
 /**
  *
- * packData
+ * Pack Data
+ *
+ * @param {Object} data
+ * @return {Object}
  *
  */
 const packData = function (data) {
@@ -50,7 +53,10 @@ const packData = function (data) {
 
 /**
  *
- * unpackData
+ * Unpack Data
+ *
+ * @param {Object} data
+ * @return {Object}
  *
  */
 const unpackData = function (data) {
@@ -80,6 +86,9 @@ const unpackData = function (data) {
 /**
  *
  * Delete bad records
+ *
+ * @param {Object} data
+ * @return {Object}
  *
  */
 function deleteBadRecords(data) {

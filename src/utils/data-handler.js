@@ -96,14 +96,19 @@ function deleteBadRecords(data) {
   let key;
   let item;
 
-  // Delete records that we don't have sufficient data for
+  function validData(item) {
+    return !(item['cc-total-vol-full-TOTALVOLUME24HTO'] === 0 || item['cc-total-vol-full-PRICE'] === void 0);
+  }
+
+  function isFresh(item) {
+    const now = +new Date();
+    const longestAge = 1000 * 60 * 60 * 24;
+    const timestamp = +new Date(item['cc-total-vol-full-PRICE-timestamp']);
+    return now - timestamp < longestAge;
+  }
+
   for ([key, item] of Object.entries(data)) {
-    if (
-         item['cc-total-vol-full-TOTALVOLUME24HTO'] === 0
-      || item['cc-total-vol-full-PRICE']            === void 0
-    ) {
-      delete data[key];
-    }
+    if (!validData(item) || !isFresh(item)) delete data[key];
   }
 
   return data;

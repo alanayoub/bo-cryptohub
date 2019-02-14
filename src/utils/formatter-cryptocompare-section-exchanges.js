@@ -10,7 +10,9 @@ function addSymbol(symbols, symbol) {
   if (!symbols[symbol]) {
     symbols[symbol] = {
       pairs: new Set(),
-      exchangeList: new Set(),
+      exchangeListFiatOnly: new Set(),
+      exchangeListCryptoOnly: new Set(),
+      exchangeListAcceptsBoth: new Set(),
       _fiatCurrencies: new Set(),
       _exchangesRank: 0,
       _numberOfExchanges: 0,
@@ -26,8 +28,9 @@ function addSymbol(symbols, symbol) {
  * addExchange
  *
  */
-function addExchange(exchanges, exchange) {
+function addExchange(exchanges, exchange, id) {
   exchanges[exchange] = {
+    id,
     pairs: new Set(),
     _cryptoCurrencies: new Set(),
     _fiatCurrencies: new Set(),
@@ -46,8 +49,10 @@ function addExchange(exchanges, exchange) {
  * addExchangeToSymbol
  *
  */
-function addExchangeToSymbol(symbols, symbol, exchange) {
-  symbols[symbol].exchangeList.add(exchange);
+function addExchangeToSymbol(symbols, symbol, exchange, type) {
+  if (type === 'fiat')        symbols[symbol].exchangeListFiatOnly.add(exchange);
+  else if (type === 'crypto') symbols[symbol].exchangeListCryptoOnly.add(exchange);
+  else if (type === 'both')   symbols[symbol].exchangeListAcceptsBoth.add(exchange);
 }
 
 /**
@@ -153,25 +158,31 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
     let symbol1;
     let symbol2;
     let exchange;
+    let exchangeId = 0;
     const exclude0xSymbols = true;
+
     for ([exchange, data] of Object.entries(response.Data)) {
       if (!data.is_active) continue;
-      if (!exchanges[exchange]) addExchange(exchanges, exchange);
+      if (!exchanges[exchange]) addExchange(exchanges, exchange, exchangeId++);
       data = data.pairs;
+
       for ([symbol1, list] of Object.entries(data)) {
         if (symbol1.startsWith('0x') && exclude0xSymbols) continue;
         addSymbol(symbols, symbol1);
-        addExchangeToSymbol(symbols, symbol1, exchange);
+        // addExchangeToSymbol(symbols, symbol1, exchange);
+
         for (symbol2 of Object.values(list)) {
           if (symbol2.startsWith('0x') && exclude0xSymbols) continue;
           pair = `${symbol1},${symbol2}`;
           addSymbol(symbols, symbol2);
-          addExchangeToSymbol(symbols, symbol2, exchange);
+          // addExchangeToSymbol(symbols, symbol2, exchange);
           addPairsToExchange(exchanges, exchange, pair);
           addPairsToSymbol(symbols, symbol1, pair);
           addPairsToSymbol(symbols, symbol2, pair);
         }
+
       }
+
     }
 
     //
@@ -208,7 +219,6 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
 
     // Symbols
     for (obj of Object.values(symbols)) {
-      obj._numberOfExchanges = obj.exchangeList.size;
       obj._numberOfPairs = obj.pairs.size;
       for (pair of obj.pairs.values()) {
         [symbol1, symbol2] = pair.split(',');
@@ -239,9 +249,14 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
         // add to _fiatCurrencies or _cryptoCurrencies
         if (currencyCodes.includes(symbol1)) obj._fiatCurrencies.add(symbol1);
         else obj._cryptoCurrencies.add(symbol1);
+
         if (currencyCodes.includes(symbol2)) obj._fiatCurrencies.add(symbol2);
         else obj._cryptoCurrencies.add(symbol2);
 
+        //
+        // Need per exchange volume to do this. Looks like too many requests
+        // with the current API setup
+        //
         // addCryptoVolume(currencyCodes, symbol1, symbol2);
         // addFiatVolume(currencyCodes, symbol1, symbol2);
 
@@ -253,6 +268,33 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
       obj._numberOfPairs = obj.pairs.size;
       obj._numberOfCryptoPairs = obj._numberOfPairs - obj._numberOfFiatPairs;
 
+    }
+
+    // Exchanges part 2
+    // Now that we have calculated which exchanges have fiat / crypto pairs add this data
+    let hasFiat;
+    let hasCrypto;
+    for ([exchange, obj] of Object.entries(exchanges)) {
+
+      for (pair of obj.pairs.values()) {
+
+        [symbol1, symbol2] = pair.split(',');
+
+        hasFiat = hasCrypto = false;
+        if (obj._numberOfFiatCurrencies) hasFiat = true;
+        if (obj._numberOfCryptoCurrencies) hasCrypto = true;
+
+        if (hasFiat && hasCrypto) addExchangeToSymbol(symbols, symbol1, exchange, 'both');
+        else if (hasCrypto)       addExchangeToSymbol(symbols, symbol1, exchange, 'crypto');
+        else if (hasFiat)         addExchangeToSymbol(symbols, symbol1, exchange, 'fiat');
+
+      }
+
+    }
+
+    // Symbols part 2
+    for (obj of Object.values(symbols)) {
+      obj._numberOfExchanges = obj.exchangeListFiatOnly.size + obj.exchangeListCryptoOnly.size + obj.exchangeListAcceptsBoth.size;
     }
 
     //
@@ -269,15 +311,19 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
       const coinList = bootstrapData.coinList.Data;
       let id;
       let symbol;
+      let exchange;
       for ([symbol] of Object.entries(coinList)) {
         if (symbols[symbol]) {
           id = map[symbol];
           result[id] = {
 
-            // 'cryptohub-exchangesList': symbols[symbol].exchangesList,
             // 'cryptohub-pairs': symbols[symbol].pairs,
             // 'cryptohub-fiatCurrencies': symbols[symbol]._fiatCurrencies,
             // 'cryptohub-exchagnesRank': symbols[symbol]._exchagnesRank,
+
+            'cryptohub-exchangesListFiatOnly': Array.from(symbols[symbol].exchangeListFiatOnly),
+            'cryptohub-exchangesListCryptoOnly': Array.from(symbols[symbol].exchangeListCryptoOnly),
+            'cryptohub-exchangesListAcceptsBoth': Array.from(symbols[symbol].exchangeListAcceptsBoth),
 
             'cryptohub-numberOfFiatCurrencies': symbols[symbol]._numberOfFiatCurrencies,
             'cryptohub-numberOfFiatCurrencies-timestamp': timestamp,

@@ -69,7 +69,10 @@ const unpackData = function (data) {
 
   // keys are required to unpack the data
   // they are a map from the minified object keys to the full text keys
-  if (!keys) return data;
+  if (!keys) {
+    logger.warn('unpackData(): no `keys` property was available on data to unpack');
+    return data;
+  }
   delete data.keys;
   for ([id, item] of Object.entries(data)) {
     newObj = {};
@@ -172,7 +175,7 @@ function updateTimeseriesHistory(timeseries, newTimestamp, newPrice, newVolume, 
  * with the last output datasource if any of the stores are empty
  *
  */
-module.exports = function dataHandler(data) {
+module.exports = function dataHandler(data, cache) {
   try {
 
     let id;
@@ -181,15 +184,11 @@ module.exports = function dataHandler(data) {
     let val;
 
     //
-    // Delete here to trim down the noise
-    //
-    data = deleteBadRecords(data);
-
-    //
     // Unpack data & merge new data with last data set
     //
     {
-      let [ oldData ] = settings.cache.get(settings.keyCryptohubAnalyticsOut);
+      // NOTE: there is no key here to unpack the data!!??
+      let [ oldData ] = cache.get('/out/data/data.json');
       oldData = JSON.parse(oldData);
 
       if (Array.isArray(oldData)) {
@@ -205,9 +204,6 @@ module.exports = function dataHandler(data) {
       }
     }
 
-    //
-    // Also Delete here to remove any legacy records that slipped through
-    //
     data = deleteBadRecords(data);
 
     let ccPrice;
@@ -260,7 +256,11 @@ module.exports = function dataHandler(data) {
     // pack data and save file (the watcher will pick it up and emit it)
     //
     data = packData(data);
-    settings.cache.set(settings.keyCryptohubAnalyticsTmp, JSON.stringify(data));
+
+    // TODg
+    const fileName = '/tmp-generated/data/data.json';
+    // When this file is saved the watcher will pitch it up and emit it to the client
+    cache.set(fileName, JSON.stringify(data));
 
   }
   catch(error) {

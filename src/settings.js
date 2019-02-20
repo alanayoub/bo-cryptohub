@@ -48,6 +48,7 @@ global.githubOverrides = {
 }
 
 const scrapeDir = '/tmp-scraped';
+const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222';
 
 /**
  *
@@ -80,7 +81,7 @@ const settings = {
 
   // Cache
   // NOTE: we dont really need this if we are using rate limits. Using it for dev though
-  cache:                                       new Cache('cache', false),
+  cache:                                       new Cache(path.join(__dirname, '../cache'), false),
   cacheForXe:                                  1,  // Days
   cacheForCryptocompare:                       0,  // Days
   cacheForCoinmarketcap:                       1,  // Days
@@ -107,7 +108,6 @@ const settings = {
   //
   // Cryptocompare
   //
-  apiKey:                                      'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222',
 
   tagUriCryptocompareTotalVolFull:              (str, ob) => `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=${ob.limit}&tsym=USD&page=${ob.page}`,
   tagKeyCryptocompareTotalVolFull:              (str, ob) => `${scrapeDir}/cryptocompare-totalvolfull/page-${ob.page}.json`,
@@ -115,8 +115,12 @@ const settings = {
 
   uriCryptocompareList:                        'https://min-api.cryptocompare.com/data/all/coinlist',
   keyCryptocompareList:                        `${scrapeDir}/cryptocompare-coinlist/data.json`,
-  uriCryptocompareExchanges:                   'https://min-api.cryptocompare.com/data/v2/all/exchanges',
-  keyCryptocompareExchanges:                   `${scrapeDir}/cryptocompare-exchanges-list/data.json`,
+
+  uriCryptocompareExchangesList:               'https://min-api.cryptocompare.com/data/v2/all/exchanges',
+  keyCryptocompareExchangesList:               `${scrapeDir}/cryptocompare-exchanges-list/data.json`,
+  uriCryptocompareExchangesGeneral:            `https://min-api.cryptocompare.com/data/exchanges/general?api_key=${cryptocompareApiKey}`,
+  keyCryptocompareExchangesGeneral:            `${scrapeDir}/cryptocompare-exchanges-general/data.json`,
+
   // uriCryptocompareExchangeStatus:              'https://min-api.cryptocompare.com/data/all/cccaggexchanges',
   // keyCryptocompareExchangeStatus:              `${scrapeDir}/cryptocompare-exchange-status/data.json`,
 

@@ -8,6 +8,10 @@
 // ╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝╚══════╝
 //
 
+// Node
+// import { join }                                  from 'path';
+const { join }      = require('path');
+
 // CryptoHub
 import logger                                    from './logger';
 import settings                                  from './settings';
@@ -36,17 +40,48 @@ process.on('warning', error => {
 try {
 
   //
+  // dataHandler and tmpDir go hand in hand
+  //
+  // we should have an events thing:
+  //   events: {
+  //     Data: dataHandler(),
+  //     Store: storeHandler()
+  //   }
+  //
+  // the directory gets created on its own, so tmpData and tmpStore
+  //
+
+  //
   // TODO: expand and collapse data so we dont repeat object labels
   //
+  const scrapeDir = '/tmp-scraped';
+  const analyticsMergeDataByKey = require.main.require('./utils/analytics-merge-data-by-key');
   const dataTable = new DataTable({
     server: {
       port: 3000
     },
+    mergeHandlers: {
+      data: analyticsMergeDataByKey,
+      store: data => {
+        return data;
+      }
+    },
+    events: {
+      data: dataHandler,
+      store: (data, cache) => {
+
+        const fileName = '/tmp-generated/store/data.json';
+        let [ oldData ] = cache.get(fileName);
+        oldData = JSON.parse(oldData) || {};
+        let newData = { ...oldData, ...data };
+
+        cache.set(fileName, JSON.stringify(newData));
+
+      }
+    },
     tmpDir: settings.keyCryptohubAnalyticsTmp,
     outDir: settings.keyCryptohubAnalyticsOut,
-    cacheDir: 'cache',
-    mergeHandler, // merge data from different sites
-    dataHandler,  // handle merged data
+    cacheDir: join(__dirname, '../cache'),
     defaultData: [],
     scrapeSites: {
       cryptocompare: {
@@ -62,24 +97,61 @@ try {
             // TODO: bootstrapData needs to change when coinlist changes!!!!
             //
             name: 'coinList',
+            event: 'data',
             interval: 1000 * 5,
-            cacheArgs: [settings.keyCryptocompareList, 'all'],
+            //
+            // TODO: can we remove this and just search for the key?
+            //
+            cacheArgs: [`${scrapeDir}/cryptocompare-coinlist/data.json`, 'all'],
             getJobs(queue, bootstrapData) {
-              queue.push({uri: settings.uriCryptocompareList, key: settings.keyCryptocompareList, cacheForDays: 0});
+              queue.push({
+                uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
+                key: `${scrapeDir}/cryptocompare-coinlist/data.json`,
+                cacheForDays: 0
+              });
             },
             formatter: formatterCryptocompareSectionCoinlist
           },
+          // {
+          //   //
+          //   // EXCHANGES
+          //   // Get all the exchanges that CryptoCompare has integrated with
+          //   //
+          //   // TODO: separate into exchangesList & exchangesGeneral & have 2 formatters, then we dont need the glob
+          //   // and we can keep the default data.json
+          //   //
+          //   name: 'exchanges',
+          //   event: 'data,store',
+          //   interval: 1000 * 60 * 60,
+          //   // TODO: rename this fucking bit, this is where the watcher will look for files to load
+          //   // so if we are saving them in different places they will never be added!
+          //   cacheArgs: [settings.keyCryptocompareExchangesGlob, 'all'],
+          //   getJobs(queue, bootstrapData) {
+          //     queue.push({uri: settings.uriCryptocompareExchanges, key: settings.keyCryptocompareExchanges, cacheForDays: 0});
+          //     queue.push({uri: settings.uriCryptocompareExchangesGeneral, key: settings.keyCryptocompareExchangesGeneral, cacheForDays: 0});
+          //   },
+          //   formatter: formatterCryptocompareSectionExchanges
+          // },
           {
-            //
-            // EXCHANGES
-            // Get all the exchanges that CryptoCompare has integrated with
-            //
-            name: 'exchanges',
+            name: 'exchanges-list',
+            event: 'data,store',
             interval: 1000 * 60 * 60,
-            cacheArgs: [settings.keyCryptocompareExchanges, 'all'],
+            cacheArgs: [settings.keyCryptocompareExchangesList, 'all'],
             getJobs(queue, bootstrapData) {
-              queue.push({uri: settings.uriCryptocompareExchanges, key: settings.keyCryptocompareExchanges, cacheForDays: 0});
+              queue.push({uri: settings.uriCryptocompareExchangesList, key: settings.keyCryptocompareExchangesList, cacheForDays: 0});
             },
+            // NOTE: rename this... add 'List'
+            formatter: formatterCryptocompareSectionExchanges
+          },
+          {
+            name: 'exchanges-general',
+            event: 'data,store',
+            interval: 1000 * 60 * 60,
+            cacheArgs: [settings.keyCryptocompareExchangesGeneral, 'all'],
+            getJobs(queue, bootstrapData) {
+              queue.push({uri: settings.uriCryptocompareExchangesGeneral, key: settings.keyCryptocompareExchangesGeneral, cacheForDays: 0});
+            },
+            // NOTE: rename this... add 'General'
             formatter: formatterCryptocompareSectionExchanges
           },
           // {
@@ -102,6 +174,7 @@ try {
             // TopTotalVolume
             //
             name: 'totalVolFull',
+            event: 'data',
             interval: 1000 * 10,
             cacheArgs: [settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`, 'all'],
             getJobs: getJobsCryptocompareSectionTotalVolFull,
@@ -120,6 +193,7 @@ try {
         sections: [
           {
             name: 'currency',
+            event: 'data',
             interval: 1000 * 60 * 60 * 24,
             cacheArgs: [settings.tagKeyXeCurrencyTables`${'USD'}`, 'all'],
             getJobs(queue, bootstrapData) {

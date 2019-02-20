@@ -120,16 +120,34 @@ function addPairsToExchange(exchanges, exchange, pair) {
  *   }
  * ```
  *
- * @param {Array} exchanges is an array of the responses of batched cryptocompare api exchanges data
- * @param {String} timestamp
- * @param {Object} bootstrapData
+ * @param {Object} response - response object
+ * @param {String} timestamp - time data was received
+ * @param {Object} bootstrapData - legacy bootstrap data (will be merged with appBootstrapData
+ * @param {Object} addBootstrapData - data store for non row data
+ * @param {String} fileName - file name of stored request
  * @return {Object}
  *
  */
-module.exports = function formatterCryptocompareSectionExchanges(response, timestamp, bootstrapData, appBootstrapData) {
+module.exports = function formatterCryptocompareSectionExchanges(response, timestamp, bootstrapData, appBootstrapData, fileName) {
   try {
 
-    if (!appBootstrapData.currency || !response && !response.Data) return {data: {}, timestamp};
+    const emptyReturn = {data: {}, timestamp};
+
+    if (!appBootstrapData.currency || (!response && !response.Data) || response.Response !== 'Success') {
+      return emptyReturn;
+    }
+
+    const responseTypeExchanges        = 'cryptocompare-exchanges/list';
+    const responseTypeExchangesGeneral = 'cryptocompare-exchanges/general';
+    if (fileName.indexOf(responseTypeExchanges) > -1) {
+      // do exchanges list
+    }
+    else if (fileName.indexOf(responseTypeExchangesGeneral) > -1) {
+      // do exchanges general
+
+      appBootstrapData.exchanges = response.Data;
+      return emptyReturn;
+    }
 
     //
     // STEP 1: Extract data into the below 2 object structures

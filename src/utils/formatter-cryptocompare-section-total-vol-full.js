@@ -92,7 +92,7 @@ module.exports = function formatterCryptocompareSectionTotalVolFull(price, times
         coinInfo = price.Data[idx].CoinInfo;
       }
       catch (error) {
-        logger.error(`formatterCryptocompareSectionPrice(): ${error}`);
+        logger.error(`formatterCryptocompareSectionTotalVolFull(): idx:${idx}, ${error}`);
       }
 
       let key;
@@ -117,7 +117,7 @@ module.exports = function formatterCryptocompareSectionTotalVolFull(price, times
 
   }
   catch(error) {
-    const message = `formatterCryptocompareSectionPrice(): ${error}`;
+    const message = `formatterCryptocompareSectionTotalVolFull(): ${error}`;
     logger.error(message);
     return {message, error: true};
   }

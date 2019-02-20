@@ -26,6 +26,9 @@ node_modules
 # Generated files
 *.generated.js
 
+# Dist
+dist/*
+
 # Cloned repos
 projects/*
 

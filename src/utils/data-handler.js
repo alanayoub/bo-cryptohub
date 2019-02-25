@@ -1,5 +1,7 @@
 // Libs
 import arrayToObject from '../libs/bo-utils/array-to-object';
+import isEmptyObject from '../libs/bo-utils/object-is-empty-object.js';
+import isObject from '../libs/bo-utils/object-is-object.js';
 
 // Cryptohub
 import logger from '../logger';
@@ -24,8 +26,10 @@ import settings from '../settings';
  */
 const packData = function (data) {
 
-  let id, item;
-  let key, val;
+  let id;
+  let item;
+  let key;
+  let val;
 
   // Create key list
   const keys = [];
@@ -167,6 +171,96 @@ function updateTimeseriesHistory(timeseries, newTimestamp, newPrice, newVolume, 
 
 /**
  *
+ * GET OLD DATA
+ *
+ */
+function getOldData(cache) {
+  let [ oldData ] = cache.get('/out/data/data.json');
+  if (oldData) oldData = JSON.parse(oldData);
+  if (Array.isArray(oldData)) {
+    oldData = arrayToObject(oldData, 'cc-coinlist-Id');
+  }
+  return oldData || {};
+}
+
+/**
+ *
+ * ADD CRYPTOHUB FIELDS
+ *
+ */
+function addCryptohubFields(data) {
+
+  let ccPrice;
+  let ccVolume;
+  let timeseries;
+  let totalSupply;
+  let ccPriceTimestamp;
+  let circulatingSupply;
+
+  //
+  // BTC Price
+  //
+  let ccBTCPrice;
+  const btcId = 1182;
+  const btcItem = data[btcId];
+  if (btcItem) {
+    ccBTCPrice = btcItem['cc-total-vol-full-PRICE'];
+  }
+
+  let key;
+  let item;
+  for ([key, item] of Object.entries(data)) {
+
+    ccPrice = item['cc-total-vol-full-PRICE'];
+    ccVolume = item['cc-total-vol-full-TOTALVOLUME24HTO'];
+    timeseries = item['cryptohub-price-history'];
+    totalSupply = item['cc-coinlist-TotalCoinSupply'];
+    ccPriceTimestamp = +new Date(item['cc-total-vol-full-PRICE-timestamp']);
+    circulatingSupply = item['cc-total-vol-full-SUPPLY'];
+
+    // Update
+    item['cryptohub-price-history'] = updateTimeseriesHistory(
+      timeseries, ccPriceTimestamp, ccPrice, ccVolume
+    );
+    item['cryptohub-circulating-percent-total'] = (circulatingSupply / totalSupply) * 100;
+    if (ccBTCPrice && ccPrice) {
+      item['cryptohub-price-btc'] = 1 / (ccBTCPrice / ccPrice);
+      item['cryptohub-price-btc-timestamp'] = ccPriceTimestamp;
+    }
+  }
+
+  return data;
+
+}
+
+/**
+ *
+ * @param {Object} data
+ * @return {Object}
+ *
+ */
+function whatsHappening(data) {
+
+  if (!isObject(data)) return false;
+
+  let key;
+  let val;
+  let up = 0;
+  let down = 0;
+  let noChange = 0;
+  for (key of Object.keys(data)) {
+    if (!data[key]) continue;
+    val = data[key]['cc-total-vol-full-CHANGEPCTDAY'];
+    if (val > 0) up++;
+    else if (val < 0) down++;
+    else noChange++;
+  }
+  return {up, down, noChange};
+}
+
+
+/**
+ *
  * Backfill and format data
  *
  * When running a new instance of the ap the datastore starts off empty.
@@ -178,94 +272,44 @@ function updateTimeseriesHistory(timeseries, newTimestamp, newPrice, newVolume, 
 module.exports = function dataHandler(data, cache) {
   try {
 
-    let id;
-    let item;
-    let key;
-    let val;
+    // Get old data & unpack it
+    let oldData = unpackData(getOldData(cache));
 
     //
-    // Unpack data & merge new data with last data set
+    // ROW DATA STUFF
     //
-    {
-      // NOTE: there is no key here to unpack the data!!??
-      let [ oldData ] = cache.get('/out/data/data.json');
-      oldData = JSON.parse(oldData);
 
-      if (Array.isArray(oldData)) {
-        oldData = arrayToObject(oldData, 'cc-coinlist-Id');
-      }
-
-      // Unpack minified data
-      oldData = unpackData(oldData);
-
-      // Do merge
-      for (id of Object.keys(oldData)) {
-        data[id] = Object.assign(oldData[id], data[id]);
-      }
+    // Backfill new data with old data
+    for (let id of Object.keys(oldData)) {
+      data[id] = Object.assign(oldData[id], data[id]);
     }
 
+    // Delete junk or partial data
     data = deleteBadRecords(data);
 
-    let ccPrice;
-    let ccVolume;
-    let totalSupply;
-    let ccPriceTimestamp;
-    let circulatingSupply;
+    // Add custom cryptohub fields
+    data = addCryptohubFields(data);
 
-    //
-    // BTC Price
-    //
-    let ccBTCPrice;
-    {
-      const btcId = 1182;
-      const btcItem = data[btcId];
-      if (btcItem) {
-        ccBTCPrice = btcItem['cc-total-vol-full-PRICE'];
-      }
-    }
+    // pack data
+    const packedData = packData(data);
 
-    for (let [key, item] of Object.entries(data)) {
-
-      ccPrice = item['cc-total-vol-full-PRICE'];
-      ccVolume = item['cc-total-vol-full-TOTALVOLUME24HTO'];
-      ccPriceTimestamp = +new Date(item['cc-total-vol-full-PRICE-timestamp']);
-
-      //
-      // Update timeseries history
-      //
-      {
-        const timeseries = item['cryptohub-price-history'];
-        item['cryptohub-price-history'] = updateTimeseriesHistory(
-          timeseries, ccPriceTimestamp, ccPrice, ccVolume
-        );
-      }
-
-      {
-        totalSupply = item['cc-coinlist-TotalCoinSupply'];
-        circulatingSupply = item['cc-total-vol-full-SUPPLY'];
-        item['cryptohub-circulating-percent-total'] = (circulatingSupply / totalSupply) * 100;
-      }
-
-      if (ccBTCPrice && ccPrice) {
-        item['cryptohub-price-btc'] = 1 / (ccBTCPrice / ccPrice);
-        item['cryptohub-price-btc-timestamp'] = ccPriceTimestamp;
-      }
-    }
-
-    //
-    // pack data and save file (the watcher will pick it up and emit it)
-    //
-    data = packData(data);
-
-    // TODg
+    // Save file (the watcher will pick it up and emit it)
     const fileName = '/tmp-generated/data/data.json';
-    // When this file is saved the watcher will pitch it up and emit it to the client
-    cache.set(fileName, JSON.stringify(data));
+    if (!isEmptyObject(packedData)) cache.set(fileName, JSON.stringify(packedData));
+
+    //
+    // OTHER STUFF
+    //
+
+    const status = whatsHappening(data);
+    console.log(status);
 
   }
   catch(error) {
     const message = `dataHandler(): ${error}`;
     logger.error(message);
+    debugger
+    if (process.env.NODE_ENV === 'development') debugger;
     return {message, error: true};
   }
 }

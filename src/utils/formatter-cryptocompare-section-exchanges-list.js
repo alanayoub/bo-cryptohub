@@ -1,5 +1,6 @@
 // Cryptohub
 const logger = require.main.require('./logger');
+import getNestedProp from '../libs/bo-utils/object-get-nested-property';
 
 /**
  *
@@ -10,12 +11,14 @@ function addSymbol(symbols, symbol) {
   if (!symbols[symbol]) {
     symbols[symbol] = {
       pairs: new Set(),
+      exchangeListDex: new Set(),
       exchangeListFiatOnly: new Set(),
       exchangeListCryptoOnly: new Set(),
       exchangeListAcceptsBoth: new Set(),
       _fiatCurrencies: new Set(),
       _exchangesRank: 0,
       _numberOfExchanges: 0,
+      _numberOfDex: 0,
       _numberOfPairs: 0,
       _numberOfFiatPairs: 0,
       _numberOfFiatCurrencies: 0,
@@ -28,9 +31,11 @@ function addSymbol(symbols, symbol) {
  * addExchange
  *
  */
-function addExchange(exchanges, exchange, id) {
-  exchanges[exchange] = {
+function addExchange(exchanges, name, id) {
+  if (!name || !id)  return;
+  exchanges[id] = {
     id,
+    name,
     pairs: new Set(),
     _cryptoCurrencies: new Set(),
     _fiatCurrencies: new Set(),
@@ -49,10 +54,12 @@ function addExchange(exchanges, exchange, id) {
  * addExchangeToSymbol
  *
  */
-function addExchangeToSymbol(symbols, symbol, exchange, type) {
-  if (type === 'fiat')        symbols[symbol].exchangeListFiatOnly.add(exchange);
-  else if (type === 'crypto') symbols[symbol].exchangeListCryptoOnly.add(exchange);
-  else if (type === 'both')   symbols[symbol].exchangeListAcceptsBoth.add(exchange);
+function addExchangeToSymbol(symbols, symbol, id, type) {
+  if (!symbol || !id || !type) return;
+  if (type === 'fiat')               symbols[symbol].exchangeListFiatOnly.add(id);
+  else if (type === 'Decentralized') symbols[symbol].exchangeListDex.add(id);
+  else if (type === 'crypto')        symbols[symbol].exchangeListCryptoOnly.add(id);
+  else if (type === 'both')          symbols[symbol].exchangeListAcceptsBoth.add(id);
 }
 
 /**
@@ -61,7 +68,8 @@ function addExchangeToSymbol(symbols, symbol, exchange, type) {
  *
  */
 function addPairsToSymbol(symbols, symbol, pair) {
-  symbols[symbol].pairs.add(pair);
+  if (symbols[symbol]) symbols[symbol].pairs.add(pair);
+  else logger.warn(`addPairsToSymbol(): can't add pair ${pair} to symbol ${symbol}`);
 }
 
 /**
@@ -69,8 +77,9 @@ function addPairsToSymbol(symbols, symbol, pair) {
  * addPairsToExchange
  *
  */
-function addPairsToExchange(exchanges, exchange, pair) {
-  exchanges[exchange].pairs.add(pair);
+function addPairsToExchange(exchanges, id, pair) {
+  if (exchanges[id]) exchanges[id].pairs.add(pair);
+  else logger.warn(`addPairsToExchange(): can't add pair ${pair} to exchange id ${id}`);
 }
 
 // TODO: val?
@@ -129,24 +138,14 @@ function addPairsToExchange(exchanges, exchange, pair) {
  * @return {Object}
  *
  */
-module.exports = function formatterCryptocompareSectionExchanges(response, timestamp, bootstrapData, appBootstrapData, fileName, event) {
+module.exports = function formatterCryptocompareSectionExchangesList(response, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
   try {
 
     const emptyReturn = {data: {}, timestamp};
+    const store = JSON.parse(cache.get('/out/store/data.json')[0]);
+    const mapNameId = getNestedProp(store, 'exchange-map-nameId');
 
-    if (!appBootstrapData.currency || (!response && !response.Data) || response.Response !== 'Success') {
-      return emptyReturn;
-    }
-
-    const responseTypeExchanges        = 'cryptocompare-exchanges/list';
-    const responseTypeExchangesGeneral = 'cryptocompare-exchanges/general';
-    if (fileName.indexOf(responseTypeExchanges) > -1) {
-      // do exchanges list
-    }
-    else if (fileName.indexOf(responseTypeExchangesGeneral) > -1) {
-      // do exchanges general
-
-      appBootstrapData.exchanges = response.Data;
+    if (!appBootstrapData.currency || !mapNameId || (!response && !response.Data) || response.Response !== 'Success') {
       return emptyReturn;
     }
 
@@ -155,12 +154,12 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
     //
     // symbols: {
     //   btc: {
-    //     exchangesList: ['kraken', 'poloniex'],
+    //     exchangesList: [1234, 4322],
     //   }
     // }
     //
     // exchanges: {
-    //   kraken: {
+    //   1234: {
     //     pairs: {btc: [eth, ltc]},
     //   }
     // }
@@ -176,26 +175,32 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
     let pair;
     let symbol1;
     let symbol2;
-    let exchange;
-    let exchangeId = 0;
+    let exchangeId;
+    let exchangeName;
+    let centralizationType;
     const exclude0xSymbols = true;
 
-    for ([exchange, data] of Object.entries(response.Data)) {
+    for ([exchangeName, data] of Object.entries(response.Data)) {
+      exchangeId = mapNameId[exchangeName];
+      centralizationType = getNestedProp(store, `exchanges.${exchangeId}.CentralizationType`);
       if (!data.is_active) continue;
-      if (!exchanges[exchange]) addExchange(exchanges, exchange, exchangeId++);
+      if (!exchanges[exchangeId]) addExchange(exchanges, exchangeName, exchangeId);
       data = data.pairs;
 
       for ([symbol1, list] of Object.entries(data)) {
         if (symbol1.startsWith('0x') && exclude0xSymbols) continue;
         addSymbol(symbols, symbol1);
-        // addExchangeToSymbol(symbols, symbol1, exchange);
-
+        if (centralizationType === 'Decentralized') {
+          addExchangeToSymbol(symbols, symbol1, exchangeId, centralizationType);
+        }
         for (symbol2 of Object.values(list)) {
           if (symbol2.startsWith('0x') && exclude0xSymbols) continue;
           pair = `${symbol1},${symbol2}`;
           addSymbol(symbols, symbol2);
-          // addExchangeToSymbol(symbols, symbol2, exchange);
-          addPairsToExchange(exchanges, exchange, pair);
+          if (centralizationType === 'Decentralized') {
+            addExchangeToSymbol(symbols, symbol1, exchangeId, centralizationType);
+          }
+          addPairsToExchange(exchanges, exchangeId, pair);
           addPairsToSymbol(symbols, symbol1, pair);
           addPairsToSymbol(symbols, symbol2, pair);
         }
@@ -210,7 +215,7 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
     //
     // symbols: {
     //   btc: {
-    //     exchangesList: ['kraken', 'poloniex'],
+    //     exchangesList: [1234, 4322],
     //     pairs: ['eth,ltc'],
     //     _fiatCurrencies: [usd, eur],
     //     _exchagnesRank: 87,
@@ -221,7 +226,7 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
     //   }
     // }
     // exchanges: {
-    //   kraken: {
+    // 1234: {
     //     pairs: ['eth,ltc'],
     //     _points: 84,
     //     _fiatCurrencies: [usd, eur],
@@ -293,7 +298,7 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
     // Now that we have calculated which exchanges have fiat / crypto pairs add this data
     let hasFiat;
     let hasCrypto;
-    for ([exchange, obj] of Object.entries(exchanges)) {
+    for ([exchangeId, obj] of Object.entries(exchanges)) {
 
       for (pair of obj.pairs.values()) {
 
@@ -303,9 +308,9 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
         if (obj._numberOfFiatCurrencies) hasFiat = true;
         if (obj._numberOfCryptoCurrencies) hasCrypto = true;
 
-        if (hasFiat && hasCrypto) addExchangeToSymbol(symbols, symbol1, exchange, 'both');
-        else if (hasCrypto)       addExchangeToSymbol(symbols, symbol1, exchange, 'crypto');
-        else if (hasFiat)         addExchangeToSymbol(symbols, symbol1, exchange, 'fiat');
+        if (hasFiat && hasCrypto) addExchangeToSymbol(symbols, symbol1, exchangeId, 'both');
+        else if (hasCrypto)       addExchangeToSymbol(symbols, symbol1, exchangeId, 'crypto');
+        else if (hasFiat)         addExchangeToSymbol(symbols, symbol1, exchangeId, 'fiat');
 
       }
 
@@ -314,54 +319,82 @@ module.exports = function formatterCryptocompareSectionExchanges(response, times
     // Symbols part 2
     for (obj of Object.values(symbols)) {
       obj._numberOfExchanges = obj.exchangeListFiatOnly.size + obj.exchangeListCryptoOnly.size + obj.exchangeListAcceptsBoth.size;
+      obj._numberOfDex = obj.exchangeListDex.size;
     }
 
     //
-    // Set bootstrap data
+    // Step 3: Save exchange data to core dataset
     //
-    appBootstrapData.exchanges = exchanges;
-
+    // data: {
+    //   1182: {
+    //     'cryptohub-exchangesListFiatOnly': [],
+    //     'cryptohub-exchangesListCryptoOnly': ['Binance'],
+    //     'cryptohub-exchangesListAcceptsBoth': ['Kraken'],
+    //     'cryptohub-numberOfFiatCurrencies': 32,
+    //     'cryptohub-numberOfFiatCurrencies-timestamp': 1550696919978,
+    //     'cryptohub-numberOfExchanges': 23,
+    //     'cryptohub-numberOfExchanges-timestamp': 1550696919978,
+    //     'cryptohub-numberOfPairs': 4,
+    //     'cryptohub-numberOfPairs-timestamp': 1550696919978,
+    //     'cryptohub-numberOfFiatPairs': 3,
+    //     'cryptohub-numberOfFiatPairs-timestamp': 1550696919978
+    //   }
+    // }
     //
-    // Save exchange data to core dataset
-    //
-    let result = {};
-    const map = bootstrapData['symbolIdMap'];
-    if (bootstrapData.coinList.Data) {
-      const coinList = bootstrapData.coinList.Data;
-      let id;
-      let symbol;
-      let exchange;
-      for ([symbol] of Object.entries(coinList)) {
-        if (symbols[symbol]) {
-          id = map[symbol];
-          result[id] = {
+    function handleData(timestamp) {
 
-            // 'cryptohub-pairs': symbols[symbol].pairs,
-            // 'cryptohub-fiatCurrencies': symbols[symbol]._fiatCurrencies,
-            // 'cryptohub-exchagnesRank': symbols[symbol]._exchagnesRank,
+      let result = {};
+      const map = bootstrapData['symbolIdMap'];
+      if (bootstrapData.coinList.Data) {
+        const coinList = bootstrapData.coinList.Data;
+        let id;
+        let symbol;
+        for ([symbol] of Object.entries(coinList)) {
+          if (symbols[symbol]) {
+            id = map[symbol];
+            result[id] = {
 
-            'cryptohub-exchangesListFiatOnly': Array.from(symbols[symbol].exchangeListFiatOnly),
-            'cryptohub-exchangesListCryptoOnly': Array.from(symbols[symbol].exchangeListCryptoOnly),
-            'cryptohub-exchangesListAcceptsBoth': Array.from(symbols[symbol].exchangeListAcceptsBoth),
+              // 'cryptohub-pairs': symbols[symbol].pairs,
+              // 'cryptohub-fiatCurrencies': symbols[symbol]._fiatCurrencies,
+              // 'cryptohub-exchagnesRank': symbols[symbol]._exchagnesRank,
 
-            'cryptohub-numberOfFiatCurrencies': symbols[symbol]._numberOfFiatCurrencies,
-            'cryptohub-numberOfFiatCurrencies-timestamp': timestamp,
+              'cryptohub-exchangesListDex': Array.from(symbols[symbol].exchangeListDex),
+              'cryptohub-exchangesListFiatOnly': Array.from(symbols[symbol].exchangeListFiatOnly),
+              'cryptohub-exchangesListCryptoOnly': Array.from(symbols[symbol].exchangeListCryptoOnly),
+              'cryptohub-exchangesListAcceptsBoth': Array.from(symbols[symbol].exchangeListAcceptsBoth),
 
-            'cryptohub-numberOfExchanges': symbols[symbol]._numberOfExchanges,
-            'cryptohub-numberOfExchanges-timestamp': timestamp,
+              'cryptohub-numberOfFiatCurrencies': symbols[symbol]._numberOfFiatCurrencies,
+              'cryptohub-numberOfFiatCurrencies-timestamp': timestamp,
 
-            'cryptohub-numberOfPairs': symbols[symbol]._numberOfPairs,
-            'cryptohub-numberOfPairs-timestamp': timestamp,
+              'cryptohub-numberOfExchanges': symbols[symbol]._numberOfExchanges,
+              'cryptohub-numberOfExchanges-timestamp': timestamp,
 
-            'cryptohub-numberOfFiatPairs': symbols[symbol]._numberOfFiatPairs,
-            'cryptohub-numberOfFiatPairs-timestamp': timestamp,
+              'cryptohub-numberOfPairs': symbols[symbol]._numberOfPairs,
+              'cryptohub-numberOfPairs-timestamp': timestamp,
 
+              'cryptohub-numberOfFiatPairs': symbols[symbol]._numberOfFiatPairs,
+              'cryptohub-numberOfFiatPairs-timestamp': timestamp,
+
+              'cryptohub-numberOfDex': symbols[symbol]._numberOfExchanges,
+
+            }
           }
         }
       }
+      return {data: result, timestamp};
+
     }
 
-    return {data: result, timestamp};
+    function handleStore(timestamp) {
+      return {data: {data: exchanges}, timestamp};
+    }
+
+    switch (event) {
+      case 'data':
+        return handleData(timestamp) || emptyReturn;
+      case 'store':
+        return handleStore(timestamp) || emptyReturn;
+    }
 
   }
   catch(error) {

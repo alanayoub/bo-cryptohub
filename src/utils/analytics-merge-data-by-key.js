@@ -16,6 +16,10 @@ module.exports = function mergeDataByKey(data) {
     const dataArray = Object.values(data);
     const result = {};
     for (const data of dataArray) {
+      if (!data) {
+        logger.warn(`mergeDataByKey: data should not be ${data}, skipping`);
+        continue;
+      }
       for (const [key, val] of Object.entries(data)) {
         if (!result[key]) result[key] = {};
         Object.assign(result[key], val);
@@ -25,6 +29,7 @@ module.exports = function mergeDataByKey(data) {
   }
   catch(error) {
     logger.error(`mergeDataByKey: ${error}`);
+    if (process.env.NODE_ENV === 'development') debugger;
     return false;
   }
 }

@@ -13,25 +13,28 @@
 const { join }      = require('path');
 
 // CryptoHub
-import logger                                    from './logger';
-import settings                                  from './settings';
-import DataTable                                 from './libs/dataTable/src';
+import logger                                        from './logger';
+import settings                                      from './settings';
+import DataTable                                     from './libs/dataTable/src';
+import getNestedProp                                 from './libs/bo-utils/object-get-nested-property';
+import getNestedProperty                             from './libs/bo-utils/object-get-nested-property.js';
 
 // Handlers
-import mergeHandler                              from './utils/merge-handler';
-import dataHandler                               from './utils/data-handler';
+import mergeHandler                                  from './utils/merge-handler';
+import dataHandler                                   from './utils/data-handler';
 
 // Formatters
-import formatterCryptocompareBootstrap           from './utils/formatter-cryptocompare-bootstrap.js';
-import formatterCryptocompareSectionPrice        from './utils/formatter-cryptocompare-section-price.js';
-import formatterCryptocompareSectionCoinlist     from './utils/formatter-cryptocompare-section-coinlist.js';
-import formatterCryptocompareSectionExchanges    from './utils/formatter-cryptocompare-section-exchanges.js';
-import formatterCryptocompareSectionTotalVolFull from './utils/formatter-cryptocompare-section-total-vol-full.js';
-import formatterXeSectionCurrency                from './utils/formatter-xe-section-currency.js';
+import formatterCryptocompareBootstrap               from './utils/formatter-cryptocompare-bootstrap.js';
+import formatterCryptocompareSectionPrice            from './utils/formatter-cryptocompare-section-price.js';
+import formatterCryptocompareSectionCoinlist         from './utils/formatter-cryptocompare-section-coinlist.js';
+import formatterCryptocompareSectionExchangesList    from './utils/formatter-cryptocompare-section-exchanges-list.js';
+import formatterCryptocompareSectionExchangesGeneral from './utils/formatter-cryptocompare-section-exchanges-general.js';
+import formatterCryptocompareSectionTotalVolFull     from './utils/formatter-cryptocompare-section-total-vol-full.js';
+import formatterXeSectionCurrency                    from './utils/formatter-xe-section-currency.js';
 
 // Job fetchers
-import getJobsCryptocompareSectionPrice          from './utils/get-jobs-cryptocompare-section-price.js';
-import getJobsCryptocompareSectionTotalVolFull   from './utils/get-jobs-cryptocompare-section-total-vol-full.js';
+import getJobsCryptocompareSectionPrice              from './utils/get-jobs-cryptocompare-section-price.js';
+import getJobsCryptocompareSectionTotalVolFull       from './utils/get-jobs-cryptocompare-section-total-vol-full.js';
 
 process.on('warning', error => {
   logger.warning(`index.js:\n${error.stack}`);
@@ -50,9 +53,53 @@ try {
   //
   // the directory gets created on its own, so tmpData and tmpStore
   //
-
   //
-  // TODO: expand and collapse data so we dont repeat object labels
+  // -------------------------------------------------------------------------------------------------------
+  //
+  // Order data is processed
+  //
+  // -------------------------------------------------------------------------------------------------------
+  //
+  //
+  // #1 sectionconfig.formatter(response, timestamp, bootstrapDAta, appBootstrapData, fileName, event)
+  //      return { data, timestamp };
+  //
+  //    The formatter receives the response data, the data that was scraped before any processing has happened
+  //    This is where you should format the individual responses into a cohesive format for further processing
+  //
+  //
+  // #2 sectionconfig.handler(oldData, newData)
+  //      return { mergedData };
+  //
+  //    NOTE: rename from handler to ? // onFormatted(oldData, newData)
+  //    This handler receives a copy of the previous sections formatted data and the new formatted data
+  //    You can disguard the old data or use it for processing
+  //    A single merged piece of data should be returned
+  //
+  //
+  // #3 mergeHandlers[eventName](data)
+  //      return data;
+  //
+  //    The merge handler receives all the formatted data for the same type of events in an object
+  //    ```
+  //    {
+  //      coinList: coinListData,
+  //      otherName: otherData
+  //    }
+  //    ```
+  //
+  //    In most cases you would merge the data into a single object or array and return it.
+  //    You can however elect to keep it as is
+  //
+  //
+  // #4 events[eventName](data, cache)
+  //    cache.set(fileName, data);
+  //    // return data;
+  //
+  //    NOTE: rename to eventsHandlers() for consistency
+  //    The events handler builds the final output that gets emitted and saved to file
+  //    TODO: change so the data is returned and the application saves the file
+  //
   //
   const scrapeDir = '/tmp-scraped';
   const analyticsMergeDataByKey = require.main.require('./utils/analytics-merge-data-by-key');
@@ -70,12 +117,28 @@ try {
       data: dataHandler,
       store: (data, cache) => {
 
+        // Get old data
         const fileName = '/tmp-generated/store/data.json';
         let [ oldData ] = cache.get(fileName);
         oldData = JSON.parse(oldData) || {};
-        let newData = { ...oldData, ...data };
 
-        cache.set(fileName, JSON.stringify(newData));
+        // Maps
+        const idName = getNestedProperty(data, 'exchanges-general.maps.idName');
+        const nameId = getNestedProperty(data, 'exchanges-general.maps.nameId');
+
+        // Exchanges object by Id
+        const list = getNestedProp(data, 'exchanges-list.data') || {};
+        const general = getNestedProp(data, 'exchanges-general.data') || {};
+        const exchanges = analyticsMergeDataByKey([list, general]);
+
+        const output = {
+          ...oldData,
+          ...exchanges && {exchanges},
+          ...nameId && {'exchange-map-nameId': nameId},
+          ...idName && {'exchange-map-idName': idName}
+        }
+
+        cache.set(fileName, JSON.stringify(output));
 
       }
     },
@@ -112,36 +175,24 @@ try {
             },
             formatter: formatterCryptocompareSectionCoinlist
           },
-          // {
-          //   //
-          //   // EXCHANGES
-          //   // Get all the exchanges that CryptoCompare has integrated with
-          //   //
-          //   // TODO: separate into exchangesList & exchangesGeneral & have 2 formatters, then we dont need the glob
-          //   // and we can keep the default data.json
-          //   //
-          //   name: 'exchanges',
-          //   event: 'data,store',
-          //   interval: 1000 * 60 * 60,
-          //   // TODO: rename this fucking bit, this is where the watcher will look for files to load
-          //   // so if we are saving them in different places they will never be added!
-          //   cacheArgs: [settings.keyCryptocompareExchangesGlob, 'all'],
-          //   getJobs(queue, bootstrapData) {
-          //     queue.push({uri: settings.uriCryptocompareExchanges, key: settings.keyCryptocompareExchanges, cacheForDays: 0});
-          //     queue.push({uri: settings.uriCryptocompareExchangesGeneral, key: settings.keyCryptocompareExchangesGeneral, cacheForDays: 0});
-          //   },
-          //   formatter: formatterCryptocompareSectionExchanges
-          // },
           {
+            //
+            // EXCHANGES
+            // Get all the exchanges that CryptoCompare has integrated with
+            //
+            // TODO: separate into exchangesList & exchangesGeneral & have 2 formatters, then we don't need the glob
+            // and we can keep the default data.json
+            //
             name: 'exchanges-list',
             event: 'data,store',
-            interval: 1000 * 60 * 60,
+            interval: 1000 * 60 * 1,
+            // TODO: rename this fucking bit, this is where the watcher will look for files to load
+            // so if we are saving them in different places they will never be added!
             cacheArgs: [settings.keyCryptocompareExchangesList, 'all'],
             getJobs(queue, bootstrapData) {
               queue.push({uri: settings.uriCryptocompareExchangesList, key: settings.keyCryptocompareExchangesList, cacheForDays: 0});
             },
-            // NOTE: rename this... add 'List'
-            formatter: formatterCryptocompareSectionExchanges
+            formatter: formatterCryptocompareSectionExchangesList
           },
           {
             name: 'exchanges-general',
@@ -151,24 +202,8 @@ try {
             getJobs(queue, bootstrapData) {
               queue.push({uri: settings.uriCryptocompareExchangesGeneral, key: settings.keyCryptocompareExchangesGeneral, cacheForDays: 0});
             },
-            // NOTE: rename this... add 'General'
-            formatter: formatterCryptocompareSectionExchanges
+            formatter: formatterCryptocompareSectionExchangesGeneral
           },
-          // {
-          //   //
-          //   // PRICE
-          //   // Get every token in USD only (batched requests)
-          //   //
-          //   name: 'price',
-          //   interval: 1000 * 10,
-          //   cacheArgs: [settings.tagKeyCryptocompareTradingInfoMultiGrouped`${{}}`, 'all'],
-          //   getJobs: getJobsCryptocompareSectionPrice,
-          //   formatter: formatterCryptocompareSectionPrice,
-          //   handler(oldData, newData) {
-          //     const merged = {...oldData, ...newData};
-          //     return merged;
-          //   },
-          // },
           {
             //
             // TopTotalVolume
@@ -178,11 +213,11 @@ try {
             interval: 1000 * 10,
             cacheArgs: [settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`, 'all'],
             getJobs: getJobsCryptocompareSectionTotalVolFull,
-            formatter: formatterCryptocompareSectionTotalVolFull,
             handler(oldData, newData) {
               const merged = {...oldData, ...newData};
               return merged;
-            }
+            },
+            formatter: formatterCryptocompareSectionTotalVolFull
           }
         ]
       },

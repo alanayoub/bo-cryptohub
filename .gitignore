@@ -15,6 +15,7 @@ node_modules
 *.swl
 *.swk
 *.swj
+*.swi
 
 *.seed
 *.csv

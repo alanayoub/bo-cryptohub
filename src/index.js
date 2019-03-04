@@ -9,15 +9,14 @@
 //
 
 // Node
-// import { join }                                  from 'path';
-const { join }      = require('path');
+import { join }                                      from 'path';
 
 // CryptoHub
 import logger                                        from './logger';
 import settings                                      from './settings';
 import DataTable                                     from './libs/dataTable/src';
 import getNestedProp                                 from './libs/bo-utils/object-get-nested-property';
-import getNestedProperty                             from './libs/bo-utils/object-get-nested-property.js';
+import pugCompileTemplates                           from './libs/bo-utils/pug-compile-templates';
 
 // Handlers
 import mergeHandler                                  from './utils/merge-handler';
@@ -36,11 +35,17 @@ import formatterXeSectionCurrency                    from './utils/formatter-xe-
 import getJobsCryptocompareSectionPrice              from './utils/get-jobs-cryptocompare-section-price.js';
 import getJobsCryptocompareSectionTotalVolFull       from './utils/get-jobs-cryptocompare-section-total-vol-full.js';
 
-process.on('warning', error => {
-  logger.warning(`index.js:\n${error.stack}`);
-});
-
 try {
+
+  process.on('warning', error => {
+    logger.warning(`index.js:\n${error.stack}`);
+  });
+
+  pugCompileTemplates({
+    varName: 'initPug',
+    pugGlob: `${__dirname}/pug/**/*.pug`,
+    outFile: `${__dirname}/public/javascript/init-pug.generated.js`
+  });
 
   //
   // dataHandler and tmpDir go hand in hand
@@ -105,7 +110,8 @@ try {
   const analyticsMergeDataByKey = require.main.require('./utils/analytics-merge-data-by-key');
   const dataTable = new DataTable({
     server: {
-      port: 3000
+      pub: join(__dirname, './public'),
+      port: 3000,
     },
     mergeHandlers: {
       data: analyticsMergeDataByKey,
@@ -123,8 +129,8 @@ try {
         oldData = JSON.parse(oldData) || {};
 
         // Maps
-        const idName = getNestedProperty(data, 'exchanges-general.maps.idName');
-        const nameId = getNestedProperty(data, 'exchanges-general.maps.nameId');
+        const idName = getNestedProp(data, 'exchanges-general.maps.idName');
+        const nameId = getNestedProp(data, 'exchanges-general.maps.nameId');
 
         // Exchanges object by Id
         const list = getNestedProp(data, 'exchanges-list.data') || {};

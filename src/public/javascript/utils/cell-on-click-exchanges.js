@@ -4,6 +4,7 @@ import numberGroupDigits  from '../libs/bo-utils/number-group-digits.js';
 import htmlToggleClass    from '../libs/bo-utils/html-toggle-class.js';
 import getRandomInt       from '../libs/bo-utils/get-random-int.js';
 import popDiv             from './popdiv.js';
+
 /**
  *
  *

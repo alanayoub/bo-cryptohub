@@ -95,13 +95,13 @@ const columnTypes = {
 
   },
 
-  // TODO not all this stuff has to do with percent stuff
   cryptohubPercent: {
     cellClassRules: {
       'cryptohub-text-bad': x => x.value.value < 0,
       'cryptohub-text-good': x => x.value.value > 0,
     },
     valueFormatter: valueFormatterPercentChange,
+    // TODO the compound renderer is not what I planned it to be, revisit
     cellRenderer: CompoundCellRenderer,
   },
 
@@ -141,7 +141,7 @@ const columnDefs = [
     field: 'cc-total-vol-full-FullName.value',
     headerName: 'Name',
     headerClass: 'CH-col',
-    headerTooltip: '',
+    headerTooltip: 'Name',
     width: 150,
     pinned: 'left',
     cellRenderer: cellRendererName,
@@ -152,7 +152,7 @@ const columnDefs = [
     field: 'cc-coinlist-Symbol.value',
     headerName: 'Symbol',
     headerClass: 'CH-col',
-    headerTooltip: '',
+    headerTooltip: 'Symbol',
     width: 90,
     pinned: 'left',
     type: ['cryptohubText'],
@@ -163,7 +163,7 @@ const columnDefs = [
     field: 'cc-total-vol-full-PRICE',
     headerName: 'Price (USD)',
     headerClass: 'CH-col',
-    headerTooltip: 'Data Source: Cryptocompare',
+    headerTooltip: 'Price in USD\n\nData Source: Cryptocompare',
     width: 120,
     type: [
       'cryptohubDefaults',
@@ -182,7 +182,7 @@ const columnDefs = [
     field: 'cryptohub-price-btc',
     headerName: 'Price (BTC)',
     headerClass: 'CH-col',
-    headerTooltip: 'Data Source: Cryptohub, calculated from Coinmarketcap data',
+    headerTooltip: 'Price in BTC\n\nData Source: BinaryOverdose, calculated from Cryptocompare data',
     width: 120,
     type: [
       'cryptohubDefaults',
@@ -216,6 +216,7 @@ const columnDefs = [
     field: 'cryptohub-price-history',
     headerName: '7D Trend',
     headerClass: 'CH-col',
+    headerTooltip: '7 Day USD price and volume trend\n\nTop & bottom numbers are % swing in price (top) & volume (bottom)\n\nData Source: BinaryOverdose / Cryptocompare',
     width: 124,
     cellRenderer: CellRendererSparkline,
     cellRendererParams: {
@@ -250,7 +251,7 @@ const columnDefs = [
     field: 'cc-total-vol-full-MKTCAP',
     headerName: 'Market Cap',
     headerClass: 'CH-col',
-    headerTooltip: 'Data Source: Cryptocompare - The price in USD multiplied by the number of coins or tokens',
+    headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Cryptocompare',
     width: 150,
     type: [
       'cryptohubDefaults',
@@ -268,7 +269,7 @@ const columnDefs = [
     field: 'cc-total-vol-full-SUPPLY',
     headerName: 'Circulating Supply',
     headerClass: 'CH-col',
-    headerTooltip: 'Data Source: Cryptocompare',
+    headerTooltip: 'Circulating supply\n\nData Source: Cryptocompare',
     width: 150,
     type: [
       'cryptohubDefaults',
@@ -284,7 +285,7 @@ const columnDefs = [
     field: 'cc-total-vol-full-ProofType.value',
     headerName: 'Proof',
     headerClass: 'CH-col',
-    headerTooltip: 'Proof Type',
+    headerTooltip: 'Proof Type\n\nData Source: Cryptocompare',
     width: 120,
     type: ['cryptohubText'],
   },
@@ -294,7 +295,7 @@ const columnDefs = [
     field: 'cc-total-vol-full-Algorithm.value',
     headerName: 'Algorithm',
     headerClass: 'CH-col',
-    headerTooltip: '',
+    headerTooltip: 'Algorithm\n\nData Source: Cryptocompare',
     width: 120,
     type: ['cryptohubText'],
   },
@@ -304,7 +305,7 @@ const columnDefs = [
     field: 'cc-total-vol-full-NetHashesPerSecond',
     headerName: 'Hashes per/s',
     headerClass: 'CH-col',
-    headerTooltip: 'Net Hashes per/s',
+    headerTooltip: 'Net Hashes per/s\n\nData Source: Cryptocompare',
     width: 180,
     columngroupshow: 'both',
     comparator: sortNumbers,
@@ -320,7 +321,7 @@ const columnDefs = [
     field: 'cryptohub-numberOfExchanges',
     headerName: 'Exchanges',
     headerClass: 'CH-col',
-    headerTooltip: 'Number of Exchanges the token is listed on',
+    headerTooltip: 'Number of Exchanges the token is listed on\n\nData Source: BinaryOverdose / Cryptocompare',
     width: 100,
     columngroupshow: 'closed',
     type: [
@@ -338,7 +339,7 @@ const columnDefs = [
   {
     field: 'cryptohub-numberOfPairs',
     headerName: 'Pairs',
-    headerTooltip: 'Number of pairs',
+    headerTooltip: 'Number of pairs\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     width: 100,
     columngroupshow: 'closed',
@@ -353,7 +354,7 @@ const columnDefs = [
   {
     field: 'cryptohub-numberOfFiatPairs',
     headerName: 'Fiat pairs',
-    headerTooltip: 'Number of fiat pairs',
+    headerTooltip: 'Number of fiat pairs\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     width: 100,
     columngroupshow: 'closed',
@@ -368,7 +369,7 @@ const columnDefs = [
   {
     field: 'cryptohub-numberOfFiatCurrencies',
     headerName: 'Fiat Currencies',
-    headerTooltip: 'Number of fiat Currencies',
+    headerTooltip: 'Number of fiat Currencies\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     width: 100,
     columngroupshow: 'closed',

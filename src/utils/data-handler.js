@@ -1,94 +1,11 @@
 // Libs
 import arrayToObject from '../libs/bo-utils/array-to-object';
 import isEmptyObject from '../libs/bo-utils/object-is-empty-object.js';
-import isObject from '../libs/bo-utils/object-is-object.js';
+import isObject      from '../libs/bo-utils/object-is-object.js';
 
-// Cryptohub
-import logger from '../logger';
-import settings from '../settings';
-
-/**
- *
- * Data Handler
- * Gets called everytime the data is updated
- *
- * @param {Array} data
- *
- */
-
-/**
- *
- * Pack Data
- *
- * @param {Object} data
- * @return {Object}
- *
- */
-const packData = function (data) {
-
-  let id;
-  let item;
-  let key;
-  let val;
-
-  // Create key list
-  const keys = [];
-  for ([id, item] of Object.entries(data)) {
-    for ([key, val] of Object.entries(item)) {
-      if (!keys.includes(key)) keys.push(key);
-    }
-  }
-
-  // Use key list to Minify data
-  let newObj;
-  let newData = {};
-  for ([id, item] of Object.entries(data)) {
-    newObj = {};
-    for ([key, val] of Object.entries(item)) {
-      newObj[keys.indexOf(key)] = val;
-    }
-    newData[id] = newObj;
-  }
-
-  newData.keys = keys;
-  return newData;
-
-}
-
-/**
- *
- * Unpack Data
- *
- * @param {Object} data
- * @return {Object}
- *
- */
-const unpackData = function (data) {
-
-  let id, item;
-  let key, val;
-  let newObj;
-  let newData = {};
-  const keys = data.keys;
-
-  // keys are required to unpack the data
-  // they are a map from the minified object keys to the full text keys
-  if (!keys) {
-    logger.warn('unpackData(): no `keys` property was available on data to unpack');
-    return data;
-  }
-  delete data.keys;
-  for ([id, item] of Object.entries(data)) {
-    newObj = {};
-    for ([key, val] of Object.entries(item)) {
-      newObj[keys[key]] = val;
-    }
-    newData[id] = newObj;
-  }
-
-  return newData;
-
-};
+// Cryptohub util functions
+import logger        from '../logger';
+import settings      from '../settings';
 
 /**
  *
@@ -104,7 +21,11 @@ function deleteBadRecords(data) {
   let item;
 
   function validData(item) {
-    return !(item['cc-total-vol-full-TOTALVOLUME24HTO'] === 0 || item['cc-total-vol-full-PRICE'] === void 0);
+    return !(
+         item['cc-total-vol-full-TOTALVOLUME24HTO'] === 0
+      || item['cc-total-vol-full-PRICE'] === void 0
+      || item['cc-total-vol-full-Id'] === void 0
+    )
   }
 
   function isFresh(item) {
@@ -261,6 +182,43 @@ function whatsHappening(data) {
 
 /**
  *
+ * Get Changes
+ *
+ * @param {Object} oldData
+ * @param {Object} newData
+ * @return {Object} - the changes between oldData and newData
+ *
+ */
+function getChanges(oldData, newData, idField) {
+  const output = {};
+  let key;
+  let val;
+  let k;
+  let v;
+  for ([key, val] of Object.entries(newData)) {
+    if (oldData[key]) {
+      for ([k, v] of Object.entries(newData[key])) {
+        // If the property is different
+        if (JSON.stringify(oldData[key][k]) !== JSON.stringify(v)) {
+          if (!output[key]) output[key] = {};
+          // Keep the new property
+          output[key][k] = v;
+        }
+      }
+      // If there are any changes in this item add the id field
+      if (output[key]) {
+        output[key][idField] = newData[key][idField];
+      }
+    }
+    else {
+      output[key] = newData[key];
+    }
+  }
+  return output;
+}
+
+/**
+ *
  * Backfill and format data
  *
  * When running a new instance of the ap the datastore starts off empty.
@@ -268,40 +226,102 @@ function whatsHappening(data) {
  * datastore will stay empty for a while. To prevent this we backfill the datastore
  * with the last output datasource if any of the stores are empty
  *
+ * @param {Object} [options]
+ * @param {Object} data
+ * @param {} cache
+ *
  */
-module.exports = function dataHandler(data, cache) {
+module.exports = function dataHandler(options = {}, data, cache) {
   try {
 
-    // Get old data & unpack it
-    let oldData = unpackData(getOldData(cache));
+    let newData = data;
+
+    // Get old data
+    let oldData = getOldData(cache);
 
     //
     // ROW DATA STUFF
     //
 
+    //
     // Backfill new data with old data
+    //
+    // NOTE:
+    // We still need to do this even when we are emitting
+    // a diff because the whole data should be available to be
+    // used by functions like `addCryptohubFields()`
     for (let id of Object.keys(oldData)) {
-      data[id] = Object.assign(oldData[id], data[id]);
+      newData[id] = Object.assign({}, oldData[id], newData[id]);
     }
 
     // Delete junk or partial data
-    data = deleteBadRecords(data);
+    newData = deleteBadRecords(newData);
 
     // Add custom cryptohub fields
-    data = addCryptohubFields(data);
+    newData = addCryptohubFields(newData);
 
-    // pack data
-    const packedData = packData(data);
+    const idField = 'cc-total-vol-full-Id';
+    const diff = getChanges(oldData, newData, idField);
+    const gotChanges = !isEmptyObject(diff);
 
-    // Save file (the watcher will pick it up and emit it)
-    const fileName = '/tmp-generated/data/data.json';
-    if (!isEmptyObject(packedData)) cache.set(fileName, JSON.stringify(packedData));
+    // {
+
+    //   function mergeData(oldData = {}, newData = {}) {
+
+    //     let key;
+    //     let output = {};
+    //     const allKeys = Array.from(new Set([
+    //       ...Object.keys(oldData),
+    //       ...Object.keys(newData)
+    //     ]));
+
+    //     for (key of allKeys) {
+    //       output[key] = newData[key]
+    //         ? Object.assign({}, oldData[key], newData[key])
+    //         : oldData[key];
+    //     }
+
+    //     return output;
+    //   }
+
+    //   console.group('changes');
+    //   const diff = getChanges(oldData, newData);
+    //   console.log('getChanges test:', diff);
+
+    //   const merged = mergeData(oldData, diff);
+    //   console.log('merged', merged);
+
+    //   const result = JSON.stringify(newData) === JSON.stringify(merged);
+    //   console.log('is there a difference? ', !result);
+
+    //   const newDiff = getChanges(newData, merged);
+    //   console.log('newDiff is:', newDiff);
+    //   console.groupEnd('changes');
+
+    //   if (!result) debugger;
+
+    // }
+
+    if (gotChanges) {
+
+      // Get changes only
+      // NOTE: We cant do this as the file is the same place
+      // where events get picked up and where the backfill happens!!!
+      if (options.updatesOnly) {
+        newData = diff;
+      }
+
+      // Save file (the watcher will pick it up and emit it)
+      const fileName = '/tmp-generated/data/data.json';
+      cache.set(fileName, JSON.stringify(newData));
+
+    }
 
     //
     // OTHER STUFF
     //
 
-    const status = whatsHappening(data);
+    const status = whatsHappening(newData);
     console.log(status);
 
   }
@@ -313,3 +333,38 @@ module.exports = function dataHandler(data, cache) {
     return {message, error: true};
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

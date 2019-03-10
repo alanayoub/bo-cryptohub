@@ -36,8 +36,11 @@ import cellOnClickTradingview      from './utils/cell-on-click-tradingview.js';
 // ag-grid filter comparators
 import sortNumbers from './utils/sort-numbers.js';
 
+
 const refs = {
+  // the last version of the unpacked data
   oldDBValues: {},
+  // the last version of the packed data
   store: []
 };
 
@@ -469,6 +472,8 @@ const agOptions = {
 
 };
 
+window.ch = initStore;
+
 /**
  *
  * Updated
@@ -485,28 +490,6 @@ const updated = function (when) {
 
 }
 
-/**
- *
- * dataHandler
- *
- * @param {Object} data
- * @return void
- *
- */
-const dataHandler = function (data) {
-
-  updated('now');
-  refs.store = dataUnpack(data);
-  agOptions.api.setRowData(refs.store);
-
-  refs.oldDBValues = refs.store.reduce((acc, val) => {
-    const id = val['cc-total-vol-full-Id'].value;
-    acc[id] = val;
-    return acc;
-  }, {});
-
-}
-
 window.ch = initStore;
 if (!new agGrid.Grid(document.querySelector('#myGrid'), agOptions)) {
 
@@ -515,13 +498,109 @@ if (!new agGrid.Grid(document.querySelector('#myGrid'), agOptions)) {
 }
 else {
 
+  /**
+   *
+   *
+   *
+   */
+  function arrayToObject(data, keyField) {
+    let id;
+    let val;
+    const obj = {};
+    for (val of data) {
+      id = val[keyField].value;
+      obj[id] = val;
+    }
+    return obj;
+  }
+
+  /**
+   *
+   *
+   *
+   */
+  function objectToArray(data) {
+    let val;
+    const arr = [];
+    for (val of Object.values(data)) {
+      arr.push(val);
+    }
+    return arr;
+  }
+
+  /**
+   *
+   * Merge each object in the dataset with the new data
+   * Only merges one level deep, each key gets its properties merged
+   *
+   * @param {Array} oldData - old ag-grid row data
+   * @param {Array} newData - new ag-grid row data
+   * @param {String} idField
+   * @return {Array}
+   *
+   */
+  function mergeData(oldData = [], newData = [], idField) {
+
+    oldData = arrayToObject(oldData, idField);
+    newData = arrayToObject(newData, idField);
+
+    let key;
+    let output = {};
+    const allKeys = Array.from(new Set([
+      ...Object.keys(oldData),
+      ...Object.keys(newData)
+    ]));
+
+    for (key of allKeys) {
+      output[key] = newData[key]
+        ? Object.assign({}, oldData[key], newData[key])
+        : oldData[key];
+    }
+
+    output = objectToArray(output);
+    return output;
+  }
+
   updated('now');
   setInterval(updated, 1000 * 1);
   io()
-    .on('data', dataHandler)
+    .on('data', data => {
+
+      updated('now');
+
+      const idField = 'cc-total-vol-full-Id';
+      refs.store = mergeData(refs.store, dataUnpack(data), idField);
+      agOptions.api.setRowData(refs.store);
+      refs.oldDBValues = arrayToObject(refs.store, idField);
+
+    })
     .on('store', data => {
+
       window.ch.store = data;
-      console.log('store event', data);
+
     });
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

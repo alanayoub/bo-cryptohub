@@ -7,6 +7,7 @@
 // ██████╔╝██║██║ ╚████║██║  ██║██║  ██║   ██║   ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║██████╔╝╚██████╔╝███████║███████╗
 // ╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝╚══════╝
 //
+//
 
 // Node
 import { join }                                      from 'path';
@@ -16,6 +17,7 @@ import logger                                        from './logger';
 import settings                                      from './settings';
 import DataTable                                     from './libs/dataTable/src';
 import getNestedProp                                 from './libs/bo-utils/object-get-nested-property';
+import partialApplication                            from './libs/bo-utils/partial-application';
 import pugCompileTemplates                           from './libs/bo-utils/pug-compile-templates';
 
 // Handlers
@@ -113,43 +115,45 @@ try {
       pub: join(__dirname, './public'),
       port: 3000,
     },
-    mergeHandlers: {
-      data: analyticsMergeDataByKey,
-      store: data => {
-        return data;
-      }
-    },
     events: {
-      data: dataHandler,
-      store: (data, cache) => {
+      data: {
+        mergeHandler: analyticsMergeDataByKey,
+        eventHandler: partialApplication(dataHandler, {updatesOnly: false})
+      },
+      store: {
+        mergeHandler: data => data,
+        eventHandler(data, cache) {
 
-        // Get old data
-        const fileName = '/tmp-generated/store/data.json';
-        let [ oldData ] = cache.get(fileName);
-        oldData = JSON.parse(oldData) || {};
+          // Get old data
+          const fileName = '/tmp-generated/store/data.json';
+          let [ oldData ] = cache.get(fileName);
+          oldData = JSON.parse(oldData) || {};
 
-        // Maps
-        const idName = getNestedProp(data, 'exchanges-general.maps.idName');
-        const nameId = getNestedProp(data, 'exchanges-general.maps.nameId');
+          // Maps
+          const idName = getNestedProp(data, 'exchanges-general.maps.idName');
+          const nameId = getNestedProp(data, 'exchanges-general.maps.nameId');
 
-        // Exchanges object by Id
-        const list = getNestedProp(data, 'exchanges-list.data') || {};
-        const general = getNestedProp(data, 'exchanges-general.data') || {};
-        const exchanges = analyticsMergeDataByKey([list, general]);
+          // Exchanges object by Id
+          const list = getNestedProp(data, 'exchanges-list.data') || {};
+          const general = getNestedProp(data, 'exchanges-general.data') || {};
+          const exchanges = analyticsMergeDataByKey([list, general]);
 
-        const output = {
-          ...oldData,
-          ...exchanges && {exchanges},
-          ...nameId && {'exchange-map-nameId': nameId},
-          ...idName && {'exchange-map-idName': idName}
+          const output = {
+            ...oldData,
+            ...exchanges && {exchanges},
+            ...nameId && {'exchange-map-nameId': nameId},
+            ...idName && {'exchange-map-idName': idName}
+          }
+
+          cache.set(fileName, JSON.stringify(output));
+
         }
-
-        cache.set(fileName, JSON.stringify(output));
-
-      }
+      },
     },
+    // TODO: check if these are still being used
     tmpDir: settings.keyCryptohubAnalyticsTmp,
     outDir: settings.keyCryptohubAnalyticsOut,
+
     cacheDir: join(__dirname, '../cache'),
     defaultData: [],
     scrapeSites: {

@@ -3,12 +3,18 @@
  * dataUnpack
  *
  * UnMinify data & expand timestamps / value into object
+ * Creates ag-grid Array row data
  *
  * @param {Array} data - array of data objects to unpack
  * @return {Array} unpacked array data
  *
  */
 export default function dataUnpack(data) {
+
+  if (!data.keys) {
+    console.log('dataUnpack(): can\'t unpack data without keys');
+    return data;
+  }
 
   //
   // UnMinify

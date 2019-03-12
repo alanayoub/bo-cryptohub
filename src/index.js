@@ -9,13 +9,15 @@
 //
 //
 
+// Binary Overdose Projects
+import DataTable                                     from 'bo-datatable';
+
 // Node
 import { join }                                      from 'path';
 
 // CryptoHub
 import logger                                        from './logger';
 import settings                                      from './settings';
-import DataTable                                     from './libs/dataTable/src';
 import getNestedProp                                 from './libs/bo-utils/object-get-nested-property';
 import partialApplication                            from './libs/bo-utils/partial-application';
 import pugCompileTemplates                           from './libs/bo-utils/pug-compile-templates';
@@ -36,6 +38,9 @@ import formatterXeSectionCurrency                    from './utils/formatter-xe-
 // Job fetchers
 import getJobsCryptocompareSectionPrice              from './utils/get-jobs-cryptocompare-section-price.js';
 import getJobsCryptocompareSectionTotalVolFull       from './utils/get-jobs-cryptocompare-section-total-vol-full.js';
+
+// Other utils
+import analyticsMergeDataByKey                       from './utils/analytics-merge-data-by-key';
 
 try {
 
@@ -109,7 +114,6 @@ try {
   //
   //
   const scrapeDir = '/tmp-scraped';
-  const analyticsMergeDataByKey = require.main.require('./utils/analytics-merge-data-by-key');
   const dataTable = new DataTable({
     server: {
       pub: join(__dirname, './public'),

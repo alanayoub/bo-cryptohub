@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <title>CryptoHub</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      #myGrid {
+        position: fixed;
+        top: 50px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    </style>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Major+Mono+Display">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/18.1.1/styles/ag-grid.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/18.1.1/styles/ag-theme-balham.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.4.1/themes/light.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylesheet/index.css" />
+  </head>
+  <body>
+    <div>
+      <div class="cryptohub-logo">
+        <h1>Binary 0verdose</h1>
+        <span class="cryptohub-tick"></span>
+        <span class="cryptohub-tick cryptohub-tick-2"></span>
+      </div>
+      <span class="ch-direction">
+        <span class="ch-up">50<span>UP</span></span>/
+        <span class="ch-dn">40<span>DN</span></span>/
+        <span class="ch-nm">10<span>NM</span></span>
+        <span class="ch-total">(total 1233)</span>
+      </span>
+      <span id="updated"></span>
+    </div>
+    <div id="myGrid" class="ag-theme-balham"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/18.1.1/ag-grid.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.4.1/tippy.min.js"></script>
+    <script src="/javascript/libs/pug/pug-runtime.js"></script>
+    <script src="/javascript/init-pug.generated.js"></script>
+    <script src="https://s3.tradingview.com/tv.js"></script>
+
+    <!-- TODO: generate these, or the whole file -->
+    <script src="/javascript/init-data.generated.js"></script>
+    <script src="/javascript/init-store.generated.js"></script>
+
+
+    <script type="module" src="/javascript/index.js"></script>
+  </body>
+</html>

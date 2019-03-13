@@ -1,11 +1,11 @@
-// Libs
-import arrayToObject from '../libs/bo-utils/array-to-object';
-import isEmptyObject from '../libs/bo-utils/object-is-empty-object.js';
-import isObject      from '../libs/bo-utils/object-is-object.js';
+// Binary Overdose
+import { arrayToObject }                        from 'bo-utils';
+import { objectIsEmptyObject as isEmptyObject } from 'bo-utils';
+import { objectIsObject as isObject }           from 'bo-utils';
 
 // Cryptohub util functions
-import logger        from '../logger';
-import settings      from '../settings';
+import logger                                   from '../logger';
+import settings                                 from '../settings';
 
 /**
  *

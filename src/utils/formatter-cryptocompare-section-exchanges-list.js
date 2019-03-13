@@ -1,6 +1,9 @@
+// Binary Overdose
+import { getNestedProp } from 'bo-utils';
+
 // Cryptohub
-const logger = require.main.require('./logger');
-import getNestedProp from '../libs/bo-utils/object-get-nested-property';
+const logger = require('../logger');
+
 
 /**
  *

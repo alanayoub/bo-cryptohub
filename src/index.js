@@ -11,6 +11,9 @@
 
 // Binary Overdose Projects
 import DataTable                                     from 'bo-datatable';
+import { objectGetNestedProperty as getNestedProp }  from 'bo-utils';
+import { partialApplication }                        from 'bo-utils';
+import { pugCompileTemplates }                       from 'bo-utils';
 
 // Node
 import { join }                                      from 'path';
@@ -18,9 +21,6 @@ import { join }                                      from 'path';
 // CryptoHub
 import logger                                        from './logger';
 import settings                                      from './settings';
-import getNestedProp                                 from './libs/bo-utils/object-get-nested-property';
-import partialApplication                            from './libs/bo-utils/partial-application';
-import pugCompileTemplates                           from './libs/bo-utils/pug-compile-templates';
 
 // Handlers
 import mergeHandler                                  from './utils/merge-handler';

@@ -11,9 +11,9 @@
 
 // Binary Overdose Projects
 import DataTable                                     from 'bo-datatable';
-import { objectGetNestedProperty as getNestedProp }  from 'bo-utils';
 import { partialApplication }                        from 'bo-utils';
-import { pugCompileTemplates }                       from 'bo-utils';
+import { nodePugCompileTemplates as pug }            from 'bo-utils';
+import { objectGetNestedProperty as getNestedProp }  from 'bo-utils';
 
 // Node
 import { join }                                      from 'path';
@@ -48,7 +48,7 @@ try {
     logger.warning(`index.js:\n${error.stack}`);
   });
 
-  pugCompileTemplates({
+  pug({
     varName: 'initPug',
     pugGlob: `${__dirname}/pug/**/*.pug`,
     outFile: `${__dirname}/public/javascript/init-pug.generated.js`

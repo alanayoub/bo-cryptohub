@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * Get Cell CSS Class Diff

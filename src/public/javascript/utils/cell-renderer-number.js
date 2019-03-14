@@ -1,11 +1,10 @@
-import getNestedProperty  from '../libs/bo-utils/object-get-nested-property.js';
-import numberGroupDigits  from '../libs/bo-utils/number-group-digits.js';
+'use strict';
 
 /**
  *
  *
  */
 export default function cellRendererNumber(params) {
-  const number = getNestedProperty(params, 'value.value');
-  return numberGroupDigits(number) || '-';
+  const number = bo.objectGetNestedProperty(params, 'value.value');
+  return bo.numberGroupDigits(number) || '-';
 };

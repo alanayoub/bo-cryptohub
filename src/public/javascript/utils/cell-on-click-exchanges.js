@@ -1,9 +1,5 @@
-import partialApplication from '../libs/bo-utils/partial-application.js';
-import getNestedProperty  from '../libs/bo-utils/object-get-nested-property.js';
-import numberGroupDigits  from '../libs/bo-utils/number-group-digits.js';
-import htmlToggleClass    from '../libs/bo-utils/html-toggle-class.js';
-import getRandomInt       from '../libs/bo-utils/get-random-int.js';
-import popDiv             from './popdiv.js';
+// Cryptohub
+import popDiv  from './popdiv.js';
 
 /**
  *
@@ -38,7 +34,7 @@ export default function cellOnClickExchanges(params) {
 
     const fiatIds       = params.data['cryptohub-exchangesListAcceptsBoth'] || [];
     const cryptoIds     = params.data['cryptohub-exchangesListCryptoOnly'] || [];
-    const exchanges     = getNestedProperty(window.ch, 'exchanges');
+    const exchanges     = bo.objectGetNestedProperty(window.ch, 'exchanges');
 
     //
     // Step 1: Create the below data structure
@@ -110,14 +106,14 @@ export default function cellOnClickExchanges(params) {
 
   function exchangeHtmlContent() {
 
-    const name          = getNestedProperty(params, 'data.cc-total-vol-full-FullName.value');
-    const total         = numberGroupDigits(getNestedProperty(params, 'value.value'));
+    const name          = bo.objectGetNestedProperty(params, 'data.cc-total-vol-full-FullName.value');
+    const total         = bo.numberGroupDigits(bo.objectGetNestedProperty(params, 'value.value'));
     const classes       = 'ch-numberofexchanges';
     const dexList       = params.data['cryptohub-exchangesListDex'] || [];
     const fiatIds       = params.data['cryptohub-exchangesListAcceptsBoth'] || [];
     const cryptoIds     = params.data['cryptohub-exchangesListCryptoOnly'] || [];
     const outputArray   = exchangeDataModel();
-    const numberOfPairs = getNestedProperty(params, 'data.cryptohub-numberOfPairs.value');
+    const numberOfPairs = bo.objectGetNestedProperty(params, 'data.cryptohub-numberOfPairs.value');
 
     const output = {
       header: {
@@ -138,12 +134,12 @@ export default function cellOnClickExchanges(params) {
   }
 
   const $cell = params.event.target.closest('.ag-cell');
-  const id = `ch-tippy-${getRandomInt()}`;
+  const id = `ch-tippy-${bo.getRandomInt()}`;
   const cssId = `#${id}`;
   const contentPopdiv = initPug['ch-tippy-click-tradingview']({id});
   const contentExchange = exchangeHtmlContent();
 
-  htmlToggleClass($cell, 'ch-cell-active');
+  bo.htmlToggleClass($cell, 'ch-cell-active');
   popDiv($cell, contentPopdiv);
   document.querySelector(cssId).innerHTML = contentExchange;
 

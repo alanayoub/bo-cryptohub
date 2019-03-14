@@ -1,4 +1,4 @@
-import timeago from '../libs/bo-utils/time-ago.js';
+'use strict';
 
 /**
  *
@@ -12,6 +12,6 @@ export default function cellTooltip(params) {
   const { value, valueFormatted, data, node, colDef, rowIndex, api } = params;
   const field = data[colDef.field];
   const timestamp = field && field.timestamp;
-  const t = timeago(timestamp) || 'unknown time ago';
+  const t = bo.timeAgo(timestamp) || 'unknown time ago';
   return `Last updated ${t}`;
 }

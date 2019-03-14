@@ -1,3 +1,5 @@
+'use strict';
+
 function NumberFilter() {}
 
 NumberFilter.prototype.init = function (params) {

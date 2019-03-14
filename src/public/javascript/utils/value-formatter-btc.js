@@ -1,5 +1,9 @@
-import getNestedProperty from '../libs/bo-utils/object-get-nested-property.js';
-import formatCurrency from '../libs/bo-utils/format-number-as-currency.js';
+'use strict';
+
+const {
+  objectGetNestedProperty: getNestedProperty,
+  formatNumberAsCurrency: formatCurrency
+} = bo;
 
 /**
  *

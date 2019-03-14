@@ -1,3 +1,5 @@
+'use strict';
+
 function NumberFloatingFilter() {}
 
 NumberFloatingFilter.prototype.init = function (params) {

@@ -1,5 +1,4 @@
-// Generic Util functions
-import getNestedProperty from '../libs/bo-utils/object-get-nested-property.js';
+'use strict';
 
 // Cryptohub Util functions
 import countdownMs from './html-countdown.js';
@@ -34,7 +33,7 @@ export default class CompoundCellRenderer {
 
     const value = params.valueFormatted
       ? params.valueFormatted
-      : getNestedProperty(params, 'value.value');
+      : bo.objectGetNestedProperty(params, 'value.value');
 
     const data = `<span class="cryptohub-cell-data">-</span>`;
 

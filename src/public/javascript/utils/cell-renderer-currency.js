@@ -1,13 +1,6 @@
-// Generic Util functions
-import diff                from '../libs/bo-utils/diff-numeric-strings.js';
-import isNumber            from '../libs/bo-utils/is-number.js';
-import isObject            from '../libs/bo-utils/object-is-object.js';
-import formatCurrency      from '../libs/bo-utils/format-number-as-currency.js';
-import getNestedProperty   from '../libs/bo-utils/object-get-nested-property.js';
-
 // Cryptohub Util functions
-import countdownMs         from './html-countdown.js';
-import getCssClass         from './get-cell-css-class-diff.js';
+import countdownMs from './html-countdown.js';
+import getCssClass from './get-cell-css-class-diff.js';
 
 /**
  *
@@ -26,26 +19,26 @@ import getCssClass         from './get-cell-css-class-diff.js';
 export default function cellRendererCurrency(refs, params) {
 
   const { colDef, data } = params;
-  const id = getNestedProperty(data, 'cc-total-vol-full-Id.value');
+  const id = bo.objectGetNestedProperty(data, 'cc-total-vol-full-Id.value');
   const html = document.createElement('div');
 
-  const newValue = getNestedProperty(params, 'value.value');
-  const oldValue = getNestedProperty(refs, `oldDBValues.${id}.${colDef.field}.value`);
+  const newValue = bo.objectGetNestedProperty(params, 'value.value');
+  const oldValue = bo.objectGetNestedProperty(refs, `oldDBValues.${id}.${colDef.field}.value`);
 
   // format number
   let newVal;
   let oldVal;
   const digits = newValue >= 1 ? 2 : 6;
-  if (isNumber(newValue)) newVal = formatCurrency(newValue, digits, params.currency);
-  if (isNumber(oldValue)) oldVal = formatCurrency(oldValue, digits, params.currency);
+  if (bo.isNumber(newValue)) newVal = bo.formatNumberAsCurrency(newValue, digits, params.currency);
+  if (bo.isNumber(oldValue)) oldVal = bo.formatNumberAsCurrency(oldValue, digits, params.currency);
 
   let result = '-';
-  if (isNumber(newValue) && !isNumber(oldValue)) {
+  if (bo.isNumber(newValue) && !bo.isNumber(oldValue)) {
     result = newVal;
   }
   else {
 
-    let { start, end } = diff(oldVal, newVal);
+    let { start, end } = bo.diffNumericStrings(oldVal, newVal);
     const cssClass = getCssClass(oldVal, newVal);
     result = `<span>${start}</span><span class="${cssClass}">${end}</span>`;
 

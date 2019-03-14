@@ -1,4 +1,6 @@
-import gnp from '../libs/bo-utils/object-get-nested-property.js';
+'use strict';
+
+const gnp = bo.getNestedProperty;
 
 /**
  *

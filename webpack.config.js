@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 
@@ -6,15 +7,18 @@ module.exports = {
 
   entry: './src/index.js',
 
-  // The target: 'node' option tells webpack not to touch any built-in modules like fs or path
-  target: 'node',
-
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js'
   },
 
-  // A module listed as an external will simply be left alone; it will not be bundled in
-  externals: {}
+  // The target: 'node' option tells webpack not to touch any built-in modules like fs or path
+  target: 'node',
+
+  plugins: [
+    new CopyPlugin([
+      {from: './node_modules/bo-utils/dist/index.client.js', to: '../src/public/javascript/libs/bo-utils-client.js'},
+    ]),
+  ],
 
 };

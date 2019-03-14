@@ -1,7 +1,7 @@
 // Binary Overdose
 import { arrayToObject }                        from 'bo-utils';
-import { objectIsEmptyObject as isEmptyObject } from 'bo-utils';
 import { objectIsObject as isObject }           from 'bo-utils';
+import { objectIsEmptyObject as isEmptyObject } from 'bo-utils';
 
 // Cryptohub util functions
 import logger                                   from '../logger';

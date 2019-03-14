@@ -1,9 +1,6 @@
-import partialApplication from '../libs/bo-utils/partial-application.js';
-import getNestedProperty  from '../libs/bo-utils/object-get-nested-property.js';
-import htmlToggleClass    from '../libs/bo-utils/html-toggle-class.js';
-import htmlPollElement    from '../libs/bo-utils/html-poll-element.js';
-import getRandomInt       from '../libs/bo-utils/get-random-int.js';
-import popDiv             from './popdiv.js';
+'use strict';
+
+import popDiv from './popdiv.js';
 
 /**
  *
@@ -11,7 +8,7 @@ import popDiv             from './popdiv.js';
  *
  */
 function exchangeSupported(exchanges) {
-  const get = getNestedProperty;
+  const get = bo.objectGetNestedProperty;
   const mapNameId = get(ch, 'exchange-map-nameId');
   // TODO: rank by exchange ranking that we havnt created yet
   const supported = [
@@ -65,7 +62,7 @@ function exchangeSupported(exchanges) {
  */
 function tradingviewGetSymbol(params, symbolTo = 'BTC') {
 
-  const get = getNestedProperty;
+  const get = bo.objectGetNestedProperty;
   const map = get(ch, 'exchange-map-idName');
   const symbolFrom = get(params, 'data.cc-coinlist-Symbol.value');
 
@@ -139,12 +136,12 @@ function loadTradingview(params, container_id, symbolTo = 'BTC') {
  */
 export default function cellOnClickTradingview(symbolTo, params) {
 
-  const id = `ch-tippy-${getRandomInt()}`;
+  const id = `ch-tippy-${bo.getRandomInt()}`;
   const cssId = `#${id}`;
   const content = initPug['ch-tippy-click-tradingview']({id});
   const $cell = params.event.target.closest('.ag-cell');
   popDiv($cell, content);
-  htmlToggleClass($cell, 'ch-cell-active');
-  htmlPollElement(cssId, 100, partialApplication(loadTradingview, params, id, symbolTo));
+  bo.htmlToggleClass($cell, 'ch-cell-active');
+  bo.htmlPollElement(cssId, 100, bo.partialApplication(loadTradingview, params, id, symbolTo));
 
 }

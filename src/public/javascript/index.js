@@ -1,41 +1,33 @@
-// Generic util functions
-import timeago                     from './libs/bo-utils/time-ago.js';
-import isObject                    from './libs/bo-utils/object-is-object.js';
-import getNestedProperty           from './libs/bo-utils/object-get-nested-property.js';
-import numberGroupDigits           from './libs/bo-utils/number-group-digits.js';
-import partialApplication          from './libs/bo-utils/partial-application.js';
-
 // Cryptohub util functions
-import dataUnpack                  from './utils/data-unpack.js';
-import cellTooltip                 from './utils/cell-tooltip.js';
-import shouldCellUpdate            from './utils/should-cell-update.js';
+import dataUnpack                     from './utils/data-unpack.js';
+import cellTooltip                    from './utils/cell-tooltip.js';
+import shouldCellUpdate               from './utils/should-cell-update.js';
 
 // ag-grid valueFormatters
-import valueFormatterBTC           from './utils/value-formatter-btc.js';
-import valueFormatterPercentChange from './utils/value-formatter-percent-change.js';
+import valueFormatterBTC              from './utils/value-formatter-btc.js';
+import valueFormatterPercentChange    from './utils/value-formatter-percent-change.js';
 
 // ag-grid cell Renderer Classes
-import CompoundCellRenderer        from './utils/class-compound-cell-renderer.js';
-import CellRendererSparkline       from './utils/class-cell-renderer-sparkline.js';
+import CompoundCellRenderer           from './utils/class-compound-cell-renderer.js';
+import CellRendererSparkline          from './utils/class-cell-renderer-sparkline.js';
 
 // ag-grid cell Renderers
-import cellRendererName            from './utils/cell-renderer-name.js';
-import cellRendererNumber          from './utils/cell-renderer-number.js';
-import cellRendererCurrency        from './utils/cell-renderer-currency.js';
-import cellRendererExchanges       from './utils/cell-renderer-exchanges.js';
-import cellRendererTradingview     from './utils/cell-renderer-tradingview.js';
+import cellRendererName               from './utils/cell-renderer-name.js';
+import cellRendererNumber             from './utils/cell-renderer-number.js';
+import cellRendererCurrency           from './utils/cell-renderer-currency.js';
+import cellRendererExchanges          from './utils/cell-renderer-exchanges.js';
+import cellRendererTradingview        from './utils/cell-renderer-tradingview.js';
 
 // ag-grid custom filters
-import filterNumber                from './utils/filter-number.js';
-import filterFloatingNumber        from './utils/filter-floating-number.js';
+import filterNumber                   from './utils/filter-number.js';
+import filterFloatingNumber           from './utils/filter-floating-number.js';
 
 // ag-grid cell on click handlers
-import cellOnClickExchanges        from './utils/cell-on-click-exchanges.js';
-import cellOnClickTradingview      from './utils/cell-on-click-tradingview.js';
+import cellOnClickExchanges           from './utils/cell-on-click-exchanges.js';
+import cellOnClickTradingview         from './utils/cell-on-click-tradingview.js';
 
 // ag-grid filter comparators
 import sortNumbers from './utils/sort-numbers.js';
-
 
 const refs = {
   // the last version of the unpacked data
@@ -172,12 +164,12 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: partialApplication(cellRendererCurrency, refs),
+    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       countdown: true,
       currency: 'USD',
     },
-    onCellClicked: partialApplication(cellOnClickTradingview, 'USD'),
+    onCellClicked: bo.partialApplication(cellOnClickTradingview, 'USD'),
   },
 
   // BTC Price
@@ -191,12 +183,12 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: partialApplication(cellRendererCurrency, refs),
+    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       countdown: true,
       currency: 'BTC',
     },
-    onCellClicked: partialApplication(cellOnClickTradingview, 'BTC'),
+    onCellClicked: bo.partialApplication(cellOnClickTradingview, 'BTC'),
   },
 
   // Percent Change
@@ -242,7 +234,7 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: partialApplication(cellRendererCurrency, refs),
+    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       countdown: true,
       currency: 'USD',
@@ -260,7 +252,7 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: partialApplication(cellRendererCurrency, refs),
+    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       countdown: true,
       currency: 'USD',
@@ -485,7 +477,7 @@ let timestamp;
 const updated = function (when) {
 
   if (when === 'now') timestamp = new Date();
-  const time = timeago(timestamp);
+  const time = bo.timeAgo(timestamp);
   document.querySelector('#updated').innerHTML = `Last Updated: ${time}`;
 
 }
@@ -581,26 +573,3 @@ else {
     });
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

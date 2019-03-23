@@ -1,6 +1,6 @@
 'use strict';
 
-const gnp = bo.getNestedProperty;
+const gnp = bo.objectGetNestedProperty;
 
 /**
  *

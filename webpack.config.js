@@ -18,6 +18,7 @@ module.exports = {
   plugins: [
     new CopyPlugin([
       {from: './node_modules/bo-utils/dist/index.client.js', to: '../src/public/javascript/libs/bo-utils-client.js'},
+      {from: './node_modules/bo-datatable/dist/index.client.js', to: '../src/public/javascript/libs/bo-datatable-client.js'},
     ]),
   ],
 

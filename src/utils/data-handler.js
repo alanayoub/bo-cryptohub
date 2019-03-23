@@ -2,6 +2,9 @@
 import { arrayToObject }                        from 'bo-utils';
 import { objectIsObject as isObject }           from 'bo-utils';
 import { objectIsEmptyObject as isEmptyObject } from 'bo-utils';
+import { timeseriesThin }                       from 'bo-utils';
+import { timeseriesPrune }                      from 'bo-utils';
+import { timeseriesScale }                      from 'bo-utils';
 
 // Cryptohub util functions
 import logger                                   from '../logger';
@@ -45,49 +48,75 @@ function deleteBadRecords(data) {
 
 /**
  *
- * Update the price history array with the latest price
+ * Timeseries Rescale
  *
- * @param {Object} timeseries - A timeseries string (timestamp|price) delimited by ,
- * @param {Number} newPrice
- * @param {Number} newTimestamp
- * @param {Number} [limit] - Maximum timeseries element aloud
- * @return {String} return the modified timeseries string
+ * @param {Array} ts - Array of timeseries objects
+ * @return {Array} - Array of updated timeseries object
  *
  */
-function updateTimeseriesHistory(timeseries, newTimestamp, newPrice, newVolume, limit = 100, maxAge = 7 * 24 * 60 * 60 * 1000) {
+export default function getNewTimeseriesData(item, limit = 50, maxAge = 1000 * 60 * 60 * 24 * 7) {
 
-  let tsArr = timeseries ? timeseries.split(',') : [];
+  const price     = item['cc-total-vol-full-PRICE'];
+  const volume    = item['cc-total-vol-full-TOTALVOLUME24HTO'];
+  const ts        = item['cryptohub-price-history'];
+  const minP      = item['cryptohub-price-history-min'] || price - 1;
+  const maxP      = item['cryptohub-price-history-max'] || price;
+  const minV      = item['cryptohub-volume-history-min'] || volume - 1;
+  const maxV      = item['cryptohub-volume-history-max'] || volume;
+  const timestamp = item['cc-total-vol-full-PRICE-timestamp'];
 
-  // remove anything older than maxAge
-  const tsNow = +new Date();
-  tsArr = tsArr.filter((v, i) => {
-    return (tsNow - v.split('|')[0]) < maxAge;
-  });
+  if (!ts) return false;
+  timeseriesPrune(ts, maxAge);
+  timeseriesThin(ts, limit);
 
-  // To make space for the new timeseries item we remove one of the
-  // current items, the one that has the shortest time span between
-  // it and its sibling
-  let d;
-  let idx;
-  let diff = Infinity;
-  if (tsArr.length >= limit) {
-    tsArr.forEach((v, i) => {
-      if (i === 0) return;
-      d = Math.abs(tsArr[i-1].split('|')[0] - tsArr[i].split('|')[0]);
-      if (d < diff) {
-        diff = d;
-        idx = i;
-      }
-    });
-    tsArr.splice(idx, 1);
-  }
+  // scale up
+  timeseriesScale({ts, min: minP, max: maxP, scaleField: 'price'});
+  timeseriesScale({ts, min: minV, max: maxV, scaleField: 'volume'});
 
-  // Add new timeseries item
-  tsArr.push(`${newTimestamp}|${newPrice}|${newVolume}`);
-  timeseries = tsArr.join();
+  // add item
+  const last = ts[ts.length - 1];
+  const next = {price, volume, timestamp: +new Date(timestamp)};
+  if (JSON.stringify(last) !== JSON.stringify(next)) ts.push(next);
 
-  return timeseries;
+  // Get new min max values
+  const arrPrice  = ts.map(x => x.price);
+  const arrVolume = ts.map(x => x.volume);
+  const minPrice  = Math.min(...arrPrice);
+  const maxPrice  = Math.max(...arrPrice);
+  const minVolume = Math.min(...arrVolume);
+  const maxVolume = Math.max(...arrVolume);
 
+  // scale down
+  timeseriesScale({ts, min: 1, max: 1000, scaleField: 'price'});
+  timeseriesScale({ts, min: 1, max: 1000, scaleField: 'volume'});
+
+  return {
+    timeseries: ts,
+    minPrice,
+    maxPrice,
+    minVolume,
+    maxVolume,
+  };
+
+}
+
+/**
+ *
+ * Get Price in BTC
+ *
+ * @param {Object} item
+ * @param {Number} bitcoinPrice
+ * @return {Object|Boolean}
+ *
+ */
+function getPriceInBtc(item, bitcoinPrice) {
+
+  const timestamp   = +new Date(item['cc-total-vol-full-PRICE-timestamp']);
+  const cryptoPrice = item['cc-total-vol-full-PRICE'];
+  const amount = 1 / (bitcoinPrice / cryptoPrice);
+  return bitcoinPrice && cryptoPrice
+    ? {amount, timestamp}
+    : false;
 }
 
 /**
@@ -111,110 +140,46 @@ function getOldData(cache) {
  */
 function addCryptohubFields(data) {
 
-  let ccPrice;
-  let ccVolume;
-  let timeseries;
-  let totalSupply;
-  let ccPriceTimestamp;
-  let circulatingSupply;
-
   //
   // BTC Price
   //
-  let ccBTCPrice;
   const btcId = 1182;
   const btcItem = data[btcId];
+  let bitcoinPrice;
   if (btcItem) {
-    ccBTCPrice = btcItem['cc-total-vol-full-PRICE'];
+    bitcoinPrice = btcItem['cc-total-vol-full-PRICE'];
   }
 
   let key;
   let item;
   for ([key, item] of Object.entries(data)) {
 
-    ccPrice = item['cc-total-vol-full-PRICE'];
-    ccVolume = item['cc-total-vol-full-TOTALVOLUME24HTO'];
-    timeseries = item['cryptohub-price-history'];
-    totalSupply = item['cc-coinlist-TotalCoinSupply'];
-    ccPriceTimestamp = +new Date(item['cc-total-vol-full-PRICE-timestamp']);
-    circulatingSupply = item['cc-total-vol-full-SUPPLY'];
-
-    // Update
-    item['cryptohub-price-history'] = updateTimeseriesHistory(
-      timeseries, ccPriceTimestamp, ccPrice, ccVolume
-    );
-    item['cryptohub-circulating-percent-total'] = (circulatingSupply / totalSupply) * 100;
-    if (ccBTCPrice && ccPrice) {
-      item['cryptohub-price-btc'] = 1 / (ccBTCPrice / ccPrice);
-      item['cryptohub-price-btc-timestamp'] = ccPriceTimestamp;
+    // Timeseries
+    const { timeseries, minPrice, maxPrice, minVolume, maxVolume } = getNewTimeseriesData(item);
+    if (timeseries) {
+      item['cryptohub-price-history']      = timeseries;
+      item['cryptohub-price-history-min']  = minPrice;
+      item['cryptohub-price-history-max']  = maxPrice;
+      item['cryptohub-volume-history-min'] = minVolume;
+      item['cryptohub-volume-history-max'] = maxVolume;
     }
+
+    // Bitcoin price
+    const priceInBtc = getPriceInBtc(item, bitcoinPrice);
+    if (priceInBtc) {
+      item['cryptohub-price-btc']           = priceInBtc.amount;
+      item['cryptohub-price-btc-timestamp'] = priceInBtc.timestamp;
+    }
+
+    // Circulating percent total
+    const supplyTotal       = item['cc-coinlist-TotalCoinSupply'];
+    const supplyCirculating = item['cc-total-vol-full-SUPPLY'];
+    item['cryptohub-circulating-percent-total'] = (supplyCirculating / supplyTotal) * 100;
+
   }
 
   return data;
 
-}
-
-/**
- *
- * @param {Object} data
- * @return {Object}
- *
- */
-function whatsHappening(data) {
-
-  if (!isObject(data)) return false;
-
-  let key;
-  let val;
-  let up = 0;
-  let down = 0;
-  let noChange = 0;
-  for (key of Object.keys(data)) {
-    if (!data[key]) continue;
-    val = data[key]['cc-total-vol-full-CHANGEPCTDAY'];
-    if (val > 0) up++;
-    else if (val < 0) down++;
-    else noChange++;
-  }
-  return {up, down, noChange};
-}
-
-
-/**
- *
- * Get Changes
- *
- * @param {Object} oldData
- * @param {Object} newData
- * @return {Object} - the changes between oldData and newData
- *
- */
-function getChanges(oldData, newData, idField) {
-  const output = {};
-  let key;
-  let val;
-  let k;
-  let v;
-  for ([key, val] of Object.entries(newData)) {
-    if (oldData[key]) {
-      for ([k, v] of Object.entries(newData[key])) {
-        // If the property is different
-        if (JSON.stringify(oldData[key][k]) !== JSON.stringify(v)) {
-          if (!output[key]) output[key] = {};
-          // Keep the new property
-          output[key][k] = v;
-        }
-      }
-      // If there are any changes in this item add the id field
-      if (output[key]) {
-        output[key][idField] = newData[key][idField];
-      }
-    }
-    else {
-      output[key] = newData[key];
-    }
-  }
-  return output;
 }
 
 /**
@@ -225,6 +190,12 @@ function getChanges(oldData, newData, idField) {
  * Some data takes longer to scrape than other therefore some items in the
  * datastore will stay empty for a while. To prevent this we backfill the datastore
  * with the last output datasource if any of the stores are empty
+ *
+ * NOTE:
+ *   Regarding packing and diffing data
+ *   We should never save packed data or data diffs
+ *   We should only ever emit packed data or data diffs so knowing that
+ *   all data we work with here should be full datasets of unpacked data
  *
  * @param {Object} [options]
  * @param {Object} data
@@ -238,10 +209,6 @@ module.exports = function dataHandler(options = {}, data, cache) {
 
     // Get old data
     let oldData = getOldData(cache);
-
-    //
-    // ROW DATA STUFF
-    //
 
     //
     // Backfill new data with old data
@@ -260,69 +227,9 @@ module.exports = function dataHandler(options = {}, data, cache) {
     // Add custom cryptohub fields
     newData = addCryptohubFields(newData);
 
-    const idField = 'cc-total-vol-full-Id';
-    const diff = getChanges(oldData, newData, idField);
-    const gotChanges = !isEmptyObject(diff);
-
-    // {
-
-    //   function mergeData(oldData = {}, newData = {}) {
-
-    //     let key;
-    //     let output = {};
-    //     const allKeys = Array.from(new Set([
-    //       ...Object.keys(oldData),
-    //       ...Object.keys(newData)
-    //     ]));
-
-    //     for (key of allKeys) {
-    //       output[key] = newData[key]
-    //         ? Object.assign({}, oldData[key], newData[key])
-    //         : oldData[key];
-    //     }
-
-    //     return output;
-    //   }
-
-    //   console.group('changes');
-    //   const diff = getChanges(oldData, newData);
-    //   console.log('getChanges test:', diff);
-
-    //   const merged = mergeData(oldData, diff);
-    //   console.log('merged', merged);
-
-    //   const result = JSON.stringify(newData) === JSON.stringify(merged);
-    //   console.log('is there a difference? ', !result);
-
-    //   const newDiff = getChanges(newData, merged);
-    //   console.log('newDiff is:', newDiff);
-    //   console.groupEnd('changes');
-
-    //   if (!result) debugger;
-
-    // }
-
-    if (gotChanges) {
-
-      // Get changes only
-      // NOTE: We cant do this as the file is the same place
-      // where events get picked up and where the backfill happens!!!
-      if (options.updatesOnly) {
-        newData = diff;
-      }
-
-      // Save file (the watcher will pick it up and emit it)
-      const fileName = '/tmp-generated/data/data.json';
-      cache.set(fileName, JSON.stringify(newData));
-
-    }
-
-    //
-    // OTHER STUFF
-    //
-
-    const status = whatsHappening(newData);
-    console.log(status);
+    // Save file (the watcher will pick it up and emit it)
+    const fileName = '/tmp-generated/data/data.json';
+    cache.set(fileName, JSON.stringify(newData));
 
   }
   catch(error) {
@@ -333,38 +240,3 @@ module.exports = function dataHandler(options = {}, data, cache) {
     return {message, error: true};
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

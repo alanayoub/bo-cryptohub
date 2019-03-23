@@ -345,6 +345,50 @@ h1 {
   color: #fff;
 }
 
+
+/**
+ *
+ * Direction
+ *
+ */
+.ch-direction {
+  position: absolute;
+  top: 0;
+  left: 431px;
+  line-height: 51px;
+  padding: 0 20px;
+  color: #ccc;
+}
+
+.ch-direction .ch-up {
+  color: #457a2b;
+  background: #457a2b1a;
+}
+
+.ch-direction .ch-dn {
+  color: #b70808;
+  background: #b708081a;
+}
+
+.ch-direction .ch-nc {
+  color: #000;
+  background: #0000001a;
+}
+
+.ch-direction .ch-symbol {
+  font-size: 17px;
+  display: inline-block;
+  padding: 0 5px;
+}
+
+.ch-direction .ch-up,
+.ch-direction .ch-dn,
+.ch-direction .ch-nc {
+  padding: 4px 6px;
+  margin-right: 4px;
+}
+
+
 /*
  *
  * This won't work untill i setup the ag-grid build and use SASS to override the theme

@@ -1,28 +1,27 @@
 'use strict';
 
+const { timeseriesScale } = bo;
+
 /**
  *
  * Price
  *
- * @param {String} str
- * @param {Object} params
+ * @param {Array} arr
+ * @param {Boolean} range
  *
  */
-function price(str, params) {
+function price(arr, range) {
 
-  let price;
-  let timestamp;
-  const priceData = [];
-  str.split(',').forEach(d => {
-    [timestamp, price] = d.split('|');
-    priceData.push({
-      x: +timestamp, y: +price
+  const priceData = arr.reduce((acc, val) => {
+    acc.push({
+      x: val.timestamp, y: val.price
     });
-  });
+    return acc;
+  }, []);
 
   return bo.d3Sparkline({
+    range,
     data: priceData,
-    range: !!params.range,
     width: 100,
     height: 32,
     styles: 'position: absolute; top: 0; right: 11px'
@@ -30,21 +29,26 @@ function price(str, params) {
 
 }
 
-function volume(str, params) {
+/**
+ *
+ * Volume
+ *
+ * @param {Array} arr
+ * @param {Boolean} range
+ * @param {Object} [volumeDays]
+ *
+ */
+function volume(arr, range, volumeDays = 7) {
 
   const volumeData = [];
-  const data = [];
-
-  let volume;
-  let timestamp;
-  str.split(',').forEach(d => {
-    [timestamp, volume] = d.split('|');
-    data.push({
-      x: +timestamp, y: +volume
+  const data = arr.reduce((acc, val) => {
+    acc.push({
+      x: val.timestamp, y: val.volume
     });
-  });
+    return acc;
+  }, []);
 
-  const numDays = params.volumeDays || 7;
+  const numDays = volumeDays;
   const steps = Math.max(Math.floor(data.length / numDays), 1);
   for (let i = 0; i < data.length; i = i + steps) {
 
@@ -64,8 +68,8 @@ function volume(str, params) {
   }
 
   return bo.d3SimpleBarChart({
+    range,
     data: volumeData,
-    range: !!params.range,
     width: 100,
     height: 10,
     fill: '#caecfc',
@@ -84,11 +88,19 @@ export default class cellRendererSparkline {
   // gets called once before the renderer is used
   init(params) {
 
-    let timestamp;
-    const str = params.value;
+    const item = params.data;
+    const minP = item['cryptohub-price-history-min'];
+    const maxP = item['cryptohub-price-history-max'];
+    const minV = item['cryptohub-volume-history-min'];
+    const maxV = item['cryptohub-volume-history-max'];
 
-    if (params.price) this.price = price(str, params);
-    if (params.volume) this.volume = volume(str, params);
+    // scale up
+    let ts = JSON.parse(JSON.stringify(params.value));
+    ts = timeseriesScale({ts, min: minP, max: maxP, scaleField: 'price', ceil: false});
+    ts = timeseriesScale({ts, min: minV, max: maxV, scaleField: 'volume', ceil: false});
+
+    if (params.price)  this.price  = price(ts, !!params.range);
+    if (params.volume) this.volume = volume(ts, !!params.range, params.volumeDays);
 
   }
 

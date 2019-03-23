@@ -1,7 +1,9 @@
+'use strict';
+
 // Cryptohub util functions
-import dataUnpack                     from './utils/data-unpack.js';
 import cellTooltip                    from './utils/cell-tooltip.js';
 import shouldCellUpdate               from './utils/should-cell-update.js';
+import convertWorkingDataToRowData    from './utils/convert-working-data-to-row-data.js';
 
 // ag-grid valueFormatters
 import valueFormatterBTC              from './utils/value-formatter-btc.js';
@@ -29,11 +31,45 @@ import cellOnClickTradingview         from './utils/cell-on-click-tradingview.js
 // ag-grid filter comparators
 import sortNumbers from './utils/sort-numbers.js';
 
+const DataTable = window.DataTable.default;
+const { objectIsObject: isObject } = bo;
+
+
+/**
+ *
+ * @param {Object} data
+ * @return {Object}
+ *
+ */
+function whatsHappening(data) {
+
+  if (!isObject(data)) return false;
+
+  let key;
+  let val;
+  let up = 0;
+  let down = 0;
+  let noChange = 0;
+  for (key of Object.keys(data)) {
+    if (!data[key]) continue;
+    val = data[key]['cc-total-vol-full-CHANGEPCTDAY'];
+    if (val > 0) up++;
+    else if (val < 0) down++;
+    else noChange++;
+  }
+  return {up, down, noChange};
+}
+
+
 const refs = {
   // the last version of the unpacked data
   oldDBValues: {},
   // the last version of the packed data
-  store: []
+  store: [],
+
+  rowData: [],
+  emitData: []
+
 };
 
 //
@@ -412,15 +448,16 @@ const agOptions = {
     ]);
 
     // NOTE: DO NOT CHANGE UNLESS YOU WANT TO UPDATE HOW DATA WORKS
-    refs.store = dataUnpack(initData || []);
-    params.api.setRowData(refs.store);
+    refs.workingData = initData;
+    refs.rowData = convertWorkingDataToRowData(initData || []);
+    params.api.setRowData(refs.rowData);
 
   },
 
   rowHeight: 35,
 
   // NOTE: DO NOT CHANGE UNLESS YOU WANT TO UPDATE HOW DATA WORKS
-  rowData: refs.store,
+  rowData: refs.rowData,
 
   // Set to true to have cells flash after data changes. See Flashing Data Changes.
   enableCellChangeFlash: true,
@@ -560,15 +597,35 @@ else {
 
       updated('now');
 
-      const idField = 'cc-total-vol-full-Id';
-      refs.store = mergeData(refs.store, dataUnpack(data), idField);
-      agOptions.api.setRowData(refs.store);
-      refs.oldDBValues = arrayToObject(refs.store, idField);
+      const newSocketData = JSON.parse(data);
+
+      DataTable.changesets.applyChanges(refs.workingData, newSocketData);
+
+      refs.rowData = convertWorkingDataToRowData(refs.workingData);
+      agOptions.api.setRowData(refs.rowData);
+
+      refs.oldDBValues = refs.workingData;
+
+      //
+      // OTHER STUFF
+      //
+      const { up, down: dn, noChange: nc } = whatsHappening(refs.workingData);
+      const total = up + dn + nc;
+      const upPer = Math.floor(up / (total / 100));
+      const dnPer = Math.floor(dn / (total / 100));
+      const ncPer = Math.floor(nc / (total / 100));
+      document.querySelector('.ch-direction .ch-up .ch-val').innerHTML = `${upPer}%`;
+      document.querySelector('.ch-direction .ch-dn .ch-val').innerHTML = `${dnPer}%`;
+      document.querySelector('.ch-direction .ch-nc .ch-val').innerHTML = `${ncPer}%`;
+      document.querySelector('.ch-direction .ch-total .ch-val').innerHTML = `${total}`;
 
     })
     .on('store', data => {
 
-      window.ch.store = data;
+      updated('now');
+
+      const newSocketData = JSON.parse(data);
+      DataTable.changesets.applyChanges(window.ch, newSocketData);
 
     });
 

@@ -2,7 +2,7 @@
 
 /**
  *
- * dataUnpack
+ * Convert Working Data to Row Data
  *
  * UnMinify data & expand timestamps / value into object
  * Creates ag-grid Array row data
@@ -11,30 +11,32 @@
  * @return {Array} unpacked array data
  *
  */
-export default function dataUnpack(data) {
+export default function convertWorkingDataToRowData(data) {
 
-  if (!data.keys) {
-    console.log('dataUnpack(): can\'t unpack data without keys');
-    return data;
-  }
+  data = JSON.parse(JSON.stringify(data));
 
-  //
-  // UnMinify
-  //
-  let id, item;
-  let key, val;
-  let newObj;
-  let newData = {};
-  const keys = data.keys;
-  delete data.keys;
-  for ([id, item] of Object.entries(data)) {
-    newObj = {};
-    for ([key, val] of Object.entries(item)) {
-      newObj[keys[key]] = val;
+  if (data.keys) {
+
+    //
+    // UnMinify
+    //
+    let id, item;
+    let key, val;
+    let newObj;
+    let newData = {};
+    const keys = data.keys;
+    delete data.keys;
+    for ([id, item] of Object.entries(data)) {
+      newObj = {};
+      for ([key, val] of Object.entries(item)) {
+        newObj[keys[key]] = val;
+      }
+      newData[id] = newObj;
     }
-    newData[id] = newObj;
+    data = newData;
+
   }
-  data = newData;
+
 
   //
   // Convert data Object to Array

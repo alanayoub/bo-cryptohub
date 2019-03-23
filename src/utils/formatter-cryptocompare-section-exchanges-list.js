@@ -1,5 +1,5 @@
 // Binary Overdose
-import { getNestedProperty as getNestedProp } from 'bo-utils';
+import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 
 // Cryptohub
 const logger = require('../logger');
@@ -400,7 +400,7 @@ module.exports = function formatterCryptocompareSectionExchangesList(response, t
 
   }
   catch(error) {
-    const message = `formatterCryptocompareSectionExchanges(): ${error}`;
+    const message = `formatterCryptocompareSectionExchangesList(): ${error}`;
     logger.error(message);
     return {message, error: true};
   }

@@ -32,9 +32,9 @@ export default function cellOnClickExchanges(params) {
     // _numberOfPairs : 18
     // _points : 0
 
-    const fiatIds       = params.data['cryptohub-exchangesListAcceptsBoth'] || [];
-    const cryptoIds     = params.data['cryptohub-exchangesListCryptoOnly'] || [];
-    const exchanges     = bo.objectGetNestedProperty(window.ch, 'exchanges');
+    const fiatIds   = params.data['cryptohub-exchangesListAcceptsBoth'] || [];
+    const cryptoIds = params.data['cryptohub-exchangesListCryptoOnly'] || [];
+    const exchanges = bo.objectGetNestedProperty(window.ch, 'exchanges');
 
     //
     // Step 1: Create the below data structure

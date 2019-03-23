@@ -79,6 +79,7 @@ module.exports = function formatterCryptocompareSectionExchangesGeneral(response
       let field;
       let output = {};
       let fields = [
+        'Id',
         'Name',
         'Url',
         'LogoUrl',

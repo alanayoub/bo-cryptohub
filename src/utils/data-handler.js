@@ -50,53 +50,25 @@ function deleteBadRecords(data) {
  *
  * Timeseries Rescale
  *
- * @param {Array} ts - Array of timeseries objects
+ * @param {Array} timeseries - Array of timeseries objects
  * @return {Array} - Array of updated timeseries object
  *
  */
 export default function getNewTimeseriesData(item, limit = 50, maxAge = 1000 * 60 * 60 * 24 * 7) {
 
-  const price     = item['cc-total-vol-full-PRICE'];
-  const volume    = item['cc-total-vol-full-TOTALVOLUME24HTO'];
-  const ts        = item['cryptohub-price-history'];
-  const minP      = item['cryptohub-price-history-min'] || price - 1;
-  const maxP      = item['cryptohub-price-history-max'] || price;
-  const minV      = item['cryptohub-volume-history-min'] || volume - 1;
-  const maxV      = item['cryptohub-volume-history-max'] || volume;
-  const timestamp = item['cc-total-vol-full-PRICE-timestamp'];
+  const price      = item['cc-total-vol-full-PRICE'];
+  const volume     = item['cc-total-vol-full-TOTALVOLUME24HTO'];
+  const timestamp  = item['cc-total-vol-full-PRICE-timestamp'];
+  const timeseries = item['cryptohub-price-history'] || [];
 
-  if (!ts) return false;
-  timeseriesPrune(ts, maxAge);
-  timeseriesThin(ts, limit);
+  timeseriesPrune(timeseries, maxAge);
+  timeseriesThin(timeseries, limit);
 
-  // scale up
-  timeseriesScale({ts, min: minP, max: maxP, scaleField: 'price'});
-  timeseriesScale({ts, min: minV, max: maxV, scaleField: 'volume'});
-
-  // add item
-  const last = ts[ts.length - 1];
+  const last = timeseries[timeseries.length - 1];
   const next = {price, volume, timestamp: +new Date(timestamp)};
-  if (JSON.stringify(last) !== JSON.stringify(next)) ts.push(next);
+  if (JSON.stringify(last) !== JSON.stringify(next)) timeseries.push(next);
 
-  // Get new min max values
-  const arrPrice  = ts.map(x => x.price);
-  const arrVolume = ts.map(x => x.volume);
-  const minPrice  = Math.min(...arrPrice);
-  const maxPrice  = Math.max(...arrPrice);
-  const minVolume = Math.min(...arrVolume);
-  const maxVolume = Math.max(...arrVolume);
-
-  // scale down
-  timeseriesScale({ts, min: 1, max: 1000, scaleField: 'price'});
-  timeseriesScale({ts, min: 1, max: 1000, scaleField: 'volume'});
-
-  return {
-    timeseries: ts,
-    minPrice,
-    maxPrice,
-    minVolume,
-    maxVolume,
-  };
+  return timeseries;
 
 }
 
@@ -121,20 +93,6 @@ function getPriceInBtc(item, bitcoinPrice) {
 
 /**
  *
- * GET OLD DATA
- *
- */
-function getOldData(cache) {
-  let [ oldData ] = cache.get('/out/data/data.json');
-  if (oldData) oldData = JSON.parse(oldData);
-  if (Array.isArray(oldData)) {
-    oldData = arrayToObject(oldData, 'cc-coinlist-Id');
-  }
-  return oldData || {};
-}
-
-/**
- *
  * ADD CRYPTOHUB FIELDS
  *
  */
@@ -155,13 +113,9 @@ function addCryptohubFields(data) {
   for ([key, item] of Object.entries(data)) {
 
     // Timeseries
-    const { timeseries, minPrice, maxPrice, minVolume, maxVolume } = getNewTimeseriesData(item);
+    const timeseries = getNewTimeseriesData(item);
     if (timeseries) {
-      item['cryptohub-price-history']      = timeseries;
-      item['cryptohub-price-history-min']  = minPrice;
-      item['cryptohub-price-history-max']  = maxPrice;
-      item['cryptohub-volume-history-min'] = minVolume;
-      item['cryptohub-volume-history-max'] = maxVolume;
+      item['cryptohub-price-history'] = timeseries;
     }
 
     // Bitcoin price
@@ -202,13 +156,15 @@ function addCryptohubFields(data) {
  * @param {} cache
  *
  */
-module.exports = function dataHandler(options = {}, data, cache) {
+module.exports = function dataHandler(options = {}, data, cache, oldData = {}) {
   try {
 
     let newData = data;
 
-    // Get old data
-    let oldData = getOldData(cache);
+    // TODO: fix this so oldData is never an rrray
+    if (Array.isArray(oldData)) {
+      oldData = arrayToObject(oldData, 'cc-coinlist-Id');
+    }
 
     //
     // Backfill new data with old data

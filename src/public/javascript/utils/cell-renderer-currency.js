@@ -23,7 +23,7 @@ export default function cellRendererCurrency(refs, params) {
   const html = document.createElement('div');
 
   const newValue = bo.objectGetNestedProperty(params, 'value.value');
-  const oldValue = bo.objectGetNestedProperty(refs, `oldDBValues.${id}.${colDef.field}.value`);
+  const oldValue = bo.objectGetNestedProperty(refs, `oldDBValues.${id}.${colDef.field}`);
 
   // format number
   let newVal;

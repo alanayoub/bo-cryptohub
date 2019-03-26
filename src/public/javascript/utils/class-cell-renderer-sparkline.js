@@ -1,7 +1,5 @@
 'use strict';
 
-const { timeseriesScale } = bo;
-
 /**
  *
  * Price
@@ -88,16 +86,9 @@ export default class cellRendererSparkline {
   // gets called once before the renderer is used
   init(params) {
 
-    const item = params.data;
-    const minP = item['cryptohub-price-history-min'];
-    const maxP = item['cryptohub-price-history-max'];
-    const minV = item['cryptohub-volume-history-min'];
-    const maxV = item['cryptohub-volume-history-max'];
+    if (!params.value) return;
 
-    // scale up
     let ts = JSON.parse(JSON.stringify(params.value));
-    ts = timeseriesScale({ts, min: minP, max: maxP, scaleField: 'price', ceil: false});
-    ts = timeseriesScale({ts, min: minV, max: maxV, scaleField: 'volume', ceil: false});
 
     if (params.price)  this.price  = price(ts, !!params.range);
     if (params.volume) this.volume = volume(ts, !!params.range, params.volumeDays);

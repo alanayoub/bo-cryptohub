@@ -34,32 +34,39 @@ import sortNumbers from './utils/sort-numbers.js';
 const DataTable = window.DataTable.default;
 const { objectIsObject: isObject } = bo;
 
-
 /**
  *
  * @param {Object} data
  * @return {Object}
  *
  */
-function whatsHappening(data) {
+function updateOverview(data) {
 
   if (!isObject(data)) return false;
 
   let key;
   let val;
   let up = 0;
-  let down = 0;
-  let noChange = 0;
+  let dn = 0;
+  let nc = 0;
   for (key of Object.keys(data)) {
     if (!data[key]) continue;
     val = data[key]['cc-total-vol-full-CHANGEPCTDAY'];
     if (val > 0) up++;
-    else if (val < 0) down++;
-    else noChange++;
+    else if (val < 0) dn++;
+    else nc++;
   }
-  return {up, down, noChange};
-}
 
+  const total = up + dn + nc;
+  const upPer = Math.floor(up / (total / 100));
+  const dnPer = Math.floor(dn / (total / 100));
+  const ncPer = Math.floor(nc / (total / 100));
+  document.querySelector('.ch-direction .ch-up .ch-val').innerHTML = `${upPer}%`;
+  document.querySelector('.ch-direction .ch-dn .ch-val').innerHTML = `${dnPer}%`;
+  document.querySelector('.ch-direction .ch-nc .ch-val').innerHTML = `${ncPer}%`;
+  document.querySelector('.ch-direction .ch-total .ch-val').innerHTML = `${total}`;
+
+}
 
 const refs = {
   // the last version of the unpacked data
@@ -448,9 +455,21 @@ const agOptions = {
     ]);
 
     // NOTE: DO NOT CHANGE UNLESS YOU WANT TO UPDATE HOW DATA WORKS
-    refs.workingData = initData;
-    refs.rowData = convertWorkingDataToRowData(initData || []);
+    refs.workingData = initOldData;
+    refs.rowData = convertWorkingDataToRowData(initOldData || []);
     params.api.setRowData(refs.rowData);
+
+    // Do an update straight away
+    // Two sets of data are used to bootstrap, the latest and an old set
+    updated('now');
+
+    refs.oldDBValues = JSON.parse(JSON.stringify(refs.workingData));
+    refs.workingData = Object.assign({}, refs.oldDBValues, initData);
+    refs.rowData = convertWorkingDataToRowData(refs.workingData);
+
+    params.api.setRowData(refs.rowData);
+
+    updateOverview(refs.workingData);
 
   },
 
@@ -597,6 +616,8 @@ else {
 
       updated('now');
 
+      refs.oldDBValues = JSON.parse(JSON.stringify(refs.workingData));
+
       const newSocketData = JSON.parse(data);
 
       DataTable.changesets.applyChanges(refs.workingData, newSocketData);
@@ -604,20 +625,7 @@ else {
       refs.rowData = convertWorkingDataToRowData(refs.workingData);
       agOptions.api.setRowData(refs.rowData);
 
-      refs.oldDBValues = refs.workingData;
-
-      //
-      // OTHER STUFF
-      //
-      const { up, down: dn, noChange: nc } = whatsHappening(refs.workingData);
-      const total = up + dn + nc;
-      const upPer = Math.floor(up / (total / 100));
-      const dnPer = Math.floor(dn / (total / 100));
-      const ncPer = Math.floor(nc / (total / 100));
-      document.querySelector('.ch-direction .ch-up .ch-val').innerHTML = `${upPer}%`;
-      document.querySelector('.ch-direction .ch-dn .ch-val').innerHTML = `${dnPer}%`;
-      document.querySelector('.ch-direction .ch-nc .ch-val').innerHTML = `${ncPer}%`;
-      document.querySelector('.ch-direction .ch-total .ch-val').innerHTML = `${total}`;
+      updateOverview(refs.workingData);
 
     })
     .on('store', data => {

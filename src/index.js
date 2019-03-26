@@ -121,17 +121,25 @@ try {
     },
     events: {
       data: {
+        // TODO: rename function
         mergeHandler: analyticsMergeDataByKey,
-        eventHandler: partialApplication(dataHandler, {updatesOnly: false})
+        // TODO: rename function
+        eventHandler: partialApplication(dataHandler, {updatesOnly: false}),
+        onBeforeEmit: (newData, oldData) => {
+
+          let emitData;
+          emitData = DataTable.diff(oldData, newData);
+          emitData = JSON.stringify(emitData);
+          return emitData;
+
+        }
       },
       store: {
         mergeHandler: data => data,
-        eventHandler(data, cache) {
+        eventHandler(data, cache, oldData = {}) {
 
           // Get old data
           const fileName = '/tmp-generated/store/data.json';
-          let [ oldData ] = cache.get(fileName);
-          oldData = JSON.parse(oldData) || {};
 
           // Maps
           const idName = getNestedProp(data, 'exchanges-general.maps.idName');
@@ -150,6 +158,14 @@ try {
           }
 
           cache.set(fileName, JSON.stringify(output));
+
+        },
+        onBeforeEmit: (newData, oldData) => {
+
+          let emitData;
+          emitData = DataTable.diff(oldData, newData);
+          emitData = JSON.stringify(emitData);
+          return emitData;
 
         }
       },
@@ -235,6 +251,29 @@ try {
           }
         ]
       },
+      // messari: {
+      //   cacheFor: 0,
+      //   rateLimitDelayMs: 1000 * 60,
+      //   bootstrap: () => {},
+      //   sections: [
+      //     {
+      //       name: 'metrics',
+      //       event: 'data',
+      //       interval: 1000 * 5,
+      //       cacheArgs: [`${scrapeDir}/messari/data.json`, 'all'],
+      //       getJobs(queue, bootstrapData) {
+      //         queue.push({
+      //           uri: 'https://data.messari.io/api/v1/assets/btc/metrics',
+      //           key: `${scrapeDir}/messari/data.json`,
+      //           cacheForDays: 0
+      //         });
+      //       },
+      //       formatter: (data) => {
+      //         console.log('messari, metrics', data);
+      //       }
+      //     },
+      //   ]
+      // },
       xe: {
         cacheFor: 0,
         rateLimitDelayMs: 1000 * 60 * 60 * 24,

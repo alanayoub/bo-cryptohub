@@ -55,17 +55,6 @@ try {
   });
 
   //
-  // dataHandler and tmpDir go hand in hand
-  //
-  // we should have an events thing:
-  //   events: {
-  //     Data: dataHandler(),
-  //     Store: storeHandler()
-  //   }
-  //
-  // the directory gets created on its own, so tmpData and tmpStore
-  //
-  //
   // -------------------------------------------------------------------------------------------------------
   //
   // Order data is processed

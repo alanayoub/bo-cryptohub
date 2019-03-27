@@ -47,7 +47,18 @@ global.githubOverrides = {
   'basic-attention-token': 'https://github.com/brave-intl',
 }
 
-const scrapeDir = '/tmp-scraped';
+const scrapeDir = process.env.NODE_ENV !== 'production'
+  ? '/home/ubuntu/cryptohub-scrape'
+  : '/tmp-scraped';
+
+const generatedDir = process.env.NODE_ENV !== 'production'
+  ? '/home/ubuntu/cryptohub-generated'
+  : '/tmp-generated';
+
+const cacheDir = process.env.NODE_ENV !== 'production'
+  ? '/home/ubuntu/cryptohub-cache'
+  : join(__dirname, '../cache');
+
 const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222';
 
 /**

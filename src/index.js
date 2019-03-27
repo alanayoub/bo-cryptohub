@@ -42,6 +42,8 @@ import getJobsCryptocompareSectionTotalVolFull       from './utils/get-jobs-cryp
 // Other utils
 import analyticsMergeDataByKey                       from './utils/analytics-merge-data-by-key';
 
+const { scrapeDir, generatedDir, cacheDir } = settings;
+
 try {
 
   process.on('warning', error => {
@@ -102,7 +104,6 @@ try {
   //    TODO: change so the data is returned and the application saves the file
   //
   //
-  const scrapeDir = '/tmp-scraped';
   const dataTable = new DataTable({
     server: {
       pub: join(__dirname, './public'),
@@ -118,7 +119,7 @@ try {
 
           let emitData;
           emitData = DataTable.diff(oldData, newData);
-          emitData = JSON.stringify(emitData);
+         emitData = JSON.stringify(emitData);
           return emitData;
 
         }
@@ -128,7 +129,7 @@ try {
         eventHandler(data, cache, oldData = {}) {
 
           // Get old data
-          const fileName = '/tmp-generated/store/data.json';
+          const fileName = `/${generatedDir}/store/data.json`;
 
           // Maps
           const idName = getNestedProp(data, 'exchanges-general.maps.idName');
@@ -163,7 +164,7 @@ try {
     tmpDir: settings.keyCryptohubAnalyticsTmp,
     outDir: settings.keyCryptohubAnalyticsOut,
 
-    cacheDir: join(__dirname, '../cache'),
+    cacheDir,
     defaultData: [],
     scrapeSites: {
       cryptocompare: {

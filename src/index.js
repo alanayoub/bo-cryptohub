@@ -106,7 +106,7 @@ try {
   const dataTable = new DataTable({
     server: {
       pub: join(__dirname, './public'),
-      port: 3000,
+      port: 3001,
     },
     events: {
       data: {

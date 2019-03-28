@@ -162,6 +162,7 @@ try {
     },
 
     dbDir,
+    generatedDir,
 
     cacheDir,
     defaultData: [],

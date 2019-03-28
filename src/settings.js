@@ -57,7 +57,7 @@ const generatedDir = process.env.NODE_ENV === 'production'
 
 const cacheDir = process.env.NODE_ENV === 'production'
   ? '/home/ubuntu/cryptohub-cache'
-  : path.join(__dirname, '../cache');
+  : '/media/alan/Seagate1/code/cryptohub/cache';
 
 const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222';
 
@@ -92,7 +92,6 @@ const settings = {
 
   // Cache
   // NOTE: we dont really need this if we are using rate limits. Using it for dev though
-  cache:                                       new Cache(path.join(__dirname, '../cache'), false),
   cacheForXe:                                  1,  // Days
   cacheForCryptocompare:                       0,  // Days
   cacheForCoinmarketcap:                       1,  // Days

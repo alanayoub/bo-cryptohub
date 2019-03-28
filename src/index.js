@@ -42,7 +42,7 @@ import getJobsCryptocompareSectionTotalVolFull       from './utils/get-jobs-cryp
 // Other utils
 import analyticsMergeDataByKey                       from './utils/analytics-merge-data-by-key';
 
-const { scrapeDir, generatedDir, cacheDir } = settings;
+const { scrapeDir, generatedDir, cacheDir, tmpDir, dbDir } = settings;
 
 try {
 
@@ -129,7 +129,7 @@ try {
         eventHandler(data, cache, oldData = {}) {
 
           // Get old data
-          const fileName = `/${generatedDir}/store/data.json`;
+          const fileName = `${generatedDir}/store/data.json`;
 
           // Maps
           const idName = getNestedProp(data, 'exchanges-general.maps.idName');
@@ -160,9 +160,8 @@ try {
         }
       },
     },
-    // TODO: check if these are still being used
-    tmpDir: settings.keyCryptohubAnalyticsTmp,
-    outDir: settings.keyCryptohubAnalyticsOut,
+
+    dbDir,
 
     cacheDir,
     defaultData: [],

@@ -1,11 +1,7 @@
 // Node
 const path = require('path');
 
-// cryptoHub
-const Cache = require('./utils/class-cache');
-
 // Settings
-global.cache = new Cache('cache', true);
 global.githubClientId = 'c7a2c111a27dee50bba0';
 global.githubClientSecret = '5e4b8b348c8165536391bdbf6041685f270503f0';
 
@@ -47,17 +43,13 @@ global.githubOverrides = {
   'basic-attention-token': 'https://github.com/brave-intl',
 }
 
-const scrapeDir = process.env.NODE_ENV === 'production'
-  ? '/home/ubuntu/cryptohub-scrape'
-  : '/tmp-scraped';
-
-const generatedDir = process.env.NODE_ENV === 'production'
-  ? '/home/ubuntu/cryptohub-generated'
-  : '/tmp-generated';
-
 const cacheDir = process.env.NODE_ENV === 'production'
   ? '/home/ubuntu/cryptohub-cache'
   : '/media/alan/Seagate1/code/cryptohub/cache';
+
+const generatedDir = `${cacheDir}/tmp-generated`;
+const scrapeDir    = `${cacheDir}/tmp-scrape`;
+const dbDir        = `${cacheDir}/db`;
 
 const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222';
 
@@ -98,6 +90,7 @@ const settings = {
   cacheForCoinmarketcapProjectsJson:           1,  // Days
   cacheForCoinmarketcapProjectHtml:            30, // Days
 
+  dbDir,
   cacheDir,
   scrapeDir,
   generatedDir,
@@ -169,12 +162,6 @@ const settings = {
   // tagUriCoinmarketcapDetailsHTML:              (str, id) => `https://coinmarketcap.com/currencies/${id}/`,
   // tagKeyCoinmarketcapDetailsJSON:              (str, id) => `/coinmarketcap/details/${id}.json`,
   // tagKeyCoinmarketcapDetailsHTML:              (str, id) => `/coinmarketcap/details/${id}.html`,
-
-  //
-  // Cryptohub
-  //
-  keyCryptohubAnalyticsTmp:                    '/tmp-generated/analytics/data.json',
-  keyCryptohubAnalyticsOut:                    '/out/analytics/data.json',
 
   //
   // XE

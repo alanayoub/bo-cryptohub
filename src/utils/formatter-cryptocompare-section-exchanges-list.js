@@ -2,7 +2,8 @@
 import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 
 // Cryptohub
-const logger = require('../logger');
+const logger   = require('../logger');
+const settings = require('../settings');
 
 /**
  *
@@ -144,7 +145,7 @@ module.exports = function formatterCryptocompareSectionExchangesList(response, t
   try {
 
     const emptyReturn = {data: {}, timestamp};
-    const store = JSON.parse(cache.get('/out/store/data.json')[0]);
+    const store = JSON.parse(cache.get(`${settings.dbDir}/store/data.json`)[0]);
     const mapNameId = getNestedProp(store, 'exchange-map-nameId');
 
     if (!appBootstrapData.currency || !mapNameId || (!response && !response.Data) || response.Response !== 'Success') {

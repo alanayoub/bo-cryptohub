@@ -184,7 +184,7 @@ module.exports = function dataHandler(options = {}, data, cache, oldData = {}) {
     newData = addCryptohubFields(newData);
 
     // Save file (the watcher will pick it up and emit it)
-    const fileName = '/tmp-generated/data/data.json';
+    const fileName = `${settings.generatedDir}/data/data.json`;
     cache.set(fileName, JSON.stringify(newData));
 
   }

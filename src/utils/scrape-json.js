@@ -11,14 +11,14 @@ const rp = require('request-promise');
 const { to } = require('await-to-js');
 const logger = require.main.require('./logger');
 
-module.exports = async function scrapeJSON(uri, key, cacheFor) {
+module.exports = async function scrapeJSON(uri, key, cacheFor, cache) {
   try {
     let error;
-    let [file, age] = global.cache.get(key);
+    let [file, age] = cache.get(key);
     if (!file || age > cacheFor) {
       [error, file] = await to(rp({uri, json: true}));
       if (error) throw new Error(error);
-      global.cache.set(key, JSON.stringify(file));
+      cache.set(key, JSON.stringify(file));
     }
     else {
       file = JSON.parse(file);

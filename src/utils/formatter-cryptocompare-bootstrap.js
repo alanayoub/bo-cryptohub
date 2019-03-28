@@ -39,10 +39,10 @@ const scrapeJSON = require.main.require('./utils/scrape-json.js');
  * @return {Object}
  *
  */
-module.exports = async function formatterCryptocompareBootstrap() {
+module.exports = async function formatterCryptocompareBootstrap(cache) {
   try {
 
-    const coinList = await scrapeJSON(settings.uriCryptocompareList, settings.keyCryptocompareList, 0)
+    const coinList = await scrapeJSON(settings.uriCryptocompareList, settings.keyCryptocompareList, 0, cache);
 
     const idSymbolMap = {};
     const symbolIdMap = {};

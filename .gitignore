@@ -22,7 +22,7 @@ npm-debug.log*
 *.gz
 
 # Dependencies
-#node_modules
+node_modules
 
 # Generated files
 *.generated.js

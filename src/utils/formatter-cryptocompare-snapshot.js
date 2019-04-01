@@ -3,7 +3,7 @@
  * @return {Object} snapshot
  *
  */
-const logger = require.main.require('./logger');
+const logger = require('../logger');
 module.exports = function formatterCryptocompareSnapshot(data) {
   try {
 

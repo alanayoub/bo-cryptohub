@@ -1,7 +1,7 @@
 // Cryptohub
-const logger     = require.main.require('./logger');
-const settings   = require.main.require('./settings');
-const scrapeJSON = require.main.require('./utils/scrape-json.js');
+const logger     = require('../logger');
+const settings   = require('../settings');
+const scrapeJSON = require('./scrape-json.js');
 
 /**
  *

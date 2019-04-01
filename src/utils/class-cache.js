@@ -9,7 +9,7 @@ const Promise = require('bluebird');
 const { to }  = require('await-to-js');
 
 // CryptoHub
-const logger = require.main.require('./logger');
+const logger = require('../logger');
 const globPromise = Promise.promisify(glob);
 
 /**

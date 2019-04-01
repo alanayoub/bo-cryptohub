@@ -10,7 +10,7 @@
  * @return {Array} - the merged data
  *
  */
-const logger = require.main.require('./logger');
+const logger = require('../logger');
 module.exports = function mergeHandler(dataArray, db) {
   try {
     //

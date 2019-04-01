@@ -7,7 +7,7 @@
  * @return {Object}
  *
  */
-const logger = require.main.require('./logger');
+const logger = require('../logger');
 module.exports = function swapObjectKeys(obj, map) {
   try {
     let result = {};

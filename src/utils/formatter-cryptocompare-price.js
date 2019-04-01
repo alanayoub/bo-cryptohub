@@ -6,7 +6,7 @@
  */
 
 // Cryptohub
-const logger = require.main.require('./logger');
+const logger = require('../logger');
 module.exports = function formatterCryptocomparePrice(price, symbolIdMap) {
   try {
     let i;

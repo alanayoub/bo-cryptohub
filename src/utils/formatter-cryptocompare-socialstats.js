@@ -3,7 +3,7 @@
  * @return {Object} socialstats
  *
  */
-const logger = require.main.require('./logger');
+const logger = require('../logger');
 module.exports = function formatterCryptocompareSocialstats(socialstats) {
   try {
     const data = {};

@@ -54,7 +54,7 @@ function deleteBadRecords(data) {
  * @return {Array} - Array of updated timeseries object
  *
  */
-export default function getNewTimeseriesData(item, limit = 50, maxAge = 1000 * 60 * 60 * 24 * 7) {
+function getNewTimeseriesData(item, limit = 50, maxAge = 1000 * 60 * 60 * 24 * 7) {
 
   const price      = item['cc-total-vol-full-PRICE'];
   const volume     = item['cc-total-vol-full-TOTALVOLUME24HTO'];
@@ -156,7 +156,7 @@ function addCryptohubFields(data) {
  * @param {} cache
  *
  */
-module.exports = function dataHandler(options = {}, data, cache, oldData = {}) {
+export default function dataHandler(options = {}, data, cache, oldData = {}) {
   try {
 
     let newData = data;

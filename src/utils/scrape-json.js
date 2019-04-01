@@ -9,7 +9,7 @@
 // Libs
 const rp = require('request-promise');
 const { to } = require('await-to-js');
-const logger = require.main.require('./logger');
+const logger   = require('../logger');
 
 module.exports = async function scrapeJSON(uri, key, cacheFor, cache) {
   try {

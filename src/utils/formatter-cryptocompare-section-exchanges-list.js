@@ -2,8 +2,8 @@
 import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 
 // Cryptohub
-const logger   = require('../logger');
-const settings = require('../settings');
+import logger   from '../logger';
+import settings from '../settings';
 
 /**
  *
@@ -141,7 +141,7 @@ function addPairsToExchange(exchanges, id, pair) {
  * @return {Object}
  *
  */
-module.exports = function formatterCryptocompareSectionExchangesList(response, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
+export default function formatterCryptocompareSectionExchangesList(response, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
   try {
 
     const emptyReturn = {data: {}, timestamp};

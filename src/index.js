@@ -9,6 +9,9 @@
 //
 //
 
+// Libs
+import '@babel/polyfill';
+
 // Binary Overdose Projects
 import DataTable                                     from 'bo-datatable';
 import { partialApplication }                        from 'bo-utils';
@@ -52,8 +55,8 @@ try {
 
   pug({
     varName: 'initPug',
-    pugGlob: `${__dirname}/pug/**/*.pug`,
-    outFile: `${__dirname}/public/javascript/init-pug.generated.js`
+    pugGlob: join(__dirname, '/pug/**/*.pug'),
+    outFile: join(__dirname, '/public/javascript/init-pug.generated.js')
   });
 
   //

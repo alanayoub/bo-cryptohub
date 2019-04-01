@@ -1,5 +1,5 @@
 // Cryptohub
-const logger = require.main.require('./logger');
+const logger = require('../logger');
 
 /**
  *

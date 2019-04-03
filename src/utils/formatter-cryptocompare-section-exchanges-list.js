@@ -72,7 +72,7 @@ function addExchangeToSymbol(symbols, symbol, id, type) {
  */
 function addPairsToSymbol(symbols, symbol, pair) {
   if (symbols[symbol]) symbols[symbol].pairs.add(pair);
-  else logger.warn(`addPairsToSymbol(): can't add pair ${pair} to symbol ${symbol}`);
+  else logger.info(`addPairsToSymbol(): can't add pair ${pair} to symbol ${symbol}`);
 }
 
 /**
@@ -82,7 +82,7 @@ function addPairsToSymbol(symbols, symbol, pair) {
  */
 function addPairsToExchange(exchanges, id, pair) {
   if (exchanges[id]) exchanges[id].pairs.add(pair);
-  else logger.warn(`addPairsToExchange(): can't add pair ${pair} to exchange id ${id}`);
+  else logger.info(`addPairsToExchange(): can't add pair ${pair} to exchange id ${id}`);
 }
 
 // TODO: val?

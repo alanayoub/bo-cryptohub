@@ -1,6 +1,9 @@
 // Node
 const path = require('path');
 
+// Libs
+const argv = require('argv');
+
 // Settings
 global.githubClientId = 'c7a2c111a27dee50bba0';
 global.githubClientSecret = '5e4b8b348c8165536391bdbf6041685f270503f0';
@@ -43,7 +46,24 @@ global.githubOverrides = {
   'basic-attention-token': 'https://github.com/brave-intl',
 }
 
-const cacheDir = process.env.NODE_ENV === 'production'
+const args = argv.option([
+  {
+    name: 'local',
+    short: 'l',
+    type: 'boolean',
+    description: 'Changes required to mimic development build locally',
+    example: `'script --local=true' or 'script -l true'`
+  },
+  {
+    name: 'logger',
+    short: 'L',
+    type: 'boolean',
+    description: 'Log to console',
+    example: `'script --logger=true' or 'script -L true'`
+  }
+]).run();
+
+const cacheDir = process.env.NODE_ENV === 'production' && args.options.local !== true
   ? '/home/ubuntu/cryptohub-cache'
   : '/media/alan/Seagate1/code/cryptohub/cache';
 
@@ -81,6 +101,7 @@ const settings = {
 
   debug:                                       true, // TODO: Change this to an env var
   appRoot:                                     path.resolve(__dirname),
+  logger:                                      args.options.logger || false,
 
   // Cache
   // NOTE: we dont really need this if we are using rate limits. Using it for dev though

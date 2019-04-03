@@ -1,12 +1,13 @@
+'use strict';
+
 // Node
 const path               = require('path');
 
 // Libs
 const CopyPlugin         = require('copy-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-
-  mode: 'development',
 
   entry: './src/index.js',
 
@@ -23,6 +24,7 @@ module.exports = {
   },
 
   plugins: [
+    new CleanWebpackPlugin(),
     new CopyPlugin([
       {from: './node_modules/bo-utils/dist/index.client.js', to: '../src/public/javascript/libs/bo-utils-client.js'},
       {from: './node_modules/bo-datatable/dist/index.client.js', to: '../src/public/javascript/libs/bo-datatable-client.js'},
@@ -30,20 +32,5 @@ module.exports = {
       {from: './src/pug', to: './pug'},
     ]),
   ],
-
-  module: {
-    rules: [
-      {
-        test: /\.m?js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
-        }
-      }
-    ]
-  }
 
 };

@@ -14,6 +14,7 @@ import '@babel/polyfill';
 
 // Binary Overdose Projects
 import DataTable                                     from 'bo-datatable';
+
 import { partialApplication }                        from 'bo-utils';
 import { nodePugCompileTemplates as pug }            from 'bo-utils';
 import { objectGetNestedProperty as getNestedProp }  from 'bo-utils';
@@ -22,7 +23,6 @@ import { objectGetNestedProperty as getNestedProp }  from 'bo-utils';
 import { join }                                      from 'path';
 
 // CryptoHub
-import logger                                        from './logger';
 import settings                                      from './settings';
 
 // Handlers
@@ -45,6 +45,7 @@ import getJobsCryptocompareSectionTotalVolFull       from './utils/get-jobs-cryp
 // Other utils
 import analyticsMergeDataByKey                       from './utils/analytics-merge-data-by-key';
 
+const logger = require('./logger');
 const { scrapeDir, generatedDir, cacheDir, tmpDir, dbDir } = settings;
 
 try {
@@ -107,7 +108,9 @@ try {
   //    TODO: change so the data is returned and the application saves the file
   //
   //
+
   const dataTable = new DataTable({
+    log: settings.log,
     server: {
       pub: join(__dirname, './public'),
       port: 3001,

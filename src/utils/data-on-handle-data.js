@@ -120,7 +120,7 @@ function addCryptohubFields(data) {
  * @param {} cache
  *
  */
-export default function dataHandler(options = {}, data, cache, oldData = {}) {
+export default function dataOnHandleData(options = {}, data, cache, oldData = {}) {
   try {
 
     let newData = data;
@@ -150,7 +150,7 @@ export default function dataHandler(options = {}, data, cache, oldData = {}) {
 
   }
   catch(error) {
-    const message = `dataHandler(): ${error}`;
+    const message = `dataOnHandleData(): ${error}`;
     logger.error(message);
     debugger
     if (process.env.NODE_ENV === 'development') debugger;

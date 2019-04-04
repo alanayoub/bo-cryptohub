@@ -26,8 +26,8 @@ import { join }                                      from 'path';
 import settings                                      from './settings';
 
 // Handlers
-import mergeHandler                                  from './utils/merge-handler';
-import dataHandler                                   from './utils/data-handler';
+import dataOnHandleData                              from './utils/data-on-handle-data';
+import storeOnHandleData                             from './utils/store-on-handle-data';
 
 import dataOnBeforeEmit                              from './utils/data-on-before-emit.js';
 import storeOnBeforeEmit                             from './utils/store-on-before-emit.js';
@@ -49,7 +49,7 @@ import getJobsCryptocompareSectionTotalVolFull       from './utils/get-jobs-cryp
 import analyticsMergeDataByKey                       from './utils/analytics-merge-data-by-key';
 
 const logger = require('./logger');
-const { scrapeDir, generatedDir, cacheDir, tmpDir, dbDir } = settings;
+const { scrapeDir } = settings;
 
 try {
 
@@ -112,128 +112,171 @@ try {
   //
   //
 
+  //
+  // COINLIST
+  // Get the full list of coins with IDs
+  //
+  // TODO: bootstrapData needs to change when coinlist changes!!!!
+  //
+  const cryptocompareCoinlist = {
+    name: 'coinList',
+    event: 'data',
+    interval: 1000 * 5,
+    //
+    // TODO: can we remove this and just search for the key?
+    //
+    cacheArgs: [`${scrapeDir}/cryptocompare-coinlist/data.json`, 'all'],
+    getJobs(queue, bootstrapData) {
+      queue.push({
+        uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
+        key: `${scrapeDir}/cryptocompare-coinlist/data.json`,
+        cacheForDays: 0
+      });
+    },
+    formatter: formatterCryptocompareSectionCoinlist
+  };
+
+  //
+  // EXCHANGES LIST
+  // Get all the exchanges that CryptoCompare has integrated with
+  //
+  // TODO: separate into exchangesList & exchangesGeneral & have 2 formatters, then we don't need the glob
+  // and we can keep the default data.json
+  //
+  const cryptocompareExchangesList = {
+    name: 'exchanges-list',
+    event: 'data,store',
+    interval: 1000 * 60 * 1,
+    // TODO: rename this fucking bit, this is where the watcher will look for files to load
+    // so if we are saving them in different places they will never be added!
+    cacheArgs: [settings.keyCryptocompareExchangesList, 'all'],
+    getJobs(queue, bootstrapData) {
+      queue.push({uri: settings.uriCryptocompareExchangesList, key: settings.keyCryptocompareExchangesList, cacheForDays: 0});
+    },
+    formatter: formatterCryptocompareSectionExchangesList
+  };
+
+  //
+  // EXCHANGES GENERAL
+  //
+  const cryptocompareExchangesGeneral = {
+    name: 'exchanges-general',
+    event: 'data,store',
+    interval: 1000 * 60 * 60,
+    cacheArgs: [settings.keyCryptocompareExchangesGeneral, 'all'],
+    getJobs(queue, bootstrapData) {
+      queue.push({uri: settings.uriCryptocompareExchangesGeneral, key: settings.keyCryptocompareExchangesGeneral, cacheForDays: 0});
+    },
+    formatter: formatterCryptocompareSectionExchangesGeneral
+  };
+
+  //
+  // TOP TOTAL VOLUME
+  //
+  const cryptocompareTopTotalVolume = {
+    name: 'totalVolFull',
+    event: 'data',
+    interval: 1000 * 10,
+    cacheArgs: [settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`, 'all'],
+    getJobs: getJobsCryptocompareSectionTotalVolFull,
+    handler(oldData, newData) {
+      const merged = {...oldData, ...newData};
+      return merged;
+    },
+    formatter: formatterCryptocompareSectionTotalVolFull
+  };
+
+  //
+  // XE CURRENCY
+  //
+  const xeCurrency = {
+    name: 'currency',
+    event: 'data',
+    interval: 1000 * 60 * 60 * 24,
+    cacheArgs: [settings.tagKeyXeCurrencyTables`${'USD'}`, 'all'],
+    getJobs(queue, bootstrapData) {
+      queue.push({
+        uri: settings.tagUriXeCurrencyTables`${'USD'}`,
+        key: settings.tagKeyXeCurrencyTables`${'USD'}`,
+        cacheForDays: 0
+      });
+    },
+    formatter: formatterXeSectionCurrency
+  };
+
+  //
+  // MESSARI METRICS
+  //
+  const messariMetrics = {
+    // name: 'metrics',
+    // event: 'data',
+    // interval: 1000 * 5,
+    // cacheArgs: [`${scrapeDir}/messari/data.json`, 'all'],
+    // getJobs(queue, bootstrapData) {
+    //   queue.push({
+    //     uri: 'https://data.messari.io/api/v1/assets/btc/metrics',
+    //     key: `${scrapeDir}/messari/data.json`,
+    //     cacheForDays: 0
+    //   });
+    // },
+    // formatter: (data) => {
+    //   console.log('messari, metrics', data);
+    // }
+  };
+
+  //
+  // TODO:
+  //
+  // const datatable = new DataTable(options);
+  //
+  // datatable.api.new(cryptocompare);
+  // datatable.api.new(xe);
+  // datatable.api.new(messari);
+
+  // datatable.api.cryptocompare.add();
+  // datatable.api.cryptocompare.add();
+  // datatable.api.cryptocompare.add();
+  // datatable.api.xe.add();
+  // datatable.api.messari.add();
+
+  // datatable.api.output(data)
+  // datatable.api.output(store)
+
   const dataTable = new DataTable({
+
     log: settings.log,
+    dbDir: settings.dbDir,
+    cacheDir: settings.cacheDir,
+    generatedDir: settings.generatedDir,
+
     server: {
       pub: join(__dirname, './public'),
       port: 3001,
     },
+
     events: {
       data: {
-        // TODO: rename function
-        mergeHandler: analyticsMergeDataByKey,
-        // TODO: rename function
-        eventHandler: partialApplication(dataHandler, {}),
+        onBeforeHandleData: analyticsMergeDataByKey,
+        onHandleData: partialApplication(dataOnHandleData, {}),
         onBeforeEmit: partialApplication(dataOnBeforeEmit, {})
       },
       store: {
-        mergeHandler: data => data,
-        eventHandler(data, cache, oldData = {}) {
-
-          // Get old data
-          const fileName = `${generatedDir}/store/data.json`;
-
-          // Maps
-          const idName = getNestedProp(data, 'exchanges-general.maps.idName');
-          const nameId = getNestedProp(data, 'exchanges-general.maps.nameId');
-
-          // Exchanges object by Id
-          const list = getNestedProp(data, 'exchanges-list.data') || {};
-          const general = getNestedProp(data, 'exchanges-general.data') || {};
-          const exchanges = analyticsMergeDataByKey([list, general]);
-
-          const output = {
-            ...oldData,
-            ...exchanges && {exchanges},
-            ...nameId && {'exchange-map-nameId': nameId},
-            ...idName && {'exchange-map-idName': idName}
-          }
-
-          cache.set(fileName, JSON.stringify(output));
-
-        },
+        onBeforeHandleData: data => data,
+        onHandleData: partialApplication(storeOnHandleData, {}),
         onBeforeEmit: partialApplication(storeOnBeforeEmit, {})
       }
     },
 
-    dbDir,
-    generatedDir,
-
-    cacheDir,
-    defaultData: [],
     scrapeSites: {
       cryptocompare: {
         cacheFor: 0,
         rateLimitDelayMs: settings.rateLimitCryptocompare,
         bootstrap: formatterCryptocompareBootstrap,
         sections: [
-          {
-            //
-            // COINLIST
-            // Get the full list of coins with IDs
-            //
-            // TODO: bootstrapData needs to change when coinlist changes!!!!
-            //
-            name: 'coinList',
-            event: 'data',
-            interval: 1000 * 5,
-            //
-            // TODO: can we remove this and just search for the key?
-            //
-            cacheArgs: [`${scrapeDir}/cryptocompare-coinlist/data.json`, 'all'],
-            getJobs(queue, bootstrapData) {
-              queue.push({
-                uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
-                key: `${scrapeDir}/cryptocompare-coinlist/data.json`,
-                cacheForDays: 0
-              });
-            },
-            formatter: formatterCryptocompareSectionCoinlist
-          },
-          {
-            //
-            // EXCHANGES
-            // Get all the exchanges that CryptoCompare has integrated with
-            //
-            // TODO: separate into exchangesList & exchangesGeneral & have 2 formatters, then we don't need the glob
-            // and we can keep the default data.json
-            //
-            name: 'exchanges-list',
-            event: 'data,store',
-            interval: 1000 * 60 * 1,
-            // TODO: rename this fucking bit, this is where the watcher will look for files to load
-            // so if we are saving them in different places they will never be added!
-            cacheArgs: [settings.keyCryptocompareExchangesList, 'all'],
-            getJobs(queue, bootstrapData) {
-              queue.push({uri: settings.uriCryptocompareExchangesList, key: settings.keyCryptocompareExchangesList, cacheForDays: 0});
-            },
-            formatter: formatterCryptocompareSectionExchangesList
-          },
-          {
-            name: 'exchanges-general',
-            event: 'data,store',
-            interval: 1000 * 60 * 60,
-            cacheArgs: [settings.keyCryptocompareExchangesGeneral, 'all'],
-            getJobs(queue, bootstrapData) {
-              queue.push({uri: settings.uriCryptocompareExchangesGeneral, key: settings.keyCryptocompareExchangesGeneral, cacheForDays: 0});
-            },
-            formatter: formatterCryptocompareSectionExchangesGeneral
-          },
-          {
-            //
-            // TopTotalVolume
-            //
-            name: 'totalVolFull',
-            event: 'data',
-            interval: 1000 * 10,
-            cacheArgs: [settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`, 'all'],
-            getJobs: getJobsCryptocompareSectionTotalVolFull,
-            handler(oldData, newData) {
-              const merged = {...oldData, ...newData};
-              return merged;
-            },
-            formatter: formatterCryptocompareSectionTotalVolFull
-          }
+          cryptocompareCoinlist,
+          cryptocompareExchangesList,
+          cryptocompareExchangesGeneral,
+          cryptocompareTopTotalVolume,
         ]
       },
       // messari: {
@@ -242,20 +285,7 @@ try {
       //   bootstrap: () => {},
       //   sections: [
       //     {
-      //       name: 'metrics',
-      //       event: 'data',
-      //       interval: 1000 * 5,
-      //       cacheArgs: [`${scrapeDir}/messari/data.json`, 'all'],
-      //       getJobs(queue, bootstrapData) {
-      //         queue.push({
-      //           uri: 'https://data.messari.io/api/v1/assets/btc/metrics',
-      //           key: `${scrapeDir}/messari/data.json`,
-      //           cacheForDays: 0
-      //         });
-      //       },
-      //       formatter: (data) => {
-      //         console.log('messari, metrics', data);
-      //       }
+      //       messariMetrics
       //     },
       //   ]
       // },
@@ -264,20 +294,7 @@ try {
         rateLimitDelayMs: 1000 * 60 * 60 * 24,
         bootstrap: () => {return {}},
         sections: [
-          {
-            name: 'currency',
-            event: 'data',
-            interval: 1000 * 60 * 60 * 24,
-            cacheArgs: [settings.tagKeyXeCurrencyTables`${'USD'}`, 'all'],
-            getJobs(queue, bootstrapData) {
-              queue.push({
-                uri: settings.tagUriXeCurrencyTables`${'USD'}`,
-                key: settings.tagKeyXeCurrencyTables`${'USD'}`,
-                cacheForDays: 0
-              });
-            },
-            formatter: formatterXeSectionCurrency
-          }
+          xeCurrency
         ]
       }
     }
@@ -287,6 +304,7 @@ try {
 
 catch (error) {
 
+    debugger;
   logger.error(`Um some error happened yo: ${error}`);
   process.exit(1);
 

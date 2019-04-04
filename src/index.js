@@ -29,6 +29,9 @@ import settings                                      from './settings';
 import mergeHandler                                  from './utils/merge-handler';
 import dataHandler                                   from './utils/data-handler';
 
+import dataOnBeforeEmit                              from './utils/data-on-before-emit.js';
+import storeOnBeforeEmit                             from './utils/store-on-before-emit.js';
+
 // Formatters
 import formatterCryptocompareBootstrap               from './utils/formatter-cryptocompare-bootstrap.js';
 import formatterCryptocompareSectionPrice            from './utils/formatter-cryptocompare-section-price.js';
@@ -120,15 +123,8 @@ try {
         // TODO: rename function
         mergeHandler: analyticsMergeDataByKey,
         // TODO: rename function
-        eventHandler: partialApplication(dataHandler, {updatesOnly: false}),
-        onBeforeEmit: (newData, oldData) => {
-
-          let emitData;
-          emitData = DataTable.diff(oldData, newData);
-         emitData = JSON.stringify(emitData);
-          return emitData;
-
-        }
+        eventHandler: partialApplication(dataHandler, {}),
+        onBeforeEmit: partialApplication(dataOnBeforeEmit, {})
       },
       store: {
         mergeHandler: data => data,
@@ -156,15 +152,8 @@ try {
           cache.set(fileName, JSON.stringify(output));
 
         },
-        onBeforeEmit: (newData, oldData) => {
-
-          let emitData;
-          emitData = DataTable.diff(oldData, newData);
-          emitData = JSON.stringify(emitData);
-          return emitData;
-
-        }
-      },
+        onBeforeEmit: partialApplication(storeOnBeforeEmit, {})
+      }
     },
 
     dbDir,

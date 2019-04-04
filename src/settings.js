@@ -73,6 +73,37 @@ const dbDir        = `${cacheDir}/db`;
 
 const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222';
 
+let columnWhitelist = [
+
+  'cc-total-vol-full-Id',
+  'cc-total-vol-full-FullName',
+  'cc-total-vol-full-PRICE',
+  'cc-total-vol-full-CHANGEPCTDAY',
+  'cc-total-vol-full-TOTALVOLUME24HTO',
+  'cc-total-vol-full-MKTCAP',
+  'cc-total-vol-full-SUPPLY',
+  'cc-total-vol-full-ProofType',
+  'cc-total-vol-full-Algorithm',
+  'cc-total-vol-full-NetHashesPerSecond',
+  'cc-total-vol-full-ImageUrl',
+
+  'cc-coinlist-Symbol',
+
+  'cryptohub-price-btc',
+  'cryptohub-price-history',
+  'cryptohub-numberOfExchanges',
+  'cryptohub-numberOfPairs',
+  'cryptohub-numberOfFiatPairs',
+  'cryptohub-numberOfFiatCurrencies',
+
+  'cryptohub-exchangesListDex',
+  'cryptohub-exchangesListAcceptsBoth',
+  'cryptohub-exchangesListCryptoOnly',
+
+];
+
+columnWhitelist = [...columnWhitelist, ...columnWhitelist.map(v => v +='-timestamp')];
+
 /**
  *
  *  uriCryptocompareList:
@@ -102,6 +133,8 @@ const settings = {
   debug:                                       true, // TODO: Change this to an env var
   appRoot:                                     path.resolve(__dirname),
   logger:                                      args.options.logger || false,
+
+  columnWhitelist,
 
   // Cache
   // NOTE: we dont really need this if we are using rate limits. Using it for dev though

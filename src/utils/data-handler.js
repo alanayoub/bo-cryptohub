@@ -12,42 +12,6 @@ import settings                                 from '../settings';
 
 /**
  *
- * Delete bad records
- *
- * @param {Object} data
- * @return {Object}
- *
- */
-function deleteBadRecords(data) {
-
-  let key;
-  let item;
-
-  function validData(item) {
-    return !(
-         item['cc-total-vol-full-TOTALVOLUME24HTO'] === 0
-      || item['cc-total-vol-full-PRICE'] === void 0
-      || item['cc-total-vol-full-Id'] === void 0
-    )
-  }
-
-  function isFresh(item) {
-    const now = +new Date();
-    const longestAge = 1000 * 60 * 60 * 24;
-    const timestamp = +new Date(item['cc-total-vol-full-PRICE-timestamp']);
-    return now - timestamp < longestAge;
-  }
-
-  for ([key, item] of Object.entries(data)) {
-    if (!validData(item) || !isFresh(item)) delete data[key];
-  }
-
-  return data;
-
-}
-
-/**
- *
  * Timeseries Rescale
  *
  * @param {Array} timeseries - Array of timeseries objects
@@ -176,9 +140,6 @@ export default function dataHandler(options = {}, data, cache, oldData = {}) {
     for (let id of Object.keys(oldData)) {
       newData[id] = Object.assign({}, oldData[id], newData[id]);
     }
-
-    // Delete junk or partial data
-    newData = deleteBadRecords(newData);
 
     // Add custom cryptohub fields
     newData = addCryptohubFields(newData);

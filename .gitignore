@@ -27,8 +27,8 @@ node_modules
 # Generated files
 *.generated.js
 
-# Dist
-dist/*
+# We do want to checkin dist, at least for now
+# dist/*
 
 # Cloned repos
 projects/*

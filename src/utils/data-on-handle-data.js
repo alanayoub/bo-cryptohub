@@ -152,7 +152,6 @@ export default function dataOnHandleData(options = {}, data, cache, oldData = {}
   catch(error) {
     const message = `dataOnHandleData(): ${error}`;
     logger.error(message);
-    debugger
     if (process.env.NODE_ENV === 'development') debugger;
     return {message, error: true};
   }

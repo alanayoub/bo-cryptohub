@@ -132,8 +132,10 @@ columnWhitelist = [...columnWhitelist, ...columnWhitelist.map(v => v +='-timesta
  */
 const settings = {
 
+  // App settings
   debug:                                       true, // TODO: Change this to an env var
   logger:                                      args.options.logger || false,
+  maxRowsTemplatedIn:                          50,
 
   //
   // Directories & Paths

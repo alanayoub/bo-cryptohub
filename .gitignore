@@ -33,6 +33,9 @@ dist/*
 # Cloned repos
 projects/*
 
+# Libs
+src/public/javascript/libs/*
+
 # Cache
 cache/*
 .cache/

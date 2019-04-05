@@ -242,6 +242,27 @@ try {
   // datatable.api.output(data)
   // datatable.api.output(store)
 
+  function getFirstXRows(data, numRows) {
+
+    let id;
+    let ids;
+    let rows;
+    let output = {};
+
+    const idField = 'cc-total-vol-full-Id';
+    const volField = 'cc-total-vol-full-TOTALVOLUME24HTO';
+
+    rows = Object
+      .values(data)
+      .sort((a, b) => b[volField] - a[volField])
+      .splice(0, numRows);
+
+    ids = rows.map(a => a[idField]);
+    for (id of ids) output[id] = data[id];
+    return output;
+  }
+
+  let initData = {};
   const dataTable = new DataTable({
 
     log: settings.log,
@@ -258,12 +279,23 @@ try {
       data: {
         onBeforeHandleData: analyticsMergeDataByKey,
         onHandleData: partialApplication(dataOnHandleData, {}),
-        onBeforeEmit: partialApplication(dataOnBeforeEmit, {})
+        onAfterConnect(event, socket, data) {
+          socket.emit(event, dataOnBeforeEmit({}, data, initData));
+        },
+        onBeforeEmit: partialApplication(dataOnBeforeEmit, {}),
+        onBeforeBootstrapSave: data => {
+          initData = getFirstXRows(data, settings.maxRowsTemplatedIn);
+          if (!settings.maxRowsTemplatedIn) return data;
+          return initData;
+        }
       },
       store: {
         onBeforeHandleData: data => data,
         onHandleData: partialApplication(storeOnHandleData, {}),
-        onBeforeEmit: partialApplication(storeOnBeforeEmit, {})
+        onBeforeEmit: partialApplication(storeOnBeforeEmit, {}),
+        onBeforeBootstrapSave: (data) => {
+          return data;
+        }
       }
     },
 

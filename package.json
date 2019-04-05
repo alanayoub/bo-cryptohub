@@ -6,24 +6,22 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-
     "build:dev": "npx webpack --config webpack.dev.js",
     "build:prod": "npx webpack --config webpack.prod.js",
     "build:link": "npm link ../bo-datatable && npm link ../bo-utils",
-
     "start:dev": "babel-node --inspect --use-strict ./src/index.js --logger=true",
     "start:prod": "node --use-strict ./dist/index.js",
     "start:prod-local": "node --inspect --use-strict ./dist/index.js --local=true",
-
     "start:dev-all": "npm run build:link && npm run build:dev && npm run start:dev",
     "start:prod-all": "npm run build:link && npm run build:prod && npm run start:prod",
     "start:prod-local-all": "npm run build:link && npm run build:prod && npm run start:prod-local"
-
   },
   "keywords": [
     "Binary Overdose"
   ],
   "dependencies": {
+    "bo-datatable": "latest",
+    "bo-utils": "latest",
     "@babel/node": "^7.2.2",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-modules-commonjs": "^7.2.0",

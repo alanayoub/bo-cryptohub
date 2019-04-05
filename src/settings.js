@@ -63,7 +63,9 @@ const args = argv.option([
   }
 ]).run();
 
-const cacheDir = process.env.NODE_ENV === 'production' && args.options.local !== true
+const isProd = process.env.NODE_ENV === 'production' && args.options.local !== true;
+
+const cacheDir = isProd
   ? '/home/ubuntu/cryptohub-cache'
   : '/media/alan/Seagate1/code/cryptohub/cache';
 
@@ -131,28 +133,36 @@ columnWhitelist = [...columnWhitelist, ...columnWhitelist.map(v => v +='-timesta
 const settings = {
 
   debug:                                       true, // TODO: Change this to an env var
-  appRoot:                                     path.resolve(__dirname),
   logger:                                      args.options.logger || false,
 
-  columnWhitelist,
-
-  // Cache
-  // NOTE: we dont really need this if we are using rate limits. Using it for dev though
-  cacheForXe:                                  1,  // Days
-  cacheForCryptocompare:                       0,  // Days
-  cacheForCoinmarketcap:                       1,  // Days
-  cacheForCoinmarketcapProjectsJson:           1,  // Days
-  cacheForCoinmarketcapProjectHtml:            30, // Days
-
+  //
+  // Directories & Paths
+  //
   dbDir,
+  appRoot:                                     path.resolve(__dirname),
   cacheDir,
   scrapeDir,
   generatedDir,
 
-  // RateLimits
+  //
+  // Lists
+  //
+  columnWhitelist,
 
   //
-  // From the website:
+  // Cache
+  // NOTE: we dont really need this if we are using rate limits. Using it for dev though
+  //
+  cacheForXe:                                  isProd ? 0 : 1000 * 60 * 10,
+  cacheForMessari:                             isProd ? 0 : 1000 * 60 * 10,
+  cacheForCryptocompare:                       isProd ? 0 : 1000 * 60 * 10,
+
+  //
+  // RateLimits
+  //
+
+  //
+  // From cryptocompare.com:
   //   Caching: 10 seconds
   //   Rate limits:
   //     Month  - 100000
@@ -164,6 +174,15 @@ const settings = {
   //  26784 ms between requests :(
   //
   rateLimitCryptocompare:                      26784,
+
+  // Unknow at the moment
+  rateLimitMessari:                            1000 * 60 * 60,
+
+  rateLimitXe:                                 1000 * 60 * 60 * 24,
+
+  //
+  // Queues
+  //
   queueCoinmarketcap:                          1000 * 60 * 60,
 
   //

@@ -269,9 +269,9 @@ try {
 
     scrapeSites: {
       cryptocompare: {
-        cacheFor: 0,
-        rateLimitDelayMs: settings.rateLimitCryptocompare,
+        cacheFor: settings.cacheForCryptocompare,
         bootstrap: formatterCryptocompareBootstrap,
+        rateLimitDelayMs: settings.rateLimitCryptocompare,
         sections: [
           cryptocompareCoinlist,
           cryptocompareExchangesList,
@@ -280,9 +280,9 @@ try {
         ]
       },
       // messari: {
-      //   cacheFor: 0,
-      //   rateLimitDelayMs: 1000 * 60,
+      //   cacheFor: settings.cacheForMessari,
       //   bootstrap: () => {},
+      //   rateLimitDelayMs: settings.rateLimitMessari,
       //   sections: [
       //     {
       //       messariMetrics
@@ -290,9 +290,9 @@ try {
       //   ]
       // },
       xe: {
-        cacheFor: 0,
-        rateLimitDelayMs: 1000 * 60 * 60 * 24,
+        cacheFor: settings.cacheForXe,
         bootstrap: () => {return {}},
+        rateLimitDelayMs: settings.rateLimitXe,
         sections: [
           xeCurrency
         ]
@@ -304,7 +304,6 @@ try {
 
 catch (error) {
 
-    debugger;
   logger.error(`Um some error happened yo: ${error}`);
   process.exit(1);
 

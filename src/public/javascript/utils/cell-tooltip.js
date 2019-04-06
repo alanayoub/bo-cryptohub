@@ -9,7 +9,7 @@
  *
  */
 export default function cellTooltip(params) {
-  const { value, valueFormatted, data, node, colDef, rowIndex, api } = params;
+  const { data, colDef } = params;
   const field = data[colDef.field];
   const timestamp = field && field.timestamp;
   const t = bo.timeAgo(timestamp) || 'unknown time ago';

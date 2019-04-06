@@ -9,7 +9,7 @@
     "build:dev": "npx webpack --config webpack.dev.js",
     "build:prod": "npx webpack --config webpack.prod.js",
     "build:link": "npm link ../bo-datatable && npm link ../bo-utils",
-    "start:dev": "babel-node --inspect --use-strict ./src/index.js --logger=true",
+    "start:dev": "npx babel-node --inspect --use-strict ./src/index.js --logger=true",
     "start:prod": "node --use-strict ./dist/index.js",
     "start:prod-local": "node --inspect --use-strict ./dist/index.js --local=true",
     "start:dev-all": "npm run build:link && npm run build:dev && npm run start:dev",
@@ -20,15 +20,21 @@
     "Binary Overdose"
   ],
   "dependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
     "@babel/node": "^7.2.2",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-modules-commonjs": "^7.2.0",
     "@babel/plugin-transform-modules-umd": "^7.2.0",
     "@babel/polyfill": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
     "@octokit/rest": "^15.2.6",
     "ag-grid": "^18.1.2",
+    "argv": "0.0.2",
     "await-to-js": "^2.0.1",
+    "babel-loader": "^8.0.5",
     "cheerio": "^1.0.0-rc.2",
+    "clean-webpack-plugin": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "copy-webpack-plugin": "^5.0.1",
     "es6-promisify": "^6.0.0",
@@ -47,12 +53,7 @@
     "request-promise": "^4.2.2",
     "single-line-log": "^1.1.2",
     "webpack-cli": "^3.2.3",
-    "winston": "^3.0.0-rc5",
-    "argv": "0.0.2",
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.2",
-    "babel-loader": "^8.0.5",
-    "clean-webpack-plugin": "^2.0.1",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "winston": "^3.0.0-rc5"
   }
 }

@@ -209,7 +209,6 @@ const columnDefs = [
     ],
     cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
-      countdown: true,
       currency: 'USD',
     },
     onCellClicked: bo.partialApplication(cellOnClickTradingview, 'USD'),
@@ -228,7 +227,6 @@ const columnDefs = [
     ],
     cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
-      countdown: true,
       currency: 'BTC',
     },
     onCellClicked: bo.partialApplication(cellOnClickTradingview, 'BTC'),
@@ -263,6 +261,7 @@ const columnDefs = [
       volume: true,
       volumeDays: 7,
     },
+    // NOTE: doesnt work yet this is what the docs say to do
     resizable: false,
   },
 
@@ -279,7 +278,6 @@ const columnDefs = [
     ],
     cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
-      countdown: true,
       currency: 'USD',
     },
   },
@@ -297,7 +295,6 @@ const columnDefs = [
     ],
     cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
-      countdown: true,
       currency: 'USD',
     },
   },
@@ -345,7 +342,7 @@ const columnDefs = [
     headerClass: 'CH-col',
     headerTooltip: 'Net Hashes per/s\n\nData Source: Cryptocompare',
     width: 180,
-    columngroupshow: 'both',
+    columnGroupShow: 'both',
     comparator: sortNumbers,
     type: [
       'cryptohubDefaults',
@@ -361,7 +358,7 @@ const columnDefs = [
     headerClass: 'CH-col',
     headerTooltip: 'Number of Exchanges the token is listed on\n\nData Source: BinaryOverdose / Cryptocompare',
     width: 100,
-    columngroupshow: 'closed',
+    columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
@@ -380,7 +377,7 @@ const columnDefs = [
     headerTooltip: 'Number of pairs\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     width: 100,
-    columngroupshow: 'closed',
+    columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
@@ -395,7 +392,7 @@ const columnDefs = [
     headerTooltip: 'Number of fiat pairs\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     width: 100,
-    columngroupshow: 'closed',
+    columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
@@ -410,7 +407,7 @@ const columnDefs = [
     headerTooltip: 'Number of fiat Currencies\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     width: 100,
-    columngroupshow: 'closed',
+    columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
@@ -512,6 +509,7 @@ const agOptions = {
   // defaultColDef: contains column properties all columns will inherit.
   defaultColDef: {
     editable: false,
+    resizable: true,
     floatingFilterComponentParams: {
       suppressMenu: true,
       suppressFilterButton: true

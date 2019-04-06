@@ -1,5 +1,4 @@
 // Cryptohub Util functions
-import countdownMs from './html-countdown.js';
 import getCssClass from './get-cell-css-class-diff.js';
 
 /**
@@ -45,10 +44,6 @@ export default function cellRendererCurrency(refs, params) {
   }
 
   html.innerHTML = result;
-
-  setTimeout(() => {
-    html.className = 'cryptohub-cell-old-data';
-  }, countdownMs(params));
 
   return html;
 

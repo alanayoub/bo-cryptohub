@@ -1,6 +1,6 @@
 {
   "name": "cryptohub",
-  "author": "",
+  "author": "Alan Ayoub",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -20,8 +20,6 @@
     "Binary Overdose"
   ],
   "dependencies": {
-    "bo-datatable": "1.0.0",
-    "bo-utils": "latest",
     "@babel/node": "^7.2.2",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-modules-commonjs": "^7.2.0",

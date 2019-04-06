@@ -18,11 +18,10 @@ import getCssClass from './get-cell-css-class-diff.js';
 export default function cellRendererCurrency(refs, params) {
 
   const { colDef, data } = params;
-  const id = bo.objectGetNestedProperty(data, 'cc-total-vol-full-Id.value');
   const html = document.createElement('div');
 
   const newValue = bo.objectGetNestedProperty(params, 'value.value');
-  const oldValue = bo.objectGetNestedProperty(refs, `oldDBValues.${id}.${colDef.field}`);
+  const oldValue = bo.objectGetNestedProperty(params, `data.${params.colDef.field}:last`);
 
   // format number
   let newVal;

@@ -75,7 +75,7 @@ const dbDir        = `${cacheDir}/db`;
 
 const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222';
 
-let columnWhitelist = [
+let fieldWhitelist = [
 
   'cc-total-vol-full-Id',
   'cc-total-vol-full-FullName',
@@ -102,9 +102,25 @@ let columnWhitelist = [
   'cryptohub-exchangesListAcceptsBoth',
   'cryptohub-exchangesListCryptoOnly',
 
+  'cc-total-vol-full-PRICE:last',
+  'cc-total-vol-full-TOTALVOLUME24HTO:last',
+  'cc-total-vol-full-MKTCAP:last',
+  'cryptohub-price-btc:last',
+
 ];
 
-columnWhitelist = [...columnWhitelist, ...columnWhitelist.map(v => v +='-timestamp')];
+// Keep the last value of each of these fields
+// in a new field with the suffix `:last`
+const fieldLastValue = [
+
+  'cc-total-vol-full-PRICE',
+  'cc-total-vol-full-TOTALVOLUME24HTO',
+  'cc-total-vol-full-MKTCAP',
+  'cryptohub-price-btc',
+
+];
+
+fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
 
 /**
  *
@@ -149,7 +165,8 @@ const settings = {
   //
   // Lists
   //
-  columnWhitelist,
+  fieldWhitelist,
+  fieldLastValue,
 
   //
   // Cache

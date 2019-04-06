@@ -69,8 +69,7 @@ function updateOverview(data) {
 }
 
 const refs = {
-  // the last version of the unpacked data
-  oldDBValues: {},
+
   // the last version of the packed data
   store: [],
 
@@ -452,18 +451,13 @@ const agOptions = {
     ]);
 
     // NOTE: DO NOT CHANGE UNLESS YOU WANT TO UPDATE HOW DATA WORKS
-    refs.workingData = initOldData;
-    refs.rowData = convertWorkingDataToRowData(initOldData || []);
-    params.api.setRowData(refs.rowData);
 
     // Do an update straight away
     // Two sets of data are used to bootstrap, the latest and an old set
     updated('now');
 
-    refs.oldDBValues = JSON.parse(JSON.stringify(refs.workingData));
-    refs.workingData = Object.assign({}, refs.oldDBValues, initData);
-    refs.rowData = convertWorkingDataToRowData(refs.workingData);
-
+    refs.workingData = initData;
+    refs.rowData = convertWorkingDataToRowData(initData || {});
     params.api.setRowData(refs.rowData);
 
     updateOverview(refs.workingData);
@@ -613,8 +607,6 @@ else {
     .on('data', data => {
 
       updated('now');
-
-      refs.oldDBValues = JSON.parse(JSON.stringify(refs.workingData));
 
       const newSocketData = JSON.parse(data);
 

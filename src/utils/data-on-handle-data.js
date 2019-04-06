@@ -24,6 +24,10 @@ function getNewTimeseriesData(item, limit = 50, maxAge = 1000 * 60 * 60 * 24 * 7
   const volume     = item['cc-total-vol-full-TOTALVOLUME24HTO'];
   const timestamp  = item['cc-total-vol-full-PRICE-timestamp'];
   const timeseries = item['cryptohub-price-history'] || [];
+  if (timeseries[0] && timeseries[0].timestamp === null) timeseries.splice(0, 1);
+  if (!price || !volume || !timestamp) {
+    return timeseries;
+  }
 
   timeseriesPrune(timeseries, maxAge);
   timeseriesThin(timeseries, limit);
@@ -36,23 +40,35 @@ function getNewTimeseriesData(item, limit = 50, maxAge = 1000 * 60 * 60 * 24 * 7
 
 }
 
-/**
- *
- * Get Price in BTC
- *
- * @param {Object} item
- * @param {Number} bitcoinPrice
- * @return {Object|Boolean}
- *
- */
-function getPriceInBtc(item, bitcoinPrice) {
+//
+//
+//
+function priceInBitcoin(oldData = {}, newData, bitcoinPrice) {
 
-  const timestamp   = +new Date(item['cc-total-vol-full-PRICE-timestamp']);
-  const cryptoPrice = item['cc-total-vol-full-PRICE'];
-  const amount = 1 / (bitcoinPrice / cryptoPrice);
-  return bitcoinPrice && cryptoPrice
-    ? {amount, timestamp}
-    : false;
+  const output = {};
+  const cryptoPrice = newData['cc-total-vol-full-PRICE'];
+  const cryptoPriceTimestamp = newData['cc-total-vol-full-PRICE-timestamp'];
+
+  if (bitcoinPrice && cryptoPrice) {
+
+    const field = 'cryptohub-price-btc';
+
+    output.price = 1 / (bitcoinPrice / cryptoPrice);
+
+    if (settings.fieldLastValue.includes(field)) {
+      output.lastPrice = oldData[field];
+    }
+
+    output.timestamp = +new Date(cryptoPriceTimestamp);
+
+  }
+
+  return output;
+
+}
+
+function getBitcoinPrice(data) {
+  return data[1182] ? data[1182]['cc-total-vol-full-PRICE'] : false;
 }
 
 /**
@@ -60,34 +76,35 @@ function getPriceInBtc(item, bitcoinPrice) {
  * ADD CRYPTOHUB FIELDS
  *
  */
-function addCryptohubFields(data) {
+function addCryptohubFields(oldData, data) {
 
-  //
-  // BTC Price
-  //
-  const btcId = 1182;
-  const btcItem = data[btcId];
-  let bitcoinPrice;
-  if (btcItem) {
-    bitcoinPrice = btcItem['cc-total-vol-full-PRICE'];
+
+  function lastValueField(oldData, newData, field) {
+    if (settings.fieldLastValue.includes(field)) {
+      newData[`${field}:last`] = oldData[field];
+    }
   }
+
+  function timestampField(data, field) {
+    const timestamp = +new Date(data['cc-total-vol-full-PRICE-timestamp']);
+    data[`${field}-timestamp`] = timestamp;
+  }
+
 
   let key;
   let item;
+  const bitcoinPrice = getBitcoinPrice(data);
   for ([key, item] of Object.entries(data)) {
 
     // Timeseries
     const timeseries = getNewTimeseriesData(item);
-    if (timeseries) {
-      item['cryptohub-price-history'] = timeseries;
-    }
+    if (timeseries) item['cryptohub-price-history'] = timeseries;
 
     // Bitcoin price
-    const priceInBtc = getPriceInBtc(item, bitcoinPrice);
-    if (priceInBtc) {
-      item['cryptohub-price-btc']           = priceInBtc.amount;
-      item['cryptohub-price-btc-timestamp'] = priceInBtc.timestamp;
-    }
+    const { price, lastPrice, timestamp } = priceInBitcoin(oldData[key], item, bitcoinPrice);
+    if (price)               item['cryptohub-price-btc']           = price;
+    if (price !== lastPrice) item['cryptohub-price-btc:last']      = lastPrice;
+    if (timestamp)           item['cryptohub-price-btc-timestamp'] = timeseries;
 
     // Circulating percent total
     const supplyTotal       = item['cc-coinlist-TotalCoinSupply'];
@@ -125,11 +142,6 @@ export default function dataOnHandleData(options = {}, data, cache, oldData = {}
 
     let newData = data;
 
-    // TODO: fix this so oldData is never an rrray
-    if (Array.isArray(oldData)) {
-      oldData = arrayToObject(oldData, 'cc-coinlist-Id');
-    }
-
     //
     // Backfill new data with old data
     //
@@ -139,10 +151,15 @@ export default function dataOnHandleData(options = {}, data, cache, oldData = {}
     // used by functions like `addCryptohubFields()`
     for (let id of Object.keys(oldData)) {
       newData[id] = Object.assign({}, oldData[id], newData[id]);
+      for (let field of settings.fieldLastValue) {
+        if (oldData[id][field] !== newData[id][field]) {
+          newData[id][`${field}:last`] = oldData[id][field];
+        }
+      }
     }
 
     // Add custom cryptohub fields
-    newData = addCryptohubFields(newData);
+    newData = addCryptohubFields(oldData, newData);
 
     // Save file (the watcher will pick it up and emit it)
     const fileName = `${settings.generatedDir}/data/data.json`;

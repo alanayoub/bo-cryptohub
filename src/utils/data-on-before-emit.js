@@ -50,7 +50,7 @@ function filterData(data) {
   let item;
   let field;
   let fields;
-  const whitelist = settings.columnWhitelist;
+  const whitelist = settings.fieldWhitelist;
 
   for ([key, item] of Object.entries(data)) {
     if (!validData(item) || !isFresh(item)) {

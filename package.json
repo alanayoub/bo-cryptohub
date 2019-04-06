@@ -39,7 +39,6 @@
     "globby": "^8.0.1",
     "javascript-time-ago": "^1.0.31",
     "mongoose": "^5.2.5",
-    "nodegit": "^0.21.1",
     "pug": "^2.0.3",
     "pug-cli": "^1.0.0-alpha6",
     "redis": "^2.8.0",
@@ -54,7 +53,6 @@
     "@babel/preset-env": "^7.4.2",
     "babel-loader": "^8.0.5",
     "clean-webpack-plugin": "^2.0.1",
-    "webpack": "^4.29.6",
     "webpack-merge": "^4.2.1"
   }
 }

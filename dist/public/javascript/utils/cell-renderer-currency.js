@@ -1,5 +1,4 @@
 // Cryptohub Util functions
-import countdownMs from './html-countdown.js';
 import getCssClass from './get-cell-css-class-diff.js';
 
 /**
@@ -18,21 +17,22 @@ import getCssClass from './get-cell-css-class-diff.js';
  */
 export default function cellRendererCurrency(refs, params) {
 
+  let result = '-';
+  if (!params.value) return result;
+
   const { colDef, data } = params;
-  const id = bo.objectGetNestedProperty(data, 'cc-total-vol-full-Id.value');
   const html = document.createElement('div');
 
   const newValue = bo.objectGetNestedProperty(params, 'value.value');
-  const oldValue = bo.objectGetNestedProperty(refs, `oldDBValues.${id}.${colDef.field}`);
+  const oldValue = bo.objectGetNestedProperty(params, `data.${params.colDef.field}:last`);
 
   // format number
   let newVal;
   let oldVal;
   const digits = newValue >= 1 ? 2 : 6;
-  if (bo.isNumber(newValue)) newVal = bo.formatNumberAsCurrency(newValue, digits, params.currency);
-  if (bo.isNumber(oldValue)) oldVal = bo.formatNumberAsCurrency(oldValue, digits, params.currency);
+  if (bo.isNumber(newValue)) newVal = bo.formatNumberAsCurrency(newValue, params.currency);
+  if (bo.isNumber(oldValue)) oldVal = bo.formatNumberAsCurrency(oldValue, params.currency);
 
-  let result = '-';
   if (bo.isNumber(newValue) && !bo.isNumber(oldValue)) {
     result = newVal;
   }
@@ -46,12 +46,6 @@ export default function cellRendererCurrency(refs, params) {
 
   html.innerHTML = result;
 
-  setTimeout(() => {
-    html.className = 'cryptohub-cell-old-data';
-  }, countdownMs(params));
-
   return html;
-
-
 
 }

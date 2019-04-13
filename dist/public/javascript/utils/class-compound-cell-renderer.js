@@ -1,7 +1,6 @@
 'use strict';
 
 // Cryptohub Util functions
-import countdownMs from './html-countdown.js';
 import getCssClass from './get-cell-css-class-diff.js';
 
 /**
@@ -44,13 +43,6 @@ export default class CompoundCellRenderer {
 
     // set value into cell
     this.eValue.innerHTML = value;
-
-    // change style after x mins
-    const valueIsTrue = value !== void 0 && value !== '-' && value !== null;
-    const countdown = valueIsTrue ? countdownMs(params) : '';
-    setTimeout(() => {
-      this.eValue.className += ' cryptohub-cell-old-data';
-    }, countdown);
 
   }
 

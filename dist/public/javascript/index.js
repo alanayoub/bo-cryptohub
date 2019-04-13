@@ -6,7 +6,6 @@ import shouldCellUpdate               from './utils/should-cell-update.js';
 import convertWorkingDataToRowData    from './utils/convert-working-data-to-row-data.js';
 
 // ag-grid valueFormatters
-import valueFormatterBTC              from './utils/value-formatter-btc.js';
 import valueFormatterPercentChange    from './utils/value-formatter-percent-change.js';
 
 // ag-grid cell Renderer Classes
@@ -31,7 +30,6 @@ import cellOnClickTradingview         from './utils/cell-on-click-tradingview.js
 // ag-grid filter comparators
 import sortNumbers from './utils/sort-numbers.js';
 
-const DataTable = window.DataTable.default;
 const { objectIsObject: isObject } = bo;
 
 /**
@@ -69,8 +67,7 @@ function updateOverview(data) {
 }
 
 const refs = {
-  // the last version of the unpacked data
-  oldDBValues: {},
+
   // the last version of the packed data
   store: [],
 
@@ -135,8 +132,8 @@ const columnTypes = {
 
   cryptohubPercent: {
     cellClassRules: {
-      'cryptohub-text-bad': x => x.value.value < 0,
-      'cryptohub-text-good': x => x.value.value > 0,
+      'cryptohub-text-bad': x => x.value && x.value.value < 0,
+      'cryptohub-text-good': x => x.value && x.value.value > 0,
     },
     valueFormatter: valueFormatterPercentChange,
     // TODO the compound renderer is not what I planned it to be, revisit
@@ -170,8 +167,11 @@ const columnDefs = [
     suppressFilter: true,
     cellClass: 'cryptohub-align-right',
     cellRenderer(params) {
-      return `<div>${params.value}</div>`;
+      return params.value + 1;
     },
+    type: [
+      'cryptohubNumeric',
+    ],
   },
 
   // Name
@@ -180,19 +180,33 @@ const columnDefs = [
     headerName: 'Name',
     headerClass: 'CH-col',
     headerTooltip: 'Name',
-    width: 150,
+    width: 180,
     pinned: 'left',
     cellRenderer: cellRendererName,
   },
 
   // Symbol
+  // {
+  //   field: 'cc-coinlist-Symbol.value',
+  //   headerName: 'Symbol',
+  //   headerClass: 'CH-col',
+  //   headerTooltip: 'Symbol',
+  //   width: 90,
+  //   pinned: 'left',
+  //   type: ['cryptohubText'],
+  // },
+
+  // m-metrics-ath-price : 20089
+  // m-metrics-cycle-low-price : 2694.8613926713642
+  // m-metrics-sectors
+
+  // Sector
   {
-    field: 'cc-coinlist-Symbol.value',
-    headerName: 'Symbol',
+    field: 'm-metrics-sectors',
+    headerName: 'Sectors',
     headerClass: 'CH-col',
-    headerTooltip: 'Symbol',
-    width: 90,
-    pinned: 'left',
+    headerTooltip: 'Sectors',
+    width: 180,
     type: ['cryptohubText'],
   },
 
@@ -209,7 +223,6 @@ const columnDefs = [
     ],
     cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
-      countdown: true,
       currency: 'USD',
     },
     onCellClicked: bo.partialApplication(cellOnClickTradingview, 'USD'),
@@ -228,19 +241,49 @@ const columnDefs = [
     ],
     cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
-      countdown: true,
-      currency: 'BTC',
+      currency: 'SAT',
     },
     onCellClicked: bo.partialApplication(cellOnClickTradingview, 'BTC'),
   },
 
-  // Percent Change
+  // All Time High
+  {
+    field: 'm-metrics-ath-price',
+    headerName: 'ATH',
+    headerClass: 'CH-col',
+    headerTooltip: 'All Time High (USD)\n\nData Source: OnChainFX',
+    width: 120,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
+    cellRendererParams: {
+      currency: 'USD',
+    },
+  },
+
+  // 24 Hour Percent Change
   // NOTE: We want percent change against BTC too!
   {
     field: 'cc-total-vol-full-CHANGEPCTDAY',
     headerName: 'Δ 24h',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Cryptocompare',
+    width: 80,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+      'cryptohubPercent'
+    ],
+  },
+
+  // 7 Day Percent change
+  {
+    field: 'm-metrics-percent-change-btc-last-1-week',
+    headerName: 'Δ 7D',
+    headerClass: 'CH-col',
+    headerTooltip: 'Percent change over 7 days against BTC\n\nData Source: Messari',
     width: 80,
     type: [
       'cryptohubDefaults',
@@ -263,6 +306,7 @@ const columnDefs = [
       volume: true,
       volumeDays: 7,
     },
+    // NOTE: doesnt work yet this is what the docs say to do
     resizable: false,
   },
 
@@ -279,7 +323,6 @@ const columnDefs = [
     ],
     cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
-      countdown: true,
       currency: 'USD',
     },
   },
@@ -297,7 +340,6 @@ const columnDefs = [
     ],
     cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
-      countdown: true,
       currency: 'USD',
     },
   },
@@ -345,7 +387,7 @@ const columnDefs = [
     headerClass: 'CH-col',
     headerTooltip: 'Net Hashes per/s\n\nData Source: Cryptocompare',
     width: 180,
-    columngroupshow: 'both',
+    columnGroupShow: 'both',
     comparator: sortNumbers,
     type: [
       'cryptohubDefaults',
@@ -361,7 +403,7 @@ const columnDefs = [
     headerClass: 'CH-col',
     headerTooltip: 'Number of Exchanges the token is listed on\n\nData Source: BinaryOverdose / Cryptocompare',
     width: 100,
-    columngroupshow: 'closed',
+    columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
@@ -380,7 +422,7 @@ const columnDefs = [
     headerTooltip: 'Number of pairs\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     width: 100,
-    columngroupshow: 'closed',
+    columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
@@ -395,7 +437,7 @@ const columnDefs = [
     headerTooltip: 'Number of fiat pairs\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     width: 100,
-    columngroupshow: 'closed',
+    columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
@@ -410,7 +452,7 @@ const columnDefs = [
     headerTooltip: 'Number of fiat Currencies\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     width: 100,
-    columngroupshow: 'closed',
+    columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
@@ -455,18 +497,13 @@ const agOptions = {
     ]);
 
     // NOTE: DO NOT CHANGE UNLESS YOU WANT TO UPDATE HOW DATA WORKS
-    refs.workingData = initOldData;
-    refs.rowData = convertWorkingDataToRowData(initOldData || []);
-    params.api.setRowData(refs.rowData);
 
     // Do an update straight away
     // Two sets of data are used to bootstrap, the latest and an old set
     updated('now');
 
-    refs.oldDBValues = JSON.parse(JSON.stringify(refs.workingData));
-    refs.workingData = Object.assign({}, refs.oldDBValues, initData);
-    refs.rowData = convertWorkingDataToRowData(refs.workingData);
-
+    refs.workingData = initData;
+    refs.rowData = convertWorkingDataToRowData(initData || {});
     params.api.setRowData(refs.rowData);
 
     updateOverview(refs.workingData);
@@ -512,6 +549,7 @@ const agOptions = {
   // defaultColDef: contains column properties all columns will inherit.
   defaultColDef: {
     editable: false,
+    resizable: true,
     floatingFilterComponentParams: {
       suppressMenu: true,
       suppressFilterButton: true
@@ -616,11 +654,9 @@ else {
 
       updated('now');
 
-      refs.oldDBValues = JSON.parse(JSON.stringify(refs.workingData));
-
       const newSocketData = JSON.parse(data);
 
-      DataTable.changesets.applyChanges(refs.workingData, newSocketData);
+      window.DataTable.changesets.applyChanges(refs.workingData, newSocketData);
 
       refs.rowData = convertWorkingDataToRowData(refs.workingData);
       agOptions.api.setRowData(refs.rowData);
@@ -633,7 +669,7 @@ else {
       updated('now');
 
       const newSocketData = JSON.parse(data);
-      DataTable.changesets.applyChanges(window.ch, newSocketData);
+      window.DataTable.changesets.applyChanges(window.ch, newSocketData);
 
     });
 

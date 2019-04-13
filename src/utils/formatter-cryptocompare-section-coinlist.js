@@ -37,7 +37,7 @@ const logger = require('../logger');
  * @return {Object}
  *
  */
-module.exports = function formatterCryptocompareSectionCoinlist(data, timestamp, bootstrapData, appBootstrapData) {
+module.exports = function formatterCryptocompareSectionCoinlist(data, timestamp, bootstrapData, appBootstrapData = {}) {
   try {
 
     const { idSymbolMap, symbolIdMap } = bootstrapData;
@@ -62,6 +62,7 @@ module.exports = function formatterCryptocompareSectionCoinlist(data, timestamp,
       }
       result[id] = currentCoinOut;
     }
+    // appBootstrapData.coinList = result;
     return {data: result, timestamp};
 
   }

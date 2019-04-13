@@ -53,7 +53,8 @@ function priceInBitcoin(oldData = {}, newData, bitcoinPrice) {
 
     const field = 'cryptohub-price-btc';
 
-    output.price = 1 / (bitcoinPrice / cryptoPrice);
+    // output.price = 1 / (bitcoinPrice / cryptoPrice); // btc
+    output.price = Math.ceil((1 / (bitcoinPrice / cryptoPrice)) * 100000000); // sats
 
     if (settings.fieldLastValue.includes(field)) {
       output.lastPrice = oldData[field];
@@ -137,7 +138,7 @@ function addCryptohubFields(oldData, data) {
  * @param {} cache
  *
  */
-export default function dataOnHandleData(options = {}, data, cache, oldData = {}) {
+export default function dataOnHandleData(options = {}, data, cache, oldData = {}, appBootstrapData) {
   try {
 
     let newData = data;
@@ -164,6 +165,33 @@ export default function dataOnHandleData(options = {}, data, cache, oldData = {}
     // Save file (the watcher will pick it up and emit it)
     const fileName = `${settings.generatedDir}/data/data.json`;
     cache.set(fileName, JSON.stringify(newData));
+
+    // Create a list of x (settins.maxRecordsScraped) sorted symbols
+    // We are doing this here as we don't the sort cryteria before this point
+    let firstXSymbols;
+    {
+      const arr = [];
+      const limit = settings.maxRecordsScraped;
+      const fieldVol = 'cc-total-vol-full-TOTALVOLUME24HTO';
+      const fieldSymbol = 'cc-coinlist-Symbol';
+      const fieldTrading = 'cc-coinlist-IsTrading';
+      let key;
+      let item;
+      for ([key, item] of Object.entries(newData)) {
+        if (item[fieldTrading] === false) {
+          delete newData[key]
+        }
+        else if (!item[fieldVol]) {
+          // do nothing
+        }
+        else {
+          arr.push(item);
+        }
+      }
+      arr.sort((a, b) => b[fieldVol] - a[fieldVol]);
+      firstXSymbols = arr.splice(0, limit).map(x => x[fieldSymbol]);
+    }
+    appBootstrapData.firstXSymbols = firstXSymbols;
 
   }
   catch(error) {

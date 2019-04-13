@@ -42,21 +42,35 @@ const scrapeJSON = require('./scrape-json.js');
 module.exports = async function formatterCryptocompareBootstrap(cache) {
   try {
 
-    const coinList = await scrapeJSON(settings.uriCryptocompareList, settings.keyCryptocompareList, 0, cache);
 
+    // Get coinList
+    let coinList;
+    try {
+      coinList = await scrapeJSON(settings.uriCryptocompareList, settings.keyCryptocompareList, 0, cache);
+      coinList = typeof coinList === 'string' ? JSON.parse(coinList).Data : coinList.Data;
+    }
+    catch (error) {
+      logger.error(`formatter-cryptocompare-bootstrap: [Error scraping coinList] | ${error}`);
+    }
+
+    // // Get old data
+    // let oldData;
+    // try {
+    //   const path = `${settings.dbDir}/data/data.json`;
+    //   oldData = JSON.parse(cache.get(path)[0]);
+    //   debugger;
+    // }
+    // catch(error) {
+    //   logger.error(`formatter-cryptocompare-bootstrap: [Error getting file] ${path} | ${error}`);
+    // }
+
+    // Create maps
     const idSymbolMap = {};
     const symbolIdMap = {};
-    let cryptocompareList;
-    {
-      if (!coinList) {
-        throw new Error('cryptocompare(): No coinList available. Probably need to run scrape');
-      };
-      cryptocompareList = typeof coinList === 'string' ? JSON.parse(coinList).Data : coinList.Data;
-      for (const [symbol, data] of Object.entries(cryptocompareList)) {
-        idSymbolMap[data.Id] = symbol;
-        symbolIdMap[symbol] = data.Id;
-      };
-    }
+    for (const [symbol, data] of Object.entries(coinList)) {
+      idSymbolMap[data.Id] = symbol;
+      symbolIdMap[symbol] = data.Id;
+    };
 
     return { idSymbolMap, symbolIdMap, coinList };
 

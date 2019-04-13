@@ -1,3 +1,7 @@
+body {
+  background: #355e21;
+}
+
 h1 {
   color: rgb(51, 51, 51) ;
   font-family: 'Major Mono Display', monospace;
@@ -12,6 +16,13 @@ h1 {
   margin-top: 0;
   text-size-adjust: 100%;
   width: 910px;
+}
+
+.ch-logo {
+  width: 170px;
+  top: 9px;
+  position: absolute;
+  left: 9px;
 }
 
 .ch-abs-full {
@@ -48,6 +59,7 @@ h1 {
   position: absolute;
   top: 25px;
   right: 10px;
+  color: #ffffffcc;
 }
 
 .cryptohub-analytics-priceGroup {}
@@ -160,6 +172,32 @@ h1 {
 
 .cryptohub-link:visited {
   color: #555;
+}
+
+/**
+ *
+ * Cells
+ *
+ */
+
+.ch-col-name {
+
+}
+
+.ch-col-name .ch-icons {
+  width: 22px;
+  height: 22px;
+  margin: 1px;
+  margin: 1px 5px 1px 2px;
+  vertical-align: bottom;
+}
+
+.ch-col-name strong {
+  font-weight: bold;
+}
+
+.ch-col-name span {
+  color: #999;
 }
 
 /**
@@ -351,27 +389,31 @@ h1 {
  *
  */
 .ch-direction {
-  position: absolute;
   top: 0;
-  left: 431px;
-  line-height: 51px;
-  padding: 0 20px;
+  left: 627px;
+  line-height: 12px;
+  padding: 5px;
   color: #ccc;
+  background: #fff;
+  border-radius: 0 0 2px 2px;
+
+  /* Center align absoute position element - Move to separate class */
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%)
 }
 
 .ch-direction .ch-up {
   color: #457a2b;
-  background: #457a2b1a;
 }
 
 .ch-direction .ch-dn {
   color: #b70808;
-  background: #b708081a;
 }
 
 .ch-direction .ch-nc {
   color: #000;
-  background: #0000001a;
 }
 
 .ch-direction .ch-symbol {
@@ -387,6 +429,11 @@ h1 {
   margin-right: 4px;
 }
 
+.ch-total > span {
+  padding: 4px 4px 4px 4px;
+  position: relative;
+  left: -5px;
+}
 
 /*
  *

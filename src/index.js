@@ -17,7 +17,6 @@ import DataTable                                     from 'bo-datatable';
 
 import { partialApplication }                        from 'bo-utils';
 import { nodePugCompileTemplates as pug }            from 'bo-utils';
-import { objectGetNestedProperty as getNestedProp }  from 'bo-utils';
 
 // Node
 import { join }                                      from 'path';
@@ -40,10 +39,12 @@ import formatterCryptocompareSectionExchangesList    from './utils/formatter-cry
 import formatterCryptocompareSectionExchangesGeneral from './utils/formatter-cryptocompare-section-exchanges-general.js';
 import formatterCryptocompareSectionTotalVolFull     from './utils/formatter-cryptocompare-section-total-vol-full.js';
 import formatterXeSectionCurrency                    from './utils/formatter-xe-section-currency.js';
+import formatterMessariSectionMetrics                from './utils/formatter-messari-section-metrics.js';
 
 // Job fetchers
 import getJobsCryptocompareSectionPrice              from './utils/get-jobs-cryptocompare-section-price.js';
 import getJobsCryptocompareSectionTotalVolFull       from './utils/get-jobs-cryptocompare-section-total-vol-full.js';
+import getJobsMessariSectionMetrics                  from './utils/get-jobs-messari-section-metrics.js';
 
 // Other utils
 import analyticsMergeDataByKey                       from './utils/analytics-merge-data-by-key';
@@ -119,13 +120,13 @@ try {
   // TODO: bootstrapData needs to change when coinlist changes!!!!
   //
   const cryptocompareCoinlist = {
-    name: 'coinList',
     event: 'data',
+    name: 'coinList',
     interval: 1000 * 5,
     //
     // TODO: can we remove this and just search for the key?
     //
-    cacheArgs: [`${scrapeDir}/cryptocompare-coinlist/data.json`, 'all'],
+    watchDirs: [`${scrapeDir}/cryptocompare-coinlist/data.json`, 'all'],
     getJobs(queue, bootstrapData) {
       queue.push({
         uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
@@ -144,12 +145,12 @@ try {
   // and we can keep the default data.json
   //
   const cryptocompareExchangesList = {
-    name: 'exchanges-list',
     event: 'data,store',
+    name: 'exchanges-list',
     interval: 1000 * 60 * 1,
     // TODO: rename this fucking bit, this is where the watcher will look for files to load
     // so if we are saving them in different places they will never be added!
-    cacheArgs: [settings.keyCryptocompareExchangesList, 'all'],
+    watchDirs: [settings.keyCryptocompareExchangesList, 'all'],
     getJobs(queue, bootstrapData) {
       queue.push({uri: settings.uriCryptocompareExchangesList, key: settings.keyCryptocompareExchangesList, cacheForDays: 0});
     },
@@ -160,10 +161,10 @@ try {
   // EXCHANGES GENERAL
   //
   const cryptocompareExchangesGeneral = {
-    name: 'exchanges-general',
     event: 'data,store',
+    name: 'exchanges-general',
     interval: 1000 * 60 * 60,
-    cacheArgs: [settings.keyCryptocompareExchangesGeneral, 'all'],
+    watchDirs: [settings.keyCryptocompareExchangesGeneral, 'all'],
     getJobs(queue, bootstrapData) {
       queue.push({uri: settings.uriCryptocompareExchangesGeneral, key: settings.keyCryptocompareExchangesGeneral, cacheForDays: 0});
     },
@@ -174,10 +175,10 @@ try {
   // TOP TOTAL VOLUME
   //
   const cryptocompareTopTotalVolume = {
-    name: 'totalVolFull',
     event: 'data',
+    name: 'totalVolFull',
     interval: 1000 * 10,
-    cacheArgs: [settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`, 'all'],
+    watchDirs: [settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`, 'all'],
     getJobs: getJobsCryptocompareSectionTotalVolFull,
     handler(oldData, newData) {
       const merged = {...oldData, ...newData};
@@ -190,10 +191,10 @@ try {
   // XE CURRENCY
   //
   const xeCurrency = {
-    name: 'currency',
     event: 'data',
+    name: 'currency',
     interval: 1000 * 60 * 60 * 24,
-    cacheArgs: [settings.tagKeyXeCurrencyTables`${'USD'}`, 'all'],
+    watchDirs: [settings.tagKeyXeCurrencyTables`${'USD'}`, 'all'],
     getJobs(queue, bootstrapData) {
       queue.push({
         uri: settings.tagUriXeCurrencyTables`${'USD'}`,
@@ -208,20 +209,12 @@ try {
   // MESSARI METRICS
   //
   const messariMetrics = {
-    // name: 'metrics',
-    // event: 'data',
-    // interval: 1000 * 5,
-    // cacheArgs: [`${scrapeDir}/messari/data.json`, 'all'],
-    // getJobs(queue, bootstrapData) {
-    //   queue.push({
-    //     uri: 'https://data.messari.io/api/v1/assets/btc/metrics',
-    //     key: `${scrapeDir}/messari/data.json`,
-    //     cacheForDays: 0
-    //   });
-    // },
-    // formatter: (data) => {
-    //   console.log('messari, metrics', data);
-    // }
+    event: 'data',
+    name: 'messari-metrics',
+    interval: 1000 * 5,
+    watchDirs: [`${scrapeDir}/messari-metric/**/*`, 'all'],
+    getJobs: getJobsMessariSectionMetrics,
+    formatter: formatterMessariSectionMetrics,
   };
 
   //
@@ -265,7 +258,6 @@ try {
   let initData = {};
   const dataTable = new DataTable({
 
-    log: settings.log,
     dbDir: settings.dbDir,
     cacheDir: settings.cacheDir,
     generatedDir: settings.generatedDir,
@@ -274,6 +266,14 @@ try {
       pub: join(__dirname, './public'),
       port: 3001,
     },
+
+    //
+    // TODO
+    //
+    // This is where you were.
+    // make app wide bootstrap work, and clip data by maxRows or whatever its called.
+    //
+    bootstrap: formatterCryptocompareBootstrap,
 
     events: {
       data: {
@@ -311,16 +311,16 @@ try {
           cryptocompareTopTotalVolume,
         ]
       },
-      // messari: {
-      //   cacheFor: settings.cacheForMessari,
-      //   bootstrap: () => {},
-      //   rateLimitDelayMs: settings.rateLimitMessari,
-      //   sections: [
-      //     {
-      //       messariMetrics
-      //     },
-      //   ]
-      // },
+      messari: {
+        cacheFor: settings.cacheForMessari,
+        bootstrap: cache => {
+          return {}
+        },
+        rateLimitDelayMs: settings.rateLimitMessari,
+        sections: [
+          messariMetrics
+        ]
+      },
       xe: {
         cacheFor: settings.cacheForXe,
         bootstrap: () => {return {}},

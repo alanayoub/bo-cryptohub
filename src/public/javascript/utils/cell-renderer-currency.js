@@ -17,6 +17,9 @@ import getCssClass from './get-cell-css-class-diff.js';
  */
 export default function cellRendererCurrency(refs, params) {
 
+  let result = '-';
+  if (!params.value) return result;
+
   const { colDef, data } = params;
   const html = document.createElement('div');
 
@@ -27,10 +30,9 @@ export default function cellRendererCurrency(refs, params) {
   let newVal;
   let oldVal;
   const digits = newValue >= 1 ? 2 : 6;
-  if (bo.isNumber(newValue)) newVal = bo.formatNumberAsCurrency(newValue, digits, params.currency);
-  if (bo.isNumber(oldValue)) oldVal = bo.formatNumberAsCurrency(oldValue, digits, params.currency);
+  if (bo.isNumber(newValue)) newVal = bo.formatNumberAsCurrency(newValue, params.currency);
+  if (bo.isNumber(oldValue)) oldVal = bo.formatNumberAsCurrency(oldValue, params.currency);
 
-  let result = '-';
   if (bo.isNumber(newValue) && !bo.isNumber(oldValue)) {
     result = newVal;
   }
@@ -45,7 +47,5 @@ export default function cellRendererCurrency(refs, params) {
   html.innerHTML = result;
 
   return html;
-
-
 
 }

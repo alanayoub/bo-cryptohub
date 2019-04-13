@@ -91,6 +91,31 @@ let fieldWhitelist = [
 
   'cc-coinlist-Symbol',
 
+  'm-metrics-sectors',
+  // 'm-metrics-categories',
+  // 'm-metrics-date-created',
+  'm-metrics-ath-price',
+  // 'm-metrics-ath-date',
+  // 'm-metrics-ath-days',
+  // 'm-metrics-ath-percent-down',
+  // 'm-metrics-ath-breakeven-multiple',
+  'm-metrics-cycle-low-price',
+  // 'm-metrics-cycle-low-data',
+  // 'm-metrics-cycle-low-percent-up',
+  // 'm-metrics-cycle-low-days-since',
+  'm-metrics-percent-change-last-1-week',
+  'm-metrics-percent-change-last-1-month',
+  'm-metrics-percent-change-last-3-months',
+  'm-metrics-percent-change-last-1-year',
+  'm-metrics-percent-change-btc-last-1-week',
+  'm-metrics-percent-change-btc-last-1-month',
+  'm-metrics-percent-change-btc-last-3-months',
+  'm-metrics-percent-change-btc-last-1-year',
+
+  'cc-total-vol-full-PRICE:last',
+  'cc-total-vol-full-TOTALVOLUME24HTO:last',
+  'cc-total-vol-full-MKTCAP:last',
+
   'cryptohub-price-btc',
   'cryptohub-price-history',
   'cryptohub-numberOfExchanges',
@@ -102,9 +127,6 @@ let fieldWhitelist = [
   'cryptohub-exchangesListAcceptsBoth',
   'cryptohub-exchangesListCryptoOnly',
 
-  'cc-total-vol-full-PRICE:last',
-  'cc-total-vol-full-TOTALVOLUME24HTO:last',
-  'cc-total-vol-full-MKTCAP:last',
   'cryptohub-price-btc:last',
 
 ];
@@ -152,6 +174,7 @@ const settings = {
   debug:                                       true, // TODO: Change this to an env var
   logger:                                      args.options.logger || false,
   maxRowsTemplatedIn:                          50,
+  maxRecordsScraped:                           400,
 
   //
   // Directories & Paths
@@ -195,7 +218,7 @@ const settings = {
   rateLimitCryptocompare:                      26784,
 
   // Unknow at the moment
-  rateLimitMessari:                            1000 * 60 * 60,
+  rateLimitMessari:                            1000 * 10,
 
   rateLimitXe:                                 1000 * 60 * 60 * 24,
 
@@ -205,12 +228,19 @@ const settings = {
   queueCoinmarketcap:                          1000 * 60 * 60,
 
   //
+  // Messari
+  //
+  tagUriMessariMetrics:                        (str, id) => `https://data.messari.io/api/v1/assets/${id}/metrics`,
+  tagKeyMessariMetrics:                        (str, id) => `${scrapeDir}/messari-metric/${id}/data.json`,
+  tagKeyMessariMetricsGrouped:                 (str, ob) => `${scrapeDir}/messari-metric-grouped/data.json`,
+
+  //
   // Cryptocompare
   //
 
-  tagUriCryptocompareTotalVolFull:              (str, ob) => `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=${ob.limit}&tsym=USD&page=${ob.page}`,
-  tagKeyCryptocompareTotalVolFull:              (str, ob) => `${scrapeDir}/cryptocompare-totalvolfull/page-${ob.page}.json`,
-  tagKeyCryptocompareTotalVolFullGrouped:       (str, ob) => `${scrapeDir}/cryptocompare-totalvolfull-grouped/data.json`,
+  tagUriCryptocompareTotalVolFull:             (str, ob) => `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=${ob.limit}&tsym=USD&page=${ob.page}`,
+  tagKeyCryptocompareTotalVolFull:             (str, ob) => `${scrapeDir}/cryptocompare-totalvolfull/page-${ob.page}.json`,
+  tagKeyCryptocompareTotalVolFullGrouped:      (str, ob) => `${scrapeDir}/cryptocompare-totalvolfull-grouped/data.json`,
 
   uriCryptocompareList:                        'https://min-api.cryptocompare.com/data/all/coinlist',
   keyCryptocompareList:                        `${scrapeDir}/cryptocompare-coinlist/data.json`,

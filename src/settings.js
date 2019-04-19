@@ -67,7 +67,7 @@ const isProd = process.env.NODE_ENV === 'production' && args.options.local !== t
 
 const cacheDir = isProd
   ? '/home/ubuntu/cryptohub-cache'
-  : '/media/alan/Seagate1/code/cryptohub/cache';
+  : path.join(__dirname, '/../cache');
 
 const generatedDir = `${cacheDir}/tmp-generated`;
 const scrapeDir    = `${cacheDir}/tmp-scrape`;
@@ -103,14 +103,14 @@ let fieldWhitelist = [
   // 'm-metrics-cycle-low-data',
   // 'm-metrics-cycle-low-percent-up',
   // 'm-metrics-cycle-low-days-since',
-  'm-metrics-percent-change-last-1-week',
-  'm-metrics-percent-change-last-1-month',
-  'm-metrics-percent-change-last-3-months',
-  'm-metrics-percent-change-last-1-year',
+  // 'm-metrics-percent-change-last-1-week',
+  // 'm-metrics-percent-change-last-1-month',
+  // 'm-metrics-percent-change-last-3-months',
+  // 'm-metrics-percent-change-last-1-year',
   'm-metrics-percent-change-btc-last-1-week',
-  'm-metrics-percent-change-btc-last-1-month',
-  'm-metrics-percent-change-btc-last-3-months',
-  'm-metrics-percent-change-btc-last-1-year',
+  // 'm-metrics-percent-change-btc-last-1-month',
+  // 'm-metrics-percent-change-btc-last-3-months',
+  // 'm-metrics-percent-change-btc-last-1-year',
 
   'cc-total-vol-full-PRICE:last',
   'cc-total-vol-full-TOTALVOLUME24HTO:last',
@@ -170,11 +170,17 @@ fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp'
  */
 const settings = {
 
+  //
   // App settings
+  //
   debug:                                       true, // TODO: Change this to an env var
   logger:                                      args.options.logger || false,
   maxRowsTemplatedIn:                          50,
   maxRecordsScraped:                           400,
+
+  // The diff-json library has a bug where null field throw an error on add.
+  // For now we are just not going to send null fields, lightens the load anyhow.
+  removeNullFields: true,
 
   //
   // Directories & Paths

@@ -1,5 +1,9 @@
 'use strict';
 
+// Binary Overdose
+// const bo = require('./libs/bo-utils-client.js');
+import bo from './libs/bo-utils-client.js';
+
 // Cryptohub util functions
 import cellTooltip                    from './utils/cell-tooltip.js';
 import shouldCellUpdate               from './utils/should-cell-update.js';
@@ -30,7 +34,10 @@ import cellOnClickTradingview         from './utils/cell-on-click-tradingview.js
 // ag-grid filter comparators
 import sortNumbers from './utils/sort-numbers.js';
 
-const { objectIsObject: isObject } = bo;
+const {
+  objectIsObject: isObject,
+  objectGetNestedProperty: gnp
+} = bo;
 
 /**
  *
@@ -208,6 +215,11 @@ const columnDefs = [
     headerTooltip: 'Sectors',
     width: 180,
     type: ['cryptohubText'],
+    valueFormatter(params) {
+      const value = gnp(params, 'value.value');
+      if (!Array.isArray(value) || !value.length) return ch.emptyCellValue;
+      else return value;
+    }
   },
 
   // USD Price
@@ -252,6 +264,33 @@ const columnDefs = [
     headerName: 'ATH',
     headerClass: 'CH-col',
     headerTooltip: 'All Time High (USD)\n\nData Source: OnChainFX',
+    width: 120,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
+    cellRendererParams: {
+      currency: 'USD',
+    },
+  },
+
+  //
+  // Cycle low
+  //
+  // This is the lowest trading price (in USD) of the asset since its All-Time-High.
+  // Notes about how OnChainFX determines Cycle Low:
+  //
+  // The Cycle Low quote is not necessarily the absolute lowest single trade price.
+  // Due to the nature of the historical data we analyze, we are not always able to look at every trade for an asset.
+  // For some assets, the Cycle Low quoted may refer to the lowest daily average since the ATH,
+  // or a price-sample on the day the Cycle Low occured.
+  //
+  {
+    field: 'm-metrics-cycle-low-price',
+    headerName: 'Cycle Low',
+    headerClass: 'CH-col',
+    headerTooltip: 'The lowest trading price (in USD) of the asset since its All-Time-High\n\nData Source: OnChainFX',
     width: 120,
     type: [
       'cryptohubDefaults',
@@ -558,8 +597,6 @@ const agOptions = {
 
 };
 
-window.ch = initStore;
-
 /**
  *
  * Updated
@@ -576,8 +613,12 @@ const updated = function (when) {
 
 }
 
-window.ch = initStore;
-if (!new agGrid.Grid(document.querySelector('#myGrid'), agOptions)) {
+window.ch = {
+  emptyCellValue: '-',
+  ...initStore
+};
+
+if (!new agGrid.Grid(document.querySelector('#ch-grid'), agOptions)) {
 
   throw new Error('Cant find grid');
 

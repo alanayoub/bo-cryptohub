@@ -61,7 +61,7 @@ function filterData(data) {
       // remove fields that are not being used
       fields = Object.keys(data[key]);
       for (field of fields) {
-        if (!whitelist.includes(field)) {
+        if (!whitelist.includes(field) || (settings.removeNullFields && data[key] === null)) {
           delete data[key][field];
         }
       }

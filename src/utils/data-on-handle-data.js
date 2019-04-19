@@ -79,7 +79,6 @@ function getBitcoinPrice(data) {
  */
 function addCryptohubFields(oldData, data) {
 
-
   function lastValueField(oldData, newData, field) {
     if (settings.fieldLastValue.includes(field)) {
       newData[`${field}:last`] = oldData[field];
@@ -105,7 +104,7 @@ function addCryptohubFields(oldData, data) {
     const { price, lastPrice, timestamp } = priceInBitcoin(oldData[key], item, bitcoinPrice);
     if (price)               item['cryptohub-price-btc']           = price;
     if (price !== lastPrice) item['cryptohub-price-btc:last']      = lastPrice;
-    if (timestamp)           item['cryptohub-price-btc-timestamp'] = timeseries;
+    if (timestamp)           item['cryptohub-price-btc-timestamp'] = timestamp;
 
     // Circulating percent total
     const supplyTotal       = item['cc-coinlist-TotalCoinSupply'];

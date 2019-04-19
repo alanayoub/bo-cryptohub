@@ -186,31 +186,38 @@ export default function formatterMessariSectionMetrics(data, timestamp, bootstra
 
     const output = {
       [id]: {
-        'm-metrics-sectors'               : gnp(data, 'misc_data.sectors'),
-        'm-metrics-categories'            : gnp(data, 'misc_data.categories'),
-        'm-metrics-date-created'          : gnp(data, 'misc_data.asset_created_at'),
-        'm-metrics-ath-price'             : gnp(data, 'all_time_high.price'),
-        'm-metrics-ath-date'              : gnp(data, 'all_time_high.at'),
-        'm-metrics-ath-days'              : gnp(data, 'all_time_high.days_since'),
-        'm-metrics-ath-percent-down'      : gnp(data, 'all_time_high.percent_down'),
-        'm-metrics-ath-breakeven-multiple': gnp(data, 'all_time_high.breakeven_multiple'),
-        'm-metrics-cycle-low-price'       : gnp(data, 'cycle_low.price'),
-        'm-metrics-cycle-low-date'        : gnp(data, 'cycle_low.at'),
-        'm-metrics-cycle-low-percent-up'  : gnp(data, 'cycle_low.percent_up'),
-        'm-metrics-cycle-low-days-since'  : gnp(data, 'cycle_low.days_since'),
-        'm-metrics-percent-change-last-1-week'  : gnp(data, 'roi_data.percent_change_last_1_week'),
-        'm-metrics-percent-change-last-1-month' : gnp(data, 'roi_data.percent_change_last_1_month'),
-        'm-metrics-percent-change-last-3-months': gnp(data, 'roi_data.percent_change_last_3_months'),
-        'm-metrics-percent-change-last-1-year'  : gnp(data, 'roi_data.percent_change_last_1_year'),
+        'm-metrics-sectors'                         : gnp(data, 'misc_data.sectors'),
+        'm-metrics-categories'                      : gnp(data, 'misc_data.categories'),
+        'm-metrics-date-created'                    : gnp(data, 'misc_data.asset_created_at'),
+        'm-metrics-ath-price'                       : gnp(data, 'all_time_high.price'),
+        'm-metrics-ath-date'                        : gnp(data, 'all_time_high.at'),
+        'm-metrics-ath-days'                        : gnp(data, 'all_time_high.days_since'),
+        'm-metrics-ath-percent-down'                : gnp(data, 'all_time_high.percent_down'),
+        'm-metrics-ath-breakeven-multiple'          : gnp(data, 'all_time_high.breakeven_multiple'),
+        'm-metrics-cycle-low-price'                 : gnp(data, 'cycle_low.price'),
+        'm-metrics-cycle-low-date'                  : gnp(data, 'cycle_low.at'),
+        'm-metrics-cycle-low-percent-up'            : gnp(data, 'cycle_low.percent_up'),
+        'm-metrics-cycle-low-days-since'            : gnp(data, 'cycle_low.days_since'),
+        'm-metrics-percent-change-last-1-week'      : gnp(data, 'roi_data.percent_change_last_1_week'),
+        'm-metrics-percent-change-last-1-month'     : gnp(data, 'roi_data.percent_change_last_1_month'),
+        'm-metrics-percent-change-last-3-months    ': gnp(data, 'roi_data.percent_change_last_3_months'),
+        'm-metrics-percent-change-last-1-year'      : gnp(data, 'roi_data.percent_change_last_1_year'),
         'm-metrics-percent-change-btc-last-1-week'  : gnp(data, 'roi_data.percent_change_btc_last_1_week'),
         'm-metrics-percent-change-btc-last-1-month' : gnp(data, 'roi_data.percent_change_btc_last_1_month'),
         'm-metrics-percent-change-btc-last-3-months': gnp(data, 'roi_data.percent_change_btc_last_3_months'),
         'm-metrics-percent-change-btc-last-1-year'  : gnp(data, 'roi_data.percent_change_btc_last_1_year'),
-
-        'm-metrics-ath-price-timestamp'       : gnp(data, 'all_time_high.at'),
-        'm-metrics-cycle-low-price-timestamp' : gnp(data, 'cycle_low.at'),
+        'm-metrics-ath-price-timestamp'             : gnp(data, 'all_time_high.at'),
+        'm-metrics-cycle-low-price-timestamp'       : gnp(data, 'cycle_low.at'),
       }
     };
+
+    let item;
+    let prop;
+    for (item of Object.values(output)) {
+      for (prop of Object.keys(item)) {
+        item[`${prop}-timestamp`] = timestamp;
+      }
+    }
 
     return {data: output, timestamp};
 

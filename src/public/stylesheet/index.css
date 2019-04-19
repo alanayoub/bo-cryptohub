@@ -1,4 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
+  font: 13px Helvetica, Arial;
   background: #355e21;
 }
 
@@ -16,6 +23,14 @@ h1 {
   margin-top: 0;
   text-size-adjust: 100%;
   width: 910px;
+}
+
+#ch-grid {
+  position: fixed;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .ch-logo {

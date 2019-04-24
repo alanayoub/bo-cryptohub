@@ -13,8 +13,8 @@
     "build:server-dev": "npx webpack --config webpack.server.dev.js",
     "build:server-prod": "npx webpack --config webpack.server.prod.js",
 
-    "build:dev": "npm run build:client-dev && npm run build:client-prod",
-    "build:prod": "npm run build:server-dev && npm run build:server-prod",
+    "build:dev": "npm run build:client-dev && npm run build:server-dev",
+    "build:prod": "npm run build:client-prod && npm run build:server-prod",
 
     "build:link": "npm link ../bo-datatable && npm link ../bo-utils",
 

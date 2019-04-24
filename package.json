@@ -6,12 +6,22 @@
   "private": true,
   "main": "src/index.js",
   "scripts": {
-    "build:dev": "npx webpack --config webpack.dev.js",
-    "build:prod": "npx webpack --config webpack.prod.js",
+
+    "build:client-dev": "npx webpack --config webpack.client.dev.js",
+    "build:client-prod": "npx webpack --config webpack.client.prod.js",
+
+    "build:server-dev": "npx webpack --config webpack.server.dev.js",
+    "build:server-prod": "npx webpack --config webpack.server.prod.js",
+
+    "build:dev": "npm run build:client-dev && npm run build:client-prod",
+    "build:prod": "npm run build:server-dev && npm run build:server-prod",
+
     "build:link": "npm link ../bo-datatable && npm link ../bo-utils",
-    "start:dev": "npx babel-node --inspect --use-strict ./src/index.js --logger=true",
-    "start:prod": "node --use-strict ./src/index.js",
-    "start:prod-local": "node --inspect --use-strict ./src/index.js --local=true",
+
+    "start:dev": "npx babel-node --inspect --use-strict ./dist/index.js --logger=true",
+    "start:prod": "node --use-strict ./dist/index.js",
+    "start:prod-local": "node --inspect --use-strict ./dist/index.js --local=true",
+
     "start:dev-all": "npm run build:link && npm run build:dev && npm run start:dev",
     "start:prod-all": "npm run build:link && npm run build:prod && npm run start:prod",
     "start:prod-local-all": "npm run build:link && npm run build:prod && npm run start:prod-local"
@@ -62,9 +72,7 @@
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.2.1",
     "webpack-merge": "^4.2.1",
-    "winston": "^3.0.0-rc5"
-  },
-  "devDependencies": {
+    "winston": "^3.0.0-rc5",
     "css-loader": "^2.1.1",
     "mini-css-extract-plugin": "^0.5.0"
   }

@@ -21,17 +21,13 @@ module.exports = {
   },
 
   output: {
-    path: path.join(__dirname, './dist'),
+    path: path.join(__dirname, './dist/public'),
     filename: 'javascript/[name].[chunkhash:8].js',
     chunkFilename: 'javascript/[name].[chunkhash:8].chunk.js'
   },
 
   // The target: 'node' option tells webpack not to touch any built-in modules like fs or path
   target: 'web',
-  node: {
-    __dirname: false,
-    __filename: false,
-  },
 
   optimization: {
     splitChunks: {

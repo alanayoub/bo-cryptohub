@@ -254,7 +254,7 @@ try {
     generatedDir: settings.generatedDir,
 
     server: {
-      pub: join(__dirname, '../dist'),
+      pub: join(__dirname, '../dist/public'),
       port: 3001,
       index: '../dist/index.html',
     },

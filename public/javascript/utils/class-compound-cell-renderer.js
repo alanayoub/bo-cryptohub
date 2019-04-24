@@ -1,5 +1,8 @@
 'use strict';
 
+// Binary Overdose Projects
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
+
 // Cryptohub Util functions
 import getCssClass from './get-cell-css-class-diff.js';
 
@@ -32,7 +35,7 @@ export default class CompoundCellRenderer {
 
     const value = params.valueFormatted
       ? params.valueFormatted
-      : bo.objectGetNestedProperty(params, 'value.value');
+      : gnp(params, 'value.value');
 
     const data = `<span class="cryptohub-cell-data">-</span>`;
 

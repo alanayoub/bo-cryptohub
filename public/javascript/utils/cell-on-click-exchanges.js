@@ -1,5 +1,14 @@
+'use strict';
+
+// Binary Overdose Projects
+import { getRandomInt }                   from '../libs/bo-utils-client';
+import { htmlToggleClass }                from '../libs/bo-utils-client';
+import { numberGroupDigits }              from '../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
+
 // Cryptohub
 import popDiv  from './popdiv.js';
+import initPug from '../generated/init-pug.generated.js';
 
 /**
  *
@@ -34,7 +43,7 @@ export default function cellOnClickExchanges(params) {
 
     const fiatIds   = params.data['cryptohub-exchangesListAcceptsBoth'] || [];
     const cryptoIds = params.data['cryptohub-exchangesListCryptoOnly'] || [];
-    const exchanges = bo.objectGetNestedProperty(window.ch, 'exchanges');
+    const exchanges = gnp(window.ch, 'exchanges');
 
     //
     // Step 1: Create the below data structure
@@ -106,14 +115,14 @@ export default function cellOnClickExchanges(params) {
 
   function exchangeHtmlContent() {
 
-    const name          = bo.objectGetNestedProperty(params, 'data.cc-total-vol-full-FullName.value');
-    const total         = bo.numberGroupDigits(bo.objectGetNestedProperty(params, 'value.value'));
+    const name          = gnp(params, 'data.cc-total-vol-full-FullName.value');
+    const total         = numberGroupDigits(gnp(params, 'value.value'));
     const classes       = 'ch-numberofexchanges';
     const dexList       = params.data['cryptohub-exchangesListDex'] || [];
     const fiatIds       = params.data['cryptohub-exchangesListAcceptsBoth'] || [];
     const cryptoIds     = params.data['cryptohub-exchangesListCryptoOnly'] || [];
     const outputArray   = exchangeDataModel();
-    const numberOfPairs = bo.objectGetNestedProperty(params, 'data.cryptohub-numberOfPairs.value');
+    const numberOfPairs = gnp(params, 'data.cryptohub-numberOfPairs.value');
 
     const output = {
       header: {
@@ -134,12 +143,12 @@ export default function cellOnClickExchanges(params) {
   }
 
   const $cell = params.event.target.closest('.ag-cell');
-  const id = `ch-tippy-${bo.getRandomInt()}`;
+  const id = `ch-tippy-${getRandomInt()}`;
   const cssId = `#${id}`;
   const contentPopdiv = initPug['ch-tippy-click-tradingview']({id});
   const contentExchange = exchangeHtmlContent();
 
-  bo.htmlToggleClass($cell, 'ch-cell-active');
+  htmlToggleClass($cell, 'ch-cell-active');
   popDiv($cell, contentPopdiv);
   document.querySelector(cssId).innerHTML = contentExchange;
 

@@ -1,5 +1,7 @@
 'use strict';
 
+import { timeAgo } from '../libs/bo-utils-client';
+
 /**
  *
  * CELL TOOLTIP
@@ -12,6 +14,6 @@ export default function cellTooltip(params) {
   const { data, colDef } = params;
   const field = data[colDef.field];
   const timestamp = field && field.timestamp;
-  const t = bo.timeAgo(timestamp) || 'unknown time ago';
+  const t = timeAgo(timestamp) || 'unknown time ago';
   return `Last updated ${t}`;
 }

@@ -9,17 +9,15 @@
 //
 //
 
+// Node
+import { join }                                      from 'path';
+
 // Libs
 import '@babel/polyfill';
 
 // Binary Overdose Projects
 import DataTable                                     from 'bo-datatable';
-
 import { partialApplication }                        from 'bo-utils';
-import { nodePugCompileTemplates as pug }            from 'bo-utils';
-
-// Node
-import { join }                                      from 'path';
 
 // CryptoHub
 import settings                                      from './settings';
@@ -27,7 +25,6 @@ import settings                                      from './settings';
 // Handlers
 import dataOnHandleData                              from './utils/data-on-handle-data';
 import storeOnHandleData                             from './utils/store-on-handle-data';
-
 import dataOnBeforeEmit                              from './utils/data-on-before-emit.js';
 import storeOnBeforeEmit                             from './utils/store-on-before-emit.js';
 
@@ -56,12 +53,6 @@ try {
 
   process.on('warning', error => {
     logger.warning(`index.js:\n${error.stack}`);
-  });
-
-  pug({
-    varName: 'initPug',
-    pugGlob: join(__dirname, '/pug/**/*.pug'),
-    outFile: join(__dirname, '/public/javascript/init-pug.generated.js')
   });
 
   //
@@ -263,8 +254,9 @@ try {
     generatedDir: settings.generatedDir,
 
     server: {
-      pub: join(__dirname, './public'),
+      pub: join(__dirname, '../dist'),
       port: 3001,
+      index: '../dist/index.html',
     },
 
     //
@@ -280,7 +272,7 @@ try {
         onBeforeHandleData: analyticsMergeDataByKey,
         onHandleData: partialApplication(dataOnHandleData, {}),
         onAfterConnect(event, socket, data) {
-          socket.emit(event, dataOnBeforeEmit({}, data, initData));
+          socket.emit(event, dataOnBeforeEmit({diff: false}, data, initData));
         },
         onBeforeEmit: partialApplication(dataOnBeforeEmit, {}),
         onBeforeBootstrapSave: data => {
@@ -292,8 +284,12 @@ try {
       store: {
         onBeforeHandleData: data => data,
         onHandleData: partialApplication(storeOnHandleData, {}),
+        onAfterConnect(event, socket, data) {
+          socket.emit(event, storeOnBeforeEmit({diff: false}, data, {}));
+        },
         onBeforeEmit: partialApplication(storeOnBeforeEmit, {}),
         onBeforeBootstrapSave: (data) => {
+          debugger;
           return data;
         }
       }

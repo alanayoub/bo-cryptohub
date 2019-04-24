@@ -1,6 +1,15 @@
 'use strict';
 
+// Binary Overdose Projects
+import { getRandomInt }                   from '../libs/bo-utils-client';
+import { htmlToggleClass }                from '../libs/bo-utils-client';
+import { htmlPollElement }                from '../libs/bo-utils-client';
+import { partialApplication }             from '../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
+
+// Cryptohub Util functions
 import popDiv from './popdiv.js';
+import initPug from '../generated/init-pug.generated.js';
 
 /**
  *
@@ -8,8 +17,7 @@ import popDiv from './popdiv.js';
  *
  */
 function exchangeSupported(exchanges) {
-  const get = bo.objectGetNestedProperty;
-  const mapNameId = get(ch, 'exchange-map-nameId');
+  const mapNameId = gnp(ch, 'exchange-map-nameId');
   // TODO: rank by exchange ranking that we havnt created yet
   const supported = [
     'POLONIEX',
@@ -62,16 +70,15 @@ function exchangeSupported(exchanges) {
  */
 function tradingviewGetSymbol(params, symbolTo = 'BTC') {
 
-  const get = bo.objectGetNestedProperty;
-  const map = get(ch, 'exchange-map-idName');
-  const symbolFrom = get(params, 'data.cc-coinlist-Symbol.value');
+  const map = gnp(ch, 'exchange-map-idName');
+  const symbolFrom = gnp(params, 'data.cc-coinlist-Symbol.value');
 
   //
   // NOTE: don't use exchange, tradingview finds a default
   //
   // Try an exchange that supports fiat first
-  // const exchangeList1 = exchangeSupported(get(params, 'data.cryptohub-exchangesListAcceptsBoth'));
-  // const exchangeList2 = exchangeSupported(get(params, 'data.cryptohub-exchangesListCryptoOnly'));
+  // const exchangeList1 = exchangeSupported(gnp(params, 'data.cryptohub-exchangesListAcceptsBoth'));
+  // const exchangeList2 = exchangeSupported(gnp(params, 'data.cryptohub-exchangesListCryptoOnly'));
 
   // const exchange = map && exchangeList1.length
   //   ? map[exchangeList1[0]]
@@ -136,12 +143,12 @@ function loadTradingview(params, container_id, symbolTo = 'BTC') {
  */
 export default function cellOnClickTradingview(symbolTo, params) {
 
-  const id = `ch-tippy-${bo.getRandomInt()}`;
+  const id = `ch-tippy-${getRandomInt()}`;
   const cssId = `#${id}`;
   const content = initPug['ch-tippy-click-tradingview']({id});
   const $cell = params.event.target.closest('.ag-cell');
   popDiv($cell, content);
-  bo.htmlToggleClass($cell, 'ch-cell-active');
-  bo.htmlPollElement(cssId, 100, bo.partialApplication(loadTradingview, params, id, symbolTo));
+  htmlToggleClass($cell, 'ch-cell-active');
+  htmlPollElement(cssId, 100, partialApplication(loadTradingview, params, id, symbolTo));
 
 }

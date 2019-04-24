@@ -5,9 +5,15 @@ import DataTable from 'bo-datatable';
 
 export default function storeOnBeforeEmit(options, newData, oldData) {
 
-  let emitData;
-  emitData = DataTable.diff(oldData, newData);
-  emitData = JSON.stringify(emitData);
-  return emitData;
+  const type = options.diff !== false ? 'changeset' : 'full';
+  let data = newData;
+
+  if (type === 'changeset') {
+    data = DataTable.diff(oldData, data);
+  }
+
+  data = JSON.stringify({data, type});
+
+  return data;
 
 }

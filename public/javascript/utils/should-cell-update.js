@@ -1,6 +1,6 @@
 'use strict';
 
-const gnp = bo.objectGetNestedProperty;
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 
 /**
  *

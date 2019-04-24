@@ -1,58 +1,80 @@
 'use strict';
 
 // Node
-const path               = require('path');
+const path                             = require('path');
 
 // Libs
-const CopyPlugin         = require('copy-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin                = require('html-webpack-plugin');
+const CleanWebpackPlugin               = require('clean-webpack-plugin');
+const CopyWebpackPlugin                = require('copy-webpack-plugin');
+
+const PreBuild                         = require('./webpack-plugin-pre-build.js');
+
+const { nodePugCompileTemplates: pug } = require('bo-utils');
 
 module.exports = {
 
   entry: {
-    app: './src/index.js'
+    app: path.resolve(__dirname, './public/javascript/index.js'),
+    pug: path.resolve(__dirname, './public/javascript/generated/init-pug.generated.js')
   },
 
   output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.join(__dirname, './dist'),
+    filename: 'javascript/[name].[chunkhash:8].js',
+    chunkFilename: 'javascript/[name].[chunkhash:8].chunk.js'
   },
 
   // The target: 'node' option tells webpack not to touch any built-in modules like fs or path
-  target: 'node',
+  target: 'web',
   node: {
     __dirname: false,
     __filename: false,
   },
 
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      name: false
+    }
+  },
+
   plugins: [
+    new PreBuild(() => {
+      console.log('Compiling pug templates');
+      pug({
+        varName: 'initPug',
+        pugGlob: path.join(__dirname, './src/pug/**/*.pug'),
+        outFile: path.join(__dirname, './public/javascript/generated/init-pug.generated.js')
+      });
+    }),
     new CleanWebpackPlugin(),
-    new CopyPlugin([
+    new CopyWebpackPlugin([
       {
         from: './node_modules/bo-utils/dist/index.client.js',
-        to:   'dist/public/javascript/libs/bo-utils-client.js'
+        to:   './javascript/libs/bo-utils-client.js'
       },
       {
         from: './node_modules/bo-datatable/dist/index.client.js',
-        to:   'dist/public/javascript/libs/bo-datatable-client.js'
-      },
-      // {
-      //   from: './src/public',
-      //   to:   './public'
-      // },
-      {
-        from: './src/public/images',
-        to:   'dist/public/images'
+        to:   './javascript/libs/bo-datatable-client.js'
       },
       {
-        from: './src/public/stylesheet',
-        to:   'dist/public/stylesheet'
+        from: './public/*',
+        to:   './',
+        flatten: true
       },
       {
-        from: './src/pug',
-        to:   'dist/pug'
+        from: './public/images',
+        to:   './images'
       },
+      {
+        from: './public/javascript/libs',
+        to:   './javascript/libs'
+      }
     ]),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, './public/index.html')
+    }),
   ],
 
 };

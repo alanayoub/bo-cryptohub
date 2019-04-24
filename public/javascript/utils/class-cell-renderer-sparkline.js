@@ -1,5 +1,10 @@
 'use strict';
 
+import { d3Sparkline }      from '../libs/bo-utils-client';
+import { arrayAverage }     from '../libs/bo-utils-client';
+import { d3SimpleBarChart } from '../libs/bo-utils-client';
+
+
 /**
  *
  * Price
@@ -17,7 +22,7 @@ function price(arr, range) {
     return acc;
   }, []);
 
-  return bo.d3Sparkline({
+  return d3Sparkline({
     range,
     data: priceData,
     width: 100,
@@ -60,12 +65,12 @@ function volume(arr, range, volumeDays = 7) {
     // Take the average of 3 volumes and the middle timestamp
     volumeData.push({
       x: p1 ? p1.x : p0.x,
-      y: bo.arrayAverage([y0, y1, y2])
+      y: arrayAverage([y0, y1, y2])
     });
 
   }
 
-  return bo.d3SimpleBarChart({
+  return d3SimpleBarChart({
     range,
     data: volumeData,
     width: 100,

@@ -1,3 +1,11 @@
+'use strict';
+
+// Binary Overdose Projects
+import { isNumber }                       from '../libs/bo-utils-client';
+import { diffNumericStrings }             from '../libs/bo-utils-client';
+import { formatNumberAsCurrency }         from '../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
+
 // Cryptohub Util functions
 import getCssClass from './get-cell-css-class-diff.js';
 
@@ -17,28 +25,28 @@ import getCssClass from './get-cell-css-class-diff.js';
  */
 export default function cellRendererCurrency(refs, params) {
 
-  let result = '-';
+  let result = ch.emptyCellValue;
   if (!params.value) return result;
 
   const { colDef, data } = params;
   const html = document.createElement('div');
 
-  const newValue = bo.objectGetNestedProperty(params, 'value.value');
-  const oldValue = bo.objectGetNestedProperty(params, `data.${params.colDef.field}:last`);
+  const newValue = gnp(params, 'value.value');
+  const oldValue = gnp(params, `data.${params.colDef.field}:last`);
 
   // format number
   let newVal;
   let oldVal;
   const digits = newValue >= 1 ? 2 : 6;
-  if (bo.isNumber(newValue)) newVal = bo.formatNumberAsCurrency(newValue, params.currency);
-  if (bo.isNumber(oldValue)) oldVal = bo.formatNumberAsCurrency(oldValue, params.currency);
+  if (isNumber(newValue)) newVal = formatNumberAsCurrency(newValue, params.currency);
+  if (isNumber(oldValue)) oldVal = formatNumberAsCurrency(oldValue, params.currency);
 
-  if (bo.isNumber(newValue) && !bo.isNumber(oldValue)) {
+  if (isNumber(newValue) && !isNumber(oldValue)) {
     result = newVal;
   }
   else {
 
-    let { start, end } = bo.diffNumericStrings(oldVal, newVal);
+    let { start, end } = diffNumericStrings(oldVal, newVal);
     const cssClass = getCssClass(oldVal, newVal);
     result = `<span>${start}</span><span class="${cssClass}">${end}</span>`;
 

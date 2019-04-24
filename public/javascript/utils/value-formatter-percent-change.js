@@ -1,8 +1,6 @@
 'use strict';
 
-const {
-  objectGetNestedProperty: getNestedProperty,
-} = bo;
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 
 /**
  *
@@ -14,7 +12,7 @@ const {
  */
 export default function valueFormatterPercentChange(params) {
 
-  const value = getNestedProperty(params, 'value.value');
+  const value = gnp(params, 'value.value');
   const num = Number.parseFloat(value).toFixed(2);
 
   return isNaN(num) ? '-' : `${num}%`;

@@ -61,8 +61,9 @@ function filterData(data) {
       // remove fields that are not being used
       fields = Object.keys(data[key]);
       for (field of fields) {
-        if (!whitelist.includes(field) || (settings.removeNullFields && data[key] === null)) {
+        if (!whitelist.includes(field) || (settings.removeNullFields && data[key][field] === null)) {
           delete data[key][field];
+          delete data[key][`${field}-timestamp`];
         }
       }
     }
@@ -79,10 +80,15 @@ function filterData(data) {
  */
 export default function dataOnBeforeEmit(options, newData, oldData) {
 
-  let emitData;
-  emitData = filterData(newData);
-  emitData = DataTable.diff(oldData, emitData);
-  emitData = JSON.stringify(emitData);
-  return emitData;
+  const type = options.diff !== false ? 'changeset' : 'full';
+  let data = filterData(newData);
+
+  if (type === 'changeset') {
+    data = DataTable.diff(oldData, data);
+  }
+
+  data = JSON.stringify({data, type});
+
+  return data;
 
 }

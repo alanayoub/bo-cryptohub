@@ -1,43 +1,46 @@
 'use strict';
 
-// Binary Overdose
-// const bo = require('./libs/bo-utils-client.js');
-import bo from './libs/bo-utils-client.js';
+// Binary Overdose Projects
+import { DataTable }                      from './libs/bo-datatable-client';
+import { objectIsObject as isObject }     from './libs/bo-utils-client';
+import { objectGetNestedProperty as gnp } from './libs/bo-utils-client';
+import { partialApplication }             from './libs/bo-utils-client';
+import { timeAgo }                        from './libs/bo-utils-client';
 
 // Cryptohub util functions
-import cellTooltip                    from './utils/cell-tooltip.js';
-import shouldCellUpdate               from './utils/should-cell-update.js';
-import convertWorkingDataToRowData    from './utils/convert-working-data-to-row-data.js';
+import cellTooltip                        from './utils/cell-tooltip.js';
+import shouldCellUpdate                   from './utils/should-cell-update.js';
+import convertWorkingDataToRowData        from './utils/convert-working-data-to-row-data.js';
 
 // ag-grid valueFormatters
-import valueFormatterPercentChange    from './utils/value-formatter-percent-change.js';
+import valueFormatterPercentChange        from './utils/value-formatter-percent-change.js';
 
 // ag-grid cell Renderer Classes
-import CompoundCellRenderer           from './utils/class-compound-cell-renderer.js';
-import CellRendererSparkline          from './utils/class-cell-renderer-sparkline.js';
+import CompoundCellRenderer               from './utils/class-compound-cell-renderer.js';
+import CellRendererSparkline              from './utils/class-cell-renderer-sparkline.js';
 
 // ag-grid cell Renderers
-import cellRendererName               from './utils/cell-renderer-name.js';
-import cellRendererNumber             from './utils/cell-renderer-number.js';
-import cellRendererCurrency           from './utils/cell-renderer-currency.js';
-import cellRendererExchanges          from './utils/cell-renderer-exchanges.js';
-import cellRendererTradingview        from './utils/cell-renderer-tradingview.js';
+import cellRendererName                   from './utils/cell-renderer-name.js';
+import cellRendererNumber                 from './utils/cell-renderer-number.js';
+import cellRendererCurrency               from './utils/cell-renderer-currency.js';
+import cellRendererExchanges              from './utils/cell-renderer-exchanges.js';
+import cellRendererTradingview            from './utils/cell-renderer-tradingview.js';
 
 // ag-grid custom filters
-import filterNumber                   from './utils/filter-number.js';
-import filterFloatingNumber           from './utils/filter-floating-number.js';
+import filterNumber                       from './utils/filter-number.js';
+import filterFloatingNumber               from './utils/filter-floating-number.js';
 
 // ag-grid cell on click handlers
-import cellOnClickExchanges           from './utils/cell-on-click-exchanges.js';
-import cellOnClickTradingview         from './utils/cell-on-click-tradingview.js';
+import cellOnClickExchanges               from './utils/cell-on-click-exchanges.js';
+import cellOnClickTradingview             from './utils/cell-on-click-tradingview.js';
 
 // ag-grid filter comparators
 import sortNumbers from './utils/sort-numbers.js';
 
-const {
-  objectIsObject: isObject,
-  objectGetNestedProperty: gnp
-} = bo;
+import style from '../stylesheet/index.css';
+
+const initStore = window.initStore || {};
+const initData = window.initData || {};
 
 /**
  *
@@ -111,7 +114,7 @@ const columnTypes = {
 
   cryptohubDefaults: {
     // NOTE: the equals property is not shown in the standard list of ag-grid options
-    // @see: https://www.ag-grid.com/javascript-grid-change-detection/
+    // https://www.ag-grid.com/javascript-grid-change-detection/
     equals: shouldCellUpdate,
     tooltip: cellTooltip,
   },
@@ -233,11 +236,11 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
+    cellRenderer: partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       currency: 'USD',
     },
-    onCellClicked: bo.partialApplication(cellOnClickTradingview, 'USD'),
+    onCellClicked: partialApplication(cellOnClickTradingview, 'USD'),
   },
 
   // BTC Price
@@ -251,11 +254,11 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
+    cellRenderer: partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       currency: 'SAT',
     },
-    onCellClicked: bo.partialApplication(cellOnClickTradingview, 'BTC'),
+    onCellClicked: partialApplication(cellOnClickTradingview, 'BTC'),
   },
 
   // All Time High
@@ -269,7 +272,7 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
+    cellRenderer: partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       currency: 'USD',
     },
@@ -296,7 +299,7 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
+    cellRenderer: partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       currency: 'USD',
     },
@@ -360,7 +363,7 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
+    cellRenderer: partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       currency: 'USD',
     },
@@ -377,7 +380,7 @@ const columnDefs = [
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: bo.partialApplication(cellRendererCurrency, refs),
+    cellRenderer: partialApplication(cellRendererCurrency, refs),
     cellRendererParams: {
       currency: 'USD',
     },
@@ -608,7 +611,7 @@ let timestamp;
 const updated = function (when) {
 
   if (when === 'now') timestamp = new Date();
-  const time = bo.timeAgo(timestamp);
+  const time = timeAgo(timestamp);
   document.querySelector('#updated').innerHTML = `Last Updated: ${time}`;
 
 }
@@ -695,23 +698,41 @@ else {
 
       updated('now');
 
-      const newSocketData = JSON.parse(data);
+      let newSocketData = JSON.parse(data);
+      const type = newSocketData.type;
+      newSocketData = newSocketData.data;
 
-      window.DataTable.changesets.applyChanges(refs.workingData, newSocketData);
+      if (type === 'changeset') {
+        window.DataTable.changesets.applyChanges(refs.workingData, newSocketData);
+      }
+      else {
+        refs.workingData = newSocketData;
+      }
 
       refs.rowData = convertWorkingDataToRowData(refs.workingData);
       agOptions.api.setRowData(refs.rowData);
 
       updateOverview(refs.workingData);
 
-    })
-    .on('store', data => {
+   })
+   .on('store', data => {
 
-      updated('now');
+     updated('now');
 
-      const newSocketData = JSON.parse(data);
-      window.DataTable.changesets.applyChanges(window.ch, newSocketData);
+     let newSocketData = JSON.parse(data);
+     const type = newSocketData.type;
+     newSocketData = newSocketData.data;
 
-    });
+     if (type === 'changeset') {
+       window.DataTable.changesets.applyChanges(window.ch, newSocketData);
+     }
+     else {
+       window.ch = {
+         ...window.ch,
+         ...newSocketData
+       };
+     }
+
+   });
 
 }

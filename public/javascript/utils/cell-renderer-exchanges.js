@@ -1,5 +1,9 @@
 'use strict';
 
+// Binary Overdose Projects
+import { numberGroupDigits }              from '../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
+
 /**
  *
  * Cell Renderer Exchanges
@@ -10,7 +14,7 @@
  */
 export default function cellRendererExchanges(params) {
 
-  const total = bo.numberGroupDigits(bo.objectGetNestedProperty(params, 'value.value'));
+  const total = numberGroupDigits(gnp(params, 'value.value'));
   const linkHtml = document.createElement('span');
   linkHtml.setAttribute('class', `cryptohub-link ch-numberofexchanges-link`);
   linkHtml.innerHTML = total;

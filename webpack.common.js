@@ -7,6 +7,7 @@ const path                             = require('path');
 const HtmlWebpackPlugin                = require('html-webpack-plugin');
 const CleanWebpackPlugin               = require('clean-webpack-plugin');
 const CopyWebpackPlugin                = require('copy-webpack-plugin');
+const MiniCssExtractPlugin             = require('mini-css-extract-plugin');
 
 const PreBuild                         = require('./webpack-plugin-pre-build.js');
 
@@ -75,6 +76,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './public/index.html')
     }),
+    new MiniCssExtractPlugin({
+      filename: '[name].[chunkhash:8].css',
+      chunkFilename: '[name].[chunkhash:8].chunk.css'
+    })
   ],
 
 };

@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: binaryoverdose.com
+Token: 800a165124d9a4101432f9c71adb30a66c0d1b084fe208ba84258852a903180c

@@ -6,22 +6,16 @@
   "private": true,
   "main": "src/index.js",
   "scripts": {
-
     "build:client-dev": "npx webpack --config webpack.client.dev.js",
     "build:client-prod": "npx webpack --config webpack.client.prod.js",
-
     "build:server-dev": "npx webpack --config webpack.server.dev.js",
     "build:server-prod": "npx webpack --config webpack.server.prod.js",
-
     "build:dev": "npm run build:client-dev && npm run build:server-dev",
     "build:prod": "npm run build:client-prod && npm run build:server-prod",
-
     "build:link": "npm link ../bo-datatable && npm link ../bo-utils",
-
     "start:dev": "npx babel-node --inspect --use-strict ./dist/index.js --logger=true",
     "start:prod": "node --use-strict ./dist/index.js",
     "start:prod-local": "node --inspect --use-strict ./dist/index.js --local=true",
-
     "start:dev-all": "npm run build:link && npm run build:dev && npm run start:dev",
     "start:prod-all": "npm run build:link && npm run build:prod && npm run start:prod",
     "start:prod-local-all": "npm run build:link && npm run build:prod && npm run start:prod-local"
@@ -47,6 +41,7 @@
     "clean-webpack-plugin": "^2.0.1",
     "cookie-parser": "^1.4.4",
     "copy-webpack-plugin": "^5.0.2",
+    "css-loader": "^2.1.1",
     "es6-promisify": "^6.0.0",
     "eslint": "^5.16.0",
     "eslint-loader": "^2.1.2",
@@ -57,6 +52,7 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^4.0.0-beta.5",
     "javascript-time-ago": "^1.0.31",
+    "mini-css-extract-plugin": "^0.5.0",
     "mongoose": "^5.4.22",
     "node-sass": "^4.11.0",
     "pug": "^2.0.3",
@@ -72,8 +68,6 @@
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.2.1",
     "webpack-merge": "^4.2.1",
-    "winston": "^3.0.0-rc5",
-    "css-loader": "^2.1.1",
-    "mini-css-extract-plugin": "^0.5.0"
+    "winston": "^3.0.0-rc5"
   }
 }

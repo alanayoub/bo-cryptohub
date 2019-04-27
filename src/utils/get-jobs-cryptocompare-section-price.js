@@ -32,7 +32,7 @@ module.exports = async function getJobsCryptocompareSectionPrice(queue, bootstra
      const limit = settings.maxRecordsScraped;
      let items = [];
      let order;
-     for (let item of Object.values(bootstrapData.coinList.Data)) {
+     for (let item of Object.values(bootstrapData.coinList)) {
        order = item['SortOrder'];
        if (order < limit) {
          items[order] = item;

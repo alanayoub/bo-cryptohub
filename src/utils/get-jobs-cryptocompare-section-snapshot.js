@@ -14,7 +14,7 @@ module.exports = async function getJobsCryptocompareSectionSnapshot(queue, boots
     let jobs = 0;
     let counter = 0;
     const groupKey = settings.tagKeyCryptocompareSnapshotGrouped`${{}}`;
-    const ids = Object.values(bootstrapData.coinList.Data).map(v => v.Id);
+    const ids = Object.values(bootstrapData.coinList).map(v => v.Id);
     const length = ids.length;
     for (const id of ids) {
       counter++;

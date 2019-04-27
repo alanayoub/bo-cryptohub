@@ -352,8 +352,8 @@ export default function formatterCryptocompareSectionExchangesList(response, tim
 
       let result = {};
       const map = bootstrapData['symbolIdMap'];
-      if (bootstrapData.coinList.Data) {
-        const coinList = bootstrapData.coinList.Data;
+      if (bootstrapData.coinList) {
+        const coinList = bootstrapData.coinList;
         let id;
         let symbol;
         for ([symbol] of Object.entries(coinList)) {

@@ -32,7 +32,7 @@ module.exports = async function getJobsCryptocompareSectionTotalVolFull(queue, b
      // const limit = 400;
      // let items = [];
      // let order;
-     // for (let item of Object.values(bootstrapData.coinList.Data)) {
+     // for (let item of Object.values(bootstrapData.coinList)) {
      //   order = item['SortOrder'];
      //   if (order < limit) {
      //     items[order] = item;

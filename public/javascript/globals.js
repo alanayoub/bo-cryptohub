@@ -30,7 +30,7 @@ window.bo = {
 
 window.refs = {
   store: [], // the last version of the packed data
-  rowData: [],
+  rowData: null,
   emitData: [],
 };
 

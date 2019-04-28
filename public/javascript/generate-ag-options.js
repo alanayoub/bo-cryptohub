@@ -1,5 +1,9 @@
 'use strict';
 
+// Cryptohub util functions
+import convertWorkingDataToRowData    from './utils/convert-working-data-to-row-data.js';
+import updateOverview                 from './utils/view-update-overview.js';
+
 // ag-grid config
 import columnLibrary     from './column-library.js';
 import defaultConfig     from './default-config.js';

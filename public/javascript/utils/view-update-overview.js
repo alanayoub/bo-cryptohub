@@ -26,9 +26,13 @@ export default function (data) {
   }
 
   const total = up + dn + nc;
-  const upPer = Math.floor(up / (total / 100));
-  const dnPer = Math.floor(dn / (total / 100));
-  const ncPer = Math.floor(nc / (total / 100));
+  const placeholder = '-';
+  let upPer = Math.floor(up / (total / 100));
+  let dnPer = Math.floor(dn / (total / 100));
+  let ncPer = Math.floor(nc / (total / 100));
+  upPer = isNaN(upPer) ? placeholder : upPer;
+  dnPer = isNaN(upPer) ? placeholder : dnPer;
+  ncPer = isNaN(upPer) ? placeholder : ncPer;
   document.querySelector('.ch-direction .ch-up .ch-val').innerHTML = `${upPer}%`;
   document.querySelector('.ch-direction .ch-dn .ch-val').innerHTML = `${dnPer}%`;
   document.querySelector('.ch-direction .ch-nc .ch-val').innerHTML = `${ncPer}%`;

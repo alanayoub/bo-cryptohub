@@ -72,10 +72,30 @@ h1 {
 
 #updated {
   position: absolute;
-  top: 25px;
-  right: 10px;
+  top: 29px;
+  right: 5px;
   color: #ffffffcc;
 }
+
+
+/*
+ *
+ * Mega menu placeholder
+ *
+ */
+.ch-megamenu {
+    position: absolute;
+    top: 28px;
+    left: 435px;
+    line-height: 23px;
+    padding: 0 5px;
+}
+
+.ch-megamenu a {
+    color: #fff !important;
+    text-decoration: none;
+}
+
 
 .cryptohub-analytics-priceGroup {}
 .cryptohub-analytics-supplyGroup {}
@@ -404,19 +424,55 @@ h1 {
  *
  */
 .ch-direction {
-  top: 0;
-  left: 627px;
+  top: 32px;
   line-height: 12px;
-  padding: 5px;
   color: #ccc;
-  background: #fff;
-  border-radius: 0 0 2px 2px;
-
-  /* Center align absoute position element - Move to separate class */
   position: absolute;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%)
+  left: 189px;
+  cursor: default;
+}
+
+.ch-direction .ch-data {
+  background: #fff;
+  border-radius: 2px 0 0 0;
+  padding: 5px;
+}
+
+.ch-direction .ch-total {
+  padding: 5px;
+  background: #f1f1f1;
+  color: #aaa;
+  border-left: 1px solid #ddd;
+}
+
+.ch-direction .ch-total > span {
+  padding: 4px;
+  position: relative;
+}
+
+.ch-direction .ch-social {
+  padding: 5px;
+  background: #3094e0;
+  border-radius: 0 2px 0 0;
+  cursor: pointer;
+}
+
+.ch-direction .ch-social:hover {
+  background: #0c7abf;
+}
+
+.ch-direction .ch-social a,
+.ch-direction .ch-social a:hover {
+  text-decoration: none;
+  color: #fff;
+}
+
+.ch-direction .ch-social .fa-twitter {
+  margin-right: 4px;
+}
+
+.ch-direction .ch-social-twitter {
+  padding: 0 4px;
 }
 
 .ch-direction .ch-up {
@@ -434,20 +490,18 @@ h1 {
 .ch-direction .ch-symbol {
   font-size: 17px;
   display: inline-block;
-  padding: 0 5px;
+  padding: 0;
+}
+
+.ch-nc .ch-symbol {
+  padding: 0 0 0 4px;
 }
 
 .ch-direction .ch-up,
 .ch-direction .ch-dn,
 .ch-direction .ch-nc {
-  padding: 4px 6px;
-  margin-right: 4px;
-}
-
-.ch-total > span {
-  padding: 4px 4px 4px 4px;
-  position: relative;
-  left: -5px;
+  padding: 4px;
+  margin-right: 0;
 }
 
 /*

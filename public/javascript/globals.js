@@ -52,6 +52,6 @@ window.bo.func.updated = function (when) {
 
   if (when === 'now') window.timestamp = new Date();
   const time = timeAgo(window.timestamp);
-  document.querySelector('#updated').innerHTML = `Last Updated: ${time}`;
+  document.querySelector('#updated').innerHTML = `Updated ${time} ago`;
 
 }

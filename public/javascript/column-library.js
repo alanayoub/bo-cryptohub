@@ -100,7 +100,8 @@ const columnDefs = {
     cellRendererParams: {
       currency: 'USD',
     },
-    onCellClicked: partialApplication(cellOnClickTradingview, 'USD'),
+    // onCellClicked: partialApplication(cellOnClickTradingview, 'USD'),
+
   },
 
   //

@@ -15,13 +15,25 @@
  *
  */
 export default function popDiv(element, content, tippyOptions = {}) {
-  const boundary = document.querySelector('.ag-body');
+  const appendTo = document.querySelector('.ag-body');
   const defaultTippyOptions = {
+    popperOptions: {
+      modifiers: {
+        preventOverflow: {
+          escapeWithReference: true,
+        },
+        hide: {
+          enabled: false
+        }
+      },
+    },
     content,
-    boundary,
+    appendTo,
+    flip: false,
     arrow: false,
     theme: 'light',
     trigger: 'click',
+    multiple: true,
     allowHTML: true,
     placement: 'bottom-start',
     showOnInit: true,
@@ -31,4 +43,5 @@ export default function popDiv(element, content, tippyOptions = {}) {
     interactiveDebounce: 1,
   }
   tippy(element, Object.assign(defaultTippyOptions, tippyOptions));
+  return element;
 }

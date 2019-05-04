@@ -4,14 +4,16 @@ import globals                        from './globals.js';
 
 // Binary Overdose Projects
 import { DataTable }                  from './libs/bo-datatable-client';
-import { partialApplication }         from './libs/bo-utils-client';
+
+// Cryptohub classes
+import CellInteractions               from './classes/class-cell-interactions.js';
 
 // Cryptohub util functions
 import convertWorkingDataToRowData    from './utils/convert-working-data-to-row-data.js';
 import updateOverview                 from './utils/view-update-overview.js';
 
 // ag-grid config
-import generateAgOptions              from './generate-ag-options.js';
+import generateAgOptions              from './ag-grid-options-generate.js';
 
 // CSS
 import style                          from '../stylesheet/index.css';
@@ -73,6 +75,8 @@ function storeEmitHandler(data) {
   }
 
 }
+
+window.bo.inst.cellInteractions = new CellInteractions();
 
 const socket = io();
 const agOptions = generateAgOptions();

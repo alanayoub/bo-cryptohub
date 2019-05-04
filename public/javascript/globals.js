@@ -25,7 +25,8 @@ window.initData = window.initData || {};
 window.initStore = window.initStore || {};
 
 window.bo = {
-  func: {}
+  func: {},
+  inst: {}
 };
 
 window.refs = {

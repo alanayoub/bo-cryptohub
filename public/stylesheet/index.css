@@ -396,7 +396,7 @@ h1 {
 
 .ag-theme-balham .ag-row-selected {
   border-bottom-color: #d9dcde!important;
-  background-color: #ECF0F1!important;
+  background-color: transparent!important;
 }
 
 .ag-theme-balham .ag-icon-desc,
@@ -504,6 +504,32 @@ h1 {
   margin-right: 0;
 }
 
+/**
+ *
+ * Cell Hover
+ *
+ */
+.ch-cell-hover {
+  border: 1px solid #48a5e7!important;
+  width: 32px;
+  height: 32px;
+}
+
+.ch-tippy-cell-hover {
+  width: 34px;
+  height: 34px;
+  background: #48a5e7;
+  color: #fff;
+}
+
+.ch-icon .fa-chevron-down {
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  font-size: 16px;
+}
+
 /*
  *
  * This won't work untill i setup the ag-grid build and use SASS to override the theme
@@ -520,12 +546,27 @@ h1 {
 
 .ag-cell-data-changed-animation {}
 
-/*
-.ag-theme-balham .ag-cell-data-changed {
-  background-color: #fff600;
+.ag-cell[data-ch-open='true'] {
+  border: 1px solid #0091EA!important;
+  background-color: #0091EA11!important;
 }
-.ag-theme-balham .ag-cell-focus {
-    border: 1px solid #0091EA;
-    outline: initial;
+
+/**
+ *
+ * Note sure if there are any adverse effects of this yet but
+ * it seems required to have the "tippy" stay within the ag-body element
+ *
+ */
+.ag-layout-normal .ag-body {
+  overflow: hidden;
 }
-*/
+
+/* .ag-theme-balham .ag-cell-data-changed { */
+/*   background-color: #fff600; */
+/* } */
+
+/* .ag-theme-balham .ag-cell-focus { */
+/*   border: 1px solid #0091EA!important; */
+/*   background-color: #0091EA11!important; */
+/*   outline: initial!important; */
+/* } */

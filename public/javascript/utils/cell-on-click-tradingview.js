@@ -2,7 +2,6 @@
 
 // Binary Overdose Projects
 import { getRandomInt }                   from '../libs/bo-utils-client';
-import { htmlToggleClass }                from '../libs/bo-utils-client';
 import { htmlPollElement }                from '../libs/bo-utils-client';
 import { partialApplication }             from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
@@ -148,7 +147,6 @@ export default function cellOnClickTradingview(symbolTo, params) {
   const content = initPug['ch-tippy-click-tradingview']({id});
   const $cell = params.event.target.closest('.ag-cell');
   popDiv($cell, content);
-  htmlToggleClass($cell, 'ch-cell-active');
   htmlPollElement(cssId, 100, partialApplication(loadTradingview, params, id, symbolTo));
 
 }

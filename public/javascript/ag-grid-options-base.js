@@ -96,13 +96,26 @@ export default {
 
   columnDefs: [],
 
-  // onCellMouseOver(params) {
-  //   console.log(arguments);
-  // },
+  onCellMouseOver(params) {
+    const field = params.colDef.field;
+    let action = null;
+    if (field === 'cc-total-vol-full-PRICE') {
+      action = 'tradingview'
+    }
+    window.bo.inst.cellInteractions.mouseOver(params, action);
+  },
 
-  // onCellMouseOut(params) {
-  //   console.log(arguments);
-  // },
+  onCellMouseOut(params) {
+    window.bo.inst.cellInteractions.mouseOut(params);
+  },
+
+  onVirtualColumnsChanged(params) {
+    console.log(params);
+  },
+
+  onVirtualRowRemoved(params) {
+    console.log(params);
+  },
 
   rowHeight: 35,
 

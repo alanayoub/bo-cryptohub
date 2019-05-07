@@ -1,20 +1,21 @@
 'use strict'
 
 // Binary Overdose Projects
-import { getRandomInt }               from '../libs/bo-utils-client';
-import { partialApplication }         from '../libs/bo-utils-client';
-import { htmlToggleClass }            from '../libs/bo-utils-client';
+import { getRandomInt }                   from '../libs/bo-utils-client';
+import { partialApplication }             from '../libs/bo-utils-client';
+import { htmlToggleClass }                from '../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 
 // Cryptohub util functions
-import popDiv                         from '../utils/popdiv.js';
-import initPug                        from '../generated/init-pug.generated.js';
+import popDiv                             from '../utils/popdiv.js';
+import initPug                            from '../generated/init-pug.generated.js';
 
-import cellOnClickTradingview         from '../utils/cell-on-click-tradingview.js';
+import cellOnClickTradingview             from '../utils/cell-on-click-tradingview.js';
+import cellOnClickExchanges               from '../utils/cell-on-click-exchanges.js';
 
 export default class CellInteractions {
 
   constructor() {
-    this.hovering$cell = null;
     this.openItems = [];
     this.tippyOptions = {
       theme: 'light',
@@ -33,26 +34,96 @@ export default class CellInteractions {
 
   /**
    *
+   * Get Cell Data
+   *
+   * @param {Object} params
+   * @return {Object}
+   *
+   */
+  static getCellData(params) {
+
+    let $from = params.event.fromElement;
+    let fromIsCell;
+    let fromIsOpen;
+    let $fromCell;
+    if ($from) {
+      $from      = $from.closest('.ag-cell')
+      fromIsCell = !!$from;
+      $fromCell  = fromIsCell && $from;
+      fromIsOpen = fromIsCell && $from.dataset.chOpen === 'true';
+    }
+
+    let $to = params.event.toElement;
+    let toIsCell;
+    let toIsOpen;
+    let $toCell;
+    if ($to) {
+      $to      = $to.closest('.ag-cell');
+      toIsCell = !!$to;
+      $toCell  = toIsCell && $to;
+      toIsOpen = toIsCell && $to.dataset.chOpen === 'true';
+    }
+
+    return {
+      $to,
+      toIsCell,
+      toIsOpen,
+      $toCell,
+      $from,
+      fromIsCell,
+      fromIsOpen,
+      $fromCell,
+    }
+
+  }
+
+  /**
+   *
    * Open a popdiv
    *
    */
-  static open(params, action) {
+  static open(params) {
 
     const $cell = params.event.srcElement.closest('.ag-cell');
-    // htmlToggleClass($cell, 'ch-cell-active');
+    const field = params.colDef.field;
+    const tippy = $cell._tippy;
+    if (!tippy) return;
 
-    // this.setMouseOverState($cell);
-    switch (action) {
-      case 'tradingview':
+    switch (field) {
+
+      case 'cc-total-vol-full-PRICE':
         $cell.dataset.chOpen = true;
-        $cell._tippy.set({
+        tippy.set({
           hideOnClick: 'false',
         });
-        cellOnClickTradingview('USD', params);
+        cellOnClickTradingview(params);
         $cell.$popDivTippy = $cell._tippy;
+        window.bo.func.openCells.addOpen(params);
         break;
+
+      case 'cryptohub-price-btc':
+        $cell.dataset.chOpen = true;
+        tippy.set({
+          hideOnClick: 'false',
+        });
+        cellOnClickTradingview(params);
+        $cell.$popDivTippy = $cell._tippy;
+        window.bo.func.openCells.addOpen(params);
+        break;
+
+      case 'cryptohub-numberOfExchanges':
+        $cell.dataset.chOpen = true;
+        tippy.set({
+          hideOnClick: 'false',
+        });
+        cellOnClickExchanges(params);
+        $cell.$popDivTippy = $cell._tippy;
+        window.bo.func.openCells.addOpen(params);
+        break;
+
       default:
         // do nothing
+
     }
 
   }
@@ -61,12 +132,27 @@ export default class CellInteractions {
    *
    * Close a popdiv
    *
+   * TODO: fix this so you dont have to pass params
+   *
    */
-  static close(params) {
-    const $cell = params.event.srcElement.closest('.ag-cell');
+  static close({params, $cell, row, field}) {
+    if (!$cell) {
+      $cell = params.event.srcElement.closest('.ag-cell');
+    }
+
+    if ($cell.dataset.chOpen === 'true') {
+      CellInteractions.setMouseOutState($cell);
+    }
+
+    $cell.dataset.chOpen = false;
     if ($cell.$popDivTippy) {
       $cell.$popDivTippy.destroy();
     }
+    if ($cell.$triggerTippy) {
+      $cell.$triggerTippy.reference.classList.remove('ch-cell-hover');
+      $cell.$triggerTippy.destroy();
+    }
+    window.bo.func.openCells.removeOpen({params, $cell, row, field});
   }
 
   /**
@@ -79,7 +165,6 @@ export default class CellInteractions {
     $cell.$triggerTippy = $cell._tippy;
     $cell.classList.add('ch-cell-hover');
     $cell.dataset.chHover = 'true';
-    this.hovering$cell = $cell;
   }
 
   /**
@@ -87,17 +172,16 @@ export default class CellInteractions {
    * Set the mouse out state of a cell
    *
    */
-  setMouseOutState($cell) {
+  static setMouseOutState($cell) {
     $cell.dataset.chHover = false;
     $cell.dataset.chOpen = false;
-    this.hovering$cell = null;
     if ($cell.$triggerTippy) {
       $cell.$triggerTippy.reference.classList.remove('ch-cell-hover');
       $cell.$triggerTippy.destroy();
-      if ($cell.$triggerTippy) {
-        $cell.$trigger.removeEventListener('click', this.triggerClickHandler);
-        $cell.$triggerTippy.destroy();
-      }
+    }
+    if ($cell.$trigger) {
+      $cell.$trigger.removeEventListener('click', CellInteractions.triggerClickHandler);
+      $cell.$triggerTippy.destroy();
     }
   }
 
@@ -106,14 +190,13 @@ export default class CellInteractions {
    * User clicked on a trigger
    *
    */
-  triggerClickHandler(context, params, action) {
+  static triggerClickHandler(params) {
     const $cell = params.event.srcElement.closest('.ag-cell');
     if ($cell.dataset.chOpen === 'true') {
-      context.setMouseOutState($cell);
-      CellInteractions.close(params);
+      CellInteractions.close({params});
     }
     else {
-      CellInteractions.open(params, action);
+      CellInteractions.open(params);
     }
   }
 
@@ -124,25 +207,20 @@ export default class CellInteractions {
    */
   mouseOut(params) {
 
-    const $cell = params.event.srcElement.closest('.ag-cell');
-    if (!$cell.$trigger) {
-      this.setMouseOutState($cell);
+    const typeArr = gnp(params, 'colDef.type') || [];
+    if (!typeArr.includes('cryptohubHover')) {
+      return;
     }
 
-    // const $cell = params.event.srcElement.closest('.ag-cell');
-    // if (this.hovering$cell && !hovering$cellOpen) {
-    //   this.setMouseOutState(this.hovering$cell);
-    // }
+    const { $to, $from, fromIsCell, fromIsOpen } = CellInteractions.getCellData(params);
+    if ($to === $from) {
+      return;
+    }
 
-  //   const hovering = $cell.dataset.chHover === 'true';
-  //   if (hovering) {
-  //     $cell.dataset.chHover = false;
-  //     // $cell.dataset.chOpen = false;
-  //     if ($cell._tippy) {
-  //       $cell._tippy.reference.classList.remove('ch-cell-hover');
-  //       $cell._tippy.destroy();
-  //     }
-  //   }
+    if (fromIsCell && !fromIsOpen) {
+      CellInteractions.setMouseOutState($from);
+    }
+
   }
 
   /**
@@ -150,45 +228,41 @@ export default class CellInteractions {
    * Mouse over handler
    *
    */
-  mouseOver(params, action) {
+  mouseOver(params) {
 
-    const id = getRandomInt();
-    const $cell = params.event.srcElement.closest('.ag-cell');
-    const width = $cell.scrollWidth;
-    const height = $cell.scrollHeight;
-    const content = initPug['ch-tippy-cell-hover']({id});
-    const hovering$cellOpen = this.hovering$cell && this.hovering$cell.dataset.chOpen === 'true';
-
-    // If we are hovering over one that is already open
-    if ($cell.dataset.chOpen === 'true') return;
-
-    // If this is the same cell
-    if ($cell === this.hovering$cell) return
-
-    if (this.hovering$cell && !hovering$cellOpen) {
-      this.setMouseOutState(this.hovering$cell);
+    const typeArr = gnp(params, 'colDef.type') || [];
+    if (!typeArr.includes('cryptohubHover')) {
+      return;
     }
 
-    // If there are no actions
-    if (!action) return;
+    const { $to, $from, toIsOpen, toIsCell } = CellInteractions.getCellData(params);
+    if ($to === $from) {
+      return;
+    }
 
-    if ($cell.dataset.chHover !== 'true') {
+    if (toIsCell && !toIsOpen) {
+
+      const id = getRandomInt();
+      const $cell = params.event.srcElement.closest('.ag-cell');
+      const content = initPug['ch-tippy-cell-hover']({id});
+
       this.setMouseOverState($cell, content);
+
+      const $trigger = document.querySelector(`.ch-tippy-cell-hover-${id}`);
+      if (!$trigger) {
+        return;
+      }
+
+      $cell.$trigger = $trigger;
+      $cell.$triggerTippy = $cell._tippy;
+
+      $trigger.addEventListener(
+        'click',
+        partialApplication(CellInteractions.triggerClickHandler, params),
+        false
+      );
+
     }
-
-    // this.active$cell = $cell;
-
-    const $trigger = document.querySelector(`.ch-tippy-cell-hover-${id}`);
-    if (!$trigger) return;
-
-    $cell.$trigger = $trigger;
-    $cell.$triggerTippy = $cell._tippy;
-
-    $trigger.addEventListener(
-      'click',
-      partialApplication(this.triggerClickHandler, this, params, action),
-      false
-    );
 
   }
 

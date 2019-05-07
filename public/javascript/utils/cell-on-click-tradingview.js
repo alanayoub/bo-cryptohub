@@ -67,10 +67,11 @@ function exchangeSupported(exchanges) {
  * @return {String|undefined} symbol - tradingview symbol
  *
  */
-function tradingviewGetSymbol(params, symbolTo = 'BTC') {
+function tradingviewGetSymbol(params) {
 
   const map = gnp(ch, 'exchange-map-idName');
   const symbolFrom = gnp(params, 'data.cc-coinlist-Symbol.value');
+  const symbolTo = gnp(params, 'colDef.cellRendererParams.symbolTo');
 
   //
   // NOTE: don't use exchange, tradingview finds a default
@@ -103,12 +104,11 @@ function tradingviewGetSymbol(params, symbolTo = 'BTC') {
  *
  * @param {Object} params - ag-grid cell params object
  * @param {String} container_id - html id of where to load the widget
- * @param {STring} [symbolTo] - to symbol, defaults to BTC
  * @return {undefined}
  *
  */
-function loadTradingview(params, container_id, symbolTo = 'BTC') {
-  const symbol = tradingviewGetSymbol(params, symbolTo);
+function loadTradingview(params, container_id) {
+  const symbol = tradingviewGetSymbol(params);
   if (symbol) {
     new TradingView.widget({
       symbol,
@@ -140,13 +140,13 @@ function loadTradingview(params, container_id, symbolTo = 'BTC') {
  *
  *
  */
-export default function cellOnClickTradingview(symbolTo, params) {
+export default function cellOnClickTradingview(params) {
 
   const id = `ch-tippy-${getRandomInt()}`;
   const cssId = `#${id}`;
   const content = initPug['ch-tippy-click-tradingview']({id});
   const $cell = params.event.target.closest('.ag-cell');
   popDiv($cell, content);
-  htmlPollElement(cssId, 100, partialApplication(loadTradingview, params, id, symbolTo));
+  htmlPollElement(cssId, 100, partialApplication(loadTradingview, params, id));
 
 }

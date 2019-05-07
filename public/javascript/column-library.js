@@ -14,9 +14,7 @@ import cellRendererCurrency               from './utils/cell-renderer-currency.j
 import cellRendererExchanges              from './utils/cell-renderer-exchanges.js';
 import cellRendererTradingview            from './utils/cell-renderer-tradingview.js';
 
-// ag-grid cell on click handlers
-import cellOnClickExchanges               from './utils/cell-on-click-exchanges.js';
-import cellOnClickTradingview             from './utils/cell-on-click-tradingview.js';
+import onCellClicked                      from './utils/on-cell-clicked.js';
 
 // ag-grid filter comparators
 import sortNumbers                        from './utils/sort-numbers.js';
@@ -95,12 +93,14 @@ const columnDefs = {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
+      'cryptohubHover'
     ],
     cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
       currency: 'USD',
+      symbolTo: 'USD'
     },
-    // onCellClicked: partialApplication(cellOnClickTradingview, 'USD'),
+    onCellClicked,
 
   },
 
@@ -116,12 +116,14 @@ const columnDefs = {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
+      'cryptohubHover'
     ],
     cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
       currency: 'SAT',
+      symbolTo: 'BTC'
     },
-    onCellClicked: partialApplication(cellOnClickTradingview, 'BTC'),
+    onCellClicked,
   },
 
   //
@@ -337,12 +339,13 @@ const columnDefs = {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
+      'cryptohubHover'
     ],
     cellStyle: {
       padding: 0
     },
     cellRenderer: cellRendererExchanges,
-    onCellClicked: cellOnClickExchanges,
+    onCellClicked,
   },
 
   //

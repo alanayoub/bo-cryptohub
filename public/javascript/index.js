@@ -18,6 +18,30 @@ import generateAgOptions              from './ag-grid-options-generate.js';
 // CSS
 import style                          from '../stylesheet/index.css';
 
+//
+// TODO: load default config
+// set changes onto new object
+// update url on change
+//
+import defaultConfig                  from './default-config.js';
+
+class State {
+
+  constructor(config) {
+    // Sanitise
+    this.state = config;
+  }
+
+  setProperty() {}
+
+  getProperty() {}
+
+  updateUrl() {}
+
+}
+
+window.bo.inst.state = new State(defaultConfig);
+
 /**
  *
  * Handle data events

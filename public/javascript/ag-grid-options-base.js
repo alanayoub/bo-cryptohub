@@ -97,12 +97,7 @@ export default {
   columnDefs: [],
 
   onCellMouseOver(params) {
-    const field = params.colDef.field;
-    let action = null;
-    if (field === 'cc-total-vol-full-PRICE') {
-      action = 'tradingview'
-    }
-    window.bo.inst.cellInteractions.mouseOver(params, action);
+    window.bo.inst.cellInteractions.mouseOver(params);
   },
 
   onCellMouseOut(params) {
@@ -110,11 +105,41 @@ export default {
   },
 
   onVirtualColumnsChanged(params) {
-    console.log(params);
+    const api = params.columnApi;
+    const visibleColumns = api.getAllDisplayedVirtualColumns().map(v => v['colId']);
+    const opts = window.bo.opts;
+    for (let field of Object.keys(opts.openCells)) {
+      if (!visibleColumns.includes(field)) {
+        for (let obj of opts.openCells[field]) {
+          const row = Object.keys(obj)[0];
+          const $cell = obj[row];
+          window.bo.clas.CellInteractions.close({$cell, row, field});
+        }
+
+      }
+    }
   },
 
   onVirtualRowRemoved(params) {
-    console.log(params);
+    if (params.type === 'virtualRowRemoved') {
+      const removedRowIndex = params.rowIndex;
+      const openCells = window.bo.opts.openCells;
+      for (let [column, valueArray] of Object.entries(openCells)) {
+        const rows = valueArray.map(v => +Object.keys(v)[0]);
+        if (rows.includes(removedRowIndex)) {
+
+          // Close popdivs
+          for (let [field, cells] of Object.entries(openCells)) {
+            for (let cell of cells) {
+              const row = Object.keys(cell)[0];
+              const $cell = cell[row];
+              window.bo.clas.CellInteractions.close({$cell, row, field});
+            }
+          }
+
+        }
+      }
+    }
   },
 
   rowHeight: 35,

@@ -2,7 +2,6 @@
 
 // Binary Overdose Projects
 import { getRandomInt }                   from '../libs/bo-utils-client';
-import { htmlToggleClass }                from '../libs/bo-utils-client';
 import { numberGroupDigits }              from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 
@@ -148,7 +147,6 @@ export default function cellOnClickExchanges(params) {
   const contentPopdiv = initPug['ch-tippy-click-tradingview']({id});
   const contentExchange = exchangeHtmlContent();
 
-  htmlToggleClass($cell, 'ch-cell-active');
   popDiv($cell, contentPopdiv);
   document.querySelector(cssId).innerHTML = contentExchange;
 

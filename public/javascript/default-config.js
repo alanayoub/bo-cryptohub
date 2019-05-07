@@ -8,7 +8,17 @@ export default {
     {id: 'rowIndex'},
     {id: 'name'},
     {id: 'sectors'},
-    {id: 'priceUSD'},
+    {
+      id: 'priceUSD',
+      hidden: 0,
+      width: 150,
+      filter: '>100500',
+      selections: [
+        // 10: {
+        //   // selection options
+        // }
+      ]
+    },
     {id: 'priceBTC'},
     {id: 'athUSD'},
     {id: 'cycleLowUSD'},

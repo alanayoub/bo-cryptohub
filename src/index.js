@@ -289,7 +289,6 @@ try {
         },
         onBeforeEmit: partialApplication(storeOnBeforeEmit, {}),
         onBeforeBootstrapSave: (data) => {
-          debugger;
           return data;
         }
       }

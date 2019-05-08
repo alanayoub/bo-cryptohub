@@ -11,6 +11,7 @@ import valueFormatterPercentChange from './utils/value-formatter-percent-change.
 import CompoundCellRenderer        from './utils/class-compound-cell-renderer.js';
 
 // ag-grid custom filters
+import filterText                  from './utils/filter-text.js';
 import filterNumber                from './utils/filter-number.js';
 import filterFloatingNumber        from './utils/filter-floating-number.js';
 
@@ -89,7 +90,18 @@ export default {
     },
 
     cryptohubText: {
-      filter: 'agTextColumnFilter',
+
+      // Filter
+      filter: filterText,
+      suppressMenu: true,
+
+      // Floating filter
+      floatingFilterComponent: filterFloatingNumber,
+      floatingFilterComponentParams: {
+        suppressMenu: true,
+        suppressFilterButton: true
+      },
+
     },
 
   },

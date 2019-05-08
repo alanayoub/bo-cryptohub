@@ -1,98 +1,57 @@
 'use strict';
 
-function NumberFilter() {}
+import Filter from '../classes/class-filter.js';
 
-NumberFilter.prototype.init = function (params) {
-    this.valueGetter = params.valueGetter;
-    this.filterText = null;
-    this.params = params;
-    this.setupGui();
-};
+export default class NumberFilter extends Filter {
 
-// not called by ag-Grid, just for us to help setup
-NumberFilter.prototype.setupGui = function () {
-    this.gui = document.createElement('div');
-    this.gui.innerHTML =
-        '<div style="padding: 4px; width=100px">' +
-        '<div style="font-weight: bold;">Greater than: </div>' +
-        '<div><input style="margin: 4px 0px 4px 0px; width: 100px" type="text" id="filterText" placeholder="Number of medals..."/></div>' +
-        '</div>';
-
-    var that = this;
-    this.onFilterChanged = function() {
-        that.extractFilterText();
-        that.params.filterChangedCallback();
-    };
-
-    this.eFilterText = this.gui.querySelector('#filterText');
-    this.eFilterText.addEventListener("input", this.onFilterChanged);
-};
-
-NumberFilter.prototype.extractFilterText = function () {
-    this.filterText = this.eFilterText.value;
-};
-
-NumberFilter.prototype.getGui = function () {
-    return this.gui;
-};
-
-//
-// TODO: =0 doesnt work
-// TODO: decimals dont work
-//
-NumberFilter.prototype.doesFilterPass = function (params) {
-  const valueGetter = this.valueGetter;
-  const value = valueGetter(params).value;
-
-  const input = this.filterText.replace(/\s/g,'');
-  const split = input.match(/[0-9]+|>=|<=|[<>&|()]/gi);
-  const whitelist = ['<', '>', '<=', '>=', '&', '|', '(', ')'];
-  const signs = split.filter(isNaN);
-  const areAllValid = signs.some(sign => {
-    return whitelist.includes(sign);
-  });
-
-  const numBeforeSigns = ['<', '>', '<=', '>='];
-  const num = 80;
-  const generateExpression = num => {
-    return split.reduce((acc, val, idx) => {
-      if (numBeforeSigns.includes(val)) acc.push(num);
-      acc.push(isNaN(val) ? val : Number(val))
-      return acc;
-    }, []).join('');
+  constructor(params) {
+    super(params);
   }
 
-  const expressionStr = generateExpression(value);
+  //
+  // TODO: =0 doesnt work
+  // TODO: decimals dont work
+  //
+  doesFilterPass(params) {
 
-  let passed;
-  try {
-    passed = (new Function(`return ${expressionStr}`))();
-  }
-  catch (error) {
-    passed = 1;
-  }
+    // Remove spaces
+    const input = this.filterText.replace(/\s/g,'');
 
-  return passed;
-};
+    // Split on numbers or valid symbols
+    const split = input.match(/[0-9]+|>=|<=|[<>&|()]/gi);
 
-NumberFilter.prototype.isFilterActive = function () {
-    return  this.filterText !== null &&
-        this.filterText !== undefined &&
-        this.filterText !== '';
-};
+    if (!split) return 1;
 
-NumberFilter.prototype.getModel = function () {
-    return this.isFilterActive() ? this.eFilterText.value : null;
-};
+    // Check all signs against whitelist
+    const signs = split.filter(isNaN);
+    const whitelist = ['<', '>', '<=', '>=', '&', '|', '(', ')'];
+    const areAllValid = signs.some(sign => {
+      return whitelist.includes(sign);
+    });
 
-NumberFilter.prototype.setModel = function (model) {
-    this.eFilterText.value = model;
-    this.extractFilterText();
-};
+    const numBeforeSigns = ['<', '>', '<=', '>='];
+    const generateExpression = num => {
+      return split.reduce((acc, val, idx) => {
+        if (numBeforeSigns.includes(val)) acc.push(num);
+        acc.push(isNaN(val) ? val : Number(val))
+        return acc;
+      }, []).join('');
+    }
 
+    const value = this.valueGetter(params).value;
+    const expressionStr = generateExpression(value);
 
-NumberFilter.prototype.destroy = function () {
-    this.eFilterText.removeEventListener("input", this.onFilterChanged);
-};
+    let passed;
+    try {
+      passed = (new Function(`return ${expressionStr}`))();
+    }
+    catch (error) {
+      passed = 1;
+    }
 
-export default NumberFilter;
+    return passed;
+
+  };
+
+}
+

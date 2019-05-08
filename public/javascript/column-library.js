@@ -77,7 +77,7 @@ const columnDefs = {
     valueFormatter(params) {
       const value = gnp(params, 'value.value');
       if (!Array.isArray(value) || !value.length) return ch.emptyCellValue;
-      else return value;
+      else return value.join(', ');
     }
   },
 

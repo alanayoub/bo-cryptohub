@@ -56,6 +56,10 @@ module.exports = {
         to:   './javascript/libs/bo-datatable-client.js'
       },
       {
+        from: './node_modules/json-url/dist/browser/json-url-single.js',
+        to:   './javascript/libs/json-url-single.js'
+      },
+      {
         from: './public/*',
         to:   './',
         flatten: true

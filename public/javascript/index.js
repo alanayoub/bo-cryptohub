@@ -1,12 +1,17 @@
 'use strict';
 
+// Libs
+import '@babel/polyfill';
+
 import globals                        from './globals.js';
+import defaultConfig                  from './default-config.js';
 
 // Binary Overdose Projects
 import { DataTable }                  from './libs/bo-datatable-client';
 
 // Cryptohub classes
 import CellInteractions               from './classes/class-cell-interactions.js';
+import State                          from './classes/class-state.js';
 
 // Cryptohub util functions
 import convertWorkingDataToRowData    from './utils/convert-working-data-to-row-data.js';
@@ -17,30 +22,6 @@ import generateAgOptions              from './ag-grid-options-generate.js';
 
 // CSS
 import style                          from '../stylesheet/index.css';
-
-//
-// TODO: load default config
-// set changes onto new object
-// update url on change
-//
-import defaultConfig                  from './default-config.js';
-
-class State {
-
-  constructor(config) {
-    // Sanitise
-    this.state = config;
-  }
-
-  setProperty() {}
-
-  getProperty() {}
-
-  updateUrl() {}
-
-}
-
-window.bo.inst.state = new State(defaultConfig);
 
 /**
  *
@@ -101,16 +82,22 @@ function storeEmitHandler(data) {
 }
 
 window.bo.inst.cellInteractions = new CellInteractions();
+window.bo.inst.state = new State(defaultConfig);
+window.bo.inst.state.init().then(() => {
 
-const socket = io();
-const agOptions = generateAgOptions();
-const gridElement = document.querySelector('#ch-grid');
-const grid = new agGrid.Grid(gridElement, agOptions);
+  const socket = io();
+  const agOptions = generateAgOptions();
+  const gridElement = document.querySelector('#ch-grid');
+  const grid = new agGrid.Grid(gridElement, agOptions);
 
-if (!grid) throw new Error('Cant find grid');
+  if (!grid) throw new Error('Cant find grid');
 
-window.bo.func.updated('now');
-setInterval(window.bo.func.updated, 1000 * 1);
+  window.bo.func.updated('now');
+  setInterval(window.bo.func.updated, 1000 * 1);
 
-socket.on('data', dataEmitHandler);
-socket.on('store', storeEmitHandler);
+  socket.on('data', dataEmitHandler);
+  socket.on('store', storeEmitHandler);
+
+});
+
+

@@ -23,9 +23,7 @@ import { timeAgo }                    from './libs/bo-utils-client';
 
 // Cryptohub classes
 import CellInteractions               from './classes/class-cell-interactions.js';
-
-window.initData = window.initData || {};
-window.initStore = window.initStore || {};
+import State                          from './classes/class-state.js';
 
 window.bo = {
   clas: {},
@@ -41,35 +39,10 @@ window.bo = {
 };
 
 window.bo.clas.CellInteractions = CellInteractions;
+window.bo.clas.State = State;
 
-/**
- *
- * TODO: move
- *
- */
-window.bo.func.openCells.addOpen = function(params) {
-  const $cell = params.event.srcElement.closest('.ag-cell');
-  const field = params.colDef.field;
-  const rowIndex = params.rowIndex;
-  const openCells = window.bo.opts.openCells;
-  if (!openCells[field]) openCells[field] = [];
-  openCells[field].push({[rowIndex]: $cell});
-},
-
-/**
- *
- * TODO: move
- *
- */
-window.bo.func.openCells.removeOpen = function({params, $cell, row, field}) {
-  if (!$cell) $cell = params.event.srcElement.closest('.ag-cell');
-  if (!field) field = params.colDef.field;
-  if (!row) row = params.rowIndex;
-  const openCells = window.bo.opts.openCells;
-  if (!Array.isArray(openCells[field])) return;
-  const idx = openCells[field].indexOf(row);
-  openCells[field].splice(idx, 1);
-}
+window.initData = window.initData || {};
+window.initStore = window.initStore || {};
 
 window.refs = {
   store: [], // the last version of the packed data
@@ -86,15 +59,42 @@ window.timestamp = null;
 
 /**
  *
+ * TODO: move
+ *
+ */
+window.bo.func.openCells.addOpen = function(params) {
+  const $cell = params.event.srcElement.closest('.ag-cell');
+  const field = params.colDef.field;
+  const rowIndex = params.rowIndex;
+  const openCells = window.bo.opts.openCells;
+  if (!openCells[field]) openCells[field] = [];
+  openCells[field].push({[rowIndex]: $cell});
+};
+
+/**
+ *
+ * TODO: move
+ *
+ */
+window.bo.func.openCells.removeOpen = function({params, $cell, row, field}) {
+  if (!$cell) $cell = params.event.srcElement.closest('.ag-cell');
+  if (!field) field = params.colDef.field;
+  if (!row) row = params.rowIndex;
+  const openCells = window.bo.opts.openCells;
+  if (!Array.isArray(openCells[field])) return;
+  const idx = openCells[field].indexOf(row);
+  openCells[field].splice(idx, 1);
+}
+
+/**
+ *
  * Updated
  * @param {Date} when
  * @return void
  *
  */
 window.bo.func.updated = function (when) {
-
   if (when === 'now') window.timestamp = new Date();
   const time = timeAgo(window.timestamp);
   document.querySelector('#updated').innerHTML = `Updated ${time} ago`;
-
 }

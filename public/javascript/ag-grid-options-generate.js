@@ -1,13 +1,15 @@
 'use strict';
 
+// Cryptohub classes
+import State                          from './classes/class-state.js';
+
 // Cryptohub util functions
 import convertWorkingDataToRowData    from './utils/convert-working-data-to-row-data.js';
 import updateOverview                 from './utils/view-update-overview.js';
 
 // ag-grid config
-import columnLibrary     from './column-library.js';
-import defaultConfig     from './default-config.js';
-import agGridOptionsBase from './ag-grid-options-base.js';
+import columnLibrary                  from './column-library.js';
+import agGridOptionsBase              from './ag-grid-options-base.js';
 
 /**
  *
@@ -39,11 +41,13 @@ function generateColumnDefs(columns) {
  */
 function onGridReady(params) {
 
+  const state = window.bo.inst.state.get();
+
   // default sort order
   params.api.setSortModel([
     {
-      colId: columnLibrary[defaultConfig.sort.column].field,
-      sort: defaultConfig.sort.direction
+      colId: columnLibrary[state.sort.column].field,
+      sort: state.sort.direction
     }
   ]);
 
@@ -66,12 +70,14 @@ export default function generateAgOptions() {
   if (!window.bo) throw new Error('window.bo does not exist');
   if (!window.refs) throw new Error('window.refs does not exist');
 
+  const state = window.bo.inst.state.get();
+
   //
   // TODO: check if there is a url config
   // if there is use that and backfill with the default config
   // dont forget to make it very secure!!!
   //
-  const columnDefs = generateColumnDefs(defaultConfig.columns);
+  const columnDefs = generateColumnDefs(state.columns);
 
   const options = window.bo.agOptions = {
     ...agGridOptionsBase,

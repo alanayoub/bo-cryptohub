@@ -9,16 +9,20 @@ import defaultConfig                  from './default-config.js';
 // Binary Overdose Projects
 import { DataTable }                  from './libs/bo-datatable-client';
 
-// Cryptohub classes
+// Binary Overdose classes
 import CellInteractions               from './classes/class-cell-interactions.js';
 import State                          from './classes/class-state.js';
 
-// Cryptohub util functions
+// Binary Overdose views
+import EditDialogue                   from './views/edit-dialogue.js';
+
+// Binary Overdose util functions
 import convertWorkingDataToRowData    from './utils/convert-working-data-to-row-data.js';
 import updateOverview                 from './utils/view-update-overview.js';
 
 // ag-grid config
 import generateAgOptions              from './ag-grid-options-generate.js';
+import generateColumnDefs             from './ag-grid-column-defs-generate.js';
 
 // CSS
 import style                          from '../stylesheet/index.css';
@@ -92,11 +96,24 @@ window.bo.inst.state.init().then(() => {
 
   if (!grid) throw new Error('Cant find grid');
 
-  window.bo.func.updated('now');
-  setInterval(window.bo.func.updated, 1000 * 1);
-
   socket.on('data', dataEmitHandler);
   socket.on('store', storeEmitHandler);
+
+  window.bo.func.updated('now');
+  window.bo.inst.editDialogue = new EditDialogue('.ch-edit');
+
+  setInterval(window.bo.func.updated, 1000 * 1);
+
+  window.onhashchange = () => {
+
+    bo.inst.state.getUrl().then(state => {
+      const columns = state.columns;
+      const columnDefs = generateColumnDefs(columns);
+      bo.agOptions.api.columnController.setColumnDefs(columnDefs);
+      bo.inst.state.set('columns', columns);
+    });
+
+  }
 
 });
 

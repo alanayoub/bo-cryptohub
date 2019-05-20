@@ -1,0 +1,22 @@
+div(class='BO-edit-dialogue')
+
+  header
+    h2 #{header.title}
+    div #{header.subtitle}
+
+  section
+    div(class='bo-cols')
+      div(class='bo-col')
+        header Available Columns
+        ul(class='bo-available-columns')
+          each column in availableColumns
+            li
+              span(class='bo-column') #{column}
+      div(class='bo-col')
+        header Displayed Columns
+        ul(class='bo-active-columns')
+          each column in activeColumns
+            li
+              span(class='bo-column') #{column}
+
+  footer

@@ -1,0 +1,103 @@
+.BO-btn {
+   display: inline-block;
+   margin: 0 .5rem;
+   padding: 1rem 2rem;
+   border: none;
+   background-color: grey;
+   box-shadow: none;
+   color: #fff;
+   vertical-align: middle;
+   text-decoration: none;
+   font-size: inherit;
+   font-family: inherit;
+   line-height: normal;
+   cursor: pointer;
+   transition: background-color .4s ease;
+   &.bo-btn-secondary {
+     background-color: #808080;
+   }
+   &.bo-btn-primary {
+     background-color: #3498db;
+   }
+}
+
+.BO-edit-dialogue {
+  header {
+    margin: 0 0 20px 0;
+    h2 {
+      font-size: 32px;
+    }
+    div {
+      font-size: 14px;
+    }
+  }
+  section {
+
+    .bo-cols {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      width: 100%;
+      li {
+        position: relative;
+        display: block;
+        padding: .75rem 1.25rem;
+        margin-bottom: -1px;
+        border: 1px solid rgba(0,0,0,.125);
+        cursor: move;
+      }
+    }
+
+    .bo-col {
+      display: flex;
+      flex-direction: column;
+      flex-basis: 100%;
+      flex: 1;
+      max-height: 500px;
+      header {
+        margin: 0 0 10px 0;
+        font-weight: 600;
+      }
+    }
+
+    .bo-active-columns {
+      li {
+        &:first-child {
+          background-color: #eee!important;
+          color: #999;
+        }
+        background-color: #fff;
+        &:hover {
+          background-color: #eee;
+        }
+      }
+    }
+
+    .bo-available-columns {
+      li {
+        background-color: #eee;
+        &:hover {
+          background-color: #fff;
+        }
+      }
+    }
+
+    .bo-available-columns,
+    .bo-active-columns {
+      overflow-y: scroll;
+      height: 100%;
+      background: #f1f1f1;
+      border: 1px solid #f1f1f1
+    }
+
+    .bo-ghost {
+      /* opacity: .5; */
+      /* background: #eee!important; */
+    }
+
+    .bo-chosen {
+      background: #C8EBFB!important;
+    }
+
+  }
+}

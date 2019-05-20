@@ -1,5 +1,8 @@
 'use strict'
 
+// Binary Overdose Projects
+import { objectSetNestedProperty } from '../libs/bo-utils-client';
+
 import jsonUrl from '../libs/json-url-single.js';
 
 export default class State {
@@ -13,7 +16,6 @@ export default class State {
 
     this.defaultConfig = defaultConfig;
     this.baseUrl = `${window.location.protocol}//${window.location.host}/`;
-    this.queryProp = 'q';
     this.whitelist = ['sort', 'columns', 'portfolio', 'favourites'];
 
   }
@@ -72,6 +74,16 @@ export default class State {
 
   /**
    *
+   * Set
+   *
+   */
+  async set(path, data) {
+    objectSetNestedProperty(this, path, data);
+    await this.setUrl();
+  }
+
+  /**
+   *
    * Get Url
    *
    * Get the compressed url data, parse and return the object data
@@ -79,12 +91,10 @@ export default class State {
    */
   async getUrl() {
 
-    const url = new URL(window.location);
-    const params = new URLSearchParams(url.search.slice(1));
-    const queryValue = params.get(this.queryProp);
+    const fragmentId = window.location.hash.substr(1);
 
-    if (queryValue) {
-      return await State.urlDecode(queryValue);
+    if (fragmentId) {
+      return await State.urlDecode(fragmentId);
     }
     else {
       return void 0;
@@ -94,14 +104,9 @@ export default class State {
 
   async setUrl() {
 
-    const url = new URL(this.baseUrl);
     const state = this.get();
-    const params = new URLSearchParams();
     const query = await State.urlEncode(state);
-    params.set(this.queryProp, query);
-    const queryString = params.toString();
-
-    history.pushState(state, '/// Binary Overdose', `?${queryString}`);
+    window.location.hash = query;
 
   }
 

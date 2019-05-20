@@ -1,4 +1,97 @@
-module.exports = {'ch-tippy-cell-data': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;pug_debug_line = 1;
+module.exports = {'edit-dialogue': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (activeColumns, availableColumns, header) {;pug_debug_line = 1;
+pug_html = pug_html + "\u003Cdiv class=\"BO-edit-dialogue\"\u003E";
+;pug_debug_line = 3;
+pug_html = pug_html + "\u003Cheader\u003E";
+;pug_debug_line = 4;
+pug_html = pug_html + "\u003Ch2\u003E";
+;pug_debug_line = 4;
+pug_html = pug_html + (pug.escape(null == (pug_interp = header.title) ? "" : pug_interp)) + "\u003C\u002Fh2\u003E";
+;pug_debug_line = 5;
+pug_html = pug_html + "\u003Cdiv\u003E";
+;pug_debug_line = 5;
+pug_html = pug_html + (pug.escape(null == (pug_interp = header.subtitle) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E\u003C\u002Fheader\u003E";
+;pug_debug_line = 7;
+pug_html = pug_html + "\u003Csection\u003E";
+;pug_debug_line = 8;
+pug_html = pug_html + "\u003Cdiv class=\"bo-cols\"\u003E";
+;pug_debug_line = 9;
+pug_html = pug_html + "\u003Cdiv class=\"bo-col\"\u003E";
+;pug_debug_line = 10;
+pug_html = pug_html + "\u003Cheader\u003E";
+;pug_debug_line = 10;
+pug_html = pug_html + "Available Columns\u003C\u002Fheader\u003E";
+;pug_debug_line = 11;
+pug_html = pug_html + "\u003Cul class=\"bo-available-columns\"\u003E";
+;pug_debug_line = 12;
+// iterate availableColumns
+;(function(){
+  var $$obj = availableColumns;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index0 = 0, $$l = $$obj.length; pug_index0 < $$l; pug_index0++) {
+        var column = $$obj[pug_index0];
+;pug_debug_line = 13;
+pug_html = pug_html + "\u003Cli\u003E";
+;pug_debug_line = 14;
+pug_html = pug_html + "\u003Cspan class=\"bo-column\"\u003E";
+;pug_debug_line = 14;
+pug_html = pug_html + (pug.escape(null == (pug_interp = column) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fli\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index0 in $$obj) {
+      $$l++;
+      var column = $$obj[pug_index0];
+;pug_debug_line = 13;
+pug_html = pug_html + "\u003Cli\u003E";
+;pug_debug_line = 14;
+pug_html = pug_html + "\u003Cspan class=\"bo-column\"\u003E";
+;pug_debug_line = 14;
+pug_html = pug_html + (pug.escape(null == (pug_interp = column) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fli\u003E";
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Ful\u003E\u003C\u002Fdiv\u003E";
+;pug_debug_line = 15;
+pug_html = pug_html + "\u003Cdiv class=\"bo-col\"\u003E";
+;pug_debug_line = 16;
+pug_html = pug_html + "\u003Cheader\u003E";
+;pug_debug_line = 16;
+pug_html = pug_html + "Displayed Columns\u003C\u002Fheader\u003E";
+;pug_debug_line = 17;
+pug_html = pug_html + "\u003Cul class=\"bo-active-columns\"\u003E";
+;pug_debug_line = 18;
+// iterate activeColumns
+;(function(){
+  var $$obj = activeColumns;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index1 = 0, $$l = $$obj.length; pug_index1 < $$l; pug_index1++) {
+        var column = $$obj[pug_index1];
+;pug_debug_line = 19;
+pug_html = pug_html + "\u003Cli\u003E";
+;pug_debug_line = 20;
+pug_html = pug_html + "\u003Cspan class=\"bo-column\"\u003E";
+;pug_debug_line = 20;
+pug_html = pug_html + (pug.escape(null == (pug_interp = column) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fli\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index1 in $$obj) {
+      $$l++;
+      var column = $$obj[pug_index1];
+;pug_debug_line = 19;
+pug_html = pug_html + "\u003Cli\u003E";
+;pug_debug_line = 20;
+pug_html = pug_html + "\u003Cspan class=\"bo-column\"\u003E";
+;pug_debug_line = 20;
+pug_html = pug_html + (pug.escape(null == (pug_interp = column) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fli\u003E";
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Ful\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fsection\u003E";
+;pug_debug_line = 22;
+pug_html = pug_html + "\u003Cfooter\u003E\u003C\u002Ffooter\u003E\u003C\u002Fdiv\u003E";}.call(this,"activeColumns" in locals_for_with?locals_for_with.activeColumns:typeof activeColumns!=="undefined"?activeColumns:undefined,"availableColumns" in locals_for_with?locals_for_with.availableColumns:typeof availableColumns!=="undefined"?availableColumns:undefined,"header" in locals_for_with?locals_for_with.header:typeof header!=="undefined"?header:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'ch-tippy-cell-data': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;pug_debug_line = 1;
 pug_html = pug_html + "\u003Cdiv class=\"ch ch-tippy-cell-data\"\u003E";
 ;pug_debug_line = 3;
 pug_html = pug_html + "\u003Cheader\u003E";

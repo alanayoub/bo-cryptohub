@@ -2,6 +2,7 @@
 
 // Node
 const path                             = require('path');
+const fs                               = require('fs');
 
 // Libs
 const HtmlWebpackPlugin                = require('html-webpack-plugin');
@@ -38,27 +39,38 @@ module.exports = {
 
   plugins: [
     new PreBuild(() => {
+
       console.log('Compiling pug templates');
       pug({
         varName: 'initPug',
-        pugGlob: path.join(__dirname, './src/pug/**/*.pug'),
+        pugGlob: path.join(__dirname, './public/javascript/views/**/*.pug'),
         outFile: path.join(__dirname, './public/javascript/generated/init-pug.generated.js')
       });
+
+      const copyConf = [
+        {
+          source: './node_modules/bo-utils/dist/index.client.js',
+          destination: path.resolve(__dirname, './public/javascript/libs/bo-utils-client.js')
+        },
+        {
+          source: './node_modules/bo-datatable/dist/index.client.js',
+          destination: path.resolve(__dirname, './public/javascript/libs/bo-datatable-client.js')
+        },
+        {
+          source: './node_modules/json-url/dist/browser/json-url-single.js',
+          destination: path.resolve(__dirname, './public/javascript/libs/json-url-single.js')
+        }
+      ]
+      for (let c of copyConf) {
+        fs.copyFile(c.source, c.destination, error => {
+          if (error) throw err;
+          console.log(`${c.source} copied to ${c.destination}`);
+        });
+      }
+
     }),
     new CleanWebpackPlugin(),
     new CopyWebpackPlugin([
-      {
-        from: './node_modules/bo-utils/dist/index.client.js',
-        to:   './javascript/libs/bo-utils-client.js'
-      },
-      {
-        from: './node_modules/bo-datatable/dist/index.client.js',
-        to:   './javascript/libs/bo-datatable-client.js'
-      },
-      {
-        from: './node_modules/json-url/dist/browser/json-url-single.js',
-        to:   './javascript/libs/json-url-single.js'
-      },
       {
         from: './public/*',
         to:   './',

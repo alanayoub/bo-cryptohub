@@ -31,12 +31,14 @@ const columnDefs = {
   // always counts from 1 to rows.length
   //
   rowIndex: {
+    field: 'rowIndex',
     valueGetter: 'node.rowIndex',
     headerName: '#',
     headerClass: 'CH-col',
     headerTooltip: 'Row Number',
     width: 40,
     pinned: 'left',
+    lockPinned: true,
     lockPosition: true,
     suppressMenu: true,
     suppressFilter: true,
@@ -60,6 +62,7 @@ const columnDefs = {
     headerTooltip: 'Name',
     width: 180,
     pinned: 'left',
+    lockPinned: true,
     cellRenderer: cellRendererName,
   },
 
@@ -72,6 +75,7 @@ const columnDefs = {
     headerName: 'Sectors',
     headerClass: 'CH-col',
     headerTooltip: 'Sectors',
+    lockPinned: true,
     width: 180,
     type: ['cryptohubText'],
     valueFormatter(params) {
@@ -89,6 +93,7 @@ const columnDefs = {
     headerName: 'Price (USD)',
     headerClass: 'CH-col',
     headerTooltip: 'Price in USD\n\nData Source: Cryptocompare',
+    lockPinned: true,
     width: 120,
     type: [
       'cryptohubDefaults',
@@ -101,7 +106,6 @@ const columnDefs = {
       symbolTo: 'USD'
     },
     onCellClicked,
-
   },
 
   //
@@ -112,6 +116,7 @@ const columnDefs = {
     headerName: 'Price (BTC)',
     headerClass: 'CH-col',
     headerTooltip: 'Price in BTC\n\nData Source: BinaryOverdose, calculated from Cryptocompare data',
+    lockPinned: true,
     width: 120,
     type: [
       'cryptohubDefaults',
@@ -134,6 +139,7 @@ const columnDefs = {
     headerName: 'ATH',
     headerClass: 'CH-col',
     headerTooltip: 'All Time High (USD)\n\nData Source: OnChainFX',
+    lockPinned: true,
     width: 120,
     type: [
       'cryptohubDefaults',
@@ -161,6 +167,7 @@ const columnDefs = {
     headerName: 'Cycle Low',
     headerClass: 'CH-col',
     headerTooltip: 'The lowest trading price (in USD) of the asset since its All-Time-High\n\nData Source: OnChainFX',
+    lockPinned: true,
     width: 120,
     type: [
       'cryptohubDefaults',
@@ -181,6 +188,7 @@ const columnDefs = {
     headerName: 'Δ 24h',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Cryptocompare',
+    lockPinned: true,
     width: 80,
     type: [
       'cryptohubDefaults',
@@ -197,6 +205,7 @@ const columnDefs = {
     headerName: 'Δ 7D',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 7 days against BTC\n\nData Source: Messari',
+    lockPinned: true,
     width: 80,
     type: [
       'cryptohubDefaults',
@@ -216,6 +225,7 @@ const columnDefs = {
     headerName: '7D Trend',
     headerClass: 'CH-col',
     headerTooltip: '7 Day USD price and volume trend\n\nTop & bottom numbers are % swing in price (top) & volume (bottom)\n\nData Source: BinaryOverdose / Cryptocompare',
+    lockPinned: true,
     width: 124,
     cellRenderer: CellRendererSparkline,
     cellRendererParams: {
@@ -238,6 +248,7 @@ const columnDefs = {
     headerName: 'Volume 24h',
     headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Cryptocompare',
+    lockPinned: true,
     width: 150,
     type: [
       'cryptohubDefaults',
@@ -257,6 +268,7 @@ const columnDefs = {
     headerName: 'Market Cap',
     headerClass: 'CH-col',
     headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Cryptocompare',
+    lockPinned: true,
     width: 150,
     type: [
       'cryptohubDefaults',
@@ -276,6 +288,7 @@ const columnDefs = {
     headerName: 'Circulating Supply',
     headerClass: 'CH-col',
     headerTooltip: 'Circulating supply\n\nData Source: Cryptocompare',
+    lockPinned: true,
     width: 150,
     type: [
       'cryptohubDefaults',
@@ -292,6 +305,7 @@ const columnDefs = {
     headerName: 'Proof',
     headerClass: 'CH-col',
     headerTooltip: 'Proof Type\n\nData Source: Cryptocompare',
+    lockPinned: true,
     width: 120,
     type: ['cryptohubText'],
   },
@@ -304,6 +318,7 @@ const columnDefs = {
     headerName: 'Algorithm',
     headerClass: 'CH-col',
     headerTooltip: 'Algorithm\n\nData Source: Cryptocompare',
+    lockPinned: true,
     width: 120,
     type: ['cryptohubText'],
   },
@@ -316,6 +331,7 @@ const columnDefs = {
     headerName: 'Hashes per/s',
     headerClass: 'CH-col',
     headerTooltip: 'Net Hashes per/s\n\nData Source: Cryptocompare',
+    lockPinned: true,
     width: 180,
     columnGroupShow: 'both',
     comparator: sortNumbers,
@@ -334,6 +350,7 @@ const columnDefs = {
     headerName: 'Exchanges',
     headerClass: 'CH-col',
     headerTooltip: 'Number of Exchanges the token is listed on\n\nData Source: BinaryOverdose / Cryptocompare',
+    lockPinned: true,
     width: 100,
     columnGroupShow: 'closed',
     type: [
@@ -356,6 +373,7 @@ const columnDefs = {
     headerName: 'Pairs',
     headerTooltip: 'Number of pairs\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
+    lockPinned: true,
     width: 100,
     columnGroupShow: 'closed',
     type: [
@@ -373,6 +391,7 @@ const columnDefs = {
     headerName: 'Fiat pairs',
     headerTooltip: 'Number of fiat pairs\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
+    lockPinned: true,
     width: 100,
     columnGroupShow: 'closed',
     type: [
@@ -390,6 +409,7 @@ const columnDefs = {
     headerName: 'Fiat Currencies',
     headerTooltip: 'Number of fiat Currencies\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
+    lockPinned: true,
     width: 100,
     columnGroupShow: 'closed',
     type: [

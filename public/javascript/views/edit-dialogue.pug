@@ -5,18 +5,29 @@ div(class='BO-edit-dialogue')
     div #{header.subtitle}
 
   section
-    div(class='bo-cols')
-      div(class='bo-col')
-        header Available Columns
-        ul(class='bo-available-columns')
-          each column in availableColumns
-            li
-              span(class='bo-column') #{column}
-      div(class='bo-col')
-        header Displayed Columns
-        ul(class='bo-active-columns')
-          each column in activeColumns
-            li
-              span(class='bo-column') #{column}
+
+    table
+      tr
+        th
+          header Available Columns
+        th
+          header Displayed Columns
+      tr
+        td(rowspan=2)
+          ul(class='bo-available-columns')
+            each column in availableColumns
+              li
+                span(class='bo-column') #{column}
+        td(style="height: 1px")
+          ul(class='bo-active-columns-frozen')
+            each column in frozenColumns
+              li
+                span(class='bo-column') #{column}
+      tr
+        td
+          ul(class='bo-active-columns')
+            each column in activeColumns
+              li
+                span(class='bo-column') #{column}
 
   footer

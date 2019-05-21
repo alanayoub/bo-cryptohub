@@ -22,6 +22,7 @@
 }
 
 .BO-edit-dialogue {
+
   header {
     margin: 0 0 20px 0;
     h2 {
@@ -31,45 +32,52 @@
       font-size: 14px;
     }
   }
+
   section {
 
-    .bo-cols {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
+    table {
       width: 100%;
-      li {
-        position: relative;
-        display: block;
-        padding: .75rem 1.25rem;
-        margin-bottom: -1px;
-        border: 1px solid rgba(0,0,0,.125);
-        cursor: move;
+      height: 500px;
+      th {
+        align: center;
+      }
+      td {
+        width: 50%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        vertical-align: top;
       }
     }
 
-    .bo-col {
-      display: flex;
-      flex-direction: column;
-      flex-basis: 100%;
-      flex: 1;
-      max-height: 500px;
-      header {
-        margin: 0 0 10px 0;
-        font-weight: 600;
-      }
+    li {
+      position: relative;
+      display: block;
+      padding: .75rem 1.25rem;
+      margin-bottom: -1px;
+      border: 1px solid rgba(0,0,0,.125);
+      cursor: move;
+    }
+    header {
+      margin: 0 0 10px 0;
+      font-weight: 600;
     }
 
     .bo-active-columns {
+      min-height: 500px;
       li {
-        &:first-child {
-          background-color: #eee!important;
-          color: #999;
-        }
         background-color: #fff;
         &:hover {
           background-color: #eee;
         }
+      }
+    }
+
+    .bo-active-columns-frozen {
+      li {
+        background-color: #eee!important;
+        color: #999;
+        cursor: default;
       }
     }
 
@@ -84,10 +92,9 @@
 
     .bo-available-columns,
     .bo-active-columns {
-      overflow-y: scroll;
       height: 100%;
       background: #f1f1f1;
-      border: 1px solid #f1f1f1
+      overflow-y: scroll;
     }
 
     .bo-ghost {

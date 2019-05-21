@@ -35,8 +35,9 @@ export default class EditDialogue {
 
     this.modal.addFooterBtn('OK', 'BO-btn bo-btn-primary', () => {
 
+      const elementListFrozen = document.querySelectorAll('.BO-edit-dialogue .bo-active-columns-frozen li');
       const elementList = document.querySelectorAll('.BO-edit-dialogue .bo-active-columns li');
-      const list = Array.from(elementList).map(v => v.textContent);
+      const list = Array.from([...elementListFrozen, ...elementList]).map(v => v.textContent);
 
       const columns = [];
       for (let field of list) {
@@ -44,9 +45,6 @@ export default class EditDialogue {
       }
 
       bo.inst.state.set('columns', columns);
-
-      // const columnDefs = generateColumnDefs(columns);
-      // bo.agOptions.api.columnController.setColumnDefs(columnDefs);
 
       this.modal.close();
 
@@ -65,12 +63,15 @@ export default class EditDialogue {
     const allColumns = Object.keys(columnLibrary);
     const activeColumns = bo.inst.state.get().columns.map(v => v.id);
     const availableColumns = [...arrayDifference(allColumns, activeColumns)];
+    const frozenColumns = activeColumns.splice(0, 2);
 
     const data = {
       header: {
         title: 'Edit',
         subtitle: 'Drag & Drop the columns you want displayed'
       },
+      // frozenColumns: {rowIndex: true, name: true},
+      frozenColumns,
       availableColumns,
       activeColumns
     };
@@ -89,7 +90,7 @@ export default class EditDialogue {
     });
 
     new Sortable(rightCol, {
-      filter: '.bo-active-columns li:nth-child(-n+2)', // 'filtered' class is not draggable
+      filter: '.bo-active-columns .bo-frozen', // 'filtered' class is not draggable
       group: 'shared',
       animation: 150,
       ghostClass: 'bo-ghost',

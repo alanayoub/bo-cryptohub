@@ -1,5 +1,8 @@
 'use strict';
 
+// ag-grid config
+import columnLibrary               from './column-library.js';
+
 // Cryptohub util functions
 import cellTooltip                 from './utils/cell-tooltip.js';
 import shouldCellUpdate            from './utils/should-cell-update.js';
@@ -116,6 +119,14 @@ export default {
     window.bo.inst.cellInteractions.mouseOut(params);
   },
 
+  /**
+   *
+   * When cell HTML elements are removed from the DOM
+   * - We need to remove all components attached to the elements. e.g. tippys
+   *
+   * TODO: manage url state
+   *
+   */
   onVirtualColumnsChanged(params) {
     const api = params.columnApi;
     const visibleColumns = api.getAllDisplayedVirtualColumns().map(v => v['colId']);
@@ -132,6 +143,15 @@ export default {
     }
   },
 
+  /**
+   *
+   *
+   * When cell HTML elements are removed from the DOM
+   * - We need to remove all components attached to the elements. e.g. tippys
+   *
+   * TODO: manage url state
+   *
+   */
   onVirtualRowRemoved(params) {
     if (params.type === 'virtualRowRemoved') {
       const removedRowIndex = params.rowIndex;
@@ -152,6 +172,60 @@ export default {
         }
       }
     }
+  },
+
+  /**
+   *
+   *
+   *
+   */
+  onSortChanged(params) {
+    console.log('onSortChanged', params);
+  },
+
+  /**
+   *
+   *
+   *
+   */
+  onFilterChanged(params) {
+    console.log('onFilterChanged', params);
+  },
+
+  /**
+   *
+   *
+   */
+  onColumnResized(params) {
+    console.log('onColumnResized', params);
+  },
+
+  /**
+   *
+   * When a column has stopped being draged
+   *
+   */
+  onDragStopped(params) {
+
+    const agGridColumnState = params.api.columnController.getColumnState();
+    const columnFieldProperties = agGridColumnState.map(v => v.colId);
+
+    const map = {};
+    for (const [key, val] of Object.entries(columnLibrary)) {
+      map[val.field] = key;
+    }
+
+    const columns = [];
+    for (const field of columnFieldProperties) {
+       if (map[field]) {
+         columns.push({
+           id: map[field]
+         });
+       }
+    }
+
+    bo.inst.state.set('columns', columns);
+
   },
 
   rowHeight: 35,

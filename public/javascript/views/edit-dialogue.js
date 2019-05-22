@@ -1,8 +1,5 @@
 'use strict';
 
-// Binary Overdose Projects
-import { arrayDifference } from '../libs/bo-utils-client';
-
 // Binary Overdose Util functions
 import initPug             from '../generated/init-pug.generated.js';
 
@@ -35,9 +32,11 @@ export default class EditDialogue {
 
     this.modal.addFooterBtn('OK', 'BO-btn bo-btn-primary', () => {
 
-      const elementListFrozen = document.querySelectorAll('.BO-edit-dialogue .bo-active-columns-frozen li');
-      const elementList = document.querySelectorAll('.BO-edit-dialogue .bo-active-columns li');
-      const list = Array.from([...elementListFrozen, ...elementList]).map(v => v.textContent);
+      const selectorFrozen = '.BO-edit-dialogue .bo-active-columns-frozen li';
+      const selectorActive = '.BO-edit-dialogue .bo-active-columns li';
+      const elementListFrozen = document.querySelectorAll(selectorFrozen);
+      const elementList = document.querySelectorAll(selectorActive);
+      const list = Array.from([...elementListFrozen, ...elementList]).map(v => v.dataset.id);
 
       const columns = [];
       for (let field of list) {
@@ -58,11 +57,29 @@ export default class EditDialogue {
 
   }
 
+  /**
+   *
+   * Open dialogue and build view
+   *
+   */
   open() {
 
-    const allColumns = Object.keys(columnLibrary);
-    const activeColumns = bo.inst.state.get().columns.map(v => v.id);
-    const availableColumns = [...arrayDifference(allColumns, activeColumns)];
+    const allColumns = [];
+    for (const [key, val] of Object.entries(columnLibrary)) {
+      allColumns.push({id: key, name: val.headerName});
+    }
+
+    const activeColumns = [];
+    for (const col of bo.inst.state.get().columns) {
+      const id = col.id;
+      activeColumns.push({
+        id,
+        name: columnLibrary[id].headerName
+      });
+    }
+
+    const activeFields = activeColumns.map(v => v.id);
+    const availableColumns = allColumns.filter(v => !activeFields.includes(v.id));
     const frozenColumns = activeColumns.splice(0, 2);
 
     const data = {

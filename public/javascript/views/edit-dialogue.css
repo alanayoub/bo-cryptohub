@@ -21,10 +21,19 @@
    }
 }
 
+.tingle-modal-box__content {
+  padding: 0!important;
+}
+
 .BO-edit-dialogue {
 
-  header {
+  > header {
     margin: 0 0 20px 0;
+    padding: 20px;
+    background: #73965d;
+    color: #fff;
+  }
+  header {
     h2 {
       font-size: 32px;
     }
@@ -34,6 +43,8 @@
   }
 
   section {
+
+    padding: 20px;
 
     table {
       width: 100%;
@@ -63,6 +74,16 @@
       font-weight: 600;
     }
 
+    .bo-available-columns {
+      margin-right: 10px;
+      li {
+        background-color: #eee;
+        &:hover {
+          background-color: #fff;
+        }
+      }
+    }
+
     .bo-active-columns {
       min-height: 500px;
       li {
@@ -78,15 +99,6 @@
         background-color: #eee!important;
         color: #999;
         cursor: default;
-      }
-    }
-
-    .bo-available-columns {
-      li {
-        background-color: #eee;
-        &:hover {
-          background-color: #fff;
-        }
       }
     }
 

@@ -16,18 +16,17 @@ div(class='BO-edit-dialogue')
         td(rowspan=2)
           ul(class='bo-available-columns')
             each column in availableColumns
-              li
-                span(class='bo-column') #{column}
+              li(data-id=column.id)
+                span(class='bo-column') #{column.name}
         td(style="height: 1px")
           ul(class='bo-active-columns-frozen')
             each column in frozenColumns
-              li
-                span(class='bo-column') #{column}
+              li(data-id=column.id)
+                span(class='bo-column') #{column.name}
       tr
         td
           ul(class='bo-active-columns')
             each column in activeColumns
-              li
-                span(class='bo-column') #{column}
-
+              li(data-id=column.id)
+                span(class='bo-column') #{column.name}
   footer

@@ -212,20 +212,17 @@ export default {
    */
   onDragStopped(params) {
 
-    const agGridColumnState = params.api.columnController.getColumnState();
-    const columnFieldProperties = agGridColumnState.map(v => v.colId);
-
-    const map = {};
-    for (const [key, val] of Object.entries(columnLibrary)) {
-      map[val.field] = key;
-    }
-
     const columns = [];
-    for (const field of columnFieldProperties) {
-       if (map[field]) {
-         columns.push({
-           id: map[field]
-         });
+    const libKeys = Object.keys(columnLibrary);
+    const agGridColumnState = params.api.columnController.getColumnState();
+
+    for (const [idx, field] of Object.entries(agGridColumnState)) {
+       if (libKeys.includes(field.colId)) {
+         const col = {
+           id: field.colId
+         };
+         if (field.width) col.width = field.width;
+         columns.push(col);
        }
     }
 

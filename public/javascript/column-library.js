@@ -73,7 +73,7 @@ const columnDefs = {
   // A list of the assets sectors
   //
   sectors: {
-    colId: 'sector',
+    colId: 'sectors',
     field: 'm-metrics-sectors',
     headerName: 'Sectors',
     headerClass: 'CH-col',

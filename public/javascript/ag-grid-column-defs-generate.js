@@ -12,13 +12,21 @@ import columnLibrary from './column-library.js';
  *
  */
 export default function generateColumnDefs(columns) {
+
+  const state = window.bo.inst.state.get();
+  const sortCol = state.sort.column;
+  const direction = state.sort.direction;
+
   let id;
   let column;
   const output = [];
   for (column of columns) {
     id = column.id;
     if (id in columnLibrary) {
-      output.push(columnLibrary[id]);
+      const col = column.id === sortCol
+        ? Object.assign({}, columnLibrary[id], {sort: direction})
+        : columnLibrary[id];
+      output.push(col);
     }
   }
   return output;

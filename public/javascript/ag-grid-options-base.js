@@ -176,11 +176,15 @@ export default {
 
   /**
    *
-   *
+   * On Sort Changed
+   * Set BO state
    *
    */
   onSortChanged(params) {
-    console.log('onSortChanged', params);
+    const sortModel = params.api.getSortModel()[0];
+    if (!sortModel) return;
+    const { colId:column, sort:direction } = sortModel;
+    bo.inst.state.set('sort', {column, direction});
   },
 
   /**
@@ -203,6 +207,7 @@ export default {
   /**
    *
    * When a column has stopped being draged
+   * Set the BO state
    *
    */
   onDragStopped(params) {

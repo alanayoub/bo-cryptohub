@@ -134,7 +134,7 @@ pug_html = pug_html + (pug.escape(null == (pug_interp = column.name) ? "" : pug_
 }).call(this);
 
 pug_html = pug_html + "\u003C\u002Ful\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E\u003C\u002Ftable\u003E\u003C\u002Fsection\u003E";
-;pug_debug_line = 32;
+;pug_debug_line = 33;
 pug_html = pug_html + "\u003Cfooter\u003E\u003C\u002Ffooter\u003E\u003C\u002Fdiv\u003E";}.call(this,"activeColumns" in locals_for_with?locals_for_with.activeColumns:typeof activeColumns!=="undefined"?activeColumns:undefined,"availableColumns" in locals_for_with?locals_for_with.availableColumns:typeof availableColumns!=="undefined"?availableColumns:undefined,"frozenColumns" in locals_for_with?locals_for_with.frozenColumns:typeof frozenColumns!=="undefined"?frozenColumns:undefined,"header" in locals_for_with?locals_for_with.header:typeof header!=="undefined"?header:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'ch-tippy-cell-data': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;pug_debug_line = 1;
 pug_html = pug_html + "\u003Cdiv class=\"ch ch-tippy-cell-data\"\u003E";
 ;pug_debug_line = 3;

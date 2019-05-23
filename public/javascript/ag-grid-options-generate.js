@@ -24,7 +24,7 @@ function onGridReady(params) {
   // default sort order
   params.api.setSortModel([
     {
-      colId: columnLibrary[state.sort.column].field,
+      colId: columnLibrary[state.sort.column].colId,
       sort: state.sort.direction
     }
   ]);

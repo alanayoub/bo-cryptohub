@@ -23,7 +23,7 @@ export default {
     {id: 'athUSD'},
     {id: 'cycleLowUSD'},
     {id: 'percentChange24hUSD'},
-    {id: 'percentChange7DUSD'},
+    {id: 'percentChange7dUSD'},
     {id: 'sparklineUSD'},
     {id: 'volume24hUSD'},
     {id: 'marketcapUSD'},

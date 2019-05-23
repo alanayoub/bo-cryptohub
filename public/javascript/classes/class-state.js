@@ -58,6 +58,7 @@ export default class State {
   /**
    *
    * TODO: Sanitise
+   * TODO: get this from the URL. The URL should be the only state
    *
    */
   get() {

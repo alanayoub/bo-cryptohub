@@ -31,6 +31,7 @@ const columnDefs = {
   // always counts from 1 to rows.length
   //
   rowIndex: {
+    colId: 'rowIndex',
     field: 'rowIndex',
     valueGetter: 'node.rowIndex',
     headerName: '#',
@@ -56,6 +57,7 @@ const columnDefs = {
   // Asset icon, name & symbol
   //
   name: {
+    colId: 'name',
     field: 'cc-total-vol-full-FullName.value',
     headerName: 'Name',
     headerClass: 'CH-col',
@@ -71,6 +73,7 @@ const columnDefs = {
   // A list of the assets sectors
   //
   sectors: {
+    colId: 'sector',
     field: 'm-metrics-sectors',
     headerName: 'Sectors',
     headerClass: 'CH-col',
@@ -89,6 +92,7 @@ const columnDefs = {
   // USD Price
   //
   priceUSD: {
+    colId: 'priceUSD',
     field: 'cc-total-vol-full-PRICE',
     headerName: 'Price (USD)',
     headerClass: 'CH-col',
@@ -112,6 +116,7 @@ const columnDefs = {
   // BTC Price
   //
   priceBTC: {
+    colId: 'priceBTC',
     field: 'cryptohub-price-btc',
     headerName: 'Price (BTC)',
     headerClass: 'CH-col',
@@ -135,6 +140,7 @@ const columnDefs = {
   // All Time High (USD)
   //
   athUSD: {
+    colId: 'athUSD',
     field: 'm-metrics-ath-price',
     headerName: 'ATH',
     headerClass: 'CH-col',
@@ -163,6 +169,7 @@ const columnDefs = {
   // or a price-sample on the day the Cycle Low occured.
   //
   cycleLowUSD: {
+    colId: 'cycleLowUSD',
     field: 'm-metrics-cycle-low-price',
     headerName: 'Cycle Low',
     headerClass: 'CH-col',
@@ -184,6 +191,7 @@ const columnDefs = {
   // NOTE: We want percent change against BTC too!
   //
   percentChange24hUSD: {
+    colId: 'percentChange24hUSD',
     field: 'cc-total-vol-full-CHANGEPCTDAY',
     headerName: 'Δ 24h',
     headerClass: 'CH-col',
@@ -201,6 +209,7 @@ const columnDefs = {
   // 7 Day Percent change (USD)
   //
   percentChange7dUSD: {
+    colId: 'percentChange7dUSD',
     field: 'm-metrics-percent-change-btc-last-1-week',
     headerName: 'Δ 7D',
     headerClass: 'CH-col',
@@ -221,6 +230,7 @@ const columnDefs = {
   // Top & bottom numbers are % swing in price (top) & volume (bottom)
   //
   sparklineUSD: {
+    colId: 'sparklineUSD',
     field: 'cryptohub-price-history',
     headerName: '7D Trend',
     headerClass: 'CH-col',
@@ -244,6 +254,7 @@ const columnDefs = {
   // The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD
   //
   volume24hUSD: {
+    colId: 'volume24hUSD',
     field: 'cc-total-vol-full-TOTALVOLUME24HTO',
     headerName: 'Volume 24h',
     headerClass: 'CH-col',
@@ -264,6 +275,7 @@ const columnDefs = {
   // Marketcap
   //
   marketcapUSD: {
+    colId: 'marketcapUSD',
     field: 'cc-total-vol-full-MKTCAP',
     headerName: 'Market Cap',
     headerClass: 'CH-col',
@@ -284,6 +296,7 @@ const columnDefs = {
   // Circulating Supply
   //
   circulatingSupply: {
+    colId: 'circulatingSupply',
     field: 'cc-total-vol-full-SUPPLY',
     headerName: 'Circulating Supply',
     headerClass: 'CH-col',
@@ -301,6 +314,7 @@ const columnDefs = {
   // Proof type
   //
   proofType: {
+    colId: 'proofType',
     field: 'cc-total-vol-full-ProofType.value',
     headerName: 'Proof',
     headerClass: 'CH-col',
@@ -314,6 +328,7 @@ const columnDefs = {
   // Algo
   //
   algo: {
+    colId: 'algo',
     field: 'cc-total-vol-full-Algorithm.value',
     headerName: 'Algorithm',
     headerClass: 'CH-col',
@@ -327,6 +342,7 @@ const columnDefs = {
   // Hashes per second
   //
   hashesPerSecond: {
+    colId: 'hashesPerSecond',
     field: 'cc-total-vol-full-NetHashesPerSecond',
     headerName: 'Hashes per/s',
     headerClass: 'CH-col',
@@ -346,6 +362,7 @@ const columnDefs = {
   // Number of Exchanges
   //
   numberOfExchanges: {
+    colId: 'numberOfExchanges',
     field: 'cryptohub-numberOfExchanges',
     headerName: 'Exchanges',
     headerClass: 'CH-col',
@@ -369,6 +386,7 @@ const columnDefs = {
   // Number of pairs
   //
   numberOfPairs: {
+    colId: 'numberOfPairs',
     field: 'cryptohub-numberOfPairs',
     headerName: 'Pairs',
     headerTooltip: 'Number of pairs\n\nData Source: BinaryOverdose / Cryptocompare',
@@ -387,6 +405,7 @@ const columnDefs = {
   // Number of Fiat pairs
   //
   numberOfFiatPairs: {
+    colId: 'numberOfFiatPairs',
     field: 'cryptohub-numberOfFiatPairs',
     headerName: 'Fiat pairs',
     headerTooltip: 'Number of fiat pairs\n\nData Source: BinaryOverdose / Cryptocompare',
@@ -405,6 +424,7 @@ const columnDefs = {
   // Number of Fiat currencies
   //
   numberOfFiatCurrencies: {
+    colId: 'numberOfFiatCurrencies',
     field: 'cryptohub-numberOfFiatCurrencies',
     headerName: 'Fiat Currencies',
     headerTooltip: 'Number of fiat Currencies\n\nData Source: BinaryOverdose / Cryptocompare',

@@ -107,10 +107,33 @@ window.bo.inst.state.init().then(() => {
   window.onhashchange = () => {
 
     bo.inst.state.getUrl().then(state => {
+
+      // Generate columnDefs
       const columns = state.columns;
       const columnDefs = generateColumnDefs(columns);
+
+      // Set sort order
+      {
+
+        // Delete old
+        for (const def of columnDefs) {
+          delete def.sort;
+        }
+
+        // Add new
+        const sortCol = bo.inst.state.sort.column;
+        const sortDir = bo.inst.state.sort.direction;
+        const col = columnDefs.filter(v => v.colId === sortCol)[0];
+        if (col) {
+          col.sort = sortDir;
+        }
+
+      }
+
+      // Apply update
       bo.agOptions.api.columnController.setColumnDefs(columnDefs);
       bo.inst.state.set('columns', columns);
+
     });
 
   }

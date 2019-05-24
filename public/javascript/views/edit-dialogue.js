@@ -1,11 +1,55 @@
 'use strict';
 
 // Binary Overdose Util functions
-import initPug             from '../generated/init-pug.generated.js';
+import initPug                from '../generated/init-pug.generated.js';
 
-import columnLibrary       from '../column-library.js';
+import columnLibrary          from '../column-library.js';
 
-import style               from './edit-dialogue.css';
+import style                  from './edit-dialogue.css';
+
+/**
+ *
+ * Ok button handler
+ *
+ * Generate column list from current column state and add new columns
+ * Then set the new state
+ *
+ * @return void
+ *
+ */
+const okButtonHandler = function() {
+
+  const stateCols = bo.inst.state.get().columns;
+
+  // Map field names to indexes
+  const map = {};
+  for (const [i, col] of Object.entries(stateCols)) {
+    map[col.id] = i;
+  }
+
+  // Get active column state for incumbent cols or create new col
+  const selectorFrozen = '.BO-edit-dialogue .bo-active-columns-frozen li';
+  const selectorActive = '.BO-edit-dialogue .bo-active-columns li';
+  const elementListFrozen = document.querySelectorAll(selectorFrozen);
+  const elementList = document.querySelectorAll(selectorActive);
+  const list = Array.from([...elementListFrozen, ...elementList]).map(v => v.dataset.id);
+  const columns = [];
+  for (const field of list) {
+    const idx = map[field];
+    if (idx > -1) {
+      columns.push(stateCols[idx]);
+    }
+    else {
+      columns.push({
+        id: field
+      });
+    }
+  }
+
+
+  bo.inst.state.set('columns', columns);
+
+}
 
 export default class EditDialogue {
 
@@ -31,22 +75,8 @@ export default class EditDialogue {
     });
 
     this.modal.addFooterBtn('OK', 'BO-btn bo-btn-primary', () => {
-
-      const selectorFrozen = '.BO-edit-dialogue .bo-active-columns-frozen li';
-      const selectorActive = '.BO-edit-dialogue .bo-active-columns li';
-      const elementListFrozen = document.querySelectorAll(selectorFrozen);
-      const elementList = document.querySelectorAll(selectorActive);
-      const list = Array.from([...elementListFrozen, ...elementList]).map(v => v.dataset.id);
-
-      const columns = [];
-      for (let field of list) {
-        columns.push({id: field});
-      }
-
-      bo.inst.state.set('columns', columns);
-
+      okButtonHandler();
       this.modal.close();
-
     });
 
     const $target = document.querySelector(selector);

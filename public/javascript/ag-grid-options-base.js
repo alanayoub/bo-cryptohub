@@ -193,7 +193,7 @@ export default {
    *
    */
   onFilterChanged(params) {
-    console.log('onFilterChanged', params);
+    // console.log('onFilterChanged', params);
   },
 
   /**
@@ -201,7 +201,7 @@ export default {
    *
    */
   onColumnResized(params) {
-    console.log('onColumnResized', params);
+    // console.log('onColumnResized', params);
   },
 
   /**

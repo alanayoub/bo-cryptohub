@@ -1,6 +1,7 @@
 'use strict';
 
-import Filter from '../classes/class-filter.js';
+import Filter                         from '../classes/class-filter.js';
+import { objectIsObject as isObject } from '../libs/bo-utils-client';
 
 export default class TextFilter extends Filter {
 
@@ -10,11 +11,20 @@ export default class TextFilter extends Filter {
 
   doesFilterPass(params) {
 
-    const value = this.valueGetter(params);
-    if (!value || !value.value) return 0;
+    let value = this.valueGetter(params);
+    if (isObject(value)) {
+      value = value.value;
+    }
+    else if (value === void 0) {
+      return 0;
+    }
+    if (Array.isArray(value)) {
+      value = value.join(' ');
+    }
+
     const input = this.filterText.trim().replace(/\s/g,'|');
     const regex = new RegExp(input, 'g');
-    const found = value.value.join(' ').toLowerCase().match(regex);
+    const found = value.toLowerCase().match(regex);
 
     let passed;
     if (found && found.length) return passed = 1;

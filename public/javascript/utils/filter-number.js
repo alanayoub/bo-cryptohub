@@ -20,7 +20,10 @@ export default class NumberFilter extends Filter {
     // Split on numbers or valid symbols
     const split = input.match(/[0-9]+|>=|<=|[<>&|()]/gi);
 
+    const value = this.valueGetter(params);
+
     if (!split) return 1;
+    if (split.length < 1) return 1;
 
     // Check all signs against whitelist
     const signs = split.filter(isNaN);
@@ -32,21 +35,30 @@ export default class NumberFilter extends Filter {
     const numBeforeSigns = ['<', '>', '<=', '>='];
     const generateExpression = num => {
       return split.reduce((acc, val, idx) => {
-        if (numBeforeSigns.includes(val)) acc.push(num);
-        acc.push(isNaN(val) ? val : Number(val))
+        if (idx === 0) {
+          acc.push(num);
+          acc.push(numBeforeSigns.includes(val) ? val : '===');
+        }
+        if (split.length === 1 || idx !== 0) {
+         acc.push(isNaN(val) ? val : Math.round(Number(val)));
+        }
         return acc;
       }, []).join('');
     }
 
-    const value = this.valueGetter(params).value;
-    const expressionStr = generateExpression(value);
-
     let passed;
-    try {
-      passed = (new Function(`return ${expressionStr}`))();
+
+    if (value) {
+      const expressionStr = generateExpression(value.value);
+      try {
+        passed = (new Function(`return ${expressionStr}`))();
+      }
+      catch (error) {
+        passed = 1;
+      }
     }
-    catch (error) {
-      passed = 1;
+    else {
+      passed = 0;
     }
 
     return passed;

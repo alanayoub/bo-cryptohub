@@ -18,7 +18,7 @@ export default class NumberFilter extends Filter {
     const input = this.filterText.replace(/\s/g,'');
 
     // Split on numbers or valid symbols
-    const split = input.match(/[0-9]+|>=|<=|[<>&|()]/gi);
+    const split = input.match(/[0-9\-]+|>=|<=|[<>&|()]/gi);
 
     const value = this.valueGetter(params);
 

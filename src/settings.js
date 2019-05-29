@@ -176,7 +176,7 @@ const settings = {
   debug:                                       true, // TODO: Change this to an env var
   logger:                                      args.options.logger || false,
   maxRowsTemplatedIn:                          50,
-  maxRecordsScraped:                           400,
+  maxRecordsScraped:                           600,
 
   // The diff-json library has a bug where null field throw an error on add.
   // For now we are just not going to send null fields, lightens the load anyhow.

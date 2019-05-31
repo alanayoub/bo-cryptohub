@@ -121,23 +121,42 @@ window.bo.inst.state.init().then(state => {
       const columns = state.columns;
       const columnDefs = generateColumnDefs(state);
 
-      // Set sort order
-      {
+      /**
+       *
+       * Update sort
+       *
+       */
+      function updateSort(sort) {
 
-        // Delete old
-        for (const def of columnDefs) {
-          delete def.sort;
+        const sortModel = bo.agOptions.api.getSortModel()[0];
+        const changed = JSON.stringify(sortModel) !== JSON.stringify(sort);
+
+        if (!changed) {
+          return false
         }
+        else {
 
-        // Add new
-        const sortCol = state.sort.column;
-        const sortDir = state.sort.direction;
-        const col = columnDefs.filter(v => v.colId === sortCol)[0];
-        if (col) {
-          col.sort = sortDir;
+          // Delete old
+          for (const def of columnDefs) {
+            delete def.sort;
+          }
+
+          // Add new
+          const sortCol = sort.column;
+          const sortDir = sort.direction;
+          const col = columnDefs.filter(v => v.colId === sortCol)[0];
+          if (col) {
+            col.sort = sortDir;
+          }
+
+          return true;
+
         }
 
       }
+
+      // Set sort order
+      const sortUpdated = updateSort(state.sort);
 
       const Pstate = bo.inst.state.get();
       const Pfilters = bo.inst.state.getFilterModel();
@@ -145,10 +164,9 @@ window.bo.inst.state.init().then(state => {
 
         const [lastState, filterModel] = values;
 
-        // Only update column defs if there is a change
-        const newStr = JSON.stringify(state.columns);
-        const lstStr = JSON.stringify(lastState.columns);
-        if (newStr !== lstStr) {
+        const columnsUpdated = JSON.stringify(lastState.columns) !== JSON.stringify(state.columns);
+
+        if (columnsUpdated || sortUpdated) {
           bo.agOptions.api.columnController.setColumnDefs(columnDefs);
         }
 

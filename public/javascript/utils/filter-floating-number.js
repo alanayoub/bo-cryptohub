@@ -4,28 +4,41 @@ function NumberFloatingFilter() {}
 
 NumberFloatingFilter.prototype.init = function (params) {
 
+  const colId = params.column.colId;
+
   this.onFloatingFilterChanged = params.onFloatingFilterChanged;
   this.eGui = document.createElement('div');
-  this.eGui.innerHTML = '<input type="text"/>';
+  this.eGui.innerHTML = `<input type="text" data-floatingFilter=${colId} />`;
   this.currentValue = null;
   this.eFilterInput = this.eGui.querySelector('input');
-  var that = this;
-  function onInputBoxChanged(){
-    if (that.eFilterInput.value === '') {
+
+  const onInputBoxChanged = () => {
+    if (this.eFilterInput.value === '') {
       //Remove the filter
-      that.onFloatingFilterChanged(null);
+      this.onFloatingFilterChanged(null);
       return;
     }
-    that.currentValue = that.eFilterInput.value;
-    that.onFloatingFilterChanged(that.currentValue);
+    this.currentValue = this.eFilterInput.value;
+    this.onFloatingFilterChanged(this.currentValue);
   }
+
   this.eFilterInput.addEventListener('input', onInputBoxChanged);
+
+  this.eFilterInput.addEventListener('blur', () => {
+    const model = params.api.getFilterModel();
+    bo.inst.state.set('filter', model);
+  });
+
+  bo.inst.state.getFilterModel().then(model => {
+    this.eGui.querySelector('input').value = model && model[colId] ? model[colId] : null;
+  });
 
 };
 
 NumberFloatingFilter.prototype.onParentModelChanged = function (parentModel) {
 
   // When the filter is empty we will receive a null message her
+  if (parentModel === 'undefined') parentModel = null;
   if (!parentModel) {
     this.eFilterInput.value = '';
   } else {

@@ -87,30 +87,39 @@ function storeEmitHandler(data) {
 
 window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);
-window.bo.inst.state.init().then(() => {
+window.bo.inst.state.init().then(state => {
 
   const socket = io();
-  const agOptions = generateAgOptions();
-  const gridElement = document.querySelector('#ch-grid');
-  const grid = new agGrid.Grid(gridElement, agOptions);
 
-  if (!grid) throw new Error('Cant find grid');
+  generateAgOptions().then(agOptions => {
+    const gridElement = document.querySelector('#ch-grid');
+    const grid = new agGrid.Grid(gridElement, agOptions);
 
-  socket.on('data', dataEmitHandler);
-  socket.on('store', storeEmitHandler);
+    if (!grid) throw new Error('Cant find grid');
 
-  window.bo.func.updated('now');
-  window.bo.inst.editDialogue = new EditDialogue('.ch-edit');
+    socket.on('data', dataEmitHandler);
+    socket.on('store', storeEmitHandler);
 
-  setInterval(window.bo.func.updated, 1000 * 1);
+    window.bo.func.updated('now');
+    window.bo.inst.editDialogue = new EditDialogue('.ch-edit');
 
-  window.onhashchange = () => {
+    setInterval(window.bo.func.updated, 1000 * 1);
 
-    bo.inst.state.getUrl().then(state => {
+    /**
+     *
+     * Copy state from url to ag-grid state
+     *
+     *
+     */
+    window.onpopstate = event => {
+
+      console.log('onpopstate', event.state);
+      const state = event.state;
+      if (!state) return;
 
       // Generate columnDefs
       const columns = state.columns;
-      const columnDefs = generateColumnDefs(columns);
+      const columnDefs = generateColumnDefs(state);
 
       // Set sort order
       {
@@ -121,8 +130,8 @@ window.bo.inst.state.init().then(() => {
         }
 
         // Add new
-        const sortCol = bo.inst.state.sort.column;
-        const sortDir = bo.inst.state.sort.direction;
+        const sortCol = state.sort.column;
+        const sortDir = state.sort.direction;
         const col = columnDefs.filter(v => v.colId === sortCol)[0];
         if (col) {
           col.sort = sortDir;
@@ -130,13 +139,32 @@ window.bo.inst.state.init().then(() => {
 
       }
 
-      // Apply update
-      bo.agOptions.api.columnController.setColumnDefs(columnDefs);
-      bo.inst.state.set('columns', columns);
+      const Pstate = bo.inst.state.get();
+      const Pfilters = bo.inst.state.getFilterModel();
+      Promise.all([Pstate, Pfilters]).then(values => {
 
-    });
+        const [lastState, filterModel] = values;
 
-  }
+        // Only update column defs if there is a change
+        const newStr = JSON.stringify(state.columns);
+        const lstStr = JSON.stringify(lastState.columns);
+        if (newStr !== lstStr) {
+          bo.agOptions.api.columnController.setColumnDefs(columnDefs);
+        }
+
+        bo.agOptions.api.setFilterModel(filterModel);
+
+      });
+
+      // bo.inst.state.get().then(lastState => {
+      //   // Set Filters
+      //   bo.inst.state.getFilterModel().then(model => {
+      //   });
+      // });
+
+    }
+
+  });
 
 });
 

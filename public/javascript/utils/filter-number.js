@@ -9,7 +9,6 @@ export default class NumberFilter extends Filter {
   }
 
   //
-  // TODO: =0 doesnt work
   // TODO: decimals dont work
   //
   doesFilterPass(params) {

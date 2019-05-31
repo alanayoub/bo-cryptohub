@@ -11,13 +11,12 @@ import columnLibrary from './column-library.js';
  * Columns are positioned in the grid according to the order the ColDef's are specified in the grid options
  *
  */
-export default function generateColumnDefs(columns) {
+export default function generateColumnDefs(state) {
 
   let column;
   const output = [];
-  const state = window.bo.inst.state.get();
 
-  for (column of columns) {
+  for (column of state.columns) {
 
     const id = column.id;
 

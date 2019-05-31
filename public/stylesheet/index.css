@@ -52,6 +52,10 @@ h1 {
   position: relative;
 }
 
+.cryptohub-logo a {
+  cursor: pointer;
+}
+
 .cryptohub-logo h1 {
   color: #457b2a;
 }

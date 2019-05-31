@@ -1,7 +1,9 @@
 'use strict'
 
 // Binary Overdose Projects
-import { objectSetNestedProperty } from '../libs/bo-utils-client';
+import { objectSetNestedProperty }              from '../libs/bo-utils-client';
+import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
+
 
 import jsonUrl from '../libs/json-url-single.js';
 
@@ -33,13 +35,9 @@ export default class State {
   async init() {
 
     const urlConfig = await this.getUrl();
-    const config = !!urlConfig ? urlConfig : this.defaultConfig;
+    const state = !!urlConfig ? urlConfig : this.defaultConfig;
 
-    for (const field of this.whitelist) {
-      this[field] = config[field];
-    }
-
-    await this.setUrl();
+    return await this.setUrl(state);
 
   }
 
@@ -61,15 +59,23 @@ export default class State {
    * TODO: get this from the URL. The URL should be the only state
    *
    */
-  get() {
+  async get() {
 
-    let field;
-    const output = {};
-    for (field of this.whitelist) {
-      output[field] = this[field];
+    // let field;
+    // const output = {};
+    // for (field of this.whitelist) {
+    //   output[field] = this[field];
+    // }
+
+    // return output;
+    const url = new URL(window.location);
+    const fragmentId = url.hash.substr(1);
+    if (fragmentId) {
+      return await State.urlDecode(fragmentId);
     }
-
-    return output;
+    else {
+      return void 0;
+    }
 
   }
 
@@ -78,9 +84,33 @@ export default class State {
    * Set
    *
    */
-  async set(path, data) {
-    objectSetNestedProperty(this, path, data);
-    await this.setUrl();
+  async set(target, data) {
+    //
+    // might as well get the url, then set it
+    // bypassing the local state
+    //
+    const state = await this.get();
+    switch (target) {
+      case 'columns':
+        objectSetNestedProperty(state, target, data);
+        break;
+      case 'sort':
+        objectSetNestedProperty(state, target, data);
+        break;
+      case 'filter':
+        const filters = Object.keys(data);
+        const columns = state.columns;
+        for (const column of columns) {
+          if (filters.includes(column.id)) {
+            column.filter = data[column.id];
+          }
+        }
+        objectSetNestedProperty(state, 'columns', columns);
+        break;
+      default:
+        break;
+    }
+    await this.setUrl(state);
   }
 
   /**
@@ -92,8 +122,8 @@ export default class State {
    */
   async getUrl() {
 
-    const fragmentId = window.location.hash.substr(1);
-
+    const url = new URL(window.location);
+    const fragmentId = url.hash.substr(1);
     if (fragmentId) {
       return await State.urlDecode(fragmentId);
     }
@@ -103,13 +133,58 @@ export default class State {
 
   }
 
-  async setUrl() {
+  async setUrl(state) {
 
-    const state = this.get();
-    const query = await State.urlEncode(state);
-    window.location.hash = query;
+    // const state = this.get();
+    // const query = await State.urlEncode(state);
+    // window.location.hash = query;
+
+    const currentState = await this.getUrl();
+    if (!state) {
+      state = currentState;
+    }
+
+    const sanitizedState = {};
+    for (const field of this.whitelist) {
+      sanitizedState[field] = state[field];
+    }
+
+    const query = await State.urlEncode(sanitizedState);
+    //
+    // TODO: check changes before pushing, sometimes we get a change when we didnt
+    // actually changes something. Try inputing into a field and deleting without blur
+    //
+    if (JSON.stringify(sanitizedState) !== JSON.stringify(currentState)) {
+      history.pushState(sanitizedState, '/// Binary Overdose', `#${query}`);
+      console.log('pushState');
+    }
+
+    return sanitizedState;
 
   }
+
+  /**
+   *
+   * Get Filter Model
+   *
+   */
+  async getFilterModel() {
+    const state = await this.getUrl();
+    let model = state.columns
+      .reduce((a, v) => {
+        if (v.filter) a[v.id] = v.filter;
+        return a;
+      }, {});
+    model = isEmptyObject(model) ? null : model;
+    return model;
+  }
+
+  /**
+   *
+   * Get Sort Model
+   *
+   */
+  getSortModel() {}
 
   setProperty() {}
 

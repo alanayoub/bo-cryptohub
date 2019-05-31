@@ -76,6 +76,7 @@ export default {
 
       // Sort
       comparator: sortNumbers,
+      sortingOrder: ['asc','desc'],
 
       // Style
       cellClass: 'cryptohub-align-right',
@@ -193,7 +194,7 @@ export default {
    *
    */
   onFilterChanged(params) {
-    // console.log('onFilterChanged', params);
+    // NOTE: This gets set in the floating filter
   },
 
   /**

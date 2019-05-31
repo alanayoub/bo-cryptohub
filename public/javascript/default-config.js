@@ -12,7 +12,7 @@ export default {
       id: 'priceUSD',
       hidden: 0,
       width: 150,
-      filter: '>100500',
+      // filter: '>100500',
       selections: [
         // 10: {
         //   // selection options

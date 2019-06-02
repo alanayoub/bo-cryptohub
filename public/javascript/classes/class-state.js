@@ -159,7 +159,6 @@ export default class State {
     if (JSON.stringify(sanitizedState) !== JSON.stringify(currentState)) {
       history.pushState(sanitizedState, '/// Binary Overdose', `#${query}`);
       await this.update();
-      console.log('pushState');
     }
 
     return sanitizedState;
@@ -190,6 +189,8 @@ export default class State {
    *
    */
   async update(state) {
+
+    if (!bo.agOptions) return;
 
     if (!state) {
       state = await this.get();

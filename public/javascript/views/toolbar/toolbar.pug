@@ -1,0 +1,36 @@
+span(class='ch-data')
+  span(class='ch-up')
+    span(class='ch-val') #{upPer}
+    span(class='ch-symbol')
+      = '▲'
+  = '/'
+  span(class='ch-dn')
+    span(class='ch-val') #{dnPer}
+    span(class='ch-symbol')
+      = '▼'
+  = '/'
+  span(class='ch-nc')
+    span(class='ch-val') #{ncPer}
+    span(class='ch-symbol')
+      = '■ '
+
+span(class='ch-total')
+  span
+    span(class='ch-val') #{total} tokens
+
+span(class='ch-social')
+  span(class='ch-social-twitter')
+    a(
+      href='https://twitter.com/BinaryOverdose?ref_src=twsrc%5Etfw'
+      class='twitter-follow-button'
+      data-show-screen-name='false'
+      data-show-count='false'
+      title='Follow @BinaryOverdose'
+      target='_blank'
+    )
+      i(class='fab fa-twitter')
+      = 'Follow'
+
+span(class='ch-edit')
+  i(class='fa fa-bars')
+  = ' Edit'

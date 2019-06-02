@@ -1,11 +1,16 @@
 'use strict';
 
-// Binary Overdose Util functions
-import initPug                from '../generated/init-pug.generated.js';
+// Libs
+import delegate      from 'delegate';
 
-import columnLibrary          from '../column-library.js';
+// Templates
+import initPug       from '../generated/init-pug.generated.js';
 
-import style                  from './edit-dialogue.css';
+// Binary Overdose Uions
+import columnLibrary from '../column-library.js';
+
+// Styles
+import style         from './edit-dialogue.css';
 
 /**
  *
@@ -53,7 +58,7 @@ const okButtonHandler = async function () {
 
 export default class EditDialogue {
 
-  constructor(selector) {
+  constructor(parentSelector, selector) {
 
     const options = {
       footer: true,
@@ -79,11 +84,10 @@ export default class EditDialogue {
       this.modal.close();
     });
 
-    const $target = document.querySelector(selector);
-    const activeClass = 'bo-active';
-    $target.onclick = event => {
+
+    delegate(parentSelector, selector, 'click', event => {
       this.open();
-    }
+    }, false);
 
   }
 

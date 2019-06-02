@@ -5,7 +5,6 @@ import State                       from './classes/class-state.js';
 
 // Cryptohub util functions
 import convertWorkingDataToRowData from './utils/convert-working-data-to-row-data.js';
-import updateOverview              from './utils/view-update-overview.js';
 
 // ag-grid config
 import columnLibrary               from './column-library.js';
@@ -48,7 +47,7 @@ export default async function generateAgOptions() {
     window.refs.rowData = convertWorkingDataToRowData(window.initData || {});
     params.api.setRowData(window.refs.rowData);
 
-    updateOverview(window.refs.workingData);
+    window.bo.inst.toolbarView.update(window.refs.workingData);
 
   };
 

@@ -3,29 +3,28 @@
 // Libs
 import '@babel/polyfill';
 
-import globals                        from './globals.js';
-import defaultConfig                  from './default-config.js';
+import globals                     from './globals.js';
+import defaultConfig               from './default-config.js';
 
 // Binary Overdose Projects
-import { DataTable }                  from './libs/bo-datatable-client';
+import { DataTable }               from './libs/bo-datatable-client';
 
 // Binary Overdose classes
-import CellInteractions               from './classes/class-cell-interactions.js';
-import State                          from './classes/class-state.js';
+import CellInteractions            from './classes/class-cell-interactions.js';
+import State                       from './classes/class-state.js';
 
 // Binary Overdose views
-import EditDialogue                   from './views/edit-dialogue.js';
+import ToolbarView                 from './views/toolbar/toolbar.js';
 
 // Binary Overdose util functions
-import convertWorkingDataToRowData    from './utils/convert-working-data-to-row-data.js';
-import updateOverview                 from './utils/view-update-overview.js';
+import convertWorkingDataToRowData from './utils/convert-working-data-to-row-data.js';
 
 // ag-grid config
-import generateAgOptions              from './ag-grid-options-generate.js';
-import generateColumnDefs             from './ag-grid-column-defs-generate.js';
+import generateAgOptions           from './ag-grid-options-generate.js';
+import generateColumnDefs          from './ag-grid-column-defs-generate.js';
 
 // CSS
-import style                          from '../stylesheet/index.css';
+import style                       from '../stylesheet/index.css';
 
 /**
  *
@@ -53,7 +52,7 @@ function dataEmitHandler(data) {
   window.refs.rowData = convertWorkingDataToRowData(window.refs.workingData);
   window.bo.agOptions.api.setRowData(window.refs.rowData);
 
-  updateOverview(window.refs.workingData);
+  window.bo.inst.toolbarView.update(window.refs.workingData);
 
 }
 
@@ -92,6 +91,7 @@ window.bo.inst.state.init().then(state => {
   const socket = io();
 
   generateAgOptions().then(agOptions => {
+
     const gridElement = document.querySelector('#ch-grid');
     const grid = new agGrid.Grid(gridElement, agOptions);
 
@@ -101,7 +101,7 @@ window.bo.inst.state.init().then(state => {
     socket.on('store', storeEmitHandler);
 
     window.bo.func.updated('now');
-    window.bo.inst.editDialogue = new EditDialogue('.ch-edit');
+    window.bo.inst.toolbarView = new ToolbarView('.CH-hook-toolbar');
 
     setInterval(window.bo.func.updated, 1000 * 1);
 

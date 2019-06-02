@@ -210,24 +210,40 @@ export default {
    * When a column has stopped being draged
    * Set the BO state
    *
+   * NOTE: This could be a reorder or width change
+   *
    */
   onDragStopped(params) {
 
-    const columns = [];
-    const libKeys = Object.keys(columnLibrary);
-    const agGridColumnState = params.api.columnController.getColumnState();
+    bo.inst.state.get().then(state => {
 
-    for (const [idx, field] of Object.entries(agGridColumnState)) {
-       if (libKeys.includes(field.colId)) {
-         const col = {
-           id: field.colId
-         };
-         if (field.width) col.width = field.width;
-         columns.push(col);
-       }
-    }
+      const columns = [];
 
-    bo.inst.state.set('columns', columns);
+      // Generate brand new column states
+      const libKeysWhitelist = Object.keys(columnLibrary);
+      const agGridColumnState = params.api.columnController.getColumnState();
+      for (const [idx, field] of Object.entries(agGridColumnState)) {
+         if (libKeysWhitelist.includes(field.colId)) {
+           const col = {
+             id: field.colId
+           };
+           if (field.width) col.width = field.width;
+           columns.push(col);
+         }
+      }
+
+      // Merge with previous states
+      const libKeysPreviousState = state.columns.map(v => v.id);
+      for (const [key, column] of Object.entries(columns)) {
+        if (libKeysPreviousState.includes(column.id)) {
+          const old = state.columns.filter(v => v.id === column.id)[0];
+          columns[key] = Object.assign({}, old, column);
+        }
+      }
+
+      bo.inst.state.set('columns', columns);
+
+    })
 
   },
 

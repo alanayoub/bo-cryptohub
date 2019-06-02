@@ -174,12 +174,6 @@ window.bo.inst.state.init().then(state => {
 
       });
 
-      // bo.inst.state.get().then(lastState => {
-      //   // Set Filters
-      //   bo.inst.state.getFilterModel().then(model => {
-      //   });
-      // });
-
     }
 
   });

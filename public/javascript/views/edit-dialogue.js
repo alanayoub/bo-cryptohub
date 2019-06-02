@@ -17,9 +17,10 @@ import style                  from './edit-dialogue.css';
  * @return void
  *
  */
-const okButtonHandler = function() {
+const okButtonHandler = async function () {
 
-  const stateCols = bo.inst.state.get().columns;
+  const state = await bo.inst.state.get();
+  const stateCols = state.columns;
 
   // Map field names to indexes
   const map = {};
@@ -45,7 +46,6 @@ const okButtonHandler = function() {
       });
     }
   }
-
 
   bo.inst.state.set('columns', columns);
 
@@ -74,8 +74,8 @@ export default class EditDialogue {
       this.modal.close();
     });
 
-    this.modal.addFooterBtn('OK', 'BO-btn bo-btn-primary', () => {
-      okButtonHandler();
+    this.modal.addFooterBtn('OK', 'BO-btn bo-btn-primary', async () => {
+      await okButtonHandler();
       this.modal.close();
     });
 
@@ -92,7 +92,7 @@ export default class EditDialogue {
    * Open dialogue and build view
    *
    */
-  open() {
+  async open() {
 
     const allColumns = [];
     for (const [key, val] of Object.entries(columnLibrary)) {
@@ -100,7 +100,9 @@ export default class EditDialogue {
     }
 
     const activeColumns = [];
-    for (const col of bo.inst.state.get().columns) {
+    const state = await bo.inst.state.get();
+    const columns = state.columns;
+    for (const col of columns) {
       const id = col.id;
       activeColumns.push({
         id,

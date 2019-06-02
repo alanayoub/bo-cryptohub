@@ -105,75 +105,11 @@ window.bo.inst.state.init().then(state => {
 
     setInterval(window.bo.func.updated, 1000 * 1);
 
-    /**
-     *
-     * Copy state from url to ag-grid state
-     *
-     *
-     */
     window.onpopstate = event => {
-
-      console.log('onpopstate', event.state);
-      const state = event.state;
-      if (!state) return;
-
-      // Generate columnDefs
-      const columns = state.columns;
-      const columnDefs = generateColumnDefs(state);
-
-      /**
-       *
-       * Update sort
-       *
-       */
-      function updateSort(sort) {
-
-        const sortModel = bo.agOptions.api.getSortModel()[0];
-        const changed = JSON.stringify(sortModel) !== JSON.stringify(sort);
-
-        if (!changed) {
-          return false
-        }
-        else {
-
-          // Delete old
-          for (const def of columnDefs) {
-            delete def.sort;
-          }
-
-          // Add new
-          const sortCol = sort.column;
-          const sortDir = sort.direction;
-          const col = columnDefs.filter(v => v.colId === sortCol)[0];
-          if (col) {
-            col.sort = sortDir;
-          }
-
-          return true;
-
-        }
-
+      if (event.state) {
+        console.log('onpopstate', event.state);
+        bo.inst.state.update(event.state);
       }
-
-      // Set sort order
-      const sortUpdated = updateSort(state.sort);
-
-      const Pstate = bo.inst.state.get();
-      const Pfilters = bo.inst.state.getFilterModel();
-      Promise.all([Pstate, Pfilters]).then(values => {
-
-        const [lastState, filterModel] = values;
-
-        const columnsUpdated = JSON.stringify(lastState.columns) !== JSON.stringify(state.columns);
-
-        if (columnsUpdated || sortUpdated) {
-          bo.agOptions.api.columnController.setColumnDefs(columnDefs);
-        }
-
-        bo.agOptions.api.setFilterModel(filterModel);
-
-      });
-
     }
 
   });

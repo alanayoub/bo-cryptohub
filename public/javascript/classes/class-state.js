@@ -4,6 +4,8 @@
 import { objectSetNestedProperty }              from '../libs/bo-utils-client';
 import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
 
+// ag-grid config
+import generateColumnDefs                       from '../ag-grid-column-defs-generate.js';
 
 import jsonUrl from '../libs/json-url-single.js';
 
@@ -156,6 +158,7 @@ export default class State {
     //
     if (JSON.stringify(sanitizedState) !== JSON.stringify(currentState)) {
       history.pushState(sanitizedState, '/// Binary Overdose', `#${query}`);
+      await this.update();
       console.log('pushState');
     }
 
@@ -177,6 +180,78 @@ export default class State {
       }, {});
     model = isEmptyObject(model) ? null : model;
     return model;
+  }
+
+  /**
+   *
+   * Copy state from url to ag-grid state
+   *
+   * TODO: make sure only stuff that needs updating gets updated
+   *
+   */
+  async update(state) {
+
+    if (!state) {
+      state = await this.get();
+    }
+
+    // Generate columnDefs
+    const columns = state.columns;
+    const columnDefs = generateColumnDefs(state);
+
+    /**
+     *
+     * Update sort
+     *
+     */
+    function updateSort(sort) {
+
+      const sortModel = bo.agOptions.api.getSortModel()[0];
+      const changed = JSON.stringify(sortModel) !== JSON.stringify(sort);
+
+      if (!changed) {
+        return false
+      }
+      else {
+
+        // Delete old
+        for (const def of columnDefs) {
+          delete def.sort;
+        }
+
+        // Add new
+        const sortCol = sort.column;
+        const sortDir = sort.direction;
+        const col = columnDefs.filter(v => v.colId === sortCol)[0];
+        if (col) {
+          col.sort = sortDir;
+        }
+
+        return true;
+
+      }
+
+    }
+
+    // Set sort order
+    const sortUpdated = updateSort(state.sort);
+
+    const Pstate = bo.inst.state.get();
+    const Pfilters = bo.inst.state.getFilterModel();
+    Promise.all([Pstate, Pfilters]).then(values => {
+
+      const [lastState, filterModel] = values;
+
+      const columnsUpdated = JSON.stringify(lastState.columns) !== JSON.stringify(state.columns);
+
+      if (columnsUpdated || sortUpdated) {
+        bo.agOptions.api.columnController.setColumnDefs(columnDefs);
+      }
+
+      bo.agOptions.api.setFilterModel(filterModel);
+
+    });
+
   }
 
   /**

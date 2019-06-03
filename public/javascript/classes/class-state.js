@@ -65,7 +65,8 @@ export default class State {
     const url = new URL(window.location);
     const fragmentId = url.hash.substr(1);
     if (fragmentId.length) {
-      return await State.urlDecode(fragmentId);
+      const obj = await State.urlDecode(fragmentId);
+      return obj.window[0];
     }
     else {
       return void 0;
@@ -86,7 +87,7 @@ export default class State {
 
     let state;
     if (arguments.length === 1) {
-      state = target;
+      state = target.window ? target.window[0] : target;
       target = null;
     }
     else {
@@ -120,8 +121,9 @@ export default class State {
     const currentState = await this.get();
 
     if (JSON.stringify(sanitizedState) !== JSON.stringify(currentState)) {
-      const query = await State.urlEncode(sanitizedState);
-      history.pushState(sanitizedState, '/// Binary Overdose', `#${query}`);
+      const obj = {window: {0: sanitizedState}};
+      const query = await State.urlEncode(obj);
+      history.pushState(obj, '/// Binary Overdose', `#${query}`);
       await this.update();
     }
 
@@ -180,6 +182,9 @@ export default class State {
 
     if (!state) {
       state = await this.get();
+    }
+    if (state.window) {
+      state = state.window[0];
     }
 
     // Generate columnDefs

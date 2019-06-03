@@ -243,9 +243,7 @@ const columnDefs = {
       price: true,
       volume: true,
       volumeDays: 7,
-    },
-    // NOTE: doesnt work yet this is what the docs say to do
-    resizable: false,
+    }
   },
 
   //

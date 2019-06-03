@@ -108,6 +108,8 @@ export default {
 
     },
 
+    cryptohubHover: {},
+
   },
 
   columnDefs: [],
@@ -286,7 +288,6 @@ export default {
   // defaultColDef: contains column properties all columns will inherit.
   defaultColDef: {
     editable: false,
-    resizable: true,
     floatingFilterComponentParams: {
       suppressMenu: true,
       suppressFilterButton: true

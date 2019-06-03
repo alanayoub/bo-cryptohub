@@ -20,7 +20,6 @@ export default class State {
 
     this.defaultConfig = defaultConfig;
     this.baseUrl = `${window.location.protocol}//${window.location.host}/`;
-    this.whitelist = ['sort', 'columns', 'portfolio', 'favourites'];
 
   }
 
@@ -36,10 +35,10 @@ export default class State {
    */
   async init() {
 
-    const urlConfig = await this.getUrl();
+    const urlConfig = await this.get();
     const state = !!urlConfig ? urlConfig : this.defaultConfig;
 
-    return await this.setUrl(state);
+    return await this.set(state);
 
   }
 
@@ -63,16 +62,9 @@ export default class State {
    */
   async get() {
 
-    // let field;
-    // const output = {};
-    // for (field of this.whitelist) {
-    //   output[field] = this[field];
-    // }
-
-    // return output;
     const url = new URL(window.location);
     const fragmentId = url.hash.substr(1);
-    if (fragmentId) {
+    if (fragmentId.length) {
       return await State.urlDecode(fragmentId);
     }
     else {
@@ -85,13 +77,22 @@ export default class State {
    *
    * Set
    *
+   * NOTE: Overloaded
+   * @param {String|Object} target - target property to update or a state object
+   * @param {String|Object} data - data to set on target property. Could be any value
+   *
    */
   async set(target, data) {
-    //
-    // might as well get the url, then set it
-    // bypassing the local state
-    //
-    const state = await this.get();
+
+    let state;
+    if (arguments.length === 1) {
+      state = target;
+      target = null;
+    }
+    else {
+      state = await this.get();
+    }
+
     switch (target) {
       case 'columns':
         objectSetNestedProperty(state, target, data);
@@ -109,56 +110,41 @@ export default class State {
         }
         objectSetNestedProperty(state, 'columns', columns);
         break;
+      case null:
+        // do nothing
       default:
         break;
     }
-    await this.setUrl(state);
+
+    const sanitizedState = State.sanitize(state);
+    const currentState = await this.get();
+
+    if (JSON.stringify(sanitizedState) !== JSON.stringify(currentState)) {
+      const query = await State.urlEncode(sanitizedState);
+      history.pushState(sanitizedState, '/// Binary Overdose', `#${query}`);
+      await this.update();
+    }
+
+    return sanitizedState;
+
   }
 
   /**
    *
-   * Get Url
+   * Sanitize
    *
-   * Get the compressed url data, parse and return the object data
+   * TODO: sanitize propertly, check for code insertion etc
    *
    */
-  async getUrl() {
+  static sanitize(state) {
 
-    const url = new URL(window.location);
-    const fragmentId = url.hash.substr(1);
-    if (fragmentId) {
-      return await State.urlDecode(fragmentId);
-    }
-    else {
-      return void 0;
-    }
+    if (!state) return;
 
-  }
-
-  async setUrl(state) {
-
-    // const state = this.get();
-    // const query = await State.urlEncode(state);
-    // window.location.hash = query;
-
-    const currentState = await this.getUrl();
-    if (!state) {
-      state = currentState;
-    }
-
+    const whitelist = ['sort', 'columns', 'portfolio', 'favourites'];
     const sanitizedState = {};
-    for (const field of this.whitelist) {
-      sanitizedState[field] = state[field];
-    }
 
-    const query = await State.urlEncode(sanitizedState);
-    //
-    // TODO: check changes before pushing, sometimes we get a change when we didnt
-    // actually changes something. Try inputing into a field and deleting without blur
-    //
-    if (JSON.stringify(sanitizedState) !== JSON.stringify(currentState)) {
-      history.pushState(sanitizedState, '/// Binary Overdose', `#${query}`);
-      await this.update();
+    for (const field of whitelist) {
+      sanitizedState[field] = state[field];
     }
 
     return sanitizedState;
@@ -171,7 +157,7 @@ export default class State {
    *
    */
   async getFilterModel() {
-    const state = await this.getUrl();
+    const state = await this.get();
     let model = state.columns
       .reduce((a, v) => {
         if (v.filter) a[v.id] = v.filter;
@@ -254,16 +240,5 @@ export default class State {
     });
 
   }
-
-  /**
-   *
-   * Get Sort Model
-   *
-   */
-  getSortModel() {}
-
-  setProperty() {}
-
-  getProperty() {}
 
 }

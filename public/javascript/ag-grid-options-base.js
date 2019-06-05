@@ -83,6 +83,12 @@ export default {
 
     },
 
+    cryptohubPercentNoFormat: {
+      valueFormatter: valueFormatterPercentChange,
+      // TODO the compound renderer is not what I planned it to be, revisit
+      cellRenderer: CompoundCellRenderer,
+    },
+
     cryptohubPercent: {
       cellClassRules: {
         'cryptohub-text-bad': x => x.value && x.value.value < 0,

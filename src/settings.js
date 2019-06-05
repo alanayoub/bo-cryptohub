@@ -97,7 +97,7 @@ let fieldWhitelist = [
   'm-metrics-ath-price',
   // 'm-metrics-ath-date',
   // 'm-metrics-ath-days',
-  // 'm-metrics-ath-percent-down',
+  'm-metrics-ath-percent-down',
   // 'm-metrics-ath-breakeven-multiple',
   'm-metrics-cycle-low-price',
   // 'm-metrics-cycle-low-data',
@@ -108,9 +108,9 @@ let fieldWhitelist = [
   // 'm-metrics-percent-change-last-3-months',
   // 'm-metrics-percent-change-last-1-year',
   'm-metrics-percent-change-btc-last-1-week',
-  // 'm-metrics-percent-change-btc-last-1-month',
-  // 'm-metrics-percent-change-btc-last-3-months',
-  // 'm-metrics-percent-change-btc-last-1-year',
+  'm-metrics-percent-change-btc-last-1-month',
+  'm-metrics-percent-change-btc-last-3-months',
+  'm-metrics-percent-change-btc-last-1-year',
 
   'cc-total-vol-full-PRICE:last',
   'cc-total-vol-full-TOTALVOLUME24HTO:last',
@@ -129,10 +129,18 @@ let fieldWhitelist = [
 
   'cryptohub-price-btc:last',
 
+  'm-metrics.price-usd',
+  'm-metrics.price-btc',
+  'm-metrics.volume-last-24-hours',
+  'm-metrics.real-volume-last-24-hours',
+  'm-metrics.percent-change-usd-last-24-hours',
+  'm-metrics.percent-change-btc-last-24-hours',
+
 ];
 
 // Keep the last value of each of these fields
 // in a new field with the suffix `:last`
+// This is used to show changes in values
 const fieldLastValue = [
 
   'cc-total-vol-full-PRICE',

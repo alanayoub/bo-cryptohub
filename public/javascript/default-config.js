@@ -10,11 +10,9 @@ export default {
       columns: [
         {id: 'rowIndex'},
         {id: 'name'},
-        {id: 'sectors'},
+
         {
           id: 'priceUSD',
-          hidden: 0,
-          width: 150,
           // filter: '>100500',
           selections: [
             // 10: {
@@ -23,11 +21,18 @@ export default {
           ]
         },
         {id: 'priceBTC'},
-        {id: 'athUSD'},
-        {id: 'cycleLowUSD'},
-        {id: 'percentChange24hUSD'},
-        {id: 'percentChange7dUSD'},
+
         {id: 'sparklineUSD'},
+
+        {id: 'cycleLowUSD'},
+        {id: 'athUSD'},
+        {id: 'athPercentDownUSD'},
+
+        {id: 'messariPercentChange24hBTC'},
+        {id: 'percentChange7dBTC'},
+
+        {id: 'sectors'},
+
         {id: 'volume24hUSD'},
         {id: 'marketcapUSD'},
         {id: 'circulatingSupply'},
@@ -38,6 +43,7 @@ export default {
         {id: 'numberOfPairs'},
         {id: 'numberOfFiatPairs'},
         {id: 'numberOfFiatCurrencies'},
+
       ],
       portfolio: [
         {

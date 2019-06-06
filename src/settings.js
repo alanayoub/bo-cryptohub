@@ -129,12 +129,12 @@ let fieldWhitelist = [
 
   'cryptohub-price-btc:last',
 
-  'm-metrics.price-usd',
-  'm-metrics.price-btc',
-  'm-metrics.volume-last-24-hours',
-  'm-metrics.real-volume-last-24-hours',
-  'm-metrics.percent-change-usd-last-24-hours',
-  'm-metrics.percent-change-btc-last-24-hours',
+  'm-metrics-price-usd',
+  'm-metrics-price-btc',
+  'm-metrics-volume-last-24-hours',
+  'm-metrics-real-volume-last-24-hours',
+  'm-metrics-percent-change-usd-last-24-hours',
+  'm-metrics-percent-change-btc-last-24-hours',
 
 ];
 

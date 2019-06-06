@@ -215,12 +215,12 @@ export default function formatterMessariSectionMetrics(data, timestamp, bootstra
 
         'm-metrics-cycle-low-price-timestamp'        : gnp(data, 'cycle_low.at'),
 
-        'm-metrics.price-usd'                        : gnp(data, 'market_data.price_usd'),
-        'm-metrics.price-btc'                        : gnp(data, 'market_data.price_btc'),
-        'm-metrics.volume-last-24-hours'             : gnp(data, 'market_data.volume_last_24_hours'),
-        'm-metrics.real-volume-last-24-hours'        : gnp(data, 'market_data.real_volume_last_24_hours'),
-        'm-metrics.percent-change-usd-last-24-hours' : gnp(data, 'market_data.percent_change_usd_last_24_hours'),
-        'm-metrics.percent-change-btc-last-24-hours' : gnp(data, 'market_data.percent_change_btc_last_24_hours'),
+        'm-metrics-price-usd'                        : gnp(data, 'market_data.price_usd'),
+        'm-metrics-price-btc'                        : gnp(data, 'market_data.price_btc'),
+        'm-metrics-volume-last-24-hours'             : gnp(data, 'market_data.volume_last_24_hours'),
+        'm-metrics-real-volume-last-24-hours'        : gnp(data, 'market_data.real_volume_last_24_hours'),
+        'm-metrics-percent-change-usd-last-24-hours' : gnp(data, 'market_data.percent_change_usd_last_24_hours'),
+        'm-metrics-percent-change-btc-last-24-hours' : gnp(data, 'market_data.percent_change_btc_last_24_hours'),
 
       }
     };

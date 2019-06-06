@@ -514,7 +514,7 @@ const columnDefs = {
   //
   messariPriceUSD: {
     colId: 'messariPriceUSD',
-    field: 'm-metrics.price-usd',
+    field: 'm-metrics-price-usd',
     headerName: 'Price $',
     headerClass: 'CH-col',
     headerTooltip: 'Price in USD\n\nData Source: Messari',
@@ -538,7 +538,7 @@ const columnDefs = {
   //
   messariPriceBTC: {
     colId: 'messariPriceBTC',
-    field: 'm-metrics.price-btc',
+    field: 'm-metrics-price-btc',
     headerName: 'Price ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Price in BTC\n\nData Source: Messari',
@@ -562,7 +562,7 @@ const columnDefs = {
   //
   messariVolume24hUSD: {
     colId: 'messariVolume24hUSD',
-    field: 'm-metrics.volume-last-24-hours',
+    field: 'm-metrics-volume-last-24-hours',
     headerName: 'Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Messari',
@@ -583,7 +583,7 @@ const columnDefs = {
   //
   messariRealVolume24hUSD: {
     colId: 'messariRealVolume24hUSD',
-    field: 'm-metrics.real-volume-last-24-hours',
+    field: 'm-metrics-real-volume-last-24-hours',
     headerName: 'Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Messari',
@@ -604,7 +604,7 @@ const columnDefs = {
   //
   messariPercentChange24hUSD: {
     colId: 'messariPercentChange24hUSD',
-    field: 'm-metrics.percent-change-usd-last-24-hours',
+    field: 'm-metrics-percent-change-usd-last-24-hours',
     headerName: 'Δ 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Messari',
@@ -622,7 +622,7 @@ const columnDefs = {
   //
   messariPercentChange24hBTC: {
     colId: 'messariPercentChange24hBTC',
-    field: 'm-metrics.percent-change-btc-last-24-hours',
+    field: 'm-metrics-percent-change-btc-last-24-hours',
     headerName: 'Δ 24h ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against BTC\n\nData Source: Messari',

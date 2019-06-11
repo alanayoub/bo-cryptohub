@@ -13,7 +13,6 @@ module.exports = async function getJobsMessariSectionMetrics(queue, bootstrapDat
   try {
 
     if (!appBootstrapData.firstXSymbols) {
-      console.log('waiting for bootstrap data');
       return;
     }
     else {

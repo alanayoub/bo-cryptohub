@@ -22,7 +22,7 @@ export default async function generateAgOptions() {
   if (!window.refs) throw new Error('window.refs does not exist');
 
   const state = await bo.inst.state.get();
-  const filterModel = await bo.inst.state.getFilterModel()
+  const filterModel = await bo.inst.state.getFilterModel();
 
   /**
    *

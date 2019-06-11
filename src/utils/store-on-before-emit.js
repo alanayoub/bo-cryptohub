@@ -3,7 +3,7 @@
 // Binary Overdose Projects
 import DataTable from 'bo-datatable';
 
-export default function storeOnBeforeEmit(options, newData, oldData) {
+export default function storeOnBeforeEmit(options, socket, newData, oldData) {
 
   const type = options.diff !== false ? 'changeset' : 'full';
   let data = newData;

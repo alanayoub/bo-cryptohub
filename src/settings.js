@@ -152,6 +152,140 @@ const fieldLastValue = [
 
 fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
 
+const defaultColumns = [
+  'rowIndex',
+  'name',
+  'priceUSD',
+  'priceBTC',
+  'sparklineUSD',
+  'cycleLowUSD',
+  'athUSD',
+  'athPercentDownUSD',
+  'messariPercentChange24hBTC',
+  'percentChange7dBTC',
+  'sectors',
+  'volume24hUSD',
+  'marketcapUSD',
+  'circulatingSupply',
+  'proofType',
+  'algo',
+  'hashesPerSecond',
+  'numberOfExchanges',
+  'numberOfPairs',
+  'numberOfFiatPairs',
+  'numberOfFiatCurrencies',
+];
+
+fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
+
+const columnDependencies = {
+  rowIndex: [
+    'rowIndex',
+    'cc-total-vol-full-Id',
+  ],
+  name: [
+    'cc-total-vol-full-FullName',
+    'cc-coinlist-Symbol',
+    'cc-total-vol-full-ImageUrl',
+  ],
+  sectors: [
+    'm-metrics-sectors',
+  ],
+  priceUSD: [
+    'cc-total-vol-full-PRICE',
+  ],
+  priceBTC: [
+    'cryptohub-price-btc',
+  ],
+  athUSD: [
+    'm-metrics-ath-price',
+  ],
+  athPercentDownUSD: [
+    'm-metrics-ath-percent-down',
+  ],
+  cycleLowUSD: [
+    'm-metrics-cycle-low-price',
+  ],
+  percentChange24hUSD: [
+    'cc-total-vol-full-CHANGEPCTDAY',
+  ],
+  percentChange7dBTC: [
+    'm-metrics-percent-change-btc-last-1-week',
+  ],
+  percentChange1mBTC: [
+    'm-metrics-percent-change-btc-last-1-month',
+  ],
+  percentChange3mBTC: [
+    'm-metrics-percent-change-btc-last-3-months',
+  ],
+  percentChange1yBTC: [
+    'm-metrics-percent-change-btc-last-1-year',
+  ],
+  sparklineUSD: [
+    'cryptohub-price-history',
+  ],
+  volume24hUSD: [
+    'cc-total-vol-full-TOTALVOLUME24HTO',
+  ],
+  marketcapUSD: [
+    'cc-total-vol-full-MKTCAP',
+  ],
+  circulatingSupply: [
+    'cc-total-vol-full-SUPPLY',
+  ],
+  proofType: [
+    'cc-total-vol-full-ProofType',
+  ],
+  algo: [
+    'cc-total-vol-full-Algorithm',
+  ],
+  hashesPerSecond: [
+    'cc-total-vol-full-NetHashesPerSecond',
+  ],
+  numberOfExchanges: [
+    'cryptohub-numberOfExchanges',
+  ],
+  numberOfPairs: [
+    'cryptohub-numberOfPairs',
+  ],
+  numberOfFiatPairs: [
+    'cryptohub-numberOfFiatPairs',
+  ],
+  numberOfFiatCurrencies: [
+    'cryptohub-numberOfFiatCurrencies',
+  ],
+  messariPriceUSD: [
+    'm-metrics-price-usd',
+  ],
+  messariPriceBTC: [
+    'm-metrics-price-btc',
+  ],
+  messariVolume24hUSD: [
+    'm-metrics-volume-last-24-hours',
+  ],
+  messariRealVolume24hUSD: [
+    'm-metrics-real-volume-last-24-hours',
+  ],
+  messariPercentChange24hUSD: [
+    'm-metrics-percent-change-usd-last-24-hours',
+  ],
+  messariPercentChange24hBTC: [
+    'm-metrics-percent-change-btc-last-24-hours',
+  ],
+}
+
+// Add timestamp fields to each dependency
+{
+  let copy;
+  for (const values of Object.values(columnDependencies)) {
+    copy = [];
+    for (const field of values) {
+      copy.push(`${field}-timestamp`)
+    }
+    values = values.push(...copy);
+  }
+}
+
 /**
  *
  *  uriCryptocompareList:
@@ -199,11 +333,14 @@ const settings = {
   scrapeDir,
   generatedDir,
 
+  columnDependencies,
+
   //
   // Lists
   //
   fieldWhitelist,
   fieldLastValue,
+  defaultColumns,
 
   //
   // Cache

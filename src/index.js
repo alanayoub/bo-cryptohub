@@ -226,7 +226,7 @@ try {
   // datatable.api.output(data)
   // datatable.api.output(store)
 
-  function getFirstXRows(data, numRows) {
+  function getFirstXRows(data, numRows = 50) {
 
     let id;
     let ids;
@@ -238,8 +238,9 @@ try {
 
     rows = Object
       .values(data)
+      .filter(a => a[idField])
       .sort((a, b) => b[volField] - a[volField])
-      .splice(0, numRows);
+      .slice(0, numRows);
 
     ids = rows.map(a => a[idField]);
     for (id of ids) output[id] = data[id];
@@ -272,9 +273,10 @@ try {
         onBeforeHandleData: analyticsMergeDataByKey,
         onHandleData: partialApplication(dataOnHandleData, {}),
         onAfterConnect(event, socket, data) {
-          socket.emit(event, dataOnBeforeEmit({diff: false}, data, initData));
+          const emitData = dataOnBeforeEmit({diff: false}, socket, data, initData);
+          socket.emit(event, emitData);
         },
-        onBeforeEmit: partialApplication(dataOnBeforeEmit, {}),
+        onBeforeEmit: partialApplication(dataOnBeforeEmit, {diff: true}),
         onBeforeBootstrapSave: data => {
           initData = getFirstXRows(data, settings.maxRowsTemplatedIn);
           if (!settings.maxRowsTemplatedIn) return data;
@@ -285,9 +287,10 @@ try {
         onBeforeHandleData: data => data,
         onHandleData: partialApplication(storeOnHandleData, {}),
         onAfterConnect(event, socket, data) {
-          socket.emit(event, storeOnBeforeEmit({diff: false}, data, {}));
+          const emitData = storeOnBeforeEmit({diff: false}, data, {})
+          socket.emit(event, emitData);
         },
-        onBeforeEmit: partialApplication(storeOnBeforeEmit, {}),
+        onBeforeEmit: partialApplication(storeOnBeforeEmit, {diff: true}),
         onBeforeBootstrapSave: (data) => {
           return data;
         }

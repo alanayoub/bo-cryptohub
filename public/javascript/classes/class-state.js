@@ -2,12 +2,14 @@
 
 // Binary Overdose Projects
 import { objectSetNestedProperty }              from '../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp }       from '../libs/bo-utils-client';
 import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
 
 // ag-grid config
 import generateColumnDefs                       from '../ag-grid-column-defs-generate.js';
+import columnLibrary                            from '../column-library.js';
 
-import jsonUrl from '../libs/json-url-single.js';
+import jsonUrl                                  from '../libs/json-url-single.js';
 
 export default class State {
 
@@ -37,7 +39,6 @@ export default class State {
 
     const urlConfig = await this.get();
     const state = !!urlConfig ? urlConfig : this.defaultConfig;
-
     return await this.set(state);
 
   }
@@ -117,18 +118,40 @@ export default class State {
         break;
     }
 
-    const sanitizedState = State.sanitize(state);
-    const currentState = await this.get();
+    const newState = State.sanitize(state);
+    const oldState = await this.get();
 
-    if (JSON.stringify(sanitizedState) !== JSON.stringify(currentState)) {
-      const obj = {window: {0: sanitizedState}};
+    if (JSON.stringify(newState) !== JSON.stringify(oldState)) {
+      const obj = {window: {0: newState}};
       const query = await State.urlEncode(obj);
       history.pushState(obj, '/// Binary Overdose', `#${query}`);
       await this.update();
+
+      if (bo.inst.socket) {
+        const oldCols = gnp(oldState, 'columns') || [];
+        const newColFields = State.columnsChanged(oldCols, newState.columns)
+        if (newColFields) {
+          const cols = newColFields.join();
+          bo.inst.socket.emit('cols', cols);
+          console.log('emit for new cols', cols);
+        }
+      }
+
     }
 
-    return sanitizedState;
+    return newState;
 
+  }
+
+  /**
+   *
+   * If cols changed return new cols
+   *
+   */
+  static columnsChanged(oldCols, newCols) {
+    const oldFields = oldCols.map(x => x.id).sort((a, b) => a.length - b.length);
+    const newFields = newCols.map(x => x.id).sort((a, b) => a.length - b.length);
+    return JSON.stringify(oldFields) !== JSON.stringify(newFields) ? newFields : false;
   }
 
   /**

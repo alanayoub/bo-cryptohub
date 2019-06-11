@@ -36,6 +36,7 @@ import style                       from '../stylesheet/index.css';
  */
 function dataEmitHandler(data) {
 
+  console.log('received data');
   window.bo.func.updated('now');
 
   let newSocketData = JSON.parse(data);
@@ -46,6 +47,7 @@ function dataEmitHandler(data) {
     window.DataTable.changesets.applyChanges(window.refs.workingData, newSocketData);
   }
   else {
+    if (!window.initData) window.initData = newSocketData;
     window.refs.workingData = newSocketData;
   }
 
@@ -80,6 +82,7 @@ function storeEmitHandler(data) {
       ...window.ch,
       ...newSocketData
     };
+    if (!window.initStore) window.initStore = window.ch;
   }
 
 }
@@ -88,7 +91,8 @@ window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);
 window.bo.inst.state.init().then(state => {
 
-  const socket = io();
+  const cols = state.columns.map(v => v.id);
+  window.bo.inst.socket = io({query: { cols } });
 
   generateAgOptions().then(agOptions => {
 
@@ -97,8 +101,8 @@ window.bo.inst.state.init().then(state => {
 
     if (!grid) throw new Error('Cant find grid');
 
-    socket.on('data', dataEmitHandler);
-    socket.on('store', storeEmitHandler);
+    bo.inst.socket.on('data', dataEmitHandler);
+    bo.inst.socket.on('store', storeEmitHandler);
 
     window.bo.func.updated('now');
     window.bo.inst.toolbarView = new ToolbarView('.CH-hook-toolbar');
@@ -107,7 +111,6 @@ window.bo.inst.state.init().then(state => {
 
     window.onpopstate = event => {
       if (event.state) {
-        console.log('onpopstate', event.state);
         bo.inst.state.update(event.state);
       }
     }

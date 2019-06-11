@@ -2,6 +2,7 @@
 
 // Binary Overdose Projects
 import DataTable from 'bo-datatable';
+import { objectGetNestedProperty as gnp }  from 'bo-utils';
 
 // CryptoHub
 import settings from '../settings';
@@ -44,13 +45,28 @@ function isFresh(item) {
  * @return {Object}
  *
  */
-function filterData(data) {
+function filterData(socket, data) {
 
   let key;
   let item;
   let field;
   let fields;
+
   const whitelist = settings.fieldWhitelist;
+  let requiredFields = new Set();
+
+  if (socket) {
+    let columns = gnp(socket, 'handshake.query.cols') || '';
+    columns = columns.split(',');
+    columns = columns.length ? columns : settings.defaultColumns;
+    for (const col of columns) {
+      for (field of settings.columnDependencies[col]) {
+        requiredFields.add(field);
+      }
+    }
+  }
+  requiredFields = Array.from(requiredFields);
+
 
   for ([key, item] of Object.entries(data)) {
     if (!validData(item) || !isFresh(item)) {
@@ -61,7 +77,7 @@ function filterData(data) {
       // remove fields that are not being used
       fields = Object.keys(data[key]);
       for (field of fields) {
-        if (!whitelist.includes(field) || (settings.removeNullFields && data[key][field] === null)) {
+        if (!requiredFields.includes(field) || !whitelist.includes(field) || (settings.removeNullFields && data[key][field] === null)) {
           delete data[key][field];
           delete data[key][`${field}-timestamp`];
         }
@@ -78,10 +94,10 @@ function filterData(data) {
  *
  *
  */
-export default function dataOnBeforeEmit(options, newData, oldData) {
+export default function dataOnBeforeEmit(options, socket, newData, oldData) {
 
   const type = options.diff !== false ? 'changeset' : 'full';
-  let data = filterData(newData);
+  let data = filterData(socket, newData);
 
   if (type === 'changeset') {
     data = DataTable.diff(oldData, data);

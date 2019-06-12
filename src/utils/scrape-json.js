@@ -14,7 +14,7 @@ const logger   = require('../logger');
 module.exports = async function scrapeJSON(uri, key, cacheFor, cache) {
   try {
     let error;
-    let [file, age] = cache.get(key);
+    let [file, age] = await cache.get(key);
     if (!file || age > cacheFor) {
       [error, file] = await to(rp({uri, json: true}));
       if (error) throw new Error(error);

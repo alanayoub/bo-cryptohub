@@ -17,7 +17,7 @@ module.exports = async function scrapeHTML(uri, key, cacheFor, cache) {
       uri,
       transform: html => cheerio.load(html)
     };
-    let [file, age] = cache.get(key);
+    let [file, age] = await cache.get(key);
     if (!file || age > cacheFor) {
       const [error, $] = await to(rp(options));
       if (error) throw new Error(error);

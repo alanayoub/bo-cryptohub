@@ -124,23 +124,28 @@ export default class State {
     if (JSON.stringify(newState) !== JSON.stringify(oldState)) {
       const obj = {window: {0: newState}};
       const query = await State.urlEncode(obj);
+      await this.update(newState);
       history.pushState(obj, '/// Binary Overdose', `#${query}`);
-      await this.update();
-
-      if (bo.inst.socket) {
-        const oldCols = gnp(oldState, 'columns') || [];
-        const newColFields = State.columnsChanged(oldCols, newState.columns)
-        if (newColFields) {
-          const cols = newColFields.join();
-          bo.inst.socket.emit('cols', cols);
-          console.log('emit for new cols', cols);
-        }
-      }
-
     }
 
     return newState;
 
+  }
+
+  /**
+   *
+   *
+   */
+  emit(oldState, newState) {
+    if (bo.inst.socket) {
+      const oldCols = gnp(oldState, 'columns') || [];
+      const newColFields = State.columnsChanged(oldCols, newState.columns)
+      if (newColFields) {
+        const cols = newColFields.join();
+        bo.inst.socket.emit('cols', cols);
+        console.log('emit for new cols', cols);
+      }
+    }
   }
 
   /**
@@ -178,7 +183,7 @@ export default class State {
 
   /**
    *
-   * Get Filter Model
+   * Get URL Filter State
    *
    */
   async getFilterModel() {
@@ -194,25 +199,48 @@ export default class State {
 
   /**
    *
+   * Get Active AG Grid State Representation
+   *
+   */
+   getAgState() {
+     const columns = [];
+     const api = bo.agOptions.api;
+     const filters = api.getFilterModel();
+     const sort = api.getSortModel()[0];
+     const cols = api.columnController.getColumnState();
+     cols.forEach(c => {
+       columns.push({
+         ...(filters[c.colId] !== void 0 && {filter: filters[c.colId]}),
+         id: c.colId,
+         width: c.width
+       })
+     });
+
+     return {columns, sort};
+   }
+
+  /**
+   *
    * Copy state from url to ag-grid state
    *
    * TODO: make sure only stuff that needs updating gets updated
    *
    */
-  async update(state) {
+  async update(newState) {
 
     if (!bo.agOptions) return;
 
-    if (!state) {
-      state = await this.get();
+    if (!newState) {
+      debugger;
+      // state = await this.get();
     }
-    if (state.window) {
-      state = state.window[0];
+    if (newState.window) {
+      newState = newState.window[0];
     }
 
     // Generate columnDefs
-    const columns = state.columns;
-    const columnDefs = generateColumnDefs(state);
+    const columns = newState.columns;
+    const columnDefs = generateColumnDefs(newState);
 
     /**
      *
@@ -249,23 +277,23 @@ export default class State {
     }
 
     // Set sort order
-    const sortUpdated = updateSort(state.sort);
+    const sortUpdated = updateSort(newState.sort);
 
-    const Pstate = bo.inst.state.get();
-    const Pfilters = bo.inst.state.getFilterModel();
-    Promise.all([Pstate, Pfilters]).then(values => {
+    const agState = this.getAgState();
+    const [ filterModel ] = await Promise.all([
+      bo.inst.state.getFilterModel()
+    ]);
 
-      const [lastState, filterModel] = values;
+    const columnsUpdated = JSON.stringify(agState.columns) !== JSON.stringify(newState.columns);
 
-      const columnsUpdated = JSON.stringify(lastState.columns) !== JSON.stringify(state.columns);
+    if (columnsUpdated || sortUpdated) {
+      bo.agOptions.api.columnController.setColumnDefs(columnDefs);
+    }
+    if (columnsUpdated) {
+      this.emit(agState, newState);
+    }
 
-      if (columnsUpdated || sortUpdated) {
-        bo.agOptions.api.columnController.setColumnDefs(columnDefs);
-      }
-
-      bo.agOptions.api.setFilterModel(filterModel);
-
-    });
+    bo.agOptions.api.setFilterModel(filterModel);
 
   }
 

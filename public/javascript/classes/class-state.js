@@ -109,6 +109,9 @@ export default class State {
           if (filters.includes(column.id)) {
             column.filter = data[column.id];
           }
+          else {
+            delete column.filter;
+          }
         }
         objectSetNestedProperty(state, 'columns', columns);
         break;

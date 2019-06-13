@@ -36,7 +36,6 @@ import style                       from '../stylesheet/index.css';
  */
 function dataEmitHandler(data) {
 
-  console.log('received data');
   window.bo.func.updated('now');
 
   let newSocketData = JSON.parse(data);

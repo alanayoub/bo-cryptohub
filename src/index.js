@@ -247,7 +247,7 @@ try {
     return output;
   }
 
-  let initData = {};
+  let initData = null;
   const dataTable = new DataTable({
 
     dbDir: settings.dbDir,

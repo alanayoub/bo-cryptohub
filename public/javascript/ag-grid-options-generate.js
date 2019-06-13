@@ -44,8 +44,8 @@ export default async function generateAgOptions() {
 
     window.bo.func.updated('now');
     window.refs.workingData = window.initData;
-    window.refs.rowData = convertWorkingDataToRowData(window.initData || {});
-    params.api.setRowData(window.refs.rowData);
+    window.refs.rowData = null;
+    if (window.refs.rowData) params.api.setRowData(window.refs.rowData);
 
     window.bo.inst.toolbarView.update(window.refs.workingData);
 

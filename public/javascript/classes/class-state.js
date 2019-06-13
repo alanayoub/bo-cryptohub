@@ -124,28 +124,12 @@ export default class State {
     if (JSON.stringify(newState) !== JSON.stringify(oldState)) {
       const obj = {window: {0: newState}};
       const query = await State.urlEncode(obj);
-      await this.update(newState);
       history.pushState(obj, '/// Binary Overdose', `#${query}`);
+      await this.update(newState);
     }
 
     return newState;
 
-  }
-
-  /**
-   *
-   *
-   */
-  emit(oldState, newState) {
-    if (bo.inst.socket) {
-      const oldCols = gnp(oldState, 'columns') || [];
-      const newColFields = State.columnsChanged(oldCols, newState.columns)
-      if (newColFields) {
-        const cols = newColFields.join();
-        bo.inst.socket.emit('cols', cols);
-        console.log('emit for new cols', cols);
-      }
-    }
   }
 
   /**
@@ -205,7 +189,7 @@ export default class State {
    getAgState() {
      const columns = [];
      const api = bo.agOptions.api;
-     const filters = api.getFilterModel();
+     const filters = api.getFilterModel() || {};
      const sort = api.getSortModel()[0];
      const cols = api.columnController.getColumnState();
      cols.forEach(c => {
@@ -230,10 +214,7 @@ export default class State {
 
     if (!bo.agOptions) return;
 
-    if (!newState) {
-      debugger;
-      // state = await this.get();
-    }
+    // Stub while we only have one "window"
     if (newState.window) {
       newState = newState.window[0];
     }
@@ -242,20 +223,14 @@ export default class State {
     const columns = newState.columns;
     const columnDefs = generateColumnDefs(newState);
 
-    /**
-     *
-     * Update sort
-     *
-     */
-    function updateSort(sort) {
-
+    // Set sort order on columnDefs
+    let sortUpdated = false;
+    {
+      const sort = newState.sort;
       const sortModel = bo.agOptions.api.getSortModel()[0];
       const changed = JSON.stringify(sortModel) !== JSON.stringify(sort);
 
-      if (!changed) {
-        return false
-      }
-      else {
+      if (changed) {
 
         // Delete old
         for (const def of columnDefs) {
@@ -270,30 +245,33 @@ export default class State {
           col.sort = sortDir;
         }
 
-        return true;
+        sortUpdated = true;
 
       }
-
     }
 
-    // Set sort order
-    const sortUpdated = updateSort(newState.sort);
-
     const agState = this.getAgState();
-    const [ filterModel ] = await Promise.all([
-      bo.inst.state.getFilterModel()
-    ]);
-
     const columnsUpdated = JSON.stringify(agState.columns) !== JSON.stringify(newState.columns);
 
+    // Update AG Grid columnDefs
     if (columnsUpdated || sortUpdated) {
       bo.agOptions.api.columnController.setColumnDefs(columnDefs);
     }
-    if (columnsUpdated) {
-      this.emit(agState, newState);
-    }
 
+    // Update AG Grid filters
+    const filterModel = await bo.inst.state.getFilterModel();
     bo.agOptions.api.setFilterModel(filterModel);
+
+    // If columns have changed emit a socket event with the new column state
+    if (columnsUpdated && bo.inst.socket) {
+      const oldCols = gnp(agState, 'columns') || [];
+      const newColFields = State.columnsChanged(oldCols, newState.columns)
+      if (newColFields) {
+        const cols = newColFields.join();
+        bo.inst.socket.emit('cols', cols);
+        console.log('emit for new cols', cols);
+      }
+    }
 
   }
 

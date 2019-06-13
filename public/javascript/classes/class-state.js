@@ -43,17 +43,70 @@ export default class State {
 
   }
 
+  /**
+   *
+   * URL Encode
+   *
+   */
   static async urlEncode(obj, algo = 'lzma') {
+
 	const codec = jsonUrl(algo);
 	const output = await codec.compress(obj);
+
     return output;
+
   }
 
+  /**
+   *
+   * URL Decode
+   *
+   */
   static async urlDecode(str, algo = 'lzma') {
+
 	const codec = jsonUrl(algo);
     const output = await codec.decompress(str);
+
     return output;
+
   }
+
+  /**
+   *
+   * If cols changed return new cols
+   *
+   */
+  static columnsChanged(oldCols, newCols) {
+
+    const oldFields = oldCols.map(x => x.id).sort((a, b) => a.length - b.length);
+    const newFields = newCols.map(x => x.id).sort((a, b) => a.length - b.length);
+
+    return JSON.stringify(oldFields) !== JSON.stringify(newFields) ? newFields : false;
+
+  }
+
+  /**
+   *
+   * Sanitize
+   *
+   * TODO: sanitize propertly, check for code insertion etc
+   *
+   */
+  static sanitize(state) {
+
+    if (!state) return;
+
+    const whitelist = ['sort', 'columns', 'portfolio', 'favourites'];
+    const sanitizedState = {};
+
+    for (const field of whitelist) {
+      sanitizedState[field] = state[field];
+    }
+
+    return sanitizedState;
+
+  }
+
 
   /**
    *
@@ -137,43 +190,11 @@ export default class State {
 
   /**
    *
-   * If cols changed return new cols
-   *
-   */
-  static columnsChanged(oldCols, newCols) {
-    const oldFields = oldCols.map(x => x.id).sort((a, b) => a.length - b.length);
-    const newFields = newCols.map(x => x.id).sort((a, b) => a.length - b.length);
-    return JSON.stringify(oldFields) !== JSON.stringify(newFields) ? newFields : false;
-  }
-
-  /**
-   *
-   * Sanitize
-   *
-   * TODO: sanitize propertly, check for code insertion etc
-   *
-   */
-  static sanitize(state) {
-
-    if (!state) return;
-
-    const whitelist = ['sort', 'columns', 'portfolio', 'favourites'];
-    const sanitizedState = {};
-
-    for (const field of whitelist) {
-      sanitizedState[field] = state[field];
-    }
-
-    return sanitizedState;
-
-  }
-
-  /**
-   *
    * Get URL Filter State
    *
    */
   async getFilterModel() {
+
     const state = await this.get();
     let model = state.columns
       .reduce((a, v) => {
@@ -181,7 +202,9 @@ export default class State {
         return a;
       }, {});
     model = isEmptyObject(model) ? null : model;
+
     return model;
+
   }
 
   /**
@@ -190,6 +213,7 @@ export default class State {
    *
    */
    getAgState() {
+
      const columns = [];
      const api = bo.agOptions.api;
      const filters = api.getFilterModel() || {};
@@ -204,6 +228,7 @@ export default class State {
      });
 
      return {columns, sort};
+
    }
 
   /**

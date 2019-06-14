@@ -50,10 +50,11 @@ function dataEmitHandler(data) {
     window.refs.workingData = newSocketData;
   }
 
-  window.refs.rowData = convertWorkingDataToRowData(window.refs.workingData);
-  window.bo.agOptions.api.setRowData(window.refs.rowData);
-
-  window.bo.inst.toolbarView.update(window.refs.workingData);
+  if (window.refs.workingData) {
+    window.refs.rowData = convertWorkingDataToRowData(window.refs.workingData);
+    window.bo.agOptions.api.setRowData(window.refs.rowData);
+    window.bo.inst.toolbarView.update(window.refs.workingData);
+  }
 
 }
 

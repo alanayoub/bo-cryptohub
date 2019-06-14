@@ -67,7 +67,6 @@ function filterData(socket, data) {
   }
   requiredFields = Array.from(requiredFields);
 
-
   for ([key, item] of Object.entries(data)) {
     if (!validData(item) || !isFresh(item)) {
       // remove record
@@ -97,13 +96,17 @@ function filterData(socket, data) {
 export default function dataOnBeforeEmit(options, socket, newData, oldData) {
 
   const type = options.diff !== false ? 'changeset' : 'full';
-  let data = filterData(socket, newData);
+  newData = filterData(socket, newData);
+  oldData = filterData(socket, oldData);
 
+  let data = newData;
   if (type === 'changeset') {
     data = DataTable.diff(oldData, data);
+    data = data.length ? JSON.stringify({data, type}) : false;
   }
-
-  data = JSON.stringify({data, type});
+  else {
+    data = Object.keys(data) ? JSON.stringify({data, type}) : false;
+  }
 
   return data;
 

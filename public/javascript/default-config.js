@@ -17,6 +17,7 @@ export default {
         {id: 'sectors'},
         {id: 'volume24hUSD'},
         {id: 'marketcapUSD'},
+        {id: 'marketcapUSDCMC'},
         {id: 'circulatingSupply'},
         {id: 'proofType'},
         {id: 'algo'},

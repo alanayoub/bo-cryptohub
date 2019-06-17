@@ -73,6 +73,7 @@ const generatedDir = `${cacheDir}/tmp-generated`;
 const scrapeDir    = `${cacheDir}/tmp-scrape`;
 const dbDir        = `${cacheDir}/db`;
 
+const coinmarketcapApiKey = '84e034e2-3972-47eb-9349-5e4dc20211cd';
 const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222';
 
 let fieldWhitelist = [
@@ -136,6 +137,22 @@ let fieldWhitelist = [
   'm-metrics-percent-change-usd-last-24-hours',
   'm-metrics-percent-change-btc-last-24-hours',
 
+  'cmc-listings-circulating_supply',
+  'cmc-listings-cmc_rank',
+  'cmc-listings-date_added',
+  'cmc-listings-id',
+  'cmc-listings-last_updated',
+  'cmc-listings-max_supply',
+  'cmc-listings-name',
+  'cmc-listings-num_market_pairs',
+  'cmc-listings-tags',
+  'cmc-listings-total_supply',
+  'cmc-listings-market_cap',
+  'cmc-listings-percent_change_1h',
+  'cmc-listings-percent_change_7d',
+  'cmc-listings-percent_change_24h',
+  'cmc-listings-volume_24h',
+
 ];
 
 // Keep the last value of each of these fields
@@ -166,6 +183,7 @@ const defaultColumns = [
   'sectors',
   'volume24hUSD',
   'marketcapUSD',
+  'marketcapUSDCMC',
   'circulatingSupply',
   'proofType',
   'algo',
@@ -272,6 +290,9 @@ const columnDependencies = {
   messariPercentChange24hBTC: [
     'm-metrics-percent-change-btc-last-24-hours',
   ],
+  marketcapUSDCMC: [
+    'cmc-listings-market_cap',
+  ],
 }
 
 // Add timestamp fields to each dependency
@@ -349,6 +370,7 @@ const settings = {
   cacheForXe:                                  isProd ? 0 : 1000 * 60 * 10,
   cacheForMessari:                             isProd ? 0 : 1000 * 60 * 10,
   cacheForCryptocompare:                       isProd ? 0 : 1000 * 60 * 10,
+  cacheForCoinmarketcap:                       isProd ? 0 : 1000 * 60 * 60 * 24,
 
   //
   // RateLimits
@@ -370,6 +392,13 @@ const settings = {
 
   // Unknow at the moment
   rateLimitMessari:                            1000 * 10,
+
+  //
+  // Based on credits so need to implement checks
+  //
+  // For cryptocurrency listings its 1 credit per 200 results
+  //
+  rateLimitCoinmarketcap:                      1000 * 60 * 60,
 
   rateLimitXe:                                 1000 * 60 * 60 * 24,
 
@@ -425,9 +454,9 @@ const settings = {
   //
   // Coinmarketcap
   //
-  // tagUriCoinmarketcapTicker:                   (str, ob) => `https://api.coinmarketcap.com/v2/ticker/?start=${ob.start || 0}&limit=${ob.limit || 100}&sort=${ob.sort || 'id'}`,
-  // tagKeyCoinmarketcapTicker:                   (str, ob) => `/coinmarketcap/ticker/${ob.cacheKey}.json`,
-  // tagKeyCoinmarketcapTickerGrouped:            (str, ob) => `/coinmarketcap/ticker-grouped/data.json`,
+
+  uriCoinmarketcapCryptocurrencyListings: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?CMC_PRO_API_KEY=${coinmarketcapApiKey}&start=1&limit=1000&convert=USD`,
+  keyCoinmarketcapCryptocurrencyListings: `${scrapeDir}/coinmarketcap-cryptocurrency-listings/data.json`,
 
   // uriCoinmarketcapList:                        'https://api.coinmarketcap.com/v2/listings/',
   // keyCoinmarketcapList:                        '/coinmarketcap/search/coins.json',

@@ -10,41 +10,42 @@
 //
 
 // Node
-import { join }                                      from 'path';
+import { join }                                            from 'path';
 
 // Libs
 import '@babel/polyfill';
 
 // Binary Overdose Projects
-import DataTable                                     from 'bo-datatable';
-import { partialApplication }                        from 'bo-utils';
+import DataTable                                           from 'bo-datatable';
+import { partialApplication }                              from 'bo-utils';
 
 // CryptoHub
-import settings                                      from './settings';
+import settings                                            from './settings';
 
 // Handlers
-import dataOnHandleData                              from './utils/data-on-handle-data';
-import storeOnHandleData                             from './utils/store-on-handle-data';
-import dataOnBeforeEmit                              from './utils/data-on-before-emit.js';
-import storeOnBeforeEmit                             from './utils/store-on-before-emit.js';
+import dataOnHandleData                                    from './utils/data-on-handle-data';
+import storeOnHandleData                                   from './utils/store-on-handle-data';
+import dataOnBeforeEmit                                    from './utils/data-on-before-emit.js';
+import storeOnBeforeEmit                                   from './utils/store-on-before-emit.js';
 
 // Formatters
-import formatterCryptocompareBootstrap               from './utils/formatter-cryptocompare-bootstrap.js';
-import formatterCryptocompareSectionPrice            from './utils/formatter-cryptocompare-section-price.js';
-import formatterCryptocompareSectionCoinlist         from './utils/formatter-cryptocompare-section-coinlist.js';
-import formatterCryptocompareSectionExchangesList    from './utils/formatter-cryptocompare-section-exchanges-list.js';
-import formatterCryptocompareSectionExchangesGeneral from './utils/formatter-cryptocompare-section-exchanges-general.js';
-import formatterCryptocompareSectionTotalVolFull     from './utils/formatter-cryptocompare-section-total-vol-full.js';
-import formatterXeSectionCurrency                    from './utils/formatter-xe-section-currency.js';
-import formatterMessariSectionMetrics                from './utils/formatter-messari-section-metrics.js';
+import formatterCryptocompareBootstrap                     from './utils/formatter-cryptocompare-bootstrap.js';
+import formatterCryptocompareSectionPrice                  from './utils/formatter-cryptocompare-section-price.js';
+import formatterCryptocompareSectionCoinlist               from './utils/formatter-cryptocompare-section-coinlist.js';
+import formatterCryptocompareSectionExchangesList          from './utils/formatter-cryptocompare-section-exchanges-list.js';
+import formatterCryptocompareSectionExchangesGeneral       from './utils/formatter-cryptocompare-section-exchanges-general.js';
+import formatterCryptocompareSectionTotalVolFull           from './utils/formatter-cryptocompare-section-total-vol-full.js';
+import formatterXeSectionCurrency                          from './utils/formatter-xe-section-currency.js';
+import formatterMessariSectionMetrics                      from './utils/formatter-messari-section-metrics.js';
+import formatterCoinmarketcapSectionCryptocurrencyListings from './utils/formatter-coinmarketcap-section-cryptocurrency-listings.js';
 
 // Job fetchers
-import getJobsCryptocompareSectionPrice              from './utils/get-jobs-cryptocompare-section-price.js';
-import getJobsCryptocompareSectionTotalVolFull       from './utils/get-jobs-cryptocompare-section-total-vol-full.js';
-import getJobsMessariSectionMetrics                  from './utils/get-jobs-messari-section-metrics.js';
+import getJobsCryptocompareSectionPrice                    from './utils/get-jobs-cryptocompare-section-price.js';
+import getJobsCryptocompareSectionTotalVolFull             from './utils/get-jobs-cryptocompare-section-total-vol-full.js';
+import getJobsMessariSectionMetrics                        from './utils/get-jobs-messari-section-metrics.js';
 
 // Other utils
-import analyticsMergeDataByKey                       from './utils/analytics-merge-data-by-key';
+import analyticsMergeDataByKey                             from './utils/analytics-merge-data-by-key';
 
 const logger = require('./logger');
 const { scrapeDir } = settings;
@@ -209,6 +210,25 @@ try {
   };
 
   //
+  // COINMARKETCAP
+  //
+  const coinmarketcapCryptocurrencyListings = {
+    event: 'data',
+    name: 'cmc-listings',
+    interval: 1000 * 5,
+    watchDirs: [`${scrapeDir}/coinmarketcap-cryptocurrency-listings/**/*`, 'all'],
+    getJobs: (queue, bootstrapData, appBootstrapData) => {
+      queue.push({
+        uri: settings.uriCoinmarketcapCryptocurrencyListings,
+        key: settings.keyCoinmarketcapCryptocurrencyListings,
+        cacheForDays: 30
+      });
+      logger.info(`getJobsCoinmarketcapCryptocurrencyListings(): 1 job created`);
+    },
+    formatter: formatterCoinmarketcapSectionCryptocurrencyListings,
+  };
+
+  //
   // TODO:
   //
   // const datatable = new DataTable(options);
@@ -317,6 +337,16 @@ try {
         rateLimitDelayMs: settings.rateLimitMessari,
         sections: [
           messariMetrics
+        ]
+      },
+      coinmarketcap: {
+        cacheFor: settings.cacheForCoinmarketcap,
+        bootstrap: cache => {
+          return {}
+        },
+        rateLimitDelayMs: settings.rateLimitCoinmarketcap,
+        sections: [
+          coinmarketcapCryptocurrencyListings
         ]
       },
       xe: {

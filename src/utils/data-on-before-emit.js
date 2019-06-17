@@ -96,8 +96,8 @@ function filterData(socket, data) {
 export default function dataOnBeforeEmit(options, socket, newData, oldData) {
 
   const type = options.diff !== false ? 'changeset' : 'full';
-  newData = filterData(socket, newData);
-  oldData = filterData(socket, oldData);
+  newData = newData === null ? {} : filterData(socket, newData);
+  oldData = oldData === null ? {} : filterData(socket, oldData);
 
   let data = newData;
   if (type === 'changeset') {

@@ -1,7 +1,12 @@
 'use strict';
 
+// Binary Overdose Projects
+import { objectFlattenObject as flatten } from './libs/bo-utils-client';
+
 // ag-grid config
-import columnLibrary from './column-library.js';
+import columnLibrary                      from './columns/';
+
+console.log(columnLibrary);
 
 /**
  *
@@ -15,14 +20,15 @@ export default function generateColumnDefs(state) {
 
   let column;
   const output = [];
+  const colLib = flatten(columnLibrary);
 
   for (column of state.columns) {
 
     const id = column.id;
 
-    if (id in columnLibrary) {
+    if (id in colLib) {
 
-      const col = Object.assign({}, columnLibrary[id]);
+      const col = Object.assign({}, colLib[id]);
 
       if (id === state.sort.column) {
         col.sort = state.sort.direction;

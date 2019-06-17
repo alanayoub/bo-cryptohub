@@ -1,25 +1,28 @@
 'use strict';
 
+// Binary Overdose Projects
+import { objectFlattenObject as flatten } from './libs/bo-utils-client';
+
 // ag-grid config
-import columnLibrary               from './column-library.js';
+import columnLibrary                      from './columns/';
 
 // Cryptohub util functions
-import cellTooltip                 from './utils/cell-tooltip.js';
-import shouldCellUpdate            from './utils/should-cell-update.js';
+import cellTooltip                        from './utils/cell-tooltip.js';
+import shouldCellUpdate                   from './utils/should-cell-update.js';
 
 // ag-grid valueFormatters
-import valueFormatterPercentChange from './utils/value-formatter-percent-change.js';
+import valueFormatterPercentChange        from './utils/value-formatter-percent-change.js';
 
 // ag-grid cell Renderer Classes
-import CompoundCellRenderer        from './utils/class-compound-cell-renderer.js';
+import CompoundCellRenderer               from './utils/class-compound-cell-renderer.js';
 
 // ag-grid custom filters
-import filterText                  from './utils/filter-text.js';
-import filterNumber                from './utils/filter-number.js';
-import filterFloatingNumber        from './utils/filter-floating-number.js';
+import filterText                         from './utils/filter-text.js';
+import filterNumber                       from './utils/filter-number.js';
+import filterFloatingNumber               from './utils/filter-floating-number.js';
 
 // ag-grid filter comparators
-import sortNumbers                 from './utils/sort-numbers.js';
+import sortNumbers                        from './utils/sort-numbers.js';
 
 //
 // AG-GRID BASE OPTIONS
@@ -228,7 +231,8 @@ export default {
       const columns = [];
 
       // Generate brand new column states
-      const libKeysWhitelist = Object.keys(columnLibrary);
+      const colLib = flatten(columnLibrary);
+      const libKeysWhitelist = Object.keys(colLib);
       const agGridColumnState = params.api.columnController.getColumnState();
       for (const [idx, field] of Object.entries(agGridColumnState)) {
          if (libKeysWhitelist.includes(field.colId)) {

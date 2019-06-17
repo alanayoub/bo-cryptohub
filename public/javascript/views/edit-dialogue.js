@@ -1,5 +1,8 @@
 'use strict';
 
+// Binary Overdose Projects
+import { objectFlattenObject as flatten } from '../libs/bo-utils-client';
+
 // Libs
 import delegate      from 'delegate';
 
@@ -7,7 +10,7 @@ import delegate      from 'delegate';
 import initPug       from '../generated/init-pug.generated.js';
 
 // Binary Overdose Uions
-import columnLibrary from '../column-library.js';
+import columnLibrary from '../columns/';
 
 // Styles
 import style         from './edit-dialogue.css';
@@ -98,8 +101,10 @@ export default class EditDialogue {
    */
   async open() {
 
+    const colLib = flatten(columnLibrary);
+
     const allColumns = [];
-    for (const [key, val] of Object.entries(columnLibrary)) {
+    for (const [key, val] of Object.entries(colLib)) {
       allColumns.push({id: key, name: val.headerName});
     }
 
@@ -110,7 +115,7 @@ export default class EditDialogue {
       const id = col.id;
       activeColumns.push({
         id,
-        name: columnLibrary[id].headerName
+        name: colLib[id].headerName
       });
     }
 

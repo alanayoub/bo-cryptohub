@@ -7,7 +7,6 @@ import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
 
 // ag-grid config
 import generateColumnDefs                       from '../ag-grid-column-defs-generate.js';
-import columnLibrary                            from '../column-library.js';
 
 import jsonUrl                                  from '../libs/json-url-single.js';
 

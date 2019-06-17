@@ -1,15 +1,18 @@
 'use strict';
 
+// Binary Overdose Projects
+import { objectFlattenObject as flatten } from './libs/bo-utils-client';
+
 // Cryptohub classes
-import State                       from './classes/class-state.js';
+import State                              from './classes/class-state.js';
 
 // Cryptohub util functions
-import convertWorkingDataToRowData from './utils/convert-working-data-to-row-data.js';
+import convertWorkingDataToRowData        from './utils/convert-working-data-to-row-data.js';
 
 // ag-grid config
-import columnLibrary               from './column-library.js';
-import agGridOptionsBase           from './ag-grid-options-base.js';
-import generateColumnDefs          from './ag-grid-column-defs-generate.js';
+import columnLibrary                      from './columns/';
+import agGridOptionsBase                  from './ag-grid-options-base.js';
+import generateColumnDefs                 from './ag-grid-column-defs-generate.js';
 
 /**
  *
@@ -23,6 +26,7 @@ export default async function generateAgOptions() {
 
   const state = await bo.inst.state.get();
   const filterModel = await bo.inst.state.getFilterModel();
+  const colLib = flatten(columnLibrary);
 
   /**
    *
@@ -34,7 +38,7 @@ export default async function generateAgOptions() {
     // default sort order
     params.api.setSortModel([
       {
-        colId: columnLibrary[state.sort.column].colId,
+        colId: colLib[state.sort.column].colId,
         sort: state.sort.direction
       }
     ]);

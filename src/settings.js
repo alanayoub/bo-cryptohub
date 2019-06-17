@@ -81,9 +81,12 @@ let fieldWhitelist = [
   'cc-total-vol-full-Id',
   'cc-total-vol-full-FullName',
   'cc-total-vol-full-PRICE',
+  'cc-total-vol-full-PRICE:last',
   'cc-total-vol-full-CHANGEPCTDAY',
   'cc-total-vol-full-TOTALVOLUME24HTO',
+  'cc-total-vol-full-TOTALVOLUME24HTO:last',
   'cc-total-vol-full-MKTCAP',
+  'cc-total-vol-full-MKTCAP:last',
   'cc-total-vol-full-SUPPLY',
   'cc-total-vol-full-ProofType',
   'cc-total-vol-full-Algorithm',
@@ -113,11 +116,8 @@ let fieldWhitelist = [
   'm-metrics-percent-change-btc-last-3-months',
   'm-metrics-percent-change-btc-last-1-year',
 
-  'cc-total-vol-full-PRICE:last',
-  'cc-total-vol-full-TOTALVOLUME24HTO:last',
-  'cc-total-vol-full-MKTCAP:last',
-
   'cryptohub-price-btc',
+  'cryptohub-price-btc:last',
   'cryptohub-price-history',
   'cryptohub-numberOfExchanges',
   'cryptohub-numberOfPairs',
@@ -127,8 +127,6 @@ let fieldWhitelist = [
   'cryptohub-exchangesListDex',
   'cryptohub-exchangesListAcceptsBoth',
   'cryptohub-exchangesListCryptoOnly',
-
-  'cryptohub-price-btc:last',
 
   'm-metrics-price-usd',
   'm-metrics-price-btc',
@@ -148,6 +146,7 @@ let fieldWhitelist = [
   'cmc-listings-tags',
   'cmc-listings-total_supply',
   'cmc-listings-market_cap',
+  'cmc-listings-market_cap:last',
   'cmc-listings-percent_change_1h',
   'cmc-listings-percent_change_7d',
   'cmc-listings-percent_change_24h',
@@ -164,6 +163,7 @@ const fieldLastValue = [
   'cc-total-vol-full-TOTALVOLUME24HTO',
   'cc-total-vol-full-MKTCAP',
   'cryptohub-price-btc',
+  'cmc-listings-market_cap',
 
 ];
 
@@ -295,13 +295,16 @@ const columnDependencies = {
   ],
 }
 
-// Add timestamp fields to each dependency
+// Add timestamp fields to each dependency and :last field to specific ones
 {
   let copy;
   for (const values of Object.values(columnDependencies)) {
     copy = [];
     for (const field of values) {
-      copy.push(`${field}-timestamp`)
+      copy.push(`${field}-timestamp`);
+      if (fieldLastValue.includes(field)) {
+        copy.push(`${field}:last`);
+      }
     }
     values = values.push(...copy);
   }

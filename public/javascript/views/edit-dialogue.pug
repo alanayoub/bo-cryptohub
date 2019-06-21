@@ -13,21 +13,15 @@ div(class='BO-edit-dialogue')
         th
           header Displayed Columns
       tr
-        td(rowspan=2)
-          ul(class='bo-available-columns')
-            each column in availableColumns
-              li(data-id=column.id)
-                span(class='bo-column') #{column.name}
+        td(rowspan=2 class='bo-left')
+          div(id='tree')
         td(style="height: 1px")
           ul(class='bo-active-columns-frozen')
             each column in frozenColumns
               li(data-id=column.id)
-                span(class='bo-column') #{column.name}
+                span(class='bo-column') #{column.title}
       tr
         td
-          ul(class='bo-active-columns')
-            each column in activeColumns
-              li(data-id=column.id)
-                span(class='bo-column') #{column.name}
+          div(id='tree2' class='bo-right')
 
   footer

@@ -1,3 +1,8 @@
+#fancytree-drop-marker {
+  z-index: 9999!important;
+  color: #73965d!important;
+}
+
 .BO-btn {
    display: inline-block;
    margin: 0 .5rem;
@@ -49,6 +54,10 @@
     table {
       width: 100%;
       height: 500px;
+      header {
+        margin: 0 0 10px 0;
+        font-weight: 600;
+      }
       th {
         align: center;
       }
@@ -58,39 +67,115 @@
         margin: 0;
         padding: 0;
         vertical-align: top;
-      }
-    }
+        position: relative;
 
-    li {
-      position: relative;
-      display: block;
-      padding: .75rem 1.25rem;
-      margin-bottom: -1px;
-      border: 1px solid rgba(0,0,0,.125);
-      cursor: move;
-    }
-    header {
-      margin: 0 0 10px 0;
-      font-weight: 600;
-    }
-
-    .bo-available-columns {
-      margin-right: 10px;
-      li {
-        background-color: #eee;
-        &:hover {
-          background-color: #fff;
+        .drag-source {
+          border: 1px solid grey;
+          border-radius: 3px;
+          padding: 2px;
+          background-color: silver;
         }
-      }
-    }
 
-    .bo-active-columns {
-      min-height: 500px;
-      li {
-        background-color: #fff;
-        &:hover {
-          background-color: #eee;
+        .fancytree-container {
         }
+
+        #tree {
+          position: absolute;
+          right: 0;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          ul.fancytree-container {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: block;
+            width: auto;
+            padding: 0;
+            li {
+              background-color: #eee;
+              &:hover {
+                background-color: #fff;
+              }
+            }
+            .fancytree-folder {
+              padding: 15px 0 15px 15px;
+              cursor: pointer;
+            }
+            overflow-y: scroll;
+            ul[role=group] {
+              padding: 0;
+              li {
+                position: relative;
+                display: block;
+                padding: 15px 5px 15px 40px;
+                margin-bottom: -1px;
+                border-top: 1px solid #f9f9f9;
+                border-bottom: 1px solid #f9f9f9;
+                cursor: move;
+              }
+            }
+          }
+          .fancytree-checkbox {
+            font-size: 16px;
+          }
+        }
+
+        #tree2 {
+          position: absolute;
+          right: 0;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          ul.fancytree-container {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: block;
+            width: auto;
+            overflow-y: scroll;
+            padding: 0;
+            li {
+              .fancytree-node {
+                padding: 0;
+                background-color: #fff;
+                position: relative;
+                display: block;
+                margin-bottom: -1px;
+                border: 1px solid #eee;
+                cursor: move;
+                margin-top: 0;
+                &:hover {
+                  background-color: #eee;
+                }
+              }
+            }
+          }
+          .fancytree-node {
+            position: relative;
+          }
+          .fa-window-close {
+            position: absolute;
+            right: 10px;
+            top: 13px;
+            cursor: pointer;
+            font-size: 18px;
+          }
+          .fa-window-close:hover {
+            color: #f00;
+          }
+          .fancytree-title {
+            padding: 15px 5px 15px 10px;
+          }
+          .fancytree-expander {
+            display: none;
+          }
+        }
+
       }
     }
 
@@ -100,23 +185,34 @@
         color: #999;
         cursor: default;
       }
+      .bo-column {
+        padding: 15px 5px 15px 10px;
+        display: block;
+        margin: 0 0 0 3px;
+      }
     }
 
-    .bo-available-columns,
-    .bo-active-columns {
-      height: 100%;
-      background: #f1f1f1;
-      overflow-y: scroll;
-    }
+    /* .bo-available-columns, */
+    /* .bo-active-columns { */
+    /*   height: 100%; */
+    /*   background: #f1f1f1; */
+    /*   overflow-y: scroll; */
+    /* } */
 
-    .bo-ghost {
-      /* opacity: .5; */
-      /* background: #eee!important; */
-    }
+    /* .bo-ghost { */
+    /*   /1* opacity: .5; *1/ */
+    /*   /1* background: #eee!important; *1/ */
+    /* } */
 
-    .bo-chosen {
-      background: #C8EBFB!important;
-    }
+    /* .bo-chosen { */
+    /*   background: #C8EBFB!important; */
+    /* } */
 
   }
+
+
+
+
+
+
 }

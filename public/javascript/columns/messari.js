@@ -245,9 +245,9 @@ export default {
   messariRealVolume24hUSD: {
     colId: 'messariRealVolume24hUSD',
     field: 'm-metrics-real-volume-last-24-hours',
-    headerName: 'Volume 24h $',
+    headerName: 'Real Volume 24h $',
     headerClass: 'CH-col',
-    headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Messari',
+    headerTooltip: 'Real Volume according to Messari. 24 hours displayed in USD\n\nData Source: Messari',
     lockPinned: true,
     width: 150,
     type: [

@@ -197,9 +197,11 @@ const defaultColumns = [
 fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
 
 const columnDependencies = {
+  // Always send fields in rowIndex
   rowIndex: [
     'rowIndex',
     'cc-total-vol-full-Id',
+    'cc-total-vol-full-CHANGEPCTDAY',
   ],
   name: [
     'cc-total-vol-full-FullName',

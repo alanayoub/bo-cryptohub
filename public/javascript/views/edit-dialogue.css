@@ -1,3 +1,8 @@
+@keyframes yellowfade {
+  from { background: yellow; }
+  to { background: transparent; }
+}
+
 #fancytree-drop-marker {
   z-index: 9999!important;
   color: #73965d!important;
@@ -85,6 +90,9 @@
           left: 0;
           top: 0;
           bottom: 0;
+          .fancytree-checkbox::before {
+            background: #fff;
+          }
           ul.fancytree-container {
             position: absolute;
             left: 0;
@@ -95,14 +103,43 @@
             width: auto;
             padding: 0;
             li {
+              position: relative;
               background-color: #eee;
               &:hover {
-                background-color: #fff;
+                background-color: #73965d55;
+                .fa-caret-down,
+                .fa-caret-right {
+                  background-color: #ffffff55;
+                }
+                .fancytree-checkbox {
+                  background-color: #ffffff55;
+                }
+              }
+              > span > {
+                .fa-caret-down,
+                .fa-caret-right {
+                  position: relative;
+                  display: inline-block;
+                  padding: 15px 15px 15px 10px;
+                  margin: 0 0 0 5px;
+                  cursor: pointer;
+                  vertical-align: middle;
+                  line-height: 0;
+                  border-right: 1px solid #00000022;
+                }
+                .fancytree-checkbox {
+                  position: relative;
+                  display: inline-block;
+                  padding: 15px 22px 15px 8px;
+                  font-size: 16px;
+                  line-height: 0;
+                  margin: 0;
+                }
               }
             }
             .fancytree-folder {
-              padding: 15px 0 15px 15px;
-              cursor: pointer;
+              padding: 5px 0 5px 0;
+              cursor: default;
             }
             overflow-y: scroll;
             ul[role=group] {
@@ -110,17 +147,18 @@
               li {
                 position: relative;
                 display: block;
-                padding: 15px 5px 15px 40px;
+                padding: 5px 5px 5px 43px;
                 margin-bottom: -1px;
                 border-top: 1px solid #f9f9f9;
                 border-bottom: 1px solid #f9f9f9;
-                cursor: move;
+                cursor: default;
               }
             }
           }
-          .fancytree-checkbox {
-            font-size: 16px;
+          .fancytree-title {
+            line-height: 26px;
           }
+
         }
 
         #tree2 {
@@ -141,13 +179,14 @@
             padding: 0;
             li {
               .fancytree-node {
-                padding: 0;
+                animation-name: yellowfade;
+                animation-duration: 0.5s;
                 background-color: #fff;
                 position: relative;
                 display: block;
                 margin-bottom: -1px;
                 border: 1px solid #eee;
-                cursor: move;
+                cursor: default;
                 margin-top: 0;
                 &:hover {
                   background-color: #eee;
@@ -169,7 +208,7 @@
             color: #f00;
           }
           .fancytree-title {
-            padding: 15px 5px 15px 10px;
+            padding: 12px 5px 12px 15px;
           }
           .fancytree-expander {
             display: none;
@@ -181,38 +220,30 @@
 
     .bo-active-columns-frozen {
       li {
-        background-color: #eee!important;
+        background-color: #fff!important;
         color: #999;
         cursor: default;
+        border: 1px dotted #999;
+        border-bottom: transparent;
+        list-style: none;
       }
       .bo-column {
-        padding: 15px 5px 15px 10px;
+        padding: 12px 5px 12px 17px;
         display: block;
         margin: 0 0 0 3px;
       }
     }
 
-    /* .bo-available-columns, */
-    /* .bo-active-columns { */
-    /*   height: 100%; */
-    /*   background: #f1f1f1; */
-    /*   overflow-y: scroll; */
-    /* } */
+    .fancytree-treefocus .fancytree-active .fancytree-title {
+      background-color: transparent!important;
+      outline: none!important;
+      color: inherit!important;
+    }
 
-    /* .bo-ghost { */
-    /*   /1* opacity: .5; *1/ */
-    /*   /1* background: #eee!important; *1/ */
-    /* } */
-
-    /* .bo-chosen { */
-    /*   background: #C8EBFB!important; */
-    /* } */
+    .fancytree-active .fancytree-title {
+      background-color: transparent!important;
+    }
 
   }
-
-
-
-
-
 
 }

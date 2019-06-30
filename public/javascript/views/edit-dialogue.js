@@ -100,57 +100,59 @@ export default class EditDialogue {
   async open() {
 
     const colLib = flatten(columnLibrary);
-
     const groupMapping = {};
-    const availableColumns = [];
+    const frozen = [];
+
+    // Source data
+    const source = [];
     for (const [key, val] of Object.entries(columnLibrary)) {
       let children = [];
       for (const [k, v] of Object.entries(val)) {
-        children.push({key: k, title: v.headerName});
-        groupMapping[k] = key;
+        if (v.pinned === 'left') {
+          frozen.push({key: k, title: v.headerName});
+        }
+        else {
+          children.push({key: k, title: v.headerName});
+          groupMapping[k] = key;
+        }
       }
-      availableColumns.push({title: key, folder: true, children});
+      source.push({title: key, folder: true, children});
     }
 
-    const activeColumns = [];
+    // Destination Data
+    const destination = [];
     const state = await bo.inst.state.get();
     const columns = state.columns;
+    const frozenFields = frozen.map(v => v.key);
     for (const col of columns) {
       const key = col.id;
       const group = groupMapping[key];
       const name = colLib[key].headerName;
       const title = `${group}: ${name}`;
-      activeColumns.push({key, title});
+      if (!frozenFields.includes(key)) {
+        destination.push({key, title});
+      }
     }
 
-    const frozenColumns = activeColumns.splice(0, 2);
-
-    const data = {
+    // HTML data
+    const context = {
       header: {
         title: 'Edit',
         subtitle: 'Drag & Drop the columns you want displayed'
       },
-      // frozenColumns: {rowIndex: true, name: true},
-      frozenColumns,
-      // availableColumns,
-      // activeColumns
+      frozenColumns: frozen,
     };
-    const content = initPug['edit-dialogue'](data);
 
-    this.modal.setContent(content);
-
-    const leftCol = document.querySelector('.bo-available-columns');
-    const rightCol = document.querySelector('.bo-active-columns');
-
-    const sourceElement = document.querySelector('#tree');
-    const destinationElement = document.querySelector('#tree2');
-    const source = availableColumns;
-    const destination = activeColumns;
-    const frozen = frozenColumns;
-
+    this.modal.setContent(initPug['edit-dialogue'](context));
     this.modal.open();
 
-    this.selector = new Selector(sourceElement, destinationElement, source, destination, frozen);
+    this.selector = new Selector(
+      document.querySelector('#tree'),
+      document.querySelector('#tree2'),
+      source,
+      destination,
+      frozen
+    );
 
   }
 

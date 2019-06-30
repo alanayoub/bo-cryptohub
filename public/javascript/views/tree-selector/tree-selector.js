@@ -168,7 +168,7 @@ export default class Selector {
         dropMarkerInsertOffsetX: 0,      // additional offset for drop-marker with hitMode = 'before'/'after'
         preventNonNodes: true,           // Prevent dropping items other than Fancytree nodes
         preventRecursion: true,          // Prevent dropping nodes on own descendants when in move-mode
-        preventSameParent: true,         // Prevent dropping nodes under same direct parent
+        preventSameParent: false,         // Prevent dropping nodes under same direct parent
         preventVoidMoves: true,          // Prevent moving nodes 'before self', etc.
         dragStart: (node, data) => {
           data.effectAllowed = 'move';
@@ -238,22 +238,50 @@ export default class Selector {
 
   /**
    *
+   *
+   */
+  static setFolderCheckbox(node) {
+    let count = 0;
+    for (const childNode of node.children) {
+      if (childNode.selected) count++;
+    }
+    if (count === node.children.length) {
+      node.partsel = false;
+      node.selected = true;
+      node.render();
+    }
+    else if (count > 0 && count < node.children.length) {
+      node.selected = false;
+      node.partsel = true;
+      node.render();
+    }
+    else {
+      node.selected = false;
+      node.partsel = false;
+      node.render();
+    }
+  }
+
+  /**
+   *
    * Sync source fancytree checkboxes after a drop event
    *
    */
   dropHandler() {
     const selected = this.$destinationTree.fancytree('getTree').toDict().map(v => v.title);
     this.$sourceTree.fancytree('getTree').visit(node => {
+      const folderNodes = new Set();
       if (node.folder) {
-        let count = 0;
+        folderNodes.add(node);
         for (const childNode of node.children) {
           if (selected.includes(`${node.title}${this.delimiter}${childNode.title}`)) {
             childNode.setSelected(true);
-            count++;
           }
         }
-        if (count === node.children.length) node.setSelected(true);
       }
+      for (const folderNode of folderNodes.values()) {
+        Selector.setFolderCheckbox(folderNode);
+      };
     });
   }
 
@@ -298,8 +326,12 @@ export default class Selector {
         if (parentClicked || isTargetFolder) {
           // uncheck all children
           for (const childNode of node.children) {
+            childNode.partsel = false;
             childNode.setSelected(false);
           }
+          node.selected = false;
+          node.partsel = false;
+          node.render();
         }
       }
     }
@@ -325,9 +357,14 @@ export default class Selector {
     }
     else {
       $sourceT.visit(node => {
+        const folderNodes = new Set();
         if (!node.folder) {
           updateLeafNode(node, clickedNode);
+          folderNodes.add(node.parent);
         }
+        for (const folderNode of folderNodes.values()) {
+          Selector.setFolderCheckbox(folderNode);
+        };
       });
     }
 

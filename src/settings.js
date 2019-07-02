@@ -196,6 +196,9 @@ const defaultColumns = [
 
 fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
 
+//
+// TODO: Add default dependencies of self
+//
 const columnDependencies = {
   // Always send fields in rowIndex
   rowIndex: [
@@ -294,6 +297,18 @@ const columnDependencies = {
   ],
   marketcapUSDCMC: [
     'cmc-listings-market_cap',
+  ],
+  volume24HourCMC: [
+    'cmc-listings-volume_24h',
+  ],
+  circulatingSupplyCMC: [
+    'cmc-listings-circulating_supply',
+  ],
+  percentChange24HourCMC: [
+    'cmc-listings-percent_change_24h',
+  ],
+  percentChange7DayCMC: [
+    'cmc-listings-percent_change_7d',
   ],
 }
 

@@ -62,11 +62,11 @@ export default {
   percentChange24hUSD: {
     colId: 'percentChange24hUSD',
     field: 'cc-total-vol-full-CHANGEPCTDAY',
-    headerName: '24H Δ $',
+    headerName: 'Change 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Cryptocompare',
     lockPinned: true,
-    width: 80,
+    width: 100,
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
@@ -82,7 +82,7 @@ export default {
   volume24hUSD: {
     colId: 'volume24hUSD',
     field: 'cc-total-vol-full-TOTALVOLUME24HTO',
-    headerName: 'Volume 24h $',
+    headerName: 'Volume 24h',
     headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Cryptocompare',
     lockPinned: true,

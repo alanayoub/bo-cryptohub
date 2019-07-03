@@ -189,7 +189,7 @@
                 cursor: default;
                 margin-top: 0;
                 &:hover {
-                  background-color: #eee;
+                  background-color: #73965d55;
                 }
               }
             }

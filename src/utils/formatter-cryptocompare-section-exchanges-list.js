@@ -145,11 +145,12 @@ function addPairsToExchange(exchanges, id, pair) {
  * @return {Object}
  *
  */
-export default function formatterCryptocompareSectionExchangesList(response, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
+export default async function formatterCryptocompareSectionExchangesList(response, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
   try {
 
     const emptyReturn = {data: {}, timestamp};
-    const store = JSON.parse(cache.get(`${settings.dbDir}/store/data.json`)[0]);
+    const [str] = await cache.get(`${settings.dbDir}/store/data.json`);
+    const store = JSON.parse(str);
     const mapNameId = getNestedProp(store, 'exchange-map-nameId');
 
     if (!appBootstrapData.currency || !mapNameId || (!response && !response.Data) || response.Response !== 'Success') {
@@ -190,7 +191,7 @@ export default function formatterCryptocompareSectionExchangesList(response, tim
     for ([exchangeName, data] of Object.entries(response.Data)) {
       exchangeId = mapNameId[exchangeName];
       centralizationType = getNestedProp(store, `exchanges.${exchangeId}.CentralizationType`);
-      if (!data.is_active) continue;
+      if (!data.isActive) continue;
       if (!exchanges[exchangeId]) addExchange(exchanges, exchangeName, exchangeId);
       data = data.pairs;
 

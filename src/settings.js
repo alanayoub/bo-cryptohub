@@ -267,6 +267,14 @@ const columnDependencies = {
   ],
   numberOfExchanges: [
     'cryptohub-numberOfExchanges',
+    'cryptohub-exchangesListDex',
+    'cryptohub-exchangesListCryptoOnly',
+    'cryptohub-exchangesListAcceptsBoth',
+    'cryptohub-numberOfPairs',
+    // 'cryptohub-exchangesListFiatOnly',
+    // 'cryptohub-numberOfFiatCurrencies',
+    // 'cryptohub-numberOfFiatPairs',
+    // 'cryptohub-numberOfDex',
   ],
   numberOfPairs: [
     'cryptohub-numberOfPairs',

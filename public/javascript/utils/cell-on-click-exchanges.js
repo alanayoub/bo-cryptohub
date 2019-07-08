@@ -101,9 +101,7 @@ export default function cellOnClickExchanges(params) {
     //
     const outputArray = [];
     {
-      let country;
-      let properties;
-      for ([country, properties] of Object.entries(outputObject)) {
+      for (const [country, properties] of Object.entries(outputObject)) {
         outputArray.push({country, ...properties});
       }
     }

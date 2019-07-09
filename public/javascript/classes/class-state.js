@@ -296,7 +296,6 @@ export default class State {
       if (newColFields) {
         const cols = newColFields.join();
         bo.inst.socket.emit('cols', cols);
-        console.log('emit for new cols', cols);
       }
     }
 

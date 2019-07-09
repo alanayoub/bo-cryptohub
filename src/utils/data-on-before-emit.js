@@ -1,8 +1,9 @@
 'use strict';
 
 // Binary Overdose Projects
-import DataTable from 'bo-datatable';
-import { objectGetNestedProperty as gnp }  from 'bo-utils';
+import DataTable                          from 'bo-datatable';
+import { objectGetNestedProperty as gnp } from 'bo-utils';
+import { objectIsEmptyObject }            from 'bo-utils';
 
 // CryptoHub
 import settings from '../settings';
@@ -100,12 +101,15 @@ export default function dataOnBeforeEmit(options, socket, newData, oldData) {
   oldData = oldData === null ? {} : filterData(socket, oldData);
 
   let data = newData;
-  if (type === 'changeset') {
-    data = DataTable.diff(oldData, data);
-    data = data.length ? JSON.stringify({data, type}) : false;
+
+  if ((Array.isArray(data) && !data.length) || objectIsEmptyObject(data)) {
+    data = false;
   }
   else {
-    data = Object.keys(data) ? JSON.stringify({data, type}) : false;
+    if (type === 'changeset') {
+      data = DataTable.diff(oldData, data);
+    }
+    data = JSON.stringify({data, type});
   }
 
   return data;

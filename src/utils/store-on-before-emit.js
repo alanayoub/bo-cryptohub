@@ -2,17 +2,22 @@
 
 // Binary Overdose Projects
 import DataTable from 'bo-datatable';
+import { objectIsEmptyObject } from 'bo-utils';
 
 export default function storeOnBeforeEmit(options, socket, newData, oldData) {
 
   const type = options.diff !== false ? 'changeset' : 'full';
   let data = newData;
 
-  if (type === 'changeset') {
-    data = DataTable.diff(oldData, data);
+  if ((Array.isArray(data) && !data.length) || objectIsEmptyObject(data)) {
+    data = false;
   }
-
-  data = JSON.stringify({data, type});
+  else {
+    if (type === 'changeset') {
+      data = DataTable.diff(oldData, data);
+    }
+    data = JSON.stringify({data, type});
+  }
 
   return data;
 

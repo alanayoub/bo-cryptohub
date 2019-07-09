@@ -294,7 +294,7 @@ try {
         onHandleData: partialApplication(dataOnHandleData, {}),
         onAfterConnect(event, socket, data) {
           const emitData = dataOnBeforeEmit({diff: false}, socket, data, initData);
-          socket.emit(event, emitData);
+          if (emitData) socket.emit(event, emitData);
         },
         onBeforeEmit: partialApplication(dataOnBeforeEmit, {diff: true}),
         onBeforeBootstrapSave: data => {
@@ -307,8 +307,8 @@ try {
         onBeforeHandleData: data => data,
         onHandleData: partialApplication(storeOnHandleData, {}),
         onAfterConnect(event, socket, data) {
-          const emitData = storeOnBeforeEmit({diff: false}, data, {})
-          socket.emit(event, emitData);
+          const emitData = storeOnBeforeEmit({diff: false}, socket, data, {});
+          if (emitData) socket.emit(event, emitData);
         },
         onBeforeEmit: partialApplication(storeOnBeforeEmit, {diff: true}),
         onBeforeBootstrapSave: (data) => {

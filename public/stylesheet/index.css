@@ -9,6 +9,14 @@ body {
   background: #355e21;
 }
 
+body:before {
+  content: 'loading';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
 h1 {
   color: rgb(51, 51, 51) ;
   font-family: 'Major Mono Display', monospace;

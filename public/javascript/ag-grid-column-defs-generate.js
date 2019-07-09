@@ -6,8 +6,6 @@ import { objectFlattenObject as flatten } from './libs/bo-utils-client';
 // ag-grid config
 import columnLibrary                      from './columns/';
 
-console.log(columnLibrary);
-
 /**
  *
  * AG-GRID columnDefs

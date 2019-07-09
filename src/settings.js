@@ -179,63 +179,63 @@ const columnDependencies = {
     'cc-total-vol-full-Id',
     'cc-total-vol-full-CHANGEPCTDAY',
   ],
-  name: [
+  nameCC: [
     'cc-total-vol-full-FullName',
     'cc-coinlist-Symbol',
     'cc-total-vol-full-ImageUrl',
   ],
-  sectors: [
+  sectorsMessari: [
     'm-metrics-sectors',
   ],
-  priceUSD: [
+  priceUSDCC: [
     'cc-total-vol-full-PRICE',
   ],
   priceBTC: [
     'cryptohub-price-btc',
   ],
-  athUSD: [
+  athUSDMessari: [
     'm-metrics-ath-price',
   ],
-  athPercentDownUSD: [
+  athPercentDownUSDMessari: [
     'm-metrics-ath-percent-down',
   ],
-  cycleLowUSD: [
+  cycleLowUSDMessari: [
     'm-metrics-cycle-low-price',
   ],
-  percentChange24hUSD: [
+  percentChange24hUSDCC: [
     'cc-total-vol-full-CHANGEPCTDAY',
   ],
-  percentChange7dBTC: [
+  percentChange7dBTCMessari: [
     'm-metrics-percent-change-btc-last-1-week',
   ],
-  percentChange1mBTC: [
+  percentChange1mBTCMessari: [
     'm-metrics-percent-change-btc-last-1-month',
   ],
-  percentChange3mBTC: [
+  percentChange3mBTCMessari: [
     'm-metrics-percent-change-btc-last-3-months',
   ],
-  percentChange1yBTC: [
+  percentChange1yBTCMessari: [
     'm-metrics-percent-change-btc-last-1-year',
   ],
   sparklineUSD: [
     'cryptohub-price-history',
   ],
-  volume24hUSD: [
+  volume24hUSDCC: [
     'cc-total-vol-full-TOTALVOLUME24HTO',
   ],
-  marketcapUSD: [
+  marketcapUSDCC: [
     'cc-total-vol-full-MKTCAP',
   ],
-  circulatingSupply: [
+  circulatingSupplyCC: [
     'cc-total-vol-full-SUPPLY',
   ],
-  proofType: [
+  proofTypeCC: [
     'cc-total-vol-full-ProofType',
   ],
-  algo: [
+  algoCC: [
     'cc-total-vol-full-Algorithm',
   ],
-  hashesPerSecond: [
+  hashesPerSecondCC: [
     'cc-total-vol-full-NetHashesPerSecond',
   ],
   numberOfExchanges: [
@@ -258,22 +258,22 @@ const columnDependencies = {
   numberOfFiatCurrencies: [
     'cryptohub-numberOfFiatCurrencies',
   ],
-  messariPriceUSD: [
+  priceUSDMessari: [
     'm-metrics-price-usd',
   ],
-  messariPriceBTC: [
+  priceBTCMessari: [
     'm-metrics-price-btc',
   ],
-  messariVolume24hUSD: [
+  volume24hUSDMessari: [
     'm-metrics-volume-last-24-hours',
   ],
-  messariRealVolume24hUSD: [
+  realVolume24hUSDMessari: [
     'm-metrics-real-volume-last-24-hours',
   ],
-  messariPercentChange24hUSD: [
+  percentChange24hUSDMessari: [
     'm-metrics-percent-change-usd-last-24-hours',
   ],
-  messariPercentChange24hBTC: [
+  percentChange24hBTCMessari: [
     'm-metrics-percent-change-btc-last-24-hours',
   ],
   marketcapUSDCMC: [

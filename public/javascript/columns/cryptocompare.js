@@ -19,8 +19,8 @@ export default {
   // Name
   // Asset icon, name & symbol
   //
-  name: {
-    colId: 'name',
+  nameCC: {
+    colId: 'nameCC',
     field: 'cc-total-vol-full-FullName.value',
     headerName: 'Name',
     headerClass: 'CH-col',
@@ -34,8 +34,8 @@ export default {
   //
   // USD Price
   //
-  priceUSD: {
-    colId: 'priceUSD',
+  priceUSDCC: {
+    colId: 'priceUSDCC',
     field: 'cc-total-vol-full-PRICE',
     headerName: 'Price $',
     headerClass: 'CH-col',
@@ -59,8 +59,8 @@ export default {
   // 24 Hour Percent Change (USD)
   // NOTE: We want percent change against BTC too!
   //
-  percentChange24hUSD: {
-    colId: 'percentChange24hUSD',
+  percentChange24hUSDCC: {
+    colId: 'percentChange24hUSDCC',
     field: 'cc-total-vol-full-CHANGEPCTDAY',
     headerName: 'Change 24h $',
     headerClass: 'CH-col',
@@ -79,8 +79,8 @@ export default {
   //
   // The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD
   //
-  volume24hUSD: {
-    colId: 'volume24hUSD',
+  volume24hUSDCC: {
+    colId: 'volume24hUSDCC',
     field: 'cc-total-vol-full-TOTALVOLUME24HTO',
     headerName: 'Volume 24h',
     headerClass: 'CH-col',
@@ -100,8 +100,8 @@ export default {
   //
   // Marketcap
   //
-  marketcapUSD: {
-    colId: 'marketcapUSD',
+  marketcapUSDCC: {
+    colId: 'marketcapUSDCC',
     field: 'cc-total-vol-full-MKTCAP',
     headerName: 'Market Cap $',
     headerClass: 'CH-col',
@@ -121,8 +121,8 @@ export default {
   //
   // Circulating Supply
   //
-  circulatingSupply: {
-    colId: 'circulatingSupply',
+  circulatingSupplyCC: {
+    colId: 'circulatingSupplyCC',
     field: 'cc-total-vol-full-SUPPLY',
     headerName: 'Circulating Supply',
     headerClass: 'CH-col',
@@ -139,8 +139,8 @@ export default {
   //
   // Proof type
   //
-  proofType: {
-    colId: 'proofType',
+  proofTypeCC: {
+    colId: 'proofTypeCC',
     field: 'cc-total-vol-full-ProofType.value',
     headerName: 'Proof',
     headerClass: 'CH-col',
@@ -153,8 +153,8 @@ export default {
   //
   // Algo
   //
-  algo: {
-    colId: 'algo',
+  algoCC: {
+    colId: 'algoCC',
     field: 'cc-total-vol-full-Algorithm.value',
     headerName: 'Algorithm',
     headerClass: 'CH-col',
@@ -167,8 +167,8 @@ export default {
   //
   // Hashes per second
   //
-  hashesPerSecond: {
-    colId: 'hashesPerSecond',
+  hashesPerSecondCC: {
+    colId: 'hashesPerSecondCC',
     field: 'cc-total-vol-full-NetHashesPerSecond',
     headerName: 'Hashes per/s',
     headerClass: 'CH-col',

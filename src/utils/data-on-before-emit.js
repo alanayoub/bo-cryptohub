@@ -6,7 +6,7 @@ import { objectGetNestedProperty as gnp } from 'bo-utils';
 import { objectIsEmptyObject }            from 'bo-utils';
 
 // CryptoHub
-import settings from '../settings';
+import settings                           from '../settings';
 
 /**
  *
@@ -59,7 +59,7 @@ function filterData(socket, data) {
   if (socket) {
     let columns = gnp(socket, 'handshake.query.cols') || '';
     columns = columns.split(',');
-    columns = columns.length ? columns : settings.defaultColumns;
+    if (!Array.isArray(columns)) throw new Error('data-on-before-emit.js no columns provided');
     for (const col of columns) {
       for (field of settings.columnDependencies[col]) {
         requiredFields.add(field);

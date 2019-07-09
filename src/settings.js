@@ -169,33 +169,6 @@ const fieldLastValue = [
 
 fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
 
-const defaultColumns = [
-  'rowIndex',
-  'name',
-  'priceUSD',
-  'priceBTC',
-  'sparklineUSD',
-  'cycleLowUSD',
-  'athUSD',
-  'athPercentDownUSD',
-  'messariPercentChange24hBTC',
-  'percentChange7dBTC',
-  'sectors',
-  'volume24hUSD',
-  'marketcapUSD',
-  'marketcapUSDCMC',
-  'circulatingSupply',
-  'proofType',
-  'algo',
-  'hashesPerSecond',
-  'numberOfExchanges',
-  'numberOfPairs',
-  'numberOfFiatPairs',
-  'numberOfFiatCurrencies',
-];
-
-fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
-
 //
 // TODO: Add default dependencies of self
 //
@@ -389,7 +362,6 @@ const settings = {
   //
   fieldWhitelist,
   fieldLastValue,
-  defaultColumns,
 
   //
   // Cache

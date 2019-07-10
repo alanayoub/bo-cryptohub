@@ -27,6 +27,10 @@ module.exports = {
     chunkFilename: 'javascript/[name].[chunkhash:8].chunk.js'
   },
 
+  externals: {
+    JsonUrl: 'JsonUrl'
+  },
+
   // The target: 'node' option tells webpack not to touch any built-in modules like fs or path
   target: 'web',
 

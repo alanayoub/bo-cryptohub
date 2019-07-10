@@ -8,8 +8,6 @@ import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
 // ag-grid config
 import generateColumnDefs                       from '../ag-grid-column-defs-generate.js';
 
-import jsonUrl                                  from '../libs/json-url-single.js';
-
 export default class State {
 
   /**
@@ -49,7 +47,7 @@ export default class State {
    */
   static async urlEncode(obj, algo = 'lzma') {
 
-	const codec = jsonUrl(algo);
+	const codec = JsonUrl(algo);
 	const output = await codec.compress(obj);
 
     return output;
@@ -63,7 +61,7 @@ export default class State {
    */
   static async urlDecode(str, algo = 'lzma') {
 
-	const codec = jsonUrl(algo);
+	const codec = JsonUrl(algo);
     const output = await codec.decompress(str);
 
     return output;

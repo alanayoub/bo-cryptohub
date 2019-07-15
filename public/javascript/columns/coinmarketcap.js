@@ -36,7 +36,7 @@ export default {
   volume24HourCMC: {
     colId: 'volume24HourCMC',
     field: 'cmc-listings-volume_24h',
-    headerName: 'Volume 24h',
+    headerName: 'Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'The 24 hour volume across all exchanges in USD\n\nData Source: CoinMarketcap',
     lockPinned: true,

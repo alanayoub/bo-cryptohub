@@ -82,7 +82,7 @@ export default {
   volume24hUSDCC: {
     colId: 'volume24hUSDCC',
     field: 'cc-total-vol-full-TOTALVOLUME24HTO',
-    headerName: 'Volume 24h',
+    headerName: 'Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Cryptocompare',
     lockPinned: true,

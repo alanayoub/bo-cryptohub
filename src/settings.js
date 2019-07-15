@@ -131,7 +131,9 @@ let fieldWhitelist = [
   'm-metrics-price-usd',
   'm-metrics-price-btc',
   'm-metrics-volume-last-24-hours',
+  'm-metrics-volume-last-24-hours:last',
   'm-metrics-real-volume-last-24-hours',
+  'm-metrics-real-volume-last-24-hours:last',
   'm-metrics-percent-change-usd-last-24-hours',
   'm-metrics-percent-change-btc-last-24-hours',
 
@@ -151,6 +153,7 @@ let fieldWhitelist = [
   'cmc-listings-percent_change_7d',
   'cmc-listings-percent_change_24h',
   'cmc-listings-volume_24h',
+  'cmc-listings-volume_24h:last',
 
 ];
 
@@ -160,10 +163,15 @@ let fieldWhitelist = [
 const fieldLastValue = [
 
   'cc-total-vol-full-PRICE',
-  'cc-total-vol-full-TOTALVOLUME24HTO',
   'cc-total-vol-full-MKTCAP',
   'cryptohub-price-btc',
   'cmc-listings-market_cap',
+
+  // Volume
+  'cc-total-vol-full-TOTALVOLUME24HTO',
+  'cmc-listings-volume_24h',
+  'm-metrics-real-volume-last-24-hours',
+  'm-metrics-volume-last-24-hours',
 
 ];
 

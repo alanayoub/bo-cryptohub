@@ -137,6 +137,11 @@ let fieldWhitelist = [
   'm-metrics-percent-change-usd-last-24-hours',
   'm-metrics-percent-change-btc-last-24-hours',
 
+  'm-metrics-current-marketcap-usd',
+  'm-metrics-current-marketcap-usd:last',
+  'm-metrics-y-2050-marketcap-usd',
+  'm-metrics-y-2050-marketcap-usd:last',
+
   'cmc-listings-circulating_supply',
   'cmc-listings-cmc_rank',
   'cmc-listings-date_added',
@@ -163,9 +168,7 @@ let fieldWhitelist = [
 const fieldLastValue = [
 
   'cc-total-vol-full-PRICE',
-  'cc-total-vol-full-MKTCAP',
   'cryptohub-price-btc',
-  'cmc-listings-market_cap',
 
   // Volume
   'cc-total-vol-full-TOTALVOLUME24HTO',
@@ -173,78 +176,32 @@ const fieldLastValue = [
   'm-metrics-real-volume-last-24-hours',
   'm-metrics-volume-last-24-hours',
 
+  // Marketcap
+  'cc-total-vol-full-MKTCAP',
+  'cmc-listings-market_cap',
+  'm-metrics-current-marketcap-usd',
+  'm-metrics-y-2050-marketcap-usd',
+
 ];
 
 fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
 
-//
-// TODO: Add default dependencies of self
-//
 const columnDependencies = {
-  // Always send fields in rowIndex
+
+  //
+  // Binary Overdose
+  // NOTE: Always send fields in rowIndex
+  //
   rowIndex: [
     'rowIndex',
     'cc-total-vol-full-Id',
     'cc-total-vol-full-CHANGEPCTDAY',
   ],
-  nameCC: [
-    'cc-total-vol-full-FullName',
-    'cc-coinlist-Symbol',
-    'cc-total-vol-full-ImageUrl',
-  ],
-  sectorsMessari: [
-    'm-metrics-sectors',
-  ],
-  priceUSDCC: [
-    'cc-total-vol-full-PRICE',
-  ],
   priceBTC: [
     'cryptohub-price-btc',
   ],
-  athUSDMessari: [
-    'm-metrics-ath-price',
-  ],
-  athPercentDownUSDMessari: [
-    'm-metrics-ath-percent-down',
-  ],
-  cycleLowUSDMessari: [
-    'm-metrics-cycle-low-price',
-  ],
-  percentChange24hUSDCC: [
-    'cc-total-vol-full-CHANGEPCTDAY',
-  ],
-  percentChange7dBTCMessari: [
-    'm-metrics-percent-change-btc-last-1-week',
-  ],
-  percentChange1mBTCMessari: [
-    'm-metrics-percent-change-btc-last-1-month',
-  ],
-  percentChange3mBTCMessari: [
-    'm-metrics-percent-change-btc-last-3-months',
-  ],
-  percentChange1yBTCMessari: [
-    'm-metrics-percent-change-btc-last-1-year',
-  ],
   sparklineUSD: [
     'cryptohub-price-history',
-  ],
-  volume24hUSDCC: [
-    'cc-total-vol-full-TOTALVOLUME24HTO',
-  ],
-  marketcapUSDCC: [
-    'cc-total-vol-full-MKTCAP',
-  ],
-  circulatingSupplyCC: [
-    'cc-total-vol-full-SUPPLY',
-  ],
-  proofTypeCC: [
-    'cc-total-vol-full-ProofType',
-  ],
-  algoCC: [
-    'cc-total-vol-full-Algorithm',
-  ],
-  hashesPerSecondCC: [
-    'cc-total-vol-full-NetHashesPerSecond',
   ],
   numberOfExchanges: [
     'cryptohub-numberOfExchanges',
@@ -266,6 +223,87 @@ const columnDependencies = {
   numberOfFiatCurrencies: [
     'cryptohub-numberOfFiatCurrencies',
   ],
+
+  //
+  // CryptoCompare
+  //
+  nameCC: [
+    'cc-total-vol-full-FullName',
+    'cc-coinlist-Symbol',
+    'cc-total-vol-full-ImageUrl',
+  ],
+  priceUSDCC: [
+    'cc-total-vol-full-PRICE',
+  ],
+  percentChange24hUSDCC: [
+    'cc-total-vol-full-CHANGEPCTDAY',
+  ],
+  volume24hUSDCC: [
+    'cc-total-vol-full-TOTALVOLUME24HTO',
+  ],
+  marketcapUSDCC: [
+    'cc-total-vol-full-MKTCAP',
+  ],
+  circulatingSupplyCC: [
+    'cc-total-vol-full-SUPPLY',
+  ],
+  proofTypeCC: [
+    'cc-total-vol-full-ProofType',
+  ],
+  algoCC: [
+    'cc-total-vol-full-Algorithm',
+  ],
+  hashesPerSecondCC: [
+    'cc-total-vol-full-NetHashesPerSecond',
+  ],
+
+
+  //
+  // CoinMarketCap
+  //
+  marketcapUSDCMC: [
+    'cmc-listings-market_cap',
+  ],
+  volume24HourCMC: [
+    'cmc-listings-volume_24h',
+  ],
+  circulatingSupplyCMC: [
+    'cmc-listings-circulating_supply',
+  ],
+  percentChange24HourCMC: [
+    'cmc-listings-percent_change_24h',
+  ],
+  percentChange7DayCMC: [
+    'cmc-listings-percent_change_7d',
+  ],
+
+  //
+  // Messari
+  //
+  sectorsMessari: [
+    'm-metrics-sectors',
+  ],
+  athUSDMessari: [
+    'm-metrics-ath-price',
+  ],
+  athPercentDownUSDMessari: [
+    'm-metrics-ath-percent-down',
+  ],
+  cycleLowUSDMessari: [
+    'm-metrics-cycle-low-price',
+  ],
+  percentChange7dBTCMessari: [
+    'm-metrics-percent-change-btc-last-1-week',
+  ],
+  percentChange1mBTCMessari: [
+    'm-metrics-percent-change-btc-last-1-month',
+  ],
+  percentChange3mBTCMessari: [
+    'm-metrics-percent-change-btc-last-3-months',
+  ],
+  percentChange1yBTCMessari: [
+    'm-metrics-percent-change-btc-last-1-year',
+  ],
   priceUSDMessari: [
     'm-metrics-price-usd',
   ],
@@ -284,20 +322,11 @@ const columnDependencies = {
   percentChange24hBTCMessari: [
     'm-metrics-percent-change-btc-last-24-hours',
   ],
-  marketcapUSDCMC: [
-    'cmc-listings-market_cap',
+  marketcapUSDMessari: [
+    'm-metrics-current-marketcap-usd',
   ],
-  volume24HourCMC: [
-    'cmc-listings-volume_24h',
-  ],
-  circulatingSupplyCMC: [
-    'cmc-listings-circulating_supply',
-  ],
-  percentChange24HourCMC: [
-    'cmc-listings-percent_change_24h',
-  ],
-  percentChange7DayCMC: [
-    'cmc-listings-percent_change_7d',
+  marketcapUSD2050Messari: [
+    'm-metrics-y-2050-marketcap-usd',
   ],
 }
 

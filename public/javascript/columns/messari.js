@@ -296,4 +296,40 @@ export default {
     ],
   },
 
+  marketcapUSDMessari: {
+    colId: 'marketcapUSDMessari',
+    field: 'm-metrics-current-marketcap-usd',
+    headerName: 'Market Cap $',
+    headerClass: 'CH-col',
+    headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Messari',
+    lockPinned: true,
+    width: 150,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
+    cellRendererParams: {
+      currency: 'USD',
+    },
+  },
+
+  marketcapUSD2050Messari: {
+    colId: 'marketcapUSD2050Messari',
+    field: 'm-metrics-y-2050-marketcap-usd',
+    headerName: 'Market Cap $ (Y2050)',
+    headerClass: 'CH-col',
+    headerTooltip: 'This is the fully diluted (Y2050) Marketcap, it takes into account known future dilution up to Jan 1, 2050.\n\nData Source: Messari',
+    lockPinned: true,
+    width: 150,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
+    cellRendererParams: {
+      currency: 'USD',
+    },
+  },
+
 }

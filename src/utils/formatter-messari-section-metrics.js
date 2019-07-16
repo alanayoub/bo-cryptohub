@@ -204,7 +204,7 @@ export default function formatterMessariSectionMetrics(data, timestamp, bootstra
 
         'm-metrics-percent-change-last-1-week'       : gnp(data, 'roi_data.percent_change_last_1_week'),
         'm-metrics-percent-change-last-1-month'      : gnp(data, 'roi_data.percent_change_last_1_month'),
-        'm-metrics-percent-change-last-3-months    ' : gnp(data, 'roi_data.percent_change_last_3_months'),
+        'm-metrics-percent-change-last-3-months'     : gnp(data, 'roi_data.percent_change_last_3_months'),
         'm-metrics-percent-change-last-1-year'       : gnp(data, 'roi_data.percent_change_last_1_year'),
         'm-metrics-percent-change-btc-last-1-week'   : gnp(data, 'roi_data.percent_change_btc_last_1_week'),
         'm-metrics-percent-change-btc-last-1-month'  : gnp(data, 'roi_data.percent_change_btc_last_1_month'),
@@ -221,6 +221,12 @@ export default function formatterMessariSectionMetrics(data, timestamp, bootstra
         'm-metrics-real-volume-last-24-hours'        : gnp(data, 'market_data.real_volume_last_24_hours'),
         'm-metrics-percent-change-usd-last-24-hours' : gnp(data, 'market_data.percent_change_usd_last_24_hours'),
         'm-metrics-percent-change-btc-last-24-hours' : gnp(data, 'market_data.percent_change_btc_last_24_hours'),
+
+        'm-metrics-current-marketcap-usd'            : gnp(data, 'marketcap.current_marketcap_usd'),
+        'm-metrics-y-2050-marketcap-usd'             : gnp(data, 'marketcap.y_2050_marketcap_usd'),
+        // 'm-metrics-y_plus10_marketcap_usd': gnp(data, 'marketcap.y_plus10_marketcap_usd'),
+        // 'm-metrics-liquid_marketcap_usd': gnp(data, 'marketcap.liquid_marketcap_usd'),
+        // 'm-metrics-volume_turnover_last_24_hours_percent': gnp(data, 'marketcap.volume_turnover_last_24_hours_percent')
 
       }
     };

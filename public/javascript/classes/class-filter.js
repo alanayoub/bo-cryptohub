@@ -41,7 +41,7 @@ export default class Filter {
   // OR the floating filter changed (only if using floating filters).
   setModel(model) {
     this.eFilterText.value = model;
-    this.filterText = this.eFilterText.value;
+    this.filterText = this.eFilterText.value.toLowerCase();
   };
 
   // optional methods

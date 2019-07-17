@@ -105,23 +105,62 @@ export default {
       'cryptohubText'
     ],
     valueGetter(params) {
+
       if (!ch.exchanges) return ch.emptyCellValue;
 
-      const b = params.data['cryptohub-exchangesListAcceptsBoth'];
-      const c = params.data['cryptohub-exchangesListCryptoOnly'];
-      const d = params.data['cryptohub-exchangesListDex'];
-      const exchangeIds = [...b, ...c, ...d];
-      const output = new Set();
-      for (const id of exchangeIds) {
-        output.add(ch.exchanges[id].Country);
-      }
+      const exchangeIds = [
+        ...params.data['cryptohub-exchangesListAcceptsBoth'] || [],
+        ...params.data['cryptohub-exchangesListCryptoOnly'] || [],
+        ...params.data['cryptohub-exchangesListDex'] || []
+      ];
 
-      return Array.from(output).join(', ');
+      const output = new Set();
+      for (const id of exchangeIds) output.add(ch.exchanges[id].name);
+
+      return Array.from(output).join(', ') || ch.emptyCellValue;
+
     },
     valueFormatter(params) {
       return params.value;
     }
   },
+
+  //
+  // Exchange Locations
+  //
+  exchangeLocations: {
+    colId: 'exchangeLocations',
+    field: 'cryptohub-exchange-locations',
+    headerName: 'Exchange Locations',
+    headerClass: 'CH-col',
+    headerTooltip: 'Geographic Locations of Exchanges\n\nData Source: BinaryOverdose / Cryptocompare',
+    lockPinned: true,
+    width: 200,
+    columnGroupShow: 'closed',
+    type: [
+      'cryptohubText'
+    ],
+    valueGetter(params) {
+
+      if (!ch.exchanges) return ch.emptyCellValue;
+
+      const exchangeIds = [
+        ...params.data['cryptohub-exchangesListAcceptsBoth'] || [],
+        ...params.data['cryptohub-exchangesListCryptoOnly'] || [],
+        ...params.data['cryptohub-exchangesListDex'] || []
+      ];
+
+      const output = new Set();
+      for (const id of exchangeIds) output.add(ch.exchanges[id].Country);
+
+      return Array.from(output).join(', ') || ch.emptyCellValue;
+
+    },
+    valueFormatter(params) {
+      return params.value;
+    }
+  },
+
   //
   // Number of Exchanges
   //

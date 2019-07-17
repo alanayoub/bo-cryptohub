@@ -120,6 +120,7 @@ let fieldWhitelist = [
   'cryptohub-price-btc:last',
   'cryptohub-price-history',
   'cryptohub-exchanges',
+  'cryptohub-exchange-locations',
   'cryptohub-numberOfExchanges',
   'cryptohub-numberOfPairs',
   'cryptohub-numberOfFiatPairs',
@@ -205,6 +206,11 @@ const columnDependencies = {
     'cryptohub-price-history',
   ],
   exchanges: [
+    'cryptohub-exchangesListDex',
+    'cryptohub-exchangesListCryptoOnly',
+    'cryptohub-exchangesListAcceptsBoth',
+  ],
+  exchangeLocations: [
     'cryptohub-exchangesListDex',
     'cryptohub-exchangesListCryptoOnly',
     'cryptohub-exchangesListAcceptsBoth',

@@ -18,6 +18,6 @@ export default function cellRendererExchanges(params) {
   const linkHtml = document.createElement('span');
   linkHtml.setAttribute('class', `cryptohub-link ch-numberofexchanges-link`);
   linkHtml.innerHTML = total;
-  return linkHtml;
+  return total !== void 0 ? linkHtml : '-';
 
 }

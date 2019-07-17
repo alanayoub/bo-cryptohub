@@ -90,12 +90,45 @@ export default {
   },
 
   //
+  // Exchanges
+  //
+  exchanges: {
+    colId: 'exchanges',
+    field: 'cryptohub-exchanges',
+    headerName: 'Exchanges',
+    headerClass: 'CH-col',
+    headerTooltip: 'List of Exchanges\n\nData Source: BinaryOverdose / Cryptocompare',
+    lockPinned: true,
+    width: 200,
+    columnGroupShow: 'closed',
+    type: [
+      'cryptohubText'
+    ],
+    valueGetter(params) {
+      if (!ch.exchanges) return ch.emptyCellValue;
+
+      const b = params.data['cryptohub-exchangesListAcceptsBoth'];
+      const c = params.data['cryptohub-exchangesListCryptoOnly'];
+      const d = params.data['cryptohub-exchangesListDex'];
+      const exchangeIds = [...b, ...c, ...d];
+      const output = new Set();
+      for (const id of exchangeIds) {
+        output.add(ch.exchanges[id].Country);
+      }
+
+      return Array.from(output).join(', ');
+    },
+    valueFormatter(params) {
+      return params.value;
+    }
+  },
+  //
   // Number of Exchanges
   //
   numberOfExchanges: {
     colId: 'numberOfExchanges',
     field: 'cryptohub-numberOfExchanges',
-    headerName: 'Exchanges',
+    headerName: '# of Exchanges',
     headerClass: 'CH-col',
     headerTooltip: 'Number of Exchanges the token is listed on\n\nData Source: BinaryOverdose / Cryptocompare',
     lockPinned: true,

@@ -119,6 +119,7 @@ let fieldWhitelist = [
   'cryptohub-price-btc',
   'cryptohub-price-btc:last',
   'cryptohub-price-history',
+  'cryptohub-exchanges',
   'cryptohub-numberOfExchanges',
   'cryptohub-numberOfPairs',
   'cryptohub-numberOfFiatPairs',
@@ -202,6 +203,11 @@ const columnDependencies = {
   ],
   sparklineUSD: [
     'cryptohub-price-history',
+  ],
+  exchanges: [
+    'cryptohub-exchangesListDex',
+    'cryptohub-exchangesListCryptoOnly',
+    'cryptohub-exchangesListAcceptsBoth',
   ],
   numberOfExchanges: [
     'cryptohub-numberOfExchanges',

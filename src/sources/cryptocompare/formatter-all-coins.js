@@ -3,7 +3,7 @@
  * @return {Object} allcoins
  *
  */
-const logger = require('../logger');
+const logger = require('../../logger');
 module.exports = function formatterCryptocompareAllCoins(allcoins) {
   try {
     const data = {};

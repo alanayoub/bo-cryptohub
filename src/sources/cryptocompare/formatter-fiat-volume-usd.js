@@ -4,8 +4,8 @@
  *
  */
 // Cryptohub
-const logger = require('../logger');
-const settings = require('../settings');
+const logger = require('../../logger');
+const settings = require('../../settings');
 //
 // fiatVolume
 //

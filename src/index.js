@@ -29,23 +29,18 @@ import dataOnBeforeEmit                                    from './utils/data-on
 import storeOnBeforeEmit                                   from './utils/store-on-before-emit.js';
 
 // Formatters
-import formatterCryptocompareBootstrap                     from './utils/formatter-cryptocompare-bootstrap.js';
-import formatterCryptocompareSectionPrice                  from './utils/formatter-cryptocompare-section-price.js';
-import formatterCryptocompareSectionCoinlist               from './utils/formatter-cryptocompare-section-coinlist.js';
-import formatterCryptocompareSectionExchangesList          from './utils/formatter-cryptocompare-section-exchanges-list.js';
-import formatterCryptocompareSectionExchangesGeneral       from './utils/formatter-cryptocompare-section-exchanges-general.js';
-import formatterCryptocompareSectionTotalVolFull           from './utils/formatter-cryptocompare-section-total-vol-full.js';
+import formatterCryptocompareBootstrap                     from './sources/cryptocompare/formatter-bootstrap.js';
 import formatterXeSectionCurrency                          from './utils/formatter-xe-section-currency.js';
 import formatterMessariSectionMetrics                      from './utils/formatter-messari-section-metrics.js';
 import formatterCoinmarketcapSectionCryptocurrencyListings from './utils/formatter-coinmarketcap-section-cryptocurrency-listings.js';
 
 // Job fetchers
-import getJobsCryptocompareSectionPrice                    from './utils/get-jobs-cryptocompare-section-price.js';
-import getJobsCryptocompareSectionTotalVolFull             from './utils/get-jobs-cryptocompare-section-total-vol-full.js';
 import getJobsMessariSectionMetrics                        from './utils/get-jobs-messari-section-metrics.js';
 
 // Other utils
 import analyticsMergeDataByKey                             from './utils/analytics-merge-data-by-key';
+
+import cryptocompare                                       from './sources/cryptocompare';
 
 const logger = require('./logger');
 const { scrapeDir } = settings;
@@ -106,77 +101,12 @@ try {
   //
 
   //
-  // COINLIST
-  // Get the full list of coins with IDs
+  // XE
   //
-  // TODO: bootstrapData needs to change when coinlist changes!!!!
-  //
-  const cryptocompareCoinlist = {
-    event: 'data',
-    name: 'coinList',
-    interval: 1000 * 5,
-    //
-    // TODO: can we remove this and just search for the key?
-    //
-    watchDirs: [`${scrapeDir}/cryptocompare-coinlist/data.json`, 'all'],
-    getJobs(queue, bootstrapData) {
-      queue.push({
-        uri: 'https://min-api.cryptocompare.com/data/all/coinlist',
-        key: `${scrapeDir}/cryptocompare-coinlist/data.json`,
-        cacheForDays: 0
-      });
-    },
-    formatter: formatterCryptocompareSectionCoinlist
-  };
-
-  //
-  // EXCHANGES LIST
-  // Get all the exchanges that CryptoCompare has integrated with
-  //
-  // TODO: separate into exchangesList & exchangesGeneral & have 2 formatters, then we don't need the glob
-  // and we can keep the default data.json
-  //
-  const cryptocompareExchangesList = {
-    event: 'data,store',
-    name: 'exchanges-list',
-    interval: 1000 * 60 * 1,
-    // TODO: rename this fucking bit, this is where the watcher will look for files to load
-    // so if we are saving them in different places they will never be added!
-    watchDirs: [settings.keyCryptocompareExchangesList, 'all'],
-    getJobs(queue, bootstrapData) {
-      queue.push({uri: settings.uriCryptocompareExchangesList, key: settings.keyCryptocompareExchangesList, cacheForDays: 0});
-    },
-    formatter: formatterCryptocompareSectionExchangesList
-  };
-
-  //
-  // EXCHANGES GENERAL
-  //
-  const cryptocompareExchangesGeneral = {
-    event: 'data,store',
-    name: 'exchanges-general',
-    interval: 1000 * 60 * 60,
-    watchDirs: [settings.keyCryptocompareExchangesGeneral, 'all'],
-    getJobs(queue, bootstrapData) {
-      queue.push({uri: settings.uriCryptocompareExchangesGeneral, key: settings.keyCryptocompareExchangesGeneral, cacheForDays: 0});
-    },
-    formatter: formatterCryptocompareSectionExchangesGeneral
-  };
-
-  //
-  // TOP TOTAL VOLUME
-  //
-  const cryptocompareTopTotalVolume = {
-    event: 'data',
-    name: 'totalVolFull',
-    interval: 1000 * 10,
-    watchDirs: [settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`, 'all'],
-    getJobs: getJobsCryptocompareSectionTotalVolFull,
-    handler(oldData, newData) {
-      const merged = {...oldData, ...newData};
-      return merged;
-    },
-    formatter: formatterCryptocompareSectionTotalVolFull
+  const xe = {
+    cacheFor: settings.cacheForXe,
+    bootstrap: () => {return {}},
+    rateLimitDelayMs: settings.rateLimitXe,
   };
 
   //
@@ -198,6 +128,15 @@ try {
   };
 
   //
+  // MESSARI
+  //
+  const messari = {
+    cacheFor: settings.cacheForMessari,
+    bootstrap: cache => {return {}},
+    rateLimitDelayMs: settings.rateLimitMessari,
+  };
+
+  //
   // MESSARI METRICS
   //
   const messariMetrics = {
@@ -207,6 +146,15 @@ try {
     watchDirs: [`${scrapeDir}/messari-metric/**/*`, 'all'],
     getJobs: getJobsMessariSectionMetrics,
     formatter: formatterMessariSectionMetrics,
+  };
+
+  //
+  // COINMARKETCAP
+  //
+  const coinmarketcap = {
+    cacheFor: settings.cacheForCoinmarketcap,
+    bootstrap: cache => {return {}},
+    rateLimitDelayMs: settings.rateLimitCoinmarketcap,
   };
 
   //
@@ -229,23 +177,8 @@ try {
   };
 
   //
-  // TODO:
   //
-  // const datatable = new DataTable(options);
   //
-  // datatable.api.new(cryptocompare);
-  // datatable.api.new(xe);
-  // datatable.api.new(messari);
-
-  // datatable.api.cryptocompare.add();
-  // datatable.api.cryptocompare.add();
-  // datatable.api.cryptocompare.add();
-  // datatable.api.xe.add();
-  // datatable.api.messari.add();
-
-  // datatable.api.output(data)
-  // datatable.api.output(store)
-
   function getFirstXRows(data, numRows = 50) {
 
     let id;
@@ -267,8 +200,10 @@ try {
     return output;
   }
 
-  let initData = null;
-  const dataTable = new DataTable({
+  //
+  // TODO:
+  //
+  const options = {
 
     dbDir: settings.dbDir,
     cacheDir: settings.cacheDir,
@@ -317,48 +252,32 @@ try {
       }
     },
 
-    scrapeSites: {
-      cryptocompare: {
-        cacheFor: settings.cacheForCryptocompare,
-        bootstrap: formatterCryptocompareBootstrap,
-        rateLimitDelayMs: settings.rateLimitCryptocompare,
-        sections: [
-          cryptocompareCoinlist,
-          cryptocompareExchangesList,
-          cryptocompareExchangesGeneral,
-          cryptocompareTopTotalVolume,
-        ]
-      },
-      messari: {
-        cacheFor: settings.cacheForMessari,
-        bootstrap: cache => {
-          return {}
-        },
-        rateLimitDelayMs: settings.rateLimitMessari,
-        sections: [
-          messariMetrics
-        ]
-      },
-      coinmarketcap: {
-        cacheFor: settings.cacheForCoinmarketcap,
-        bootstrap: cache => {
-          return {}
-        },
-        rateLimitDelayMs: settings.rateLimitCoinmarketcap,
-        sections: [
-          coinmarketcapCryptocurrencyListings
-        ]
-      },
-      xe: {
-        cacheFor: settings.cacheForXe,
-        bootstrap: () => {return {}},
-        rateLimitDelayMs: settings.rateLimitXe,
-        sections: [
-          xeCurrency
-        ]
-      }
-    }
+  };
+
+  let initData = null;
+  const datatable = new DataTable(options);
+
+  datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
+    datatable.sources.cryptocompare.add(cryptocompare.coinList);
+    datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
+    datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
+    datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
   });
+
+  datatable.newSource('messari', messari).then(() => {
+    datatable.sources.messari.add(messariMetrics);
+  });
+
+  datatable.newSource('coinmarketcap', coinmarketcap).then(() => {
+    datatable.sources.coinmarketcap.add(coinmarketcapCryptocurrencyListings);
+  });
+
+  datatable.newSource('xe', xe).then(() => {
+    datatable.sources.xe.add(xeCurrency);
+  });
+
+  // datatable.output(data)
+  // datatable.output(store)
 
 }
 

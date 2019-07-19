@@ -2,8 +2,8 @@
  * Itterate over Cryptocompare exchange pairs
  * @return {Object} uri and key for making a request
  */
-const settings = require('../settings');
-const logger = require('../logger');
+const settings = require('../../settings');
+const logger = require('../../logger');
 module.exports = async function* itterateCryptocompareExchangePairs() {
   try {
 

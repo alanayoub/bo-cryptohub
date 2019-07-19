@@ -2,8 +2,8 @@
 import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 
 // Cryptohub
-import logger   from '../logger';
-import settings from '../settings';
+import logger   from '../../logger';
+import settings from '../../settings';
 
 /**
  *

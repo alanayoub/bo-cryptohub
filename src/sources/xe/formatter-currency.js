@@ -13,8 +13,8 @@
 const cheerio = require('cheerio');
 
 // CryptoHub
-const logger = require('../logger');
-const settings = require('../settings');
+const logger = require('../../logger');
+const settings = require('../../settings');
 
 //
 // Xe

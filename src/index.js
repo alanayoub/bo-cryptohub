@@ -30,17 +30,14 @@ import storeOnBeforeEmit                                   from './utils/store-o
 
 // Formatters
 import formatterCryptocompareBootstrap                     from './sources/cryptocompare/formatter-bootstrap.js';
-import formatterXeSectionCurrency                          from './utils/formatter-xe-section-currency.js';
-import formatterMessariSectionMetrics                      from './utils/formatter-messari-section-metrics.js';
-import formatterCoinmarketcapSectionCryptocurrencyListings from './utils/formatter-coinmarketcap-section-cryptocurrency-listings.js';
-
-// Job fetchers
-import getJobsMessariSectionMetrics                        from './utils/get-jobs-messari-section-metrics.js';
 
 // Other utils
 import analyticsMergeDataByKey                             from './utils/analytics-merge-data-by-key';
 
 import cryptocompare                                       from './sources/cryptocompare';
+import coinmarketcap                                       from './sources/coinmarketcap';
+import messari                                             from './sources/messari';
+import xe                                                  from './sources/xe';
 
 const logger = require('./logger');
 const { scrapeDir } = settings;
@@ -100,85 +97,6 @@ try {
   //
   //
 
-  //
-  // XE
-  //
-  const xe = {
-    cacheFor: settings.cacheForXe,
-    bootstrap: () => {return {}},
-    rateLimitDelayMs: settings.rateLimitXe,
-  };
-
-  //
-  // XE CURRENCY
-  //
-  const xeCurrency = {
-    event: 'data',
-    name: 'currency',
-    interval: 1000 * 60 * 60 * 24,
-    watchDirs: [settings.tagKeyXeCurrencyTables`${'USD'}`, 'all'],
-    getJobs(queue, bootstrapData) {
-      queue.push({
-        uri: settings.tagUriXeCurrencyTables`${'USD'}`,
-        key: settings.tagKeyXeCurrencyTables`${'USD'}`,
-        cacheForDays: 0
-      });
-    },
-    formatter: formatterXeSectionCurrency
-  };
-
-  //
-  // MESSARI
-  //
-  const messari = {
-    cacheFor: settings.cacheForMessari,
-    bootstrap: cache => {return {}},
-    rateLimitDelayMs: settings.rateLimitMessari,
-  };
-
-  //
-  // MESSARI METRICS
-  //
-  const messariMetrics = {
-    event: 'data',
-    name: 'messari-metrics',
-    interval: 1000 * 5,
-    watchDirs: [`${scrapeDir}/messari-metric/**/*`, 'all'],
-    getJobs: getJobsMessariSectionMetrics,
-    formatter: formatterMessariSectionMetrics,
-  };
-
-  //
-  // COINMARKETCAP
-  //
-  const coinmarketcap = {
-    cacheFor: settings.cacheForCoinmarketcap,
-    bootstrap: cache => {return {}},
-    rateLimitDelayMs: settings.rateLimitCoinmarketcap,
-  };
-
-  //
-  // COINMARKETCAP
-  //
-  const coinmarketcapCryptocurrencyListings = {
-    event: 'data',
-    name: 'cmc-listings',
-    interval: 1000 * 5,
-    watchDirs: [`${scrapeDir}/coinmarketcap-cryptocurrency-listings/**/*`, 'all'],
-    getJobs: (queue, bootstrapData, appBootstrapData) => {
-      queue.push({
-        uri: settings.uriCoinmarketcapCryptocurrencyListings,
-        key: settings.keyCoinmarketcapCryptocurrencyListings,
-        cacheForDays: 30
-      });
-      logger.info(`getJobsCoinmarketcapCryptocurrencyListings(): 1 job created`);
-    },
-    formatter: formatterCoinmarketcapSectionCryptocurrencyListings,
-  };
-
-  //
-  //
-  //
   function getFirstXRows(data, numRows = 50) {
 
     let id;
@@ -264,16 +182,16 @@ try {
     datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
   });
 
-  datatable.newSource('messari', messari).then(() => {
-    datatable.sources.messari.add(messariMetrics);
+  datatable.newSource('messari', messari.config).then(() => {
+    datatable.sources.messari.add(messari.metrics);
   });
 
-  datatable.newSource('coinmarketcap', coinmarketcap).then(() => {
-    datatable.sources.coinmarketcap.add(coinmarketcapCryptocurrencyListings);
+  datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
+    datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
   });
 
-  datatable.newSource('xe', xe).then(() => {
-    datatable.sources.xe.add(xeCurrency);
+  datatable.newSource('xe', xe.config).then(() => {
+    datatable.sources.xe.add(xe.currency);
   });
 
   // datatable.output(data)

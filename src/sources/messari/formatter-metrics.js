@@ -1,5 +1,5 @@
 // Cryptohub
-const logger = require('../logger');
+const logger = require('../../logger');
 
 import { objectGetNestedProperty as gnp }  from 'bo-utils';
 

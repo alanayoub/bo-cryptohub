@@ -7,8 +7,8 @@ import { timeseriesPrune }                      from 'bo-utils';
 import { timeseriesScale }                      from 'bo-utils';
 
 // Cryptohub util functions
-import logger                                   from '../logger';
-import settings                                 from '../settings';
+import logger                                   from '../../logger';
+import settings                                 from '../../settings';
 
 /**
  *

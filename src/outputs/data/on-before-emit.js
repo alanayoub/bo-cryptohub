@@ -6,7 +6,7 @@ import { objectGetNestedProperty as gnp } from 'bo-utils';
 import { objectIsEmptyObject }            from 'bo-utils';
 
 // CryptoHub
-import settings                           from '../settings';
+import settings                           from '../../settings';
 
 /**
  *

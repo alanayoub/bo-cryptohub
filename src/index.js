@@ -10,34 +10,33 @@
 //
 
 // Node
-import { join }                                            from 'path';
+import { join }                        from 'path';
 
 // Libs
 import '@babel/polyfill';
 
 // Binary Overdose Projects
-import DataTable                                           from 'bo-datatable';
-import { partialApplication }                              from 'bo-utils';
+import DataTable                       from 'bo-datatable';
+import { partialApplication }          from 'bo-utils';
 
 // CryptoHub
-import settings                                            from './settings';
-
-// Handlers
-import dataOnHandleData                                    from './utils/data-on-handle-data';
-import storeOnHandleData                                   from './utils/store-on-handle-data';
-import dataOnBeforeEmit                                    from './utils/data-on-before-emit.js';
-import storeOnBeforeEmit                                   from './utils/store-on-before-emit.js';
+import settings                        from './settings';
 
 // Formatters
-import formatterCryptocompareBootstrap                     from './sources/cryptocompare/formatter-bootstrap.js';
+import formatterCryptocompareBootstrap from './sources/cryptocompare/formatter-bootstrap.js';
 
 // Other utils
-import analyticsMergeDataByKey                             from './utils/analytics-merge-data-by-key';
+import analyticsMergeDataByKey         from './utils/analytics-merge-data-by-key';
 
-import cryptocompare                                       from './sources/cryptocompare';
-import coinmarketcap                                       from './sources/coinmarketcap';
-import messari                                             from './sources/messari';
-import xe                                                  from './sources/xe';
+// Sources
+import cryptocompare                   from './sources/cryptocompare';
+import coinmarketcap                   from './sources/coinmarketcap';
+import messari                         from './sources/messari';
+import xe                              from './sources/xe';
+
+// Outputs
+import data                            from './outputs/data';
+import store                           from './outputs/store';
 
 const logger = require('./logger');
 const { scrapeDir } = settings;
@@ -97,27 +96,6 @@ try {
   //
   //
 
-  function getFirstXRows(data, numRows = 50) {
-
-    let id;
-    let ids;
-    let rows;
-    let output = {};
-
-    const idField = 'cc-total-vol-full-Id';
-    const volField = 'cc-total-vol-full-TOTALVOLUME24HTO';
-
-    rows = Object
-      .values(data)
-      .filter(a => a[idField])
-      .sort((a, b) => b[volField] - a[volField])
-      .slice(0, numRows);
-
-    ids = rows.map(a => a[idField]);
-    for (id of ids) output[id] = data[id];
-    return output;
-  }
-
   //
   // TODO:
   //
@@ -143,36 +121,15 @@ try {
 
     events: {
       data: {
-        onBeforeHandleData: analyticsMergeDataByKey,
-        onHandleData: partialApplication(dataOnHandleData, {}),
-        onAfterConnect(event, socket, data) {
-          const emitData = dataOnBeforeEmit({diff: false}, socket, data, initData);
-          if (emitData) socket.emit(event, emitData);
-        },
-        onBeforeEmit: partialApplication(dataOnBeforeEmit, {diff: true}),
-        onBeforeBootstrapSave: data => {
-          initData = getFirstXRows(data, settings.maxRowsTemplatedIn);
-          if (!settings.maxRowsTemplatedIn) return data;
-          return initData;
-        }
+        ...data
       },
       store: {
-        onBeforeHandleData: data => data,
-        onHandleData: partialApplication(storeOnHandleData, {}),
-        onAfterConnect(event, socket, data) {
-          const emitData = storeOnBeforeEmit({diff: false}, socket, data, {});
-          if (emitData) socket.emit(event, emitData);
-        },
-        onBeforeEmit: partialApplication(storeOnBeforeEmit, {diff: true}),
-        onBeforeBootstrapSave: (data) => {
-          return data;
-        }
+        ...store
       }
     },
 
   };
 
-  let initData = null;
   const datatable = new DataTable(options);
 
   datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
@@ -193,9 +150,6 @@ try {
   datatable.newSource('xe', xe.config).then(() => {
     datatable.sources.xe.add(xe.currency);
   });
-
-  // datatable.output(data)
-  // datatable.output(store)
 
 }
 

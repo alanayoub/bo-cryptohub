@@ -4,8 +4,8 @@
 import { objectGetNestedProperty as getNestedProp }  from 'bo-utils';
 
 // Cryptohub
-import analyticsMergeDataByKey                       from './analytics-merge-data-by-key';
-import settings                                      from '../settings';
+import analyticsMergeDataByKey                       from '../../utils/analytics-merge-data-by-key';
+import settings                                      from '../../settings';
 
 /**
  *

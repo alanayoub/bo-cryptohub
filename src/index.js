@@ -17,16 +17,12 @@ import '@babel/polyfill';
 
 // Binary Overdose Projects
 import DataTable                       from 'bo-datatable';
-import { partialApplication }          from 'bo-utils';
 
 // CryptoHub
 import settings                        from './settings';
 
 // Formatters
 import formatterCryptocompareBootstrap from './sources/cryptocompare/formatter-bootstrap.js';
-
-// Other utils
-import analyticsMergeDataByKey         from './utils/analytics-merge-data-by-key';
 
 // Sources
 import cryptocompare                   from './sources/cryptocompare';
@@ -39,7 +35,6 @@ import data                            from './outputs/data';
 import store                           from './outputs/store';
 
 const logger = require('./logger');
-const { scrapeDir } = settings;
 
 try {
 

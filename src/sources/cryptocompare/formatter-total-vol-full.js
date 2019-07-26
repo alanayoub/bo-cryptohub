@@ -1,6 +1,8 @@
 // Cryptohub
 const logger = require('../../logger');
 
+import { perSecondSave } from '../../db';
+
 /**
  *
  * TOTAL VOL FULL
@@ -74,12 +76,12 @@ const logger = require('../../logger');
  * @return {Object}
  *
  */
-module.exports = function formatterCryptocompareSectionTotalVolFull(price, timestamp, bootstrapData) {
+export default async function totalVolFull(price, timestamp, bootstrapData, appBootstrapData) {
   try {
 
     const prefix = 'cc-total-vol-full-';
 
-    let fData = {};
+    let result = {};
     let idx;
     let dataItem;
     let RAW;
@@ -92,32 +94,34 @@ module.exports = function formatterCryptocompareSectionTotalVolFull(price, times
         coinInfo = price.Data[idx].CoinInfo;
       }
       catch (error) {
-        logger.error(`formatterCryptocompareSectionTotalVolFull(): idx:${idx}, ${error}`);
+        logger.error(`totalVolFull(): idx:${idx}, ${error}`);
       }
 
       let key;
       let val;
       const id = coinInfo.Id;
 
-      fData[id] = {};
+      result[id] = {};
 
       for ([key, val] of Object.entries(RAW)) {
-        fData[id][`${prefix}${key}-timestamp`] = timestamp;
-        fData[id][`${prefix}${key}`] = val;
+        result[id][`${prefix}${key}-timestamp`] = timestamp;
+        result[id][`${prefix}${key}`] = val;
       }
 
       for ([key, val] of Object.entries(coinInfo)) {
-        fData[id][`${prefix}${key}-timestamp`] = timestamp;
-        fData[id][`${prefix}${key}`] = val;
+        result[id][`${prefix}${key}-timestamp`] = timestamp;
+        result[id][`${prefix}${key}`] = val;
       }
 
     }
 
-    return {data: fData, timestamp};
+    await perSecondSave(result, timestamp);
+
+    return {data: result, timestamp};
 
   }
   catch(error) {
-    const message = `formatterCryptocompareSectionTotalVolFull(): ${error}`;
+    const message = `totalVolFull(): ${error}`;
     logger.error(message);
     return {message, error: true};
   }

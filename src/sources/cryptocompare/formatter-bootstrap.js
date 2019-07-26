@@ -42,7 +42,6 @@ const scrapeJSON = require('../../utils/scrape-json.js');
 module.exports = async function formatterCryptocompareBootstrap(cache) {
   try {
 
-
     // Get coinList
     let coinList;
     try {

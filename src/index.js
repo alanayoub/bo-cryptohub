@@ -9,6 +9,9 @@
 //
 //
 
+// Database connect
+import './db/connect';
+
 // Node
 import { join }                        from 'path';
 

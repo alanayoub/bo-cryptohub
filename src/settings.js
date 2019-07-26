@@ -188,6 +188,90 @@ const fieldLastValue = [
 
 fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
 
+const fieldTypeMap = {
+
+  // NOTE: Allowing String, Number and Boolean becaues Cryptocompare cant make its mind up :(
+
+  'cc-coinlist-Algorithm'                      :'String|Number|Boolean', // :'String',  // "N/A"
+  'cc-coinlist-BlockNumber'                    :'String|Number|Boolean', // :'Number',  // 0
+  'cc-coinlist-BlockReward'                    :'String|Number|Boolean', // :'Number',  // 0
+  'cc-coinlist-BlockTime'                      :'String|Number|Boolean', // :'Number',  // 0
+  'cc-coinlist-BuiltOn'                        :'String|Number|Boolean', // :'String',  // "7605"
+  'cc-coinlist-CoinName'                       :'String|Number|Boolean', // :'String',  // "Quoine Liquid"
+  'cc-coinlist-FullName'                       :'String|Number|Boolean', // :'String',  // "Quoine Liquid (QASH)"
+  'cc-coinlist-FullyPremined'                  :'String|Number|Boolean', // :'String',  // "0"
+  'cc-coinlist-Id'                             :'String|Number|Boolean', // :'String',  // "402714"
+  'cc-coinlist-ImageUrl'                       :'String|Number|Boolean', // :'String',  // "/media/15887431/qash.png"
+  'cc-coinlist-IsTrading'                      :'String|Number|Boolean', // :'Boolean', // true
+  'cc-coinlist-Name'                           :'String|Number|Boolean', // :'String',  // "QASH"
+  'cc-coinlist-NetHashesPerSecond'             :'String|Number|Boolean', // :'Number',  // 0
+  'cc-coinlist-PreMinedValue'                  :'String|Number|Boolean', // :'String',  // "N/A"
+  'cc-coinlist-ProofType'                      :'String|Number|Boolean', // :'String',  // "N/A"
+  'cc-coinlist-SmartContractAddress'           :'String|Number|Boolean', // :'String',  // "0x618e75ac90b12c6049ba3b27f5d5f8651b0037f6"
+  'cc-coinlist-SortOrder'                      :'String|Number|Boolean', // :'Number',  // "1877" --- NOTE: We have overwritten this to be a Number ---
+  'cc-coinlist-Sponsored'                      :'String|Number|Boolean', // :'Boolean', // false
+  'cc-coinlist-Symbol'                         :'String|Number|Boolean', // :'String',  // "QASH"
+  'cc-coinlist-TotalCoinSupply'                :'String|Number|Boolean', // :'String',  // "1000000000"
+  'cc-coinlist-TotalCoinsFreeFloat'            :'String|Number|Boolean', // :'String',  // "N/A"
+  'cc-coinlist-TotalCoinsMined'                :'String|Number|Boolean', // :'Number',  // 1000000000
+  'cc-coinlist-Url'                            :'String|Number|Boolean', // :'String',  // "/coins/qash/overview"
+
+  'cc-total-vol-full-Algorithm'                :'String|Number|Boolean', // :'String',  // "SHA-256"
+  'cc-total-vol-full-BlockNumber'              :'String|Number|Boolean', // :'Number',  // 587081
+  'cc-total-vol-full-BlockReward'              :'String|Number|Boolean', // :'Number',  // 12.5
+  'cc-total-vol-full-BlockTime'                :'String|Number|Boolean', // :'Number',  // 600
+  'cc-total-vol-full-Id'                       :'String|Number|Boolean', // :'String',  // "1182"
+  'cc-total-vol-full-ImageUrl'                 :'String|Number|Boolean', // :'String',  // "/media/19633/btc.png"
+  'cc-total-vol-full-Name'                     :'String|Number|Boolean', // :'String',  // "BTC"
+  'cc-total-vol-full-NetHashesPerSecond'       :'String|Number|Boolean', // :'Number',  // 64524184803.7811
+  'cc-total-vol-full-ProofType'                :'String|Number|Boolean', // :'String',  // "PoW"
+  'cc-total-vol-full-TYPE'                     :'String|Number|Boolean', // :'String',  // "5"
+  'cc-total-vol-full-Type'                     :'String|Number|Boolean', // :'Number',  // 1
+  'cc-total-vol-full-Url'                      :'String|Number|Boolean', // :'String',  // "/coins/btc/overview"
+  'cc-total-vol-full-CHANGE24HOUR'             :'String|Number|Boolean', // :'Number',  // -288.78999999999905
+  'cc-total-vol-full-CHANGEDAY'                :'String|Number|Boolean', // :'Number',  // -83.03000000000065
+  'cc-total-vol-full-CHANGEPCT24HOUR'          :'String|Number|Boolean', // :'Number',  // -2.8625521011443578
+  'cc-total-vol-full-CHANGEPCTDAY'             :'String|Number|Boolean', // :'Number',  // -0.8401473672920365
+  'cc-total-vol-full-DocumentType'             :'String|Number|Boolean', // :'String',  // "Webpagecoinp"
+  'cc-total-vol-full-FLAGS'                    :'String|Number|Boolean', // :'String',  // "1"
+  'cc-total-vol-full-FROMSYMBOL'               :'String|Number|Boolean', // :'String',  // "BTC"
+  'cc-total-vol-full-FullName'                 :'String|Number|Boolean', // :'String',  // "Bitcoin"
+  'cc-total-vol-full-HIGH24HOUR'               :'String|Number|Boolean', // :'Number',  // 10174.4
+  'cc-total-vol-full-HIGHDAY'                  :'String|Number|Boolean', // :'Number',  // 9882.79
+  'cc-total-vol-full-HIGHHOUR'                 :'String|Number|Boolean', // :'Number',  // 9811.55
+  'cc-total-vol-full-IMAGEURL'                 :'String|Number|Boolean', // :'String',  // "/media/19633/btc.png"
+  'cc-total-vol-full-Internal'                 :'String|Number|Boolean', // :'String',  // "BTC"
+  'cc-total-vol-full-LASTMARKET'               :'String|Number|Boolean', // :'String',  // "Bitstamp"
+  'cc-total-vol-full-LASTTRADEID'              :'String|Number|Boolean', // :'String',  // "94656047" --- NOTE: We have overwritten this to be a Number ---
+  'cc-total-vol-full-LASTUPDATE'               :'String|Number|Boolean', // :'Number',  // 1564135004
+  'cc-total-vol-full-LASTVOLUME'               :'String|Number|Boolean', // :'Number',  // 0.00699377
+  'cc-total-vol-full-LASTVOLUMETO'             :'String|Number|Boolean', // :'Number',  // 68.538946
+  'cc-total-vol-full-LOW24HOUR'                :'String|Number|Boolean', // :'Number',  // 9647.05
+  'cc-total-vol-full-LOWDAY'                   :'String|Number|Boolean', // :'Number',  // 9668.52
+  'cc-total-vol-full-LOWHOUR'                  :'String|Number|Boolean', // :'Number',  // 9772.29
+  'cc-total-vol-full-MARKET'                   :'String|Number|Boolean', // :'String',  // "CCCAGG"
+  'cc-total-vol-full-MKTCAP'                   :'String|Number|Boolean', // :'Number',  // 174813018760
+  'cc-total-vol-full-OPEN24HOUR'               :'String|Number|Boolean', // :'Number',  // 10088.55
+  'cc-total-vol-full-OPENDAY'                  :'String|Number|Boolean', // :'Number',  // 9882.79
+  'cc-total-vol-full-OPENHOUR'                 :'String|Number|Boolean', // :'Number',  // 9798.61
+  'cc-total-vol-full-PRICE'                    :'String|Number|Boolean', // :'Number',  // 9799.76
+  'cc-total-vol-full-SUPPLY'                   :'String|Number|Boolean', // :'Number',  // 17838500
+  'cc-total-vol-full-TOPTIERVOLUME24HOUR'      :'String|Number|Boolean', // :'Number',  // 34693.46712488547
+  'cc-total-vol-full-TOPTIERVOLUME24HOURTO'    :'String|Number|Boolean', // :'Number',  // 342986884.10271114
+  'cc-total-vol-full-TOSYMBOL'                 :'String|Number|Boolean', // :'String',  // "USD"
+  'cc-total-vol-full-TOTALTOPTIERVOLUME24H'    :'String|Number|Boolean', // :'Number',  // 145573.9073042986
+  'cc-total-vol-full-TOTALTOPTIERVOLUME24HTO'  :'String|Number|Boolean', // :'Number',  // 1429588586.5553167
+  'cc-total-vol-full-TOTALVOLUME24H'           :'String|Number|Boolean', // :'Number',  // 289044.02882536233
+  'cc-total-vol-full-TOTALVOLUME24HTO'         :'String|Number|Boolean', // :'Number',  // 2835893441.3717556
+  'cc-total-vol-full-VOLUME24HOUR'             :'String|Number|Boolean', // :'Number',  // 36648.859710940465
+  'cc-total-vol-full-VOLUME24HOURTO'           :'String|Number|Boolean', // :'Number',  // 362481358.8910086
+  'cc-total-vol-full-VOLUMEDAY'                :'String|Number|Boolean', // :'Number',  // 13338.414241986171
+  'cc-total-vol-full-VOLUMEDAYTO'              :'String|Number|Boolean', // :'Number',  // 129927216.80335271
+  'cc-total-vol-full-VOLUMEHOUR'               :'String|Number|Boolean', // :'Number',  // 833.5320880846975
+  'cc-total-vol-full-VOLUMEHOURTO'             :'String|Number|Boolean', // :'Number',  // 8163468.329335898
+
+}
+
 const columnDependencies = {
 
   //
@@ -411,6 +495,11 @@ const settings = {
   //
   fieldWhitelist,
   fieldLastValue,
+
+  //
+  // Maps
+  //
+  fieldTypeMap,
 
   //
   // Cache

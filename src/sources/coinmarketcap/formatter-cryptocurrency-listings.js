@@ -1,6 +1,7 @@
 // Cryptohub
 const logger = require('../../logger');
 
+import { perSecondSave }                   from '../../db';
 import { objectGetNestedProperty as gnp }  from 'bo-utils';
 
 /**
@@ -48,7 +49,7 @@ import { objectGetNestedProperty as gnp }  from 'bo-utils';
  * @return {Object}
  *
  */
-export default function formatter(data, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
+export default async function formatter(data, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
 
   try {
 
@@ -110,40 +111,44 @@ export default function formatter(data, timestamp, bootstrapData, appBootstrapDa
     //
     //
     //
-    const output = {};
+    const result = {};
+    const prefix = 'cmc-listings-';
     for (const val of Object.values(data)) {
       const id = appBootstrapData.mapCmcIdCcId[val.id];
-      output[id] = {
-        'cmc-listings-circulating_supply' : val.circulating_supply,
-        'cmc-listings-cmc_rank'           : val.cmc_rank,
-        'cmc-listings-date_added'         : val.date_added,
-        'cmc-listings-id'                 : val.id,
-        'cmc-listings-last_updated'       : val.last_updated,
-        'cmc-listings-max_supply'         : val.max_supply,
-        'cmc-listings-name'               : val.name,
-        'cmc-listings-num_market_pairs'   : val.num_market_pairs,
-        'cmc-listings-tags'               : val.tags,
-        'cmc-listings-total_supply'       : val.total_supply,
-        'cmc-listings-market_cap'         : gnp(val, 'quote.USD.market_cap'),
-        'cmc-listings-percent_change_1h'  : gnp(val, 'quote.USD.percent_change_1h'),
-        'cmc-listings-percent_change_7d'  : gnp(val, 'quote.USD.percent_change_7d'),
-        'cmc-listings-percent_change_24h' : gnp(val, 'quote.USD.percent_change_24h'),
-        'cmc-listings-volume_24h'         : gnp(val, 'quote.USD.volume_24h'),
-        // 'cmc-listings-slug'               : val.slug,
-        // 'cmc-listings-symbol'             : val.symbol,
-        // 'cmc-listings-price'              : gnp(val, ''),
+      if (id === void 0) continue;
+      result[id] = {
+        [`${prefix}circulating_supply`]           : val.circulating_supply,
+        [`${prefix}cmc_rank`]                     : val.cmc_rank,
+        [`${prefix}date_added`]                   : val.date_added,
+        [`${prefix}id`]                           : val.id,
+        [`${prefix}last_updated`]                 : val.last_updated,
+        [`${prefix}max_supply`]                   : val.max_supply,
+        [`${prefix}name`]                         : val.name,
+        [`${prefix}num_market_pairs`]             : val.num_market_pairs,
+        [`${prefix}tags`]                         : val.tags,
+        [`${prefix}total_supply`]                 : val.total_supply,
+        [`${prefix}quote-USD-market_cap`]         : gnp(val, 'quote.USD.market_cap'),
+        [`${prefix}quote-USD-percent_change_1h`]  : gnp(val, 'quote.USD.percent_change_1h'),
+        [`${prefix}quote-USD-percent_change_7d`]  : gnp(val, 'quote.USD.percent_change_7d'),
+        [`${prefix}quote-USD-percent_change_24h`] : gnp(val, 'quote.USD.percent_change_24h'),
+        [`${prefix}quote-USD-volume_24h`]         : gnp(val, 'quote.USD.volume_24h'),
+        [`${prefix}quote-USD-price`]              : gnp(val, 'quote.USD.price'),
+        [`${prefix}slug`]                         : val.slug,
+        [`${prefix}symbol`]                       : val.symbol,
       }
     }
 
     let item;
     let prop;
-    for (item of Object.values(output)) {
+    for (item of Object.values(result)) {
       for (prop of Object.keys(item)) {
         item[`${prop}-timestamp`] = timestamp;
       }
     }
 
-    return {data: output, timestamp};
+    await perSecondSave(result, timestamp);
+
+    return {data: result, timestamp};
 
   }
 

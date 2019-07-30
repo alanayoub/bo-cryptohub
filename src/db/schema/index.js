@@ -96,6 +96,8 @@ const PerSecondModel = model('PerSecond', PerSecondSchema);
 // Regex Query
 // { _id: { $regex: "^cc-total-vol-full-HIGHDAY:" } }
 //
+// { "_id" : { $regex: "cc-coinlist-Id|cc-coinlist-IsTrading|cc-total-vol-full-HIGHDAY", $options: "i" } }
+//
 
 export {
   PerSecondModel

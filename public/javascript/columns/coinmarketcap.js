@@ -17,7 +17,7 @@ export default {
 
   marketcapUSDCMC: {
     colId: 'marketcapUSDCMC',
-    field: 'cmc-listings-market_cap',
+    field: 'cmc-listings-quote_USD_market_cap',
     headerName: 'Market Cap $',
     headerClass: 'CH-col',
     headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: CoinMarketcap',
@@ -35,7 +35,7 @@ export default {
 
   volume24HourCMC: {
     colId: 'volume24HourCMC',
-    field: 'cmc-listings-volume_24h',
+    field: 'cmc-listings-quote_USD_volume_24h',
     headerName: 'Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'The 24 hour volume across all exchanges in USD\n\nData Source: CoinMarketcap',
@@ -71,7 +71,7 @@ export default {
 
   percentChange24HourCMC: {
     colId: 'percentChange24HourCMC',
-    field: 'cmc-listings-percent_change_24h',
+    field: 'cmc-listings-quote_USD_percent_change_24h',
     headerName: 'Change 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 Hours\n\nData Source: CoinMarketCap',
@@ -86,7 +86,7 @@ export default {
 
   percentChange7DayCMC: {
     colId: 'percentChange7DayCMC',
-    field: 'cmc-listings-percent_change_7d',
+    field: 'cmc-listings-quote_USD_percent_change_7d',
     headerName: 'Change 7d $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 7 Days\n\nData Source: CoinMarketCap',

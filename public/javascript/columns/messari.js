@@ -16,7 +16,7 @@ export default {
   //
   sectorsMessari: {
     colId: 'sectorsMessari',
-    field: 'm-metrics-sectors',
+    field: 'm-metrics-misc_data_sectors',
     headerName: 'Sectors',
     headerClass: 'CH-col',
     headerTooltip: 'Sectors',
@@ -35,7 +35,7 @@ export default {
   //
   athUSDMessari: {
     colId: 'athUSDMessari',
-    field: 'm-metrics-ath-price',
+    field: 'm-metrics-all_time_high_price',
     headerName: 'ATH $',
     headerClass: 'CH-col',
     headerTooltip: 'All Time High (USD)\n\nData Source: OnChainFX',
@@ -56,7 +56,7 @@ export default {
   //
   athPercentDownUSDMessari: {
     colId: 'athPercentDownUSDMessari',
-    field: 'm-metrics-ath-percent-down',
+    field: 'm-metrics-all_time_high_percent_down',
     headerName: 'ATH % Down',
     headerClass: 'CH-col',
     headerTooltip: '% Down from All Time High (USD)\n\nData Source: OnChainFX',
@@ -82,7 +82,7 @@ export default {
   //
   cycleLowUSDMessari: {
     colId: 'cycleLowUSDMessari',
-    field: 'm-metrics-cycle-low-price',
+    field: 'm-metrics-cycle_low_price',
     headerName: 'Cycle Low $',
     headerClass: 'CH-col',
     headerTooltip: 'The lowest trading price (in USD) of the asset since its All-Time-High\n\nData Source: OnChainFX',
@@ -103,7 +103,7 @@ export default {
   //
   percentChange7dBTCMessari: {
     colId: 'percentChange7dBTCMessari',
-    field: 'm-metrics-percent-change-btc-last-1-week',
+    field: 'm-metrics-roi_data_percent_change_btc_last_1_week',
     headerName: '7D Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 7 days against BTC\n\nData Source: Messari',
@@ -121,7 +121,7 @@ export default {
   //
   percentChange1mBTCMessari: {
     colId: 'percentChange1mBTCMessari',
-    field: 'm-metrics-percent-change-btc-last-1-month',
+    field: 'm-metrics-roi_data_percent_change_btc_last_1_month',
     headerName: '1M Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 1 month against BTC\n\nData Source: Messari',
@@ -139,7 +139,7 @@ export default {
   //
   percentChange3mBTCMessari: {
     colId: 'percentChange3mBTCMessari',
-    field: 'm-metrics-percent-change-btc-last-3-months',
+    field: 'm-metrics-roi_data_percent_change_btc_last_3_months',
     headerName: '3M Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 3 months against BTC\n\nData Source: Messari',
@@ -157,7 +157,7 @@ export default {
   //
   percentChange1yBTCMessari: {
     colId: 'percentChange1yBTCMessari',
-    field: 'm-metrics-percent-change-btc-last-1-year',
+    field: 'm-metrics-roi_data_percent_change_btc_last_1_year',
     headerName: '1Y Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 1 year against BTC\n\nData Source: Messari',
@@ -175,7 +175,7 @@ export default {
   //
   priceUSDMessari: {
     colId: 'priceUSDMessari',
-    field: 'm-metrics-price-usd',
+    field: 'm-metrics-price_usd',
     headerName: 'Price $',
     headerClass: 'CH-col',
     headerTooltip: 'Price in USD\n\nData Source: Messari',
@@ -199,7 +199,7 @@ export default {
   //
   priceBTCMessari: {
     colId: 'priceBTCMessari',
-    field: 'm-metrics-price-btc',
+    field: 'm-metrics-price_btc',
     headerName: 'Price ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Price in BTC\n\nData Source: Messari',
@@ -223,7 +223,7 @@ export default {
   //
   volume24hUSDMessari: {
     colId: 'volume24hUSDMessari',
-    field: 'm-metrics-volume-last-24-hours',
+    field: 'm-metrics-volume_last_24_hours',
     headerName: 'Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Messari',
@@ -244,7 +244,7 @@ export default {
   //
   realVolume24hUSDMessari: {
     colId: 'realVolume24hUSDMessari',
-    field: 'm-metrics-real-volume-last-24-hours',
+    field: 'm-metrics-real_volume_last_24_hours',
     headerName: 'Real Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'Real Volume according to Messari. 24 hours displayed in USD\n\nData Source: Messari',
@@ -265,7 +265,7 @@ export default {
   //
   percentChange24hUSDMessari: {
     colId: 'percentChange24hUSDMessari',
-    field: 'm-metrics-percent-change-usd-last-24-hours',
+    field: 'm-metrics-market_data_percent_change_usd_last_24_hours',
     headerName: 'Δ 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Messari',
@@ -283,7 +283,7 @@ export default {
   //
   percentChange24hBTCMessari: {
     colId: 'percentChange24hBTCMessari',
-    field: 'm-metrics-percent-change-btc-last-24-hours',
+    field: 'm-metrics-market_data_percent_change_btc_last_24_hours',
     headerName: 'Δ 24h ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against BTC\n\nData Source: Messari',
@@ -298,7 +298,7 @@ export default {
 
   marketcapUSDMessari: {
     colId: 'marketcapUSDMessari',
-    field: 'm-metrics-current-marketcap-usd',
+    field: 'm-metrics-current_marketcap_usd',
     headerName: 'Market Cap $',
     headerClass: 'CH-col',
     headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Messari',
@@ -316,7 +316,7 @@ export default {
 
   marketcapUSD2050Messari: {
     colId: 'marketcapUSD2050Messari',
-    field: 'm-metrics-y-2050-marketcap-usd',
+    field: 'm-metrics-y_2050_marketcap_usd',
     headerName: 'Market Cap $ (Y2050)',
     headerClass: 'CH-col',
     headerTooltip: 'This is the fully diluted (Y2050) Marketcap, it takes into account known future dilution up to Jan 1, 2050.\n\nData Source: Messari',

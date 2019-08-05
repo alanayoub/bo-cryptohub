@@ -1,7 +1,9 @@
 // Cryptohub
 const logger = require('../../logger');
 
-import { objectGetNestedProperty as gnp }  from 'bo-utils';
+import { objectGetNestedProperty as gnp } from 'bo-utils';
+
+import { perSecondSave }                  from '../../db';
 
 /**
  *
@@ -168,12 +170,12 @@ import { objectGetNestedProperty as gnp }  from 'bo-utils';
  * @return {Object}
  *
  */
-export default function formatterMessariSectionMetrics(data, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
+export default async function formatterMessariSectionMetrics(data, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
 
   try {
 
     function dataIsValid(data) {
-      if (data.data && data.data.symbol) return true
+      if (data.data && data.data.symbol) return true;
       else return false;
     }
 
@@ -184,62 +186,69 @@ export default function formatterMessariSectionMetrics(data, timestamp, bootstra
     const sectors = gnp(data, 'misc_data.sectors');
     const id = appBootstrapData.symbolIdMap[symbol]; // TODO: need proper mapping for ids
 
-    const output = {
-      [id]: {
+    const prefix = 'm-metrics-';
 
-        'm-metrics-sectors'                          : gnp(data, 'misc_data.sectors'),
-        'm-metrics-categories'                       : gnp(data, 'misc_data.categories'),
-        'm-metrics-date-created'                     : gnp(data, 'misc_data.asset_created_at'),
+    if (id === void 0) {
+      result = {};
+    }
+    else {
+      result = {
+        [id]: {
 
-        'm-metrics-ath-price'                        : gnp(data, 'all_time_high.price'),
-        'm-metrics-ath-date'                         : gnp(data, 'all_time_high.at'),
-        'm-metrics-ath-days'                         : gnp(data, 'all_time_high.days_since'),
-        'm-metrics-ath-percent-down'                 : gnp(data, 'all_time_high.percent_down'),
-        'm-metrics-ath-breakeven-multiple'           : gnp(data, 'all_time_high.breakeven_multiple'),
+          [`${prefix}misc_data_sectors`]                            : gnp(data, 'misc_data.sectors'),
+          [`${prefix}misc_data_categories`]                         : gnp(data, 'misc_data.categories'),
+          [`${prefix}misc_data_asset_created_at`]                   : gnp(data, 'misc_data.asset_created_at'),
 
-        'm-metrics-cycle-low-price'                  : gnp(data, 'cycle_low.price'),
-        'm-metrics-cycle-low-date'                   : gnp(data, 'cycle_low.at'),
-        'm-metrics-cycle-low-percent-up'             : gnp(data, 'cycle_low.percent_up'),
-        'm-metrics-cycle-low-days-since'             : gnp(data, 'cycle_low.days_since'),
+          [`${prefix}all_time_high_price`]                          : gnp(data, 'all_time_high.price'),
+          [`${prefix}all_time_high_at`]                             : gnp(data, 'all_time_high.at'),
+          [`${prefix}all_time_high_days_since`]                     : gnp(data, 'all_time_high.days_since'),
+          [`${prefix}all_time_high_percent_down`]                   : gnp(data, 'all_time_high.percent_down'),
+          [`${prefix}all_time_high_breakeven_multiple`]             : gnp(data, 'all_time_high.breakeven_multiple'),
 
-        'm-metrics-percent-change-last-1-week'       : gnp(data, 'roi_data.percent_change_last_1_week'),
-        'm-metrics-percent-change-last-1-month'      : gnp(data, 'roi_data.percent_change_last_1_month'),
-        'm-metrics-percent-change-last-3-months'     : gnp(data, 'roi_data.percent_change_last_3_months'),
-        'm-metrics-percent-change-last-1-year'       : gnp(data, 'roi_data.percent_change_last_1_year'),
-        'm-metrics-percent-change-btc-last-1-week'   : gnp(data, 'roi_data.percent_change_btc_last_1_week'),
-        'm-metrics-percent-change-btc-last-1-month'  : gnp(data, 'roi_data.percent_change_btc_last_1_month'),
-        'm-metrics-percent-change-btc-last-3-months' : gnp(data, 'roi_data.percent_change_btc_last_3_months'),
-        'm-metrics-percent-change-btc-last-1-year'   : gnp(data, 'roi_data.percent_change_btc_last_1_year'),
+          [`${prefix}cycle_low_price`]                              : gnp(data, 'cycle_low.price'),
+          [`${prefix}cycle_low_at`]                                 : gnp(data, 'cycle_low.at'),
+          [`${prefix}cycle_low_percent_up`]                         : gnp(data, 'cycle_low.percent_up'),
+          [`${prefix}cycle_low_days_since`]                         : gnp(data, 'cycle_low.days_since'),
 
-        'm-metrics-ath-price-timestamp'              : gnp(data, 'all_time_high.at'),
+          [`${prefix}roi_data_percent_change_last_1_week`]          : gnp(data, 'roi_data.percent_change_last_1_week'),
+          [`${prefix}roi_data_percent_change_last_1_month`]         : gnp(data, 'roi_data.percent_change_last_1_month'),
+          [`${prefix}roi_data_percent_change_last_3_months`]        : gnp(data, 'roi_data.percent_change_last_3_months'),
+          [`${prefix}roi_data_percent_change_last_1_year`]          : gnp(data, 'roi_data.percent_change_last_1_year'),
+          [`${prefix}roi_data_percent_change_btc_last_1_week`]      : gnp(data, 'roi_data.percent_change_btc_last_1_week'),
+          [`${prefix}roi_data_percent_change_btc_last_1_month`]     : gnp(data, 'roi_data.percent_change_btc_last_1_month'),
+          [`${prefix}roi_data_percent_change_btc_last_3_months`]    : gnp(data, 'roi_data.percent_change_btc_last_3_months'),
+          [`${prefix}roi_data_percent_change_btc_last_1_year`]      : gnp(data, 'roi_data.percent_change_btc_last_1_year'),
 
-        'm-metrics-cycle-low-price-timestamp'        : gnp(data, 'cycle_low.at'),
+          [`${prefix}cycle_low_at`]                                 : gnp(data, 'cycle_low.at'),
 
-        'm-metrics-price-usd'                        : gnp(data, 'market_data.price_usd'),
-        'm-metrics-price-btc'                        : gnp(data, 'market_data.price_btc'),
-        'm-metrics-volume-last-24-hours'             : gnp(data, 'market_data.volume_last_24_hours'),
-        'm-metrics-real-volume-last-24-hours'        : gnp(data, 'market_data.real_volume_last_24_hours'),
-        'm-metrics-percent-change-usd-last-24-hours' : gnp(data, 'market_data.percent_change_usd_last_24_hours'),
-        'm-metrics-percent-change-btc-last-24-hours' : gnp(data, 'market_data.percent_change_btc_last_24_hours'),
+          [`${prefix}market_data_price_usd`]                        : gnp(data, 'market_data.price_usd'),
+          [`${prefix}market_data_price_btc`]                        : gnp(data, 'market_data.price_btc'),
+          [`${prefix}market_data_volume_last_24_hours`]             : gnp(data, 'market_data.volume_last_24_hours'),
+          [`${prefix}market_data_real_volume_last_24_hours`]        : gnp(data, 'market_data.real_volume_last_24_hours'),
+          [`${prefix}market_data_percent_change_usd_last_24_hours`] : gnp(data, 'market_data.percent_change_usd_last_24_hours'),
+          [`${prefix}market_data_percent_change_btc_last_24_hours`] : gnp(data, 'market_data.percent_change_btc_last_24_hours'),
 
-        'm-metrics-current-marketcap-usd'            : gnp(data, 'marketcap.current_marketcap_usd'),
-        'm-metrics-y-2050-marketcap-usd'             : gnp(data, 'marketcap.y_2050_marketcap_usd'),
-        // 'm-metrics-y_plus10_marketcap_usd': gnp(data, 'marketcap.y_plus10_marketcap_usd'),
-        // 'm-metrics-liquid_marketcap_usd': gnp(data, 'marketcap.liquid_marketcap_usd'),
-        // 'm-metrics-volume_turnover_last_24_hours_percent': gnp(data, 'marketcap.volume_turnover_last_24_hours_percent')
+          [`${prefix}marketcap_current_marketcap_usd`]              : gnp(data, 'marketcap.current_marketcap_usd'),
+          [`${prefix}marketcap_y_2050_marketcap_usd`]               : gnp(data, 'marketcap.y_2050_marketcap_usd'),
+          // 'm-metrics-y_plus10_marketcap_usd': gnp(data, 'marketcap.y_plus10_marketcap_usd'),
+          // 'm-metrics-liquid_marketcap_usd': gnp(data, 'marketcap.liquid_marketcap_usd'),
+          // 'm-metrics-volume_turnover_last_24_hours_percent': gnp(data, 'marketcap.volume_turnover_last_24_hours_percent')
 
-      }
-    };
+        }
+      };
 
-    let item;
-    let prop;
-    for (item of Object.values(output)) {
-      for (prop of Object.keys(item)) {
-        item[`${prop}-timestamp`] = timestamp;
+      let item;
+      let prop;
+      for (item of Object.values(result)) {
+        for (prop of Object.keys(item)) {
+          item[`${prop}-timestamp`] = timestamp;
+        }
       }
     }
 
-    return {data: output, timestamp};
+    await perSecondSave(result, timestamp);
+
+    return {data: result, timestamp};
 
   }
 

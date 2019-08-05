@@ -9,6 +9,8 @@ import { timeseriesScale }                      from 'bo-utils';
 // Cryptohub util functions
 import logger                                   from '../../logger';
 import settings                                 from '../../settings';
+import { perSecondSave }                        from '../../db';
+import { getRows }                              from '../../db/query';
 
 /**
  *
@@ -77,43 +79,47 @@ function getBitcoinPrice(data) {
  * ADD CRYPTOHUB FIELDS
  *
  */
-function addCryptohubFields(oldData, data) {
+async function getCryptohubFields(oldData, data) {
 
-  function lastValueField(oldData, newData, field) {
-    if (settings.fieldLastValue.includes(field)) {
-      newData[`${field}:last`] = oldData[field];
-    }
-  }
-
-  function timestampField(data, field) {
-    const timestamp = +new Date(data['cc-total-vol-full-PRICE-timestamp']);
-    data[`${field}-timestamp`] = timestamp;
-  }
-
+  const cryptohubData = {}
 
   let key;
   let item;
   const bitcoinPrice = getBitcoinPrice(data);
   for ([key, item] of Object.entries(data)) {
 
+    if (isNaN(key)) continue;
+
+    cryptohubData[key] = {};
+
     // Timeseries
     const timeseries = getNewTimeseriesData(item);
-    if (timeseries) item['cryptohub-price-history'] = timeseries;
+    if (timeseries) {
+      // item['cryptohub-price-history'] = timeseries;
+      cryptohubData[key]['cryptohub-price-history'] = JSON.stringify(timeseries);
+    }
 
     // Bitcoin price
     const { price, lastPrice, timestamp } = priceInBitcoin(oldData[key], item, bitcoinPrice);
-    if (price)               item['cryptohub-price-btc']           = price;
-    if (price !== lastPrice) item['cryptohub-price-btc:last']      = lastPrice;
-    if (timestamp)           item['cryptohub-price-btc-timestamp'] = timestamp;
+    if (price) {
+      // item['cryptohub-price-btc'] = price;
+      cryptohubData[key]['cryptohub-price-btc'] = price;
+    }
+    if (price !== lastPrice) {
+      cryptohubData[key]['cryptohub-price-btc:last'] = lastPrice;
+    }
+    if (timestamp) {
+      cryptohubData[key]['cryptohub-price-btc-timestamp'] = timestamp;
+    }
 
     // Circulating percent total
     const supplyTotal       = item['cc-coinlist-TotalCoinSupply'];
     const supplyCirculating = item['cc-total-vol-full-SUPPLY'];
-    item['cryptohub-circulating-percent-total'] = (supplyCirculating / supplyTotal) * 100;
+    cryptohubData[key]['cryptohub-circulating-percent-total'] = (supplyCirculating / supplyTotal) * 100;
 
   }
 
-  return data;
+  return cryptohubData;
 
 }
 
@@ -141,6 +147,7 @@ export default function dataOnHandleData(options = {}, data, cache, oldData = {}
   try {
 
     let newData = data;
+    let cryptohubData;
 
     //
     // Backfill new data with old data
@@ -148,7 +155,7 @@ export default function dataOnHandleData(options = {}, data, cache, oldData = {}
     // NOTE:
     // We still need to do this even when we are emitting
     // a diff because the whole data should be available to be
-    // used by functions like `addCryptohubFields()`
+    // used by functions like `getCryptohubFields()`
     for (let id of Object.keys(oldData)) {
       newData[id] = Object.assign({}, oldData[id], newData[id]);
       for (let field of settings.fieldLastValue) {
@@ -159,7 +166,10 @@ export default function dataOnHandleData(options = {}, data, cache, oldData = {}
     }
 
     // Add custom cryptohub fields
-    newData = addCryptohubFields(oldData, newData);
+    cryptohubData = getCryptohubFields(oldData, newData);
+    newData = Object.assign(newData, cryptohubData);
+
+    perSecondSave(cryptohubData, +new Date()); // NOTE: should be async
 
     // Save file (the watcher will pick it up and emit it)
     const fileName = `${settings.generatedDir}/data/data.json`;
@@ -183,13 +193,14 @@ export default function dataOnHandleData(options = {}, data, cache, oldData = {}
         else if (!item[fieldVol]) {
           // do nothing
         }
-        else {
+       else {
           arr.push(item);
         }
       }
       arr.sort((a, b) => b[fieldVol] - a[fieldVol]);
       firstXSymbols = arr.splice(0, limit).map(x => x[fieldSymbol]);
     }
+
     appBootstrapData.firstXSymbols = firstXSymbols;
 
   }

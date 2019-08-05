@@ -76,94 +76,6 @@ const dbDir        = `${cacheDir}/db`;
 const coinmarketcapApiKey = '84e034e2-3972-47eb-9349-5e4dc20211cd';
 const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222';
 
-let fieldWhitelist = [
-
-  'cc-total-vol-full-Id',
-  'cc-total-vol-full-FullName',
-  'cc-total-vol-full-PRICE',
-  'cc-total-vol-full-PRICE:last',
-  'cc-total-vol-full-CHANGEPCTDAY',
-  'cc-total-vol-full-TOTALVOLUME24HTO',
-  'cc-total-vol-full-TOTALVOLUME24HTO:last',
-  'cc-total-vol-full-MKTCAP',
-  'cc-total-vol-full-MKTCAP:last',
-  'cc-total-vol-full-SUPPLY',
-  'cc-total-vol-full-ProofType',
-  'cc-total-vol-full-Algorithm',
-  'cc-total-vol-full-NetHashesPerSecond',
-  'cc-total-vol-full-ImageUrl',
-
-  'cc-coinlist-Symbol',
-
-  'm-metrics-sectors',
-  // 'm-metrics-categories',
-  // 'm-metrics-date-created',
-  'm-metrics-ath-price',
-  // 'm-metrics-ath-date',
-  // 'm-metrics-ath-days',
-  'm-metrics-ath-percent-down',
-  // 'm-metrics-ath-breakeven-multiple',
-  'm-metrics-cycle-low-price',
-  // 'm-metrics-cycle-low-data',
-  // 'm-metrics-cycle-low-percent-up',
-  // 'm-metrics-cycle-low-days-since',
-  // 'm-metrics-percent-change-last-1-week',
-  // 'm-metrics-percent-change-last-1-month',
-  // 'm-metrics-percent-change-last-3-months',
-  // 'm-metrics-percent-change-last-1-year',
-  'm-metrics-percent-change-btc-last-1-week',
-  'm-metrics-percent-change-btc-last-1-month',
-  'm-metrics-percent-change-btc-last-3-months',
-  'm-metrics-percent-change-btc-last-1-year',
-
-  'cryptohub-price-btc',
-  'cryptohub-price-btc:last',
-  'cryptohub-price-history',
-  'cryptohub-exchanges',
-  'cryptohub-exchange-locations',
-  'cryptohub-numberOfExchanges',
-  'cryptohub-numberOfPairs',
-  'cryptohub-numberOfFiatPairs',
-  'cryptohub-numberOfFiatCurrencies',
-
-  'cryptohub-exchangesListDex',
-  'cryptohub-exchangesListAcceptsBoth',
-  'cryptohub-exchangesListCryptoOnly',
-
-  'm-metrics-price-usd',
-  'm-metrics-price-btc',
-  'm-metrics-volume-last-24-hours',
-  'm-metrics-volume-last-24-hours:last',
-  'm-metrics-real-volume-last-24-hours',
-  'm-metrics-real-volume-last-24-hours:last',
-  'm-metrics-percent-change-usd-last-24-hours',
-  'm-metrics-percent-change-btc-last-24-hours',
-
-  'm-metrics-current-marketcap-usd',
-  'm-metrics-current-marketcap-usd:last',
-  'm-metrics-y-2050-marketcap-usd',
-  'm-metrics-y-2050-marketcap-usd:last',
-
-  'cmc-listings-circulating_supply',
-  'cmc-listings-cmc_rank',
-  'cmc-listings-date_added',
-  'cmc-listings-id',
-  'cmc-listings-last_updated',
-  'cmc-listings-max_supply',
-  'cmc-listings-name',
-  'cmc-listings-num_market_pairs',
-  'cmc-listings-tags',
-  'cmc-listings-total_supply',
-  'cmc-listings-market_cap',
-  'cmc-listings-market_cap:last',
-  'cmc-listings-percent_change_1h',
-  'cmc-listings-percent_change_7d',
-  'cmc-listings-percent_change_24h',
-  'cmc-listings-volume_24h',
-  'cmc-listings-volume_24h:last',
-
-];
-
 // Keep the last value of each of these fields
 // in a new field with the suffix `:last`
 // This is used to show changes in values
@@ -186,90 +98,103 @@ const fieldLastValue = [
 
 ];
 
-fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
-
 const fieldTypeMap = {
 
-  // NOTE: Allowing String, Number and Boolean becaues Cryptocompare cant make its mind up :(
+  //
+  // NOTE: Allowing String, Number and Boolean becaues none of the data sources can make their mind up :(
+  // Once we have more data in the database we can see what it looks like
+  //
 
-  'cc-coinlist-Algorithm'                      :'String|Number|Boolean',      // :'String',  // "N/A"
-  'cc-coinlist-BlockNumber'                    :'String|Number|Boolean',      // :'Number',  // 0
-  'cc-coinlist-BlockReward'                    :'String|Number|Boolean',      // :'Number',  // 0
-  'cc-coinlist-BlockTime'                      :'String|Number|Boolean',      // :'Number',  // 0
-  'cc-coinlist-BuiltOn'                        :'String|Number|Boolean',      // :'String',  // "7605"
-  'cc-coinlist-ContentCreatedOn'               :'String|Number|Boolean',      // :'Number',  // 1427211129
-  'cc-coinlist-CoinName'                       :'String|Number|Boolean',      // :'String',  // "Quoine Liquid"
-  'cc-coinlist-FullName'                       :'String|Number|Boolean',      // :'String',  // "Quoine Liquid (QASH)"
-  'cc-coinlist-FullyPremined'                  :'String|Number|Boolean',      // :'String',  // "0"
-  'cc-coinlist-Id'                             :'String|Number|Boolean',      // :'String',  // "402714"
-  'cc-coinlist-ImageUrl'                       :'String|Number|Boolean',      // :'String',  // "/media/15887431/qash.png"
-  'cc-coinlist-IsTrading'                      :'String|Number|Boolean',      // :'Boolean', // true
-  'cc-coinlist-Name'                           :'String|Number|Boolean',      // :'String',  // "QASH"
-  'cc-coinlist-NetHashesPerSecond'             :'String|Number|Boolean|Null', // :'Number',  // 0
-  'cc-coinlist-PreMinedValue'                  :'String|Number|Boolean',      // :'String',  // "N/A"
-  'cc-coinlist-ProofType'                      :'String|Number|Boolean',      // :'String',  // "N/A"
-  'cc-coinlist-SmartContractAddress'           :'String|Number|Boolean',      // :'String',  // "0x618e75ac90b12c6049ba3b27f5d5f8651b0037f6"
-  'cc-coinlist-SortOrder'                      :'String|Number|Boolean',      // :'Number',  // "1877" --- NOTE: We have overwritten this to be a Number ---
-  'cc-coinlist-Sponsored'                      :'String|Number|Boolean',      // :'Boolean', // false
-  'cc-coinlist-Symbol'                         :'String|Number|Boolean',      // :'String',  // "QASH"
-  'cc-coinlist-TotalCoinSupply'                :'String|Number|Boolean',      // :'String',  // "1000000000"
-  'cc-coinlist-TotalCoinsFreeFloat'            :'String|Number|Boolean',      // :'String',  // "N/A"
-  'cc-coinlist-TotalCoinsMined'                :'String|Number|Boolean',      // :'Number',  // 1000000000
-  'cc-coinlist-Url'                            :'String|Number|Boolean',      // :'String',  // "/coins/qash/overview"
+  'cryptohub-price-btc'                        :'String|Number|Boolean|Null|Undefined',
+  'cryptohub-price-history'                    :'String|Number|Boolean|Null|Undefined|Array',
+  'cryptohub-exchanges'                        :'String|Number|Boolean|Null|Undefined',
+  'cryptohub-exchange-locations'               :'String|Number|Boolean|Null|Undefined|Array',
+  'cryptohub-numberOfExchanges'                :'String|Number|Boolean|Null|Undefined',
+  'cryptohub-numberOfPairs'                    :'String|Number|Boolean|Null|Undefined',
+  'cryptohub-numberOfFiatPairs'                :'String|Number|Boolean|Null|Undefined',
+  'cryptohub-numberOfFiatCurrencies'           :'String|Number|Boolean|Null|Undefined',
+  'cryptohub-exchangesListDex'                 :'String|Number|Boolean|Null|Undefined|Array',
+  'cryptohub-exchangesListAcceptsBoth'         :'String|Number|Boolean|Null|Undefined|Array',
+  'cryptohub-exchangesListCryptoOnly'          :'String|Number|Boolean|Null|Undefined|Array',
 
-  'cc-total-vol-full-Algorithm'                :'String|Number|Boolean',      // :'String',  // "SHA-256"
-  'cc-total-vol-full-BlockNumber'              :'String|Number|Boolean',      // :'Number',  // 587081
-  'cc-total-vol-full-BlockReward'              :'String|Number|Boolean',      // :'Number',  // 12.5
-  'cc-total-vol-full-BlockTime'                :'String|Number|Boolean',      // :'Number',  // 600
-  'cc-total-vol-full-Id'                       :'String|Number|Boolean',      // :'String',  // "1182"
-  'cc-total-vol-full-ImageUrl'                 :'String|Number|Boolean',      // :'String',  // "/media/19633/btc.png"
-  'cc-total-vol-full-Name'                     :'String|Number|Boolean',      // :'String',  // "BTC"
-  'cc-total-vol-full-NetHashesPerSecond'       :'String|Number|Boolean|Null', // :'Number',  // 64524184803.7811
-  'cc-total-vol-full-ProofType'                :'String|Number|Boolean',      // :'String',  // "PoW"
-  'cc-total-vol-full-TYPE'                     :'String|Number|Boolean',      // :'String',  // "5"
-  'cc-total-vol-full-Type'                     :'String|Number|Boolean',      // :'Number',  // 1
-  'cc-total-vol-full-Url'                      :'String|Number|Boolean',      // :'String',  // "/coins/btc/overview"
-  'cc-total-vol-full-CHANGE24HOUR'             :'String|Number|Boolean',      // :'Number',  // -288.78999999999905
-  'cc-total-vol-full-CHANGEDAY'                :'String|Number|Boolean',      // :'Number',  // -83.03000000000065
-  'cc-total-vol-full-CHANGEPCT24HOUR'          :'String|Number|Boolean',      // :'Number',  // -2.8625521011443578
-  'cc-total-vol-full-CHANGEPCTDAY'             :'String|Number|Boolean',      // :'Number',  // -0.8401473672920365
-  'cc-total-vol-full-DocumentType'             :'String|Number|Boolean',      // :'String',  // "Webpagecoinp"
-  'cc-total-vol-full-FLAGS'                    :'String|Number|Boolean',      // :'String',  // "1"
-  'cc-total-vol-full-FROMSYMBOL'               :'String|Number|Boolean',      // :'String',  // "BTC"
-  'cc-total-vol-full-FullName'                 :'String|Number|Boolean',      // :'String',  // "Bitcoin"
-  'cc-total-vol-full-HIGH24HOUR'               :'String|Number|Boolean',      // :'Number',  // 10174.4
-  'cc-total-vol-full-HIGHDAY'                  :'String|Number|Boolean',      // :'Number',  // 9882.79
-  'cc-total-vol-full-HIGHHOUR'                 :'String|Number|Boolean',      // :'Number',  // 9811.55
-  'cc-total-vol-full-IMAGEURL'                 :'String|Number|Boolean',      // :'String',  // "/media/19633/btc.png"
-  'cc-total-vol-full-Internal'                 :'String|Number|Boolean',      // :'String',  // "BTC"
-  'cc-total-vol-full-LASTMARKET'               :'String|Number|Boolean',      // :'String',  // "Bitstamp"
-  'cc-total-vol-full-LASTTRADEID'              :'String|Number|Boolean',      // :'String',  // "94656047" --- NOTE: We have overwritten this to be a Number ---
-  'cc-total-vol-full-LASTUPDATE'               :'String|Number|Boolean',      // :'Number',  // 1564135004
-  'cc-total-vol-full-LASTVOLUME'               :'String|Number|Boolean',      // :'Number',  // 0.00699377
-  'cc-total-vol-full-LASTVOLUMETO'             :'String|Number|Boolean',      // :'Number',  // 68.538946
-  'cc-total-vol-full-LOW24HOUR'                :'String|Number|Boolean',      // :'Number',  // 9647.05
-  'cc-total-vol-full-LOWDAY'                   :'String|Number|Boolean',      // :'Number',  // 9668.52
-  'cc-total-vol-full-LOWHOUR'                  :'String|Number|Boolean',      // :'Number',  // 9772.29
-  'cc-total-vol-full-MARKET'                   :'String|Number|Boolean',      // :'String',  // "CCCAGG"
-  'cc-total-vol-full-MKTCAP'                   :'String|Number|Boolean',      // :'Number',  // 174813018760
-  'cc-total-vol-full-OPEN24HOUR'               :'String|Number|Boolean',      // :'Number',  // 10088.55
-  'cc-total-vol-full-OPENDAY'                  :'String|Number|Boolean',      // :'Number',  // 9882.79
-  'cc-total-vol-full-OPENHOUR'                 :'String|Number|Boolean',      // :'Number',  // 9798.61
-  'cc-total-vol-full-PRICE'                    :'String|Number|Boolean',      // :'Number',  // 9799.76
-  'cc-total-vol-full-SUPPLY'                   :'String|Number|Boolean',      // :'Number',  // 17838500
-  'cc-total-vol-full-TOPTIERVOLUME24HOUR'      :'String|Number|Boolean',      // :'Number',  // 34693.46712488547
-  'cc-total-vol-full-TOPTIERVOLUME24HOURTO'    :'String|Number|Boolean',      // :'Number',  // 342986884.10271114
-  'cc-total-vol-full-TOSYMBOL'                 :'String|Number|Boolean',      // :'String',  // "USD"
-  'cc-total-vol-full-TOTALTOPTIERVOLUME24H'    :'String|Number|Boolean',      // :'Number',  // 145573.9073042986
-  'cc-total-vol-full-TOTALTOPTIERVOLUME24HTO'  :'String|Number|Boolean',      // :'Number',  // 1429588586.5553167
-  'cc-total-vol-full-TOTALVOLUME24H'           :'String|Number|Boolean',      // :'Number',  // 289044.02882536233
-  'cc-total-vol-full-TOTALVOLUME24HTO'         :'String|Number|Boolean',      // :'Number',  // 2835893441.3717556
-  'cc-total-vol-full-VOLUME24HOUR'             :'String|Number|Boolean',      // :'Number',  // 36648.859710940465
-  'cc-total-vol-full-VOLUME24HOURTO'           :'String|Number|Boolean',      // :'Number',  // 362481358.8910086
-  'cc-total-vol-full-VOLUMEDAY'                :'String|Number|Boolean',      // :'Number',  // 13338.414241986171
-  'cc-total-vol-full-VOLUMEDAYTO'              :'String|Number|Boolean',      // :'Number',  // 129927216.80335271
-  'cc-total-vol-full-VOLUMEHOUR'               :'String|Number|Boolean',      // :'Number',  // 833.5320880846975
-  'cc-total-vol-full-VOLUMEHOURTO'             :'String|Number|Boolean',      // :'Number',  // 8163468.329335898
+  'cc-coinlist-Algorithm'                      :'String|Number|Boolean|Null|Undefined',      // :'String',  // "N/A"
+  'cc-coinlist-BlockNumber'                    :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 0
+  'cc-coinlist-BlockReward'                    :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 0
+  'cc-coinlist-BlockTime'                      :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 0
+  'cc-coinlist-BuiltOn'                        :'String|Number|Boolean|Null|Undefined',      // :'String',  // "7605"
+  'cc-coinlist-ContentCreatedOn'               :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 1427211129
+  'cc-coinlist-CoinName'                       :'String|Number|Boolean|Null|Undefined',      // :'String',  // "Quoine Liquid"
+  'cc-coinlist-FullName'                       :'String|Number|Boolean|Null|Undefined',      // :'String',  // "Quoine Liquid (QASH)"
+  'cc-coinlist-FullyPremined'                  :'String|Number|Boolean|Null|Undefined',      // :'String',  // "0"
+  'cc-coinlist-Id'                             :'String|Number|Boolean|Null|Undefined',      // :'String',  // "402714"
+  'cc-coinlist-ImageUrl'                       :'String|Number|Boolean|Null|Undefined',      // :'String',  // "/media/15887431/qash.png"
+  'cc-coinlist-IsTrading'                      :'String|Number|Boolean|Null|Undefined',      // :'Boolean', // true
+  'cc-coinlist-Name'                           :'String|Number|Boolean|Null|Undefined',      // :'String',  // "QASH"
+  'cc-coinlist-NetHashesPerSecond'             :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 0
+  'cc-coinlist-PreMinedValue'                  :'String|Number|Boolean|Null|Undefined',      // :'String',  // "N/A"
+  'cc-coinlist-ProofType'                      :'String|Number|Boolean|Null|Undefined',      // :'String',  // "N/A"
+  'cc-coinlist-SmartContractAddress'           :'String|Number|Boolean|Null|Undefined',      // :'String',  // "0x618e75ac90b12c6049ba3b27f5d5f8651b0037f6"
+  'cc-coinlist-SortOrder'                      :'String|Number|Boolean|Null|Undefined',      // :'Number',  // "1877" --- NOTE: We have overwritten this to be a Number ---
+  'cc-coinlist-Sponsored'                      :'String|Number|Boolean|Null|Undefined',      // :'Boolean', // false
+  'cc-coinlist-Symbol'                         :'String|Number|Boolean|Null|Undefined',      // :'String',  // "QASH"
+  'cc-coinlist-TotalCoinSupply'                :'String|Number|Boolean|Null|Undefined',      // :'String',  // "1000000000"
+  'cc-coinlist-TotalCoinsFreeFloat'            :'String|Number|Boolean|Null|Undefined',      // :'String',  // "N/A"
+  'cc-coinlist-TotalCoinsMined'                :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 1000000000
+  'cc-coinlist-Url'                            :'String|Number|Boolean|Null|Undefined',      // :'String',  // "/coins/qash/overview"
+
+  'cc-total-vol-full-Algorithm'                :'String|Number|Boolean|Null|Undefined',      // :'String',  // "SHA-256"
+  'cc-total-vol-full-BlockNumber'              :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 587081
+  'cc-total-vol-full-BlockReward'              :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 12.5
+  'cc-total-vol-full-BlockTime'                :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 600
+  'cc-total-vol-full-Id'                       :'String|Number|Boolean|Null|Undefined',      // :'String',  // "1182"
+  'cc-total-vol-full-ImageUrl'                 :'String|Number|Boolean|Null|Undefined',      // :'String',  // "/media/19633/btc.png"
+  'cc-total-vol-full-Name'                     :'String|Number|Boolean|Null|Undefined',      // :'String',  // "BTC"
+  'cc-total-vol-full-NetHashesPerSecond'       :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 64524184803.7811
+  'cc-total-vol-full-ProofType'                :'String|Number|Boolean|Null|Undefined',      // :'String',  // "PoW"
+  'cc-total-vol-full-TYPE'                     :'String|Number|Boolean|Null|Undefined',      // :'String',  // "5"
+  'cc-total-vol-full-Type'                     :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 1
+  'cc-total-vol-full-Url'                      :'String|Number|Boolean|Null|Undefined',      // :'String',  // "/coins/btc/overview"
+  'cc-total-vol-full-CHANGE24HOUR'             :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -288.78999999999905
+  'cc-total-vol-full-CHANGEDAY'                :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -83.03000000000065
+  'cc-total-vol-full-CHANGEPCT24HOUR'          :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -2.8625521011443578
+  'cc-total-vol-full-CHANGEPCTDAY'             :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -0.8401473672920365
+  'cc-total-vol-full-DocumentType'             :'String|Number|Boolean|Null|Undefined',      // :'String',  // "Webpagecoinp"
+  'cc-total-vol-full-FLAGS'                    :'String|Number|Boolean|Null|Undefined',      // :'String',  // "1"
+  'cc-total-vol-full-FROMSYMBOL'               :'String|Number|Boolean|Null|Undefined',      // :'String',  // "BTC"
+  'cc-total-vol-full-FullName'                 :'String|Number|Boolean|Null|Undefined',      // :'String',  // "Bitcoin"
+  'cc-total-vol-full-HIGH24HOUR'               :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 10174.4
+  'cc-total-vol-full-HIGHDAY'                  :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 9882.79
+  'cc-total-vol-full-HIGHHOUR'                 :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 9811.55
+  'cc-total-vol-full-IMAGEURL'                 :'String|Number|Boolean|Null|Undefined',      // :'String',  // "/media/19633/btc.png"
+  'cc-total-vol-full-Internal'                 :'String|Number|Boolean|Null|Undefined',      // :'String',  // "BTC"
+  'cc-total-vol-full-LASTMARKET'               :'String|Number|Boolean|Null|Undefined',      // :'String',  // "Bitstamp"
+  'cc-total-vol-full-LASTTRADEID'              :'String|Number|Boolean|Null|Undefined',      // :'String',  // "94656047" --- NOTE: We have overwritten this to be a Number ---
+  'cc-total-vol-full-LASTUPDATE'               :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 1564135004
+  'cc-total-vol-full-LASTVOLUME'               :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 0.00699377
+  'cc-total-vol-full-LASTVOLUMETO'             :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 68.538946
+  'cc-total-vol-full-LOW24HOUR'                :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 9647.05
+  'cc-total-vol-full-LOWDAY'                   :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 9668.52
+  'cc-total-vol-full-LOWHOUR'                  :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 9772.29
+  'cc-total-vol-full-MARKET'                   :'String|Number|Boolean|Null|Undefined',      // :'String',  // "CCCAGG"
+  'cc-total-vol-full-MKTCAP'                   :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 174813018760
+  'cc-total-vol-full-OPEN24HOUR'               :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 10088.55
+  'cc-total-vol-full-OPENDAY'                  :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 9882.79
+  'cc-total-vol-full-OPENHOUR'                 :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 9798.61
+  'cc-total-vol-full-PRICE'                    :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 9799.76
+  'cc-total-vol-full-SUPPLY'                   :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 17838500
+  'cc-total-vol-full-TOPTIERVOLUME24HOUR'      :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 34693.46712488547
+  'cc-total-vol-full-TOPTIERVOLUME24HOURTO'    :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 342986884.10271114
+  'cc-total-vol-full-TOSYMBOL'                 :'String|Number|Boolean|Null|Undefined',      // :'String',  // "USD"
+  'cc-total-vol-full-TOTALTOPTIERVOLUME24H'    :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 145573.9073042986
+  'cc-total-vol-full-TOTALTOPTIERVOLUME24HTO'  :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 1429588586.5553167
+  'cc-total-vol-full-TOTALVOLUME24H'           :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 289044.02882536233
+  'cc-total-vol-full-TOTALVOLUME24HTO'         :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 2835893441.3717556
+  'cc-total-vol-full-VOLUME24HOUR'             :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 36648.859710940465
+  'cc-total-vol-full-VOLUME24HOURTO'           :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 362481358.8910086
+  'cc-total-vol-full-VOLUMEDAY'                :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 13338.414241986171
+  'cc-total-vol-full-VOLUMEDAYTO'              :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 129927216.80335271
+  'cc-total-vol-full-VOLUMEHOUR'               :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 833.5320880846975
+  'cc-total-vol-full-VOLUMEHOURTO'             :'String|Number|Boolean|Null|Undefined',      // :'Number',  // 8163468.329335898
 
   'cmc-listings-id'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 1,
   'cmc-listings-name'                          :'String|Number|Boolean|Null|Undefined', // :'String',       // : "Bitcoin",
@@ -284,16 +209,140 @@ const fieldTypeMap = {
   'cmc-listings-platform'                      :'String|Number|Boolean|Null|Undefined', // :'String|Null',  // : null,
   'cmc-listings-cmc_rank'                      :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 1,
   'cmc-listings-last_updated'                  :'String|Number|Boolean|Null|Undefined', // :'String',       // : "2019-07-28T13:58:32.000Z",
-  'cmc-listings-quote-USD-price'               :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 9517.4595443,
-  'cmc-listings-quote-USD-volume_24h'          :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 12547623223.4615,
-  'cmc-listings-quote-USD-percent_change_1h'   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : -0.103109,
-  'cmc-listings-quote-USD-percent_change_24h'  :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0.587142,
-  'cmc-listings-quote-USD-percent_change_7d'   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : -9.68955,
-  'cmc-listings-quote-USD-market_cap'          :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 169821096604.41385,
-  'cmc-listings-quote-USD-last_updated'        :'String|Number|Boolean|Null|Undefined', // :'String',       // : "2019-07-28T13:58:32.000Z"
+  'cmc-listings-quote_USD_price'               :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 9517.4595443,
+  'cmc-listings-quote_USD_volume_24h'          :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 12547623223.4615,
+  'cmc-listings-quote_USD_percent_change_1h'   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : -0.103109,
+  'cmc-listings-quote_USD_percent_change_24h'  :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0.587142,
+  'cmc-listings-quote_USD_percent_change_7d'   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : -9.68955,
+  'cmc-listings-quote_USD_market_cap'          :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 169821096604.41385,
+  'cmc-listings-quote_USD_last_updated'        :'String|Number|Boolean|Null|Undefined', // :'String',       // : "2019-07-28T13:58:32.000Z"
 
+  'm-metrics-id'                                                      :'String|Number|Boolean|Null|Undefined', // :'String',       // : "1e31218a",
+  'm-metrics-symbol'                                                  :'String|Number|Boolean|Null|Undefined', // :'String',       // : "btc",
+  'm-metrics-name'                                                    :'String|Number|Boolean|Null|Undefined', // :'String',       // : "Bitcoin",
+  'm-metrics-market_data_price_usd'                                   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 5091.098917763153,
+  'm-metrics-market_data_price_btc'                                   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 1,
+  'm-metrics-market_data_volume_last_24_hours'                        :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 16399320644,
+  'm-metrics-market_data_real_volume_last_24_hours'                   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 828943906.4819491,
+  'm-metrics-market_data_volume_last_24_hours_overstatement_multiple' :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 19.78339006507566,
+  'm-metrics-market_data_percent_change_usd_last_24_hours'            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : -1.4378802987483073,
+  'm-metrics-market_data_percent_change_btc_last_24_hours'            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0
+
+  'm-metrics-marketcap_current_marketcap_usd'                         :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 89805009562.96193,
+  'm-metrics-marketcap_y_2050_marketcap_usd'                          :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 108575497584.61174,
+  'm-metrics-marketcap_y_plus10_marketcap_usd'                        :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 105767392638.06367,
+  'm-metrics-marketcap_liquid_marketcap_usd'                          :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 91263574016.9179,
+  'm-metrics-marketcap_volume_turnover_last_24_hours_percent'         :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0.9082965634550806
+
+  'm-metrics-supply_y_2050'                                           :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 20983495.3984375,
+  'm-metrics-supply_y_plus10'                                         :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 20440796,
+  'm-metrics-supply_liquid'                                           :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 17637762,
+  'm-metrics-supply_circulating'                                      :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 17639612,
+  'm-metrics-supply_y_2050_issued_percent'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 84.06422126083676,
+  'm-metrics-supply_annual_inflation_percent'                         :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 3.8386389384322115,
+  'm-metrics-supply_y_plus10_issued_percent'                          :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 86.29611097336914
+
+  'm-metrics-blockchain_stats_24_hours_transaction_volume'            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 3423719699.2928834,
+  'm-metrics-blockchain_stats_24_hours_adjusted_transaction_volume'   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 1572846426.8066072,
+  'm-metrics-blockchain_stats_24_hours_nvt'                           :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 27.395889045691852,
+  'm-metrics-blockchain_stats_24_hours_adjusted_nvt'                  :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 60.61607813796638,
+  'm-metrics-blockchain_stats_24_hours_sum_of_fees'                   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 150177.795038277,
+  'm-metrics-blockchain_stats_24_hours_median_tx_value'               :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 164.00716844700003,
+  'm-metrics-blockchain_stats_24_hours_median_tx_fee'                 :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0.23983012446160373,
+  'm-metrics-blockchain_stats_24_hours_count_of_active_addresses'     :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 706754,
+  'm-metrics-blockchain_stats_24_hours_count_of_tx'                   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 285567,
+  'm-metrics-blockchain_stats_24_hours_count_of_payments'             :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 423315,
+  'm-metrics-blockchain_stats_24_hours_new_issuance'                  :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 9637186.770436611,
+  'm-metrics-blockchain_stats_24_hours_average_difficulty'            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 6071846049920.75,
+  'm-metrics-blockchain_stats_24_hours_kilobytes_added'               :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 153443.952,
+  'm-metrics-blockchain_stats_24_hours_count_of_blocks_added'         :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 149
+
+  'm-metrics-all_time_high_price'                                     :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 20089,
+  'm-metrics-all_time_high_at'                                        :'String|Number|Boolean|Null|Undefined', // :'String',       // : "2017-12-17",
+  'm-metrics-all_time_high_days_since'                                :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 479,
+  'm-metrics-all_time_high_percent_down'                              :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 74.24297641819645,
+  'm-metrics-all_time_high_breakeven_multiple'                        :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 3.882436170561514
+
+  'm-metrics-cycle_low_price'                                          :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 3126.679993636258,
+  'm-metrics-cycle_low_at'                                             :'String|Number|Boolean|Null|Undefined', // :'String',       // : "2018-12-15",
+  'm-metrics-cycle_low_percent_up'                                     :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 65.4895441132397,
+  'm-metrics-cycle_low_days_since'                                     :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 116
+
+  'm-metrics-token_sale_stats_sale_proceeds_usd'                       :'String|Number|Boolean|Null|Undefined', // :'String',       // : null,
+  'm-metrics-token_sale_stats_sale_start_date'                         :'String|Number|Boolean|Null|Undefined', // :'String',       // : null,
+  'm-metrics-token_sale_stats_sale_end_date'                           :'String|Number|Boolean|Null|Undefined', // :'String',       // : null,
+  'm-metrics-token_sale_stats_roi_since_sale_usd_percent'              :'String|Number|Boolean|Null|Undefined', // :'String',       // : null,
+  'm-metrics-token_sale_stats_roi_since_sale_btc_percent'              :'String|Number|Boolean|Null|Undefined', // :'String',       // : null,
+  'm-metrics-token_sale_stats_roi_since_sale_eth_percent'              :'String|Number|Boolean|Null|Undefined', // :'String',       // : null
+
+  'm-metrics-staking_stats_staking_yield_percent'                      :'String|Number|Boolean|Null|Undefined', // :'String',       // : null,
+  'm-metrics-staking_stats_staking_type'                               :'String|Number|Boolean|Null|Undefined', // :'String',       // : null,
+  'm-metrics-staking_stats_staking_minimum'                            :'String|Number|Boolean|Null|Undefined', // :'String',       // : null,
+  'm-metrics-staking_stats_tokens_staked'                              :'String|Number|Boolean|Null|Undefined', // :'String',       // : null,
+  'm-metrics-staking_stats_tokens_staked_percent'                      :'String|Number|Boolean|Null|Undefined', // :'String',       // : 0,
+  'm-metrics-staking_stats_real_staking_yield_percent'                 :'String|Number|Boolean|Null|Undefined', // :'String',       // : null
+
+  'm-metrics-mining_stats_mining_algo'                                :'String|Number|Boolean|Null|Undefined', // :'String',       // : "SHA-256",
+  'm-metrics-mining_stats_network_hash_rate'                          :'String|Number|Boolean|Null|Undefined', // :'String',       // : "51,117 PH/s",
+  'm-metrics-mining_stats_available_on_nicehash_percent'              :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0.0006888457166142784,
+  'm-metrics-mining_stats_1_hour_attack_cost'                         :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 429329.6386353715,
+  'm-metrics-mining_stats_24_hours_attack_cost'                       :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 10303911.327248916,
+  'm-metrics-mining_stats_attack_appeal'                              :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 8858.106754394195
+
+  'm-metrics-developer_activity_stars'                                :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 37778,
+  'm-metrics-developer_activity_watchers'                             :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 3525,
+  'm-metrics-developer_activity_commits_last_3_months'                :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 361,
+  'm-metrics-developer_activity_commits_last_1_year'                  :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 1825,
+  'm-metrics-developer_activity_lines_added_last_3_months'            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 23556,
+  'm-metrics-developer_activity_lines_added_last_1_year'              :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 98803,
+  'm-metrics-developer_activity_lines_deleted_last_3_months'          :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 8701,
+  'm-metrics-developer_activity_lines_deleted_last_1_year'            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 71940
+
+  'm-metrics-roi_data_percent_change_last_1_week'                     :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 4.068800808149478,
+  'm-metrics-roi_data_percent_change_last_1_month'                    :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 34.48065939117886,
+  'm-metrics-roi_data_percent_change_last_3_months'                   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 42.28001937093203,
+  'm-metrics-roi_data_percent_change_last_1_year'                     :'String|Number|Boolean|Null|Undefined', // :'Number',       // : -24.822514997273164,
+  'm-metrics-roi_data_percent_change_btc_last_1_week'                 :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0,
+  'm-metrics-roi_data_percent_change_btc_last_1_month'                :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0,
+  'm-metrics-roi_data_percent_change_btc_last_3_months'               :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0,
+  'm-metrics-roi_data_percent_change_btc_last_1_year'                 :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 0,
+  'm-metrics-roi_data_percent_change_month_to_date'                   :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 25.34399357274989,
+  'm-metrics-roi_data_percent_change_quarter_to_date'                 :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 25.34399357274989,
+  'm-metrics-roi_data_percent_change_year_to_date'                    :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 39.8379747316033
+
+  'm-metrics-roi_by_year_2018_usd_percent'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : -72.50923276595937,
+  'm-metrics-roi_by_year_2017_usd_percent'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 1610.7690519883597,
+  'm-metrics-roi_by_year_2016_usd_percent'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 89.7667,
+  'm-metrics-roi_by_year_2015_usd_percent'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 35.44,
+  'm-metrics-roi_by_year_2014_usd_percent'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : -57.718,
+  'm-metrics-roi_by_year_2013_usd_percent'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 5360.674,
+  'm-metrics-roi_by_year_2012_usd_percent'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 174.8979,
+  'm-metrics-roi_by_year_2011_usd_percent'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 1420.27027
+
+  'm-metrics-risk_metrics_sharpe_ratios_last_30_days'                 :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 7.2391861543371,
+  'm-metrics-risk_metrics_sharpe_ratios_last_90_days'                 :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 3.859009530925087,
+  'm-metrics-risk_metrics_sharpe_ratios_last_1_year'                  :'String|Number|Boolean|Null|Undefined', // :'Number',       // : -0.44277420502195886,
+  'm-metrics-risk_metrics_sharpe_ratios_last_3_years'                 :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 1.4592119414515123
+
+  'm-metrics-misc_data_vladimir_club_cost'                            :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 10857549.758461175,
+  'm-metrics-misc_data_btc_current_normalized_supply_price_usd'       :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 5174.328467348516,
+  'm-metrics-misc_data_btc_y2050_normalized_supply_price_usd'         :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 5174.328467348516,
+  'm-metrics-misc_data_asset_created_at'                              :'String|Number|Boolean|Null|Undefined', // :'String',       // : "2009-01-03",
+  'm-metrics-misc_data_asset_age_days'                                :'String|Number|Boolean|Null|Undefined', // :'Number',       // : 3749,
+  'm-metrics-misc_data_categories'                                    :'String|Number|Boolean|Null|Undefined', // :'String',       // : [ "Currency" ],
+  'm-metrics-misc_data_sectors'                                       :'String|Number|Boolean|Null|Undefined', // :'String',       // : [ "Currency" ]
 }
 
+let fieldWhitelist = [
+  ...Object.keys(fieldTypeMap),
+  ...fieldLastValue.map(field => `${field}:last`)
+];
+
+fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
+
+//
+// This should be generated
+//
 const columnDependencies = {
 
   //
@@ -375,24 +424,23 @@ const columnDependencies = {
     'cc-total-vol-full-NetHashesPerSecond',
   ],
 
-
   //
   // CoinMarketCap
   //
   marketcapUSDCMC: [
-    'cmc-listings-market_cap',
+    'cmc-listings-quote_USD_market_cap',
   ],
   volume24HourCMC: [
-    'cmc-listings-volume_24h',
+    'cmc-listings-quote_USD_volume_24h',
   ],
   circulatingSupplyCMC: [
     'cmc-listings-circulating_supply',
   ],
   percentChange24HourCMC: [
-    'cmc-listings-percent_change_24h',
+    'cmc-listings-quote_USD_percent_change_24h',
   ],
   percentChange7DayCMC: [
-    'cmc-listings-percent_change_7d',
+    'cmc-listings-quote_USD_percent_change_7d',
   ],
 
   //
@@ -402,53 +450,55 @@ const columnDependencies = {
     'm-metrics-sectors',
   ],
   athUSDMessari: [
-    'm-metrics-ath-price',
+    'm-metrics-all_time_high_price',
   ],
   athPercentDownUSDMessari: [
-    'm-metrics-ath-percent-down',
+    'm-metrics-all_time_high_percent_down',
   ],
   cycleLowUSDMessari: [
-    'm-metrics-cycle-low-price',
+    'm-metrics-cycle_low_price',
   ],
   percentChange7dBTCMessari: [
-    'm-metrics-percent-change-btc-last-1-week',
+    'm-metrics-roi_data_percent_change_btc_last_1_week',
   ],
   percentChange1mBTCMessari: [
-    'm-metrics-percent-change-btc-last-1-month',
+    'm-metrics-roi_data_percent_change_btc_last_1_month',
   ],
   percentChange3mBTCMessari: [
-    'm-metrics-percent-change-btc-last-3-months',
+    'm-metrics-roi_data_percent_change_btc_last_3_months',
   ],
   percentChange1yBTCMessari: [
-    'm-metrics-percent-change-btc-last-1-year',
+    'm-metrics-roi_data_percent_change_btc_last_1_year',
   ],
   priceUSDMessari: [
-    'm-metrics-price-usd',
+    'm-metrics-price_usd',
   ],
   priceBTCMessari: [
-    'm-metrics-price-btc',
+    'm-metrics-price_btc',
   ],
   volume24hUSDMessari: [
-    'm-metrics-volume-last-24-hours',
+    'm-metrics-volume_last_24_hours',
   ],
   realVolume24hUSDMessari: [
-    'm-metrics-real-volume-last-24-hours',
+    'm-metrics-real_volume_last_24_hours',
   ],
   percentChange24hUSDMessari: [
-    'm-metrics-percent-change-usd-last-24-hours',
+    'm-metrics-market_data_percent_change_usd_last_24_hours',
   ],
   percentChange24hBTCMessari: [
-    'm-metrics-percent-change-btc-last-24-hours',
+    'm-metrics-market_data_percent_change_btc_last_24_hours',
   ],
   marketcapUSDMessari: [
-    'm-metrics-current-marketcap-usd',
+    'm-metrics-current_marketcap_usd',
   ],
   marketcapUSD2050Messari: [
-    'm-metrics-y-2050-marketcap-usd',
+    'm-metrics-y_2050_marketcap_usd',
   ],
 }
 
-// Add timestamp fields to each dependency and :last field to specific ones
+//
+// Add timestamp, :last and default fields
+//
 {
   let copy;
   for (const values of Object.values(columnDependencies)) {

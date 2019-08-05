@@ -43,6 +43,9 @@ async function perSecondSave(data, timestamp = +new Date()) {
         // Ignores -timestamp and :last files
         if (regex.test(field)) continue;
 
+        if (projectId === void 0 || projectId === 'undefined') {
+          debugger;
+        }
         _id = `${field}:${projectId}`;
 
         filter = { _id };
@@ -51,16 +54,15 @@ async function perSecondSave(data, timestamp = +new Date()) {
           _id,
           samples: [[unixTime, value], [unixTime, value]]
         }
-
         ts = await PerSecondModel.findOne({ _id });
         if (ts === null) {
           ts = await PerSecondModel.create(defaultDoc);
+          ts = await ts.save();
         }
-        else {
+        else if (ts.samples[1][1] !== value) {
           ts.samples = [ts.samples[1], [unixTime, value]]
+          ts = await ts.save();
         }
-
-        ts = await ts.save();
 
       }
       catch (error) {
@@ -70,6 +72,8 @@ async function perSecondSave(data, timestamp = +new Date()) {
 
     }
   }
+
+  return true;
 
 }
 

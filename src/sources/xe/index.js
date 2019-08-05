@@ -14,7 +14,7 @@ const config = {
 // CURRENCY
 //
 const currency = {
-  event: 'data',
+  event: 'store',
   name: 'currency',
   interval: 1000 * 60 * 60 * 24,
   watchDirs: [settings.tagKeyXeCurrencyTables`${'USD'}`, 'all'],

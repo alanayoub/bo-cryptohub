@@ -92,6 +92,10 @@ function doEmit(changes) {
       }
     }
 
+    for (const [key, item] of Object.entries(data)) {
+      if (!item['cc-total-vol-full-Id']) delete data[key]; // Required field(s)
+    }
+
     //
     // Emit
     //

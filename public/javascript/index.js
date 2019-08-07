@@ -43,20 +43,26 @@ function dataEmitHandler(data) {
   newSocketData = newSocketData.data;
 
   if (type === 'changeset') {
-    console.log('changeset');
+    console.log('BAD: changeset');
     window.DataTable.changesets.applyChanges(window.refs.workingData, newSocketData);
   }
   else if (type === 'dbDiff') {
-    console.log('dbDiff');
-    for (const [id, val] of Object.entries(newSocketData)) {
-      if (!window.refs.workingData[id]) window.refs.workingData[id] = val;
-      else {
-        Object.assign(window.refs.workingData[id], val);
+    console.log('GOOD: dbDiff');
+    if (!window.initData) {
+      window.initData = newSocketData;
+      window.refs.workingData = newSocketData;
+    }
+    else {
+      for (const [id, val] of Object.entries(newSocketData)) {
+        if (!window.refs.workingData[id]) window.refs.workingData[id] = val;
+        else {
+          Object.assign(window.refs.workingData[id], val);
+        }
       }
     }
   }
   else {
-    console.log('full change');
+    console.log('BAD: full change');
     if (!window.initData) window.initData = newSocketData;
     window.refs.workingData = newSocketData;
   }

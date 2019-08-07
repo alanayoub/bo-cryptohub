@@ -187,6 +187,7 @@ export default async function formatterMessariSectionMetrics(data, timestamp, bo
     const id = appBootstrapData.symbolIdMap[symbol]; // TODO: need proper mapping for ids
 
     const prefix = 'm-metrics-';
+    let result;
 
     if (id === void 0) {
       result = {};
@@ -246,6 +247,7 @@ export default async function formatterMessariSectionMetrics(data, timestamp, bo
       }
     }
 
+    console.log('saving metrics');
     await perSecondSave(result, timestamp);
 
     return {data: result, timestamp};

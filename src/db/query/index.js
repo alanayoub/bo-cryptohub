@@ -6,6 +6,36 @@ import { PerSecondModel }                   from '../schema';
 
 const idsList = Object.keys(fieldTypeMap);
 
+/**
+ *
+ * MAKE DATA SHIT
+ *
+ * To support legacy data format. TMP situation untill we fully
+ * move to db data
+ *
+ */
+function makeDataShit(objectData) {
+  const data = {};
+  for (const [id, obj] of Object.entries(objectData)) {
+    if (!data[id]) data[id] = {};
+    for (const [field, value] of Object.entries(obj)) {
+      data[id][field]                = obj[field][1][1]; // value
+      data[id][`${field}:last`]      = obj[field][0][1]; // last value
+      data[id][`${field}-timestamp`] = obj[field][1][0]; // timestamp
+    }
+  }
+  return data;
+}
+
+/**
+ *
+ * GET ROWS
+ *
+ * @param {Array} columns
+ * @param {String} sort
+ * @return {Object}
+ *
+ */
 async function getRows(columns, sort) {
 
   // db.tsseconds.find({ _id: { $regex: "^m-metrics-all_time_high_percent_down" } }).sort({ "samples.1": 1 })
@@ -28,7 +58,7 @@ async function getRows(columns, sort) {
     _id: { $regex: regex }
   }
 
-  const data = await PerSecondModel.find(query);
+  const data = await PerSecondModel.find(query).lean();
 
   let id;
   const objectData = {};
@@ -38,7 +68,12 @@ async function getRows(columns, sort) {
     objectData[id][field] = item.samples;
   }
 
-  const output = objectData;
+  let output;
+  output = objectData;
+  output = makeDataShit(output);
+  for (const [key, item] of Object.entries(output)) {
+    if (!item['cc-total-vol-full-Id']) delete output[key]; // Required field(s)
+  }
 
   // Organize data first
   // if (sort) {
@@ -50,21 +85,34 @@ async function getRows(columns, sort) {
 
   return output;
 
+}
 
-    //const columns = [
-    //  'percentChange24hUSDCC',
-    //  'volume24HourCMC'
-    //];
-    //getRows(columns).then(data => {
-    //  console.log(!!data);
-    //  debugger;
-    //});
-    ////
-    ////
-    ////
+/**
+ *
+ * GET ALL SYMBOLS
+ *
+ * @param {Array} columns
+ * @param {String} sort
+ * @return {Object}
+ *
+ */
+async function getAllSymbols() {
+
+  const query = {_id: {$regex: "m-markets-base"}};
+  const data = await PerSecondModel.find(query).lean();
+  const symbols = new Set();
+
+  for (const obj of Object.values(data)) {
+    symbols.add(obj.samples[1][1]);
+  }
+
+  const output = Array.from(symbols);
+
+  return output;
 
 }
 
-export default {
-  getRows
+export {
+  getRows,
+  getAllSymbols
 }

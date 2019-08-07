@@ -1,17 +1,18 @@
 'use strict';
 
 // Binary Overdose Projects
-import { partialApplication }    from '../libs/bo-utils-client';
+import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
+import { partialApplication }                   from '../libs/bo-utils-client';
 
 // ag-grid cell Renderer Classes
-import CellRendererSparkline     from '../utils/class-cell-renderer-sparkline.js';
+import CellRendererSparkline                    from '../utils/class-cell-renderer-sparkline.js';
 
 // ag-grid cell Renderers
-import cellRendererNumber        from '../utils/cell-renderer-number.js';
-import cellRendererCurrency      from '../utils/cell-renderer-currency.js';
-import cellRendererExchanges     from '../utils/cell-renderer-exchanges.js';
+import cellRendererNumber                       from '../utils/cell-renderer-number.js';
+import cellRendererCurrency                     from '../utils/cell-renderer-currency.js';
+import cellRendererExchanges                    from '../utils/cell-renderer-exchanges.js';
 
-import onCellClicked             from '../utils/on-cell-clicked.js';
+import onCellClicked                            from '../utils/on-cell-clicked.js';
 
 export default {
 
@@ -106,16 +107,23 @@ export default {
     ],
     valueGetter(params) {
 
-      if (!ch.exchanges) return ch.emptyCellValue;
+      if (isEmptyObject(ch.exchanges)) {
+        return ch.emptyCellValue;
+      }
+
+      let dex = params.data['cryptohub-exchangesListDex'];
+      let both = params.data['cryptohub-exchangesListAcceptsBoth'];
+      let crypto = params.data['cryptohub-exchangesListCryptoOnly'];
+      dex = dex ? dex.value : [];
+      both = both ? both.value : [];
+      crypto = crypto ? crypto.value : [];
 
       const exchangeIds = [
-        ...params.data['cryptohub-exchangesListAcceptsBoth'] || [],
-        ...params.data['cryptohub-exchangesListCryptoOnly'] || [],
-        ...params.data['cryptohub-exchangesListDex'] || []
+        ...dex, ...both, ...crypto
       ];
 
       const output = new Set();
-      for (const id of exchangeIds) output.add(ch.exchanges[id].name);
+      for (const id of exchangeIds) output.add(ch.exchanges[id].Name);
 
       return Array.from(output).join(', ') || ch.emptyCellValue;
 
@@ -142,12 +150,17 @@ export default {
     ],
     valueGetter(params) {
 
-      if (!ch.exchanges) return ch.emptyCellValue;
+      if (isEmptyObject(ch.exchanges)) return ch.emptyCellValue;
+
+      let dex = params.data['cryptohub-exchangesListDex'];
+      let both = params.data['cryptohub-exchangesListAcceptsBoth'];
+      let crypto = params.data['cryptohub-exchangesListCryptoOnly'];
+      dex = dex ? dex.value : [];
+      both = both ? both.value : [];
+      crypto = crypto ? crypto.value : [];
 
       const exchangeIds = [
-        ...params.data['cryptohub-exchangesListAcceptsBoth'] || [],
-        ...params.data['cryptohub-exchangesListCryptoOnly'] || [],
-        ...params.data['cryptohub-exchangesListDex'] || []
+        ...dex, ...both, ...crypto
       ];
 
       const output = new Set();

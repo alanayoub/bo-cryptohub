@@ -5,6 +5,8 @@ import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 import logger   from '../../logger';
 import settings from '../../settings';
 
+import { perSecondSave } from '../../db';
+
 /**
  *
  * addSymbol
@@ -145,7 +147,7 @@ function addPairsToExchange(exchanges, id, pair) {
  * @return {Object}
  *
  */
-export default async function formatterCryptocompareSectionExchangesList(response, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
+export default async function formatterExchangesList(response, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
   try {
 
     const emptyReturn = {data: {}, timestamp};
@@ -349,7 +351,7 @@ export default async function formatterCryptocompareSectionExchangesList(respons
     //   }
     // }
     //
-    function handleData(timestamp) {
+    async function handleData(timestamp, bootstrapData) {
 
       let result = {};
       const map = bootstrapData['symbolIdMap'];
@@ -389,6 +391,9 @@ export default async function formatterCryptocompareSectionExchangesList(respons
           }
         }
       }
+
+      await perSecondSave(result, timestamp);
+
       return {data: result, timestamp};
 
     }
@@ -399,14 +404,14 @@ export default async function formatterCryptocompareSectionExchangesList(respons
 
     switch (event) {
       case 'data':
-        return handleData(timestamp) || emptyReturn;
+        return handleData(timestamp, bootstrapData) || emptyReturn;
       case 'store':
         return handleStore(timestamp) || emptyReturn;
     }
 
   }
   catch(error) {
-    const message = `formatterCryptocompareSectionExchangesList(): ${error}`;
+    const message = `formatterExchangesList(): ${error}`;
     logger.error(message);
     return {message, error: true};
   }

@@ -175,7 +175,7 @@ export default {
   //
   priceUSDMessari: {
     colId: 'priceUSDMessari',
-    field: 'm-metrics-price_usd',
+    field: 'm-metrics-market_data_price_usd',
     headerName: 'Price $',
     headerClass: 'CH-col',
     headerTooltip: 'Price in USD\n\nData Source: Messari',
@@ -199,7 +199,7 @@ export default {
   //
   priceBTCMessari: {
     colId: 'priceBTCMessari',
-    field: 'm-metrics-price_btc',
+    field: 'm-metrics-market_data_price_btc',
     headerName: 'Price ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Price in BTC\n\nData Source: Messari',
@@ -215,6 +215,10 @@ export default {
       currency: 'SAT',
       symbolTo: 'BTC'
     },
+    valueFormatter(params) {
+      if (params.value) params.value.value *= 100000000;
+      return params;
+    },
     onCellClicked,
   },
 
@@ -223,7 +227,7 @@ export default {
   //
   volume24hUSDMessari: {
     colId: 'volume24hUSDMessari',
-    field: 'm-metrics-volume_last_24_hours',
+    field: 'm-metrics-market_data_volume_last_24_hours',
     headerName: 'Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Messari',
@@ -244,7 +248,7 @@ export default {
   //
   realVolume24hUSDMessari: {
     colId: 'realVolume24hUSDMessari',
-    field: 'm-metrics-real_volume_last_24_hours',
+    field: 'm-metrics-market_data_real_volume_last_24_hours',
     headerName: 'Real Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'Real Volume according to Messari. 24 hours displayed in USD\n\nData Source: Messari',
@@ -298,7 +302,7 @@ export default {
 
   marketcapUSDMessari: {
     colId: 'marketcapUSDMessari',
-    field: 'm-metrics-current_marketcap_usd',
+    field: 'm-metrics-marketcap_current_marketcap_usd',
     headerName: 'Market Cap $',
     headerClass: 'CH-col',
     headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Messari',
@@ -316,7 +320,7 @@ export default {
 
   marketcapUSD2050Messari: {
     colId: 'marketcapUSD2050Messari',
-    field: 'm-metrics-y_2050_marketcap_usd',
+    field: 'm-metrics-marketcap_y_2050_marketcap_usd',
     headerName: 'Market Cap $ (Y2050)',
     headerClass: 'CH-col',
     headerTooltip: 'This is the fully diluted (Y2050) Marketcap, it takes into account known future dilution up to Jan 1, 2050.\n\nData Source: Messari',

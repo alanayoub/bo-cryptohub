@@ -95,8 +95,8 @@ export default class cellRendererSparkline {
 
     let ts = JSON.parse(JSON.stringify(params.value));
 
-    if (params.price)  this.price  = price(ts, !!params.range);
-    if (params.volume) this.volume = volume(ts, !!params.range, params.volumeDays);
+    if (params.price)  this.price  = price(ts.value, !!params.range);
+    if (params.volume) this.volume = volume(ts.value, !!params.range, params.volumeDays);
 
   }
 

@@ -20,7 +20,7 @@ import { getRows }                              from '../../db/query';
  * @return {Array} - Array of updated timeseries object
  *
  */
-function getNewTimeseriesData(item, limit = 50, maxAge = 1000 * 60 * 60 * 24 * 7) {
+function getNewTimeseriesData(item, limit = 7, maxAge = 1000 * 60 * 60 * 24 * 7) {
 
   const price      = item['cc-total-vol-full-PRICE'];
   const volume     = item['cc-total-vol-full-TOTALVOLUME24HTO'];
@@ -79,7 +79,7 @@ function getBitcoinPrice(data) {
  * ADD CRYPTOHUB FIELDS
  *
  */
-async function getCryptohubFields(oldData, data) {
+function getCryptohubFields(oldData, data) {
 
   const cryptohubData = {}
 
@@ -96,7 +96,7 @@ async function getCryptohubFields(oldData, data) {
     const timeseries = getNewTimeseriesData(item);
     if (timeseries) {
       // item['cryptohub-price-history'] = timeseries;
-      cryptohubData[key]['cryptohub-price-history'] = JSON.stringify(timeseries);
+      cryptohubData[key]['cryptohub-price-history'] = timeseries;
     }
 
     // Bitcoin price

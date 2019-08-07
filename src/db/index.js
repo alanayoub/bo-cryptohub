@@ -32,8 +32,9 @@ async function perSecondSave(data, timestamp = +new Date()) {
   let defaultDoc;
   let projectData;
 
-  const regex = RegExp('^.*[-timestamp|:last]$');
+  const regex = RegExp('^.*(-timestamp|:last)$');
 
+  console.log('perSecondSave');
   for ([projectId, projectData] of Object.entries(data)) {
     for ([field, value] of Object.entries(projectData)) {
 

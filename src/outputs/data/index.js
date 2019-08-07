@@ -8,6 +8,7 @@ import onHandleData                from './on-handle-data';
 import analyticsMergeDataByKey     from '../../utils/analytics-merge-data-by-key';
 
 import settings                    from '../../settings';
+import { getRows }                 from '../../db/query';
 
 function getFirstXRows(data, numRows = 50) {
 
@@ -36,8 +37,13 @@ export default {
   onBeforeHandleData: analyticsMergeDataByKey,
   onHandleData: partialApplication(onHandleData, {}),
   onAfterConnect(event, socket, data) {
-    const emitData = onBeforeEmit({diff: false}, socket, data, initData);
-    if (emitData) socket.emit(event, emitData);
+    // const emitData = onBeforeEmit({diff: false}, socket, data, initData);
+    // if (emitData) socket.emit(event, emitData);
+    const cols = socket.handshake.query.cols.split(',');
+    getRows(cols).then(v => {
+      const output = JSON.stringify({data: v, type: 'dbDiff'});
+      socket.emit('data', output);
+    });
   },
   onBeforeEmit: partialApplication(onBeforeEmit, {diff: true}),
   onBeforeBootstrapSave: data => {

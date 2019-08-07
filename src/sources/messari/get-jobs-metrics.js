@@ -1,6 +1,10 @@
+'use strict';
+
 // Cryptohub
 const logger = require('../../logger');
 const settings = require('../../settings');
+
+import { getAllSymbols } from '../../db/query';
 
 /**
  *
@@ -8,38 +12,29 @@ const settings = require('../../settings');
  * @param {Object} bootstrapData
  *
  */
-module.exports = async function getJobsMessariSectionMetrics(queue, bootstrapData, appBootstrapData) {
+module.exports = async function getJobsMessariMetrics(queue, bootstrapData, appBootstrapData) {
 
   try {
 
-    if (!appBootstrapData.firstXSymbols) {
-      return;
+    let symbol;
+    let jobs = 0;
+    const symbols = await getAllSymbols();
+
+    for (symbol of symbols) {
+      queue.push({
+        uri: settings.tagUriMessariMetrics`${symbol}`,
+        key: settings.tagKeyMessariMetrics`${symbol}`,
+        cacheForDays: settings.cacheForMessari,
+      });
+      jobs++;
     }
-    else {
 
-      let symbol;
-      let jobs = 0;
-      const symbols = appBootstrapData.firstXSymbols;
-      // const groupKey = settings.tagKeyMessariMetricsGrouped`${{}}`;
-
-      for (symbol of symbols) {
-        queue.push({
-          // groupKey,
-          uri: settings.tagUriMessariMetrics`${symbol}`,
-          key: settings.tagKeyMessariMetrics`${symbol}`,
-          cacheForDays: settings.cacheForMessari,
-        });
-        jobs++;
-      }
-
-      logger.info(`getJobsMessariMetrics(): ${jobs} metrics jobs created`);
-
-    }
+    logger.info(`getJobsMessariMetrics(): ${jobs} metrics jobs created`);
 
   }
   catch(error) {
 
-    const message = `getJobsMessariSectionMetrics(): ${error}`;
+    const message = `getJobsMessariMetrics(): ${error}`;
     logger.error(message);
     return {message, error: true};
 

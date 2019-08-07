@@ -9,11 +9,13 @@ import formatterExchangesGeneral from './formatter-exchanges-general.js';
 
 import getJobsTotalVolFull       from './get-jobs-total-vol-full.js';
 
+import formatterBootstrap        from './formatter-bootstrap.js';
+
 const { scrapeDir } = settings;
 
 const config = {
   cacheFor: settings.cacheForCryptocompare,
-  bootstrap: () => {return {}},
+  bootstrap: formatterBootstrap,
   rateLimitDelayMs: settings.rateLimitCryptocompare,
 }
 

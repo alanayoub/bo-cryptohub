@@ -135,5 +135,3 @@ window.bo.inst.state.init().then(state => {
   });
 
 });
-
-

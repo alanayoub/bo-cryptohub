@@ -69,7 +69,7 @@ function doEmit(changes) {
   let fields;
 
   const sockets = global.io.sockets.sockets;
-  for(const socketId in sockets) {
+  for (const socketId in sockets) {
 
     // Get socket and required fields
     socket = sockets[socketId];

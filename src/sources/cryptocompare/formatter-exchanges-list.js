@@ -5,7 +5,8 @@ import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 import logger   from '../../logger';
 import settings from '../../settings';
 
-import { perSecondSave } from '../../db';
+import { perSecondSave, exchangeSave } from '../../db';
+import { getMaps, getExchanges }       from '../../db/query';
 
 /**
  *
@@ -151,9 +152,10 @@ export default async function formatterExchangesList(response, timestamp, bootst
   try {
 
     const emptyReturn = {data: {}, timestamp};
-    const [str] = await cache.get(`${settings.dbDir}/store/data.json`);
-    const store = JSON.parse(str);
-    const mapNameId = getNestedProp(store, 'exchange-map-nameId');
+
+    const maps = await getMaps(['exchangeMapNameId']);
+    const mapNameId = maps[0].map;
+    const dbExchanges = await getExchanges();
 
     if (!appBootstrapData.currency || !mapNameId || (!response && !response.Data) || response.Response !== 'Success') {
       return emptyReturn;
@@ -192,7 +194,7 @@ export default async function formatterExchangesList(response, timestamp, bootst
 
     for ([exchangeName, data] of Object.entries(response.Data)) {
       exchangeId = mapNameId[exchangeName];
-      centralizationType = getNestedProp(store, `exchanges.${exchangeId}.CentralizationType`);
+      centralizationType = getNestedProp(dbExchanges, `${exchangeId}.CentralizationType`);
       if (!data.isActive) continue;
       if (!exchanges[exchangeId]) addExchange(exchanges, exchangeName, exchangeId);
       data = data.pairs;
@@ -200,14 +202,14 @@ export default async function formatterExchangesList(response, timestamp, bootst
       for ([symbol1, list] of Object.entries(data)) {
         if (symbol1.startsWith('0x') && exclude0xSymbols) continue;
         addSymbol(symbols, symbol1);
-        if (centralizationType === 'Decentralized') {
+        if (centralizationType && centralizationType === 'Decentralized') {
           addExchangeToSymbol(symbols, symbol1, exchangeId, centralizationType);
         }
         for (symbol2 of Object.values(list)) {
           if (symbol2.startsWith('0x') && exclude0xSymbols) continue;
           pair = `${symbol1},${symbol2}`;
           addSymbol(symbols, symbol2);
-          if (centralizationType === 'Decentralized') {
+          if (centralizationType && centralizationType === 'Decentralized') {
             addExchangeToSymbol(symbols, symbol1, exchangeId, centralizationType);
           }
           addPairsToExchange(exchanges, exchangeId, pair);
@@ -393,12 +395,12 @@ export default async function formatterExchangesList(response, timestamp, bootst
       }
 
       await perSecondSave(result, timestamp);
-
       return {data: result, timestamp};
 
     }
 
-    function handleStore(timestamp) {
+    async function handleStore(timestamp) {
+      await exchangeSave(exchanges);
       return {data: {data: exchanges}, timestamp};
     }
 

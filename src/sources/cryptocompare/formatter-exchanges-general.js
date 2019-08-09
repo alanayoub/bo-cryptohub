@@ -1,5 +1,9 @@
+'use strict';
+
 // Cryptohub
 const logger = require('../../logger');
+
+import { mapSave, exchangeSave } from '../../db';
 
 /**
  *
@@ -14,7 +18,7 @@ const logger = require('../../logger');
  * @return {Object}
  *
  */
-module.exports = function formatterCryptocompareSectionExchangesGeneral(response, timestamp, bootstrapData, appBootstrapData, fileName, event) {
+export default async function formatterCryptocompareSectionExchangesGeneral(response, timestamp, bootstrapData, appBootstrapData, fileName, event) {
   try {
 
     const emptyReturn = {data: {}, timestamp};
@@ -79,18 +83,33 @@ module.exports = function formatterCryptocompareSectionExchangesGeneral(response
       let field;
       let output = {};
       let fields = [
+        'CentralizationType',
+        'Country',
         'Id',
+        'ItemType',
+        'LogoUrl',
         'Name',
         'Url',
-        'LogoUrl',
-        'ItemType',
-        'CentralizationType',
-        'Country'
+        'InternalName',
+        'GradePoints',
+        'Grade',
+        'AffiliateUrl',
+        'OrderBook',
+        'Trades',
+        'Description',
+        'FullAddress',
+        'Fees',
+        'DepositMethods',
+        'Sponsored',
+        'Recommended',
+        'SortOrder',
+        'TOTALVOLUME24HBTC',
+        'DISPLAYTOTALVOLUME24HBTC',
       ];
       for ([id, obj] of Object.entries(responseData)) {
         output[id] = {};
         for (field of fields) {
-          output[id][field] = obj[field];
+          output[id][`cc-${field}`] = obj[field];
         }
       }
       return output;
@@ -100,6 +119,10 @@ module.exports = function formatterCryptocompareSectionExchangesGeneral(response
       maps: maps(response.Data),
       data: data(response.Data)
     };
+
+    if (output.data) await exchangeSave(output.data);
+    if (output.maps.nameId) await mapSave('exchangeMapNameId', JSON.stringify(output.maps.nameId));
+    if (output.maps.idName) await mapSave('exchangeMapIdName', JSON.stringify(output.maps.idName));
 
     return { data: output, timestamp };
 

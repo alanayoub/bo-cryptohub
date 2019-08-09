@@ -1,8 +1,8 @@
 'use strict';
 
 // Binary Overdose
-import { fieldTypeMap, columnDependencies } from '../../settings';
-import { PerSecondModel }                   from '../schema';
+import { fieldTypeMap, columnDependencies }        from '../../settings';
+import { PerSecondModel, MapModel, ExchangeModel } from '../schema';
 
 const idsList = Object.keys(fieldTypeMap);
 
@@ -112,7 +112,67 @@ async function getAllSymbols() {
 
 }
 
+/**
+ *
+ * GET MAPS
+ *
+ * @param {Array} columns
+ * @param {String} sort
+ * @return {Object}
+ *
+ */
+async function getMaps(ids) {
+
+  if (!Array.isArray(ids)) ids = [ids];
+
+  const query = {_id: {$regex: ids.join('|')}};
+  let maps = await MapModel.find(query).lean();
+
+  if (!Array.isArray(maps)) maps = [maps];
+
+  for (const item of maps) {
+    if (typeof item.map === 'string') {
+      item.map = JSON.parse(item.map);
+    }
+  }
+
+  return maps;
+
+}
+
+/**
+ *
+ * GET EXCHANGES
+ *
+ * @param {Array} columns
+ * @param {String} sort
+ * @return {Object}
+ *
+ */
+async function getExchanges() {
+
+  const query = {
+    _id: {$regex: "exchange"}
+  }
+
+  const data = await ExchangeModel.find(query).lean();
+
+  let id;
+  let item;
+  const output = {};
+  for (item of data) {
+    id = item._id.split(':')[1];
+    if (!output[id]) output[id] = {};
+    output[id] = item;
+  }
+
+  return output;
+
+}
+
 export {
+  getMaps,
   getRows,
-  getAllSymbols
+  getExchanges,
+  getAllSymbols,
 }

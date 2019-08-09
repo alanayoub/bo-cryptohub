@@ -8,6 +8,8 @@ import socketIO     from 'socket.io';
 import compression  from 'compression';
 import cookieParser from 'cookie-parser';
 
+import { getRows }  from '../db/query';
+
 const app = express();
 app.use(compression());
 
@@ -62,17 +64,12 @@ export default async function startServer(config) {
       socket.on('cols', async columns => {
 
         console.log('received request for cols update');
-        socket.handshake.query.cols = columns;
-        //
-        // TODO: emit from here
-        //
-        // let [ lastData ] = await that.cache.get(`${config.dbDir}/data/data.json`);
-        // lastData = JSON.parse(lastData);
-        // const emitData = config.events['data'].onBeforeEmit(socket, lastData, {});
-        // if (emitData) {
-        //   console.log('Emit data for cols update', columns);
-        //   socket.emit('data', emitData);
-        // };
+        const cols = columns.split(',');
+        console.log(cols);
+        await getRows(cols).then(v => {
+          const output = JSON.stringify({data: v, type: 'dbDiff'});
+          socket.emit('data', output);
+        });
 
       });
 

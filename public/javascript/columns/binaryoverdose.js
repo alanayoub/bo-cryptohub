@@ -107,6 +107,8 @@ export default {
     ],
     valueGetter(params) {
 
+      let output;
+      try {
       if (isEmptyObject(ch.exchanges)) {
         return ch.emptyCellValue;
       }
@@ -122,8 +124,13 @@ export default {
         ...dex, ...both, ...crypto
       ];
 
-      const output = new Set();
+      output = new Set();
       for (const id of exchangeIds) output.add(ch.exchanges[id].Name);
+      }
+      catch (error) {
+        console.log(error);
+        debugger;
+      }
 
       return Array.from(output).join(', ') || ch.emptyCellValue;
 

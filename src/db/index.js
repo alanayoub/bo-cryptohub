@@ -152,17 +152,18 @@ async function perSecondSave(data, timestamp = +new Date()) {
         unixTime = +new Date(timestamp);
         defaultDoc = {
           _id,
+          lastChecked: unixTime,
           samples: [[unixTime, value], [unixTime, value]]
         }
         ts = await PerSecondModel.findOne({ _id });
         if (ts === null) {
           ts = await PerSecondModel.create(defaultDoc);
-          ts = await ts.save();
         }
         else if (ts.samples[1][1] !== value) {
           ts.samples = [ts.samples[1], [unixTime, value]]
-          ts = await ts.save();
         }
+        ts.lastChecked = unixTime;
+        ts = await ts.save();
 
       }
       catch (error) {

@@ -20,6 +20,15 @@ const validator = {
     return isValid;
   },
 
+  lastChecked(val) {
+    const isValid = (!isNaN(val) && String(val).length === 13)
+    if (!isValid) {
+      console.log(val);
+      debugger;
+    }
+    return isValid;
+  },
+
   samples(arr) {
 
     const tsItemIsValid = tsItem => {
@@ -69,6 +78,11 @@ const options = {
     type: String,
     required: true,
     validate: [validator.id, '{PATH} is not valid']
+  },
+  lastChecked: {
+    type: Number,
+    required: true,
+    validate: [validator.lastChecked, '{PATH} is not valid timestamp']
   },
   samples: {
     type: [[{

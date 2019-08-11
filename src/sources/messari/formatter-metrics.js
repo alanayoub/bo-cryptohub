@@ -247,7 +247,6 @@ export default async function formatterMessariSectionMetrics(data, timestamp, bo
       }
     }
 
-    console.log('saving metrics');
     await perSecondSave(result, timestamp);
 
     return {data: result, timestamp};

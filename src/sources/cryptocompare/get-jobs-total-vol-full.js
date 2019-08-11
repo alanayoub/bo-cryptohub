@@ -26,7 +26,7 @@ module.exports = async function getJobsCryptocompareSectionTotalVolFull(queue, b
       };
       const uri = settings.tagUriCryptocompareTotalVolFull`${data}`;
       const key = settings.tagKeyCryptocompareTotalVolFull`${data}`;
-      queue.push({uri, key, cacheForDays: settings.cacheForCryptocompare});
+      queue.push({uri, key, cacheForDays: 0});
       jobs++;
       page++;
     }

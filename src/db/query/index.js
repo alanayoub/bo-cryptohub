@@ -19,9 +19,15 @@ function makeDataShit(objectData) {
   for (const [id, obj] of Object.entries(objectData)) {
     if (!data[id]) data[id] = {};
     for (const [field, value] of Object.entries(obj)) {
-      data[id][field]                = obj[field][1][1]; // value
-      data[id][`${field}:last`]      = obj[field][0][1]; // last value
-      data[id][`${field}-timestamp`] = obj[field][1][0]; // timestamp
+      data[id][field]                  = obj[field].samples[1][1]; // value
+      data[id][`${field}:last`]        = obj[field].samples[0][1]; // last value
+      data[id][`${field}-timestamp`]   = obj[field].samples[1][0]; // timestamp
+      data[id][`${field}-lastChecked`] = obj[field].lastChecked; // last time value was checked
+
+      //
+      // TODO: Add last checked
+      // data[id][`${field}-lastChecked`] = obj[field]; // timestamp
+      //
     }
   }
   return data;
@@ -65,7 +71,7 @@ async function getRows(columns, sort) {
   for (const item of data) {
     [field, id] = item._id.split(':');
     if (!objectData[id]) objectData[id] = {};
-    objectData[id][field] = item.samples;
+    objectData[id][field] = item;
   }
 
   let output;

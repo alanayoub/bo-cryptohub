@@ -56,15 +56,20 @@ export default function convertWorkingDataToRowData(data) {
   let value;
   let valueKey;
   let timestamp;
+  let lastChecked;
+  let lastCheckedKey;
   let d, k, v;
   for (d of data) {
     for ([k, v] of Object.entries(d)) {
       match = k.match(regex);
+      lastCheckedKey = k.replace(/-timestamp/, '-lastChecked');
       if (match && match.length) {
         valueKey = k.replace(regex, '');
         value = d[valueKey];
         timestamp = d[k];
+        lastChecked = d[lastCheckedKey];
         d[valueKey] = {
+          lastChecked,
           timestamp,
           value
         };

@@ -363,7 +363,7 @@ let fieldWhitelist = [
   ...fieldLastValue.map(field => `${field}:last`)
 ];
 
-fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp')];
+fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp'), ...fieldWhitelist.map(v => v +='-lastChecked')];
 
 //
 // This should be generated

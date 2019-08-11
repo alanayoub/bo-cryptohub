@@ -147,7 +147,10 @@ export default {
     headerTooltip: 'Proof Type\n\nData Source: Cryptocompare',
     lockPinned: true,
     width: 120,
-    type: ['cryptohubText'],
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText',
+    ],
   },
 
   //
@@ -161,7 +164,10 @@ export default {
     headerTooltip: 'Algorithm\n\nData Source: Cryptocompare',
     lockPinned: true,
     width: 120,
-    type: ['cryptohubText'],
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText',
+    ],
   },
 
   //

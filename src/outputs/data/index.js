@@ -42,8 +42,12 @@ export default {
     const cols = JSON.parse(socket.handshake.query.cols);
     const columns = cols.columns;
     getRows(columns).then(v => {
-      const output = JSON.stringify({data: v, type: 'dbDiff'});
-      socket.emit('data', output);
+      const firstX = getFirstXRows(v, settings.maxRowsTemplatedIn);
+      const firstXStr = JSON.stringify({data: firstX, type: 'dbDiff'});
+      socket.emit('data', firstXStr);
+      const output = v;
+      const outputStr = JSON.stringify({data: output, type: 'dbDiff'});
+      socket.emit('data', outputStr);
     });
   },
   onBeforeBootstrapSave: data => {

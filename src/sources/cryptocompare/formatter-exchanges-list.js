@@ -5,8 +5,8 @@ import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 import logger   from '../../logger';
 import settings from '../../settings';
 
-import { perSecondSave, exchangeSave } from '../../db';
-import { getMaps, getExchanges }       from '../../db/query';
+import { perSecondSave, exchangeSave }          from '../../db';
+import { getMaps, getExchanges, getCurrencies } from '../../db/query';
 
 /**
  *
@@ -156,8 +156,9 @@ export default async function formatterExchangesList(response, timestamp, bootst
     const maps = await getMaps(['exchangeMapNameId']);
     const mapNameId = maps[0].map;
     const dbExchanges = await getExchanges();
+    const dbCurrencies = await getCurrencies();
 
-    if (!appBootstrapData.currency || !mapNameId || (!response && !response.Data) || response.Response !== 'Success') {
+    if (!mapNameId || (!response && !response.Data) || response.Response !== 'Success') {
       return emptyReturn;
     }
 
@@ -251,7 +252,7 @@ export default async function formatterExchangesList(response, timestamp, bootst
     //
 
     let obj;
-    const currencyCodes = Object.keys(appBootstrapData.currency) || [];
+    const currencyCodes = Object.keys(dbCurrencies) || [];
 
     // Symbols
     for (obj of Object.values(symbols)) {

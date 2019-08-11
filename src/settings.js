@@ -352,6 +352,10 @@ const fieldTypeMap = {
   'm-markets-last_trade_at'               :'String|Number|Boolean|Null|Undefined|Array', // "2019-08-06T10:08:14Z",
   'm-markets-excluded_from_price'         :'String|Number|Boolean|Null|Undefined|Array', // false
 
+  'xe-name'       : 'String', // "US Dollar"
+  'xe-unitsPerUSD': 'String', // "1.0000000000"
+  'xe-USDPerUnits': 'String', // "1.0000000000"
+
 }
 
 let fieldWhitelist = [

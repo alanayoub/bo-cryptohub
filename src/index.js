@@ -92,14 +92,14 @@ try {
     datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
   });
 
-  // datatable.newSource('messari', messari.config).then(() => {
-  //   datatable.sources.messari.add(messari.markets);
-  //   datatable.sources.messari.add(messari.metrics);
-  // });
+  datatable.newSource('messari', messari.config).then(() => {
+    datatable.sources.messari.add(messari.markets);
+    datatable.sources.messari.add(messari.metrics);
+  });
 
-  // datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
-  //   datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
-  // });
+  datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
+    datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
+  });
 
   datatable.newSource('xe', xe.config).then(() => {
     datatable.sources.xe.add(xe.currency);

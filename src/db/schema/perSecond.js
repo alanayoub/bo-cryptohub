@@ -12,7 +12,7 @@ const validator = {
 
   id(val) {
     const [ field, projectId ] = val.split(':');
-    const isValid = idsList.includes(field) && !isNaN(projectId) && projectId.length < 10;
+    const isValid = idsList.includes(field) && projectId.length < 10;
     if (!isValid) {
       console.log(field, projectId, idsList);
       debugger;

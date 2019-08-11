@@ -170,9 +170,37 @@ async function getExchanges() {
 
 }
 
+/**
+ *
+ * GET CURRENCIES
+ *
+ * @return {Object}
+ *
+ */
+async function getCurrencies() {
+
+  const query = {
+    _id: {$regex: "xe-"}
+  }
+
+  const data = await PerSecondModel.find(query).lean();
+
+  let id;
+  const output = {};
+  for (const item of data) {
+    [field, id] = item._id.split(':');
+    if (!output[id]) output[id] = {};
+    output[id][field] = item.samples[1][1];
+  }
+
+  return output;
+
+}
+
 export {
   getMaps,
   getRows,
   getExchanges,
   getAllSymbols,
+  getCurrencies,
 }

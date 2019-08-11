@@ -1,13 +1,6 @@
-/**
- *
- * USD Currency Table
- * @return {Object}
- *
- */
+'use strict';
 
-//
-// NOTE: MAKE THIS A FORMATTER and put it on bootstrapData
-//
+import { perSecondSave } from '../../db';
 
 // Libs
 const cheerio = require('cheerio');
@@ -16,15 +9,20 @@ const cheerio = require('cheerio');
 const logger = require('../../logger');
 const settings = require('../../settings');
 
-//
-// Xe
-//
-// Currency conversion data for USD
-//
-//  USD: {name: "US Dollar", unitsPerUSD": 1.0000000000", USDPerUnits: "1.0000000000"},
-//  EUR: {name: "Euro",      unitsPerUSD: "0.8576784390", USDPerUnits: "1.1659381355"}
-//
-module.exports = function formatterXeSectionCurrency(response, timestamp, bootstrapData, appBootstrapData) {
+/**
+ *
+ * XE
+ *
+ * USD Currency Table
+ * @return {Object}
+ *
+ * Currency conversion data for USD
+ *
+ *  USD: {name: "US Dollar", unitsPerUSD: "1.0000000000", USDPerUnits: "1.0000000000"},
+ *  EUR: {name: "Euro",      unitsPerUSD: "0.8576784390", USDPerUnits: "1.1659381355"}
+ *
+ */
+export default async function formatterCurrency(response, timestamp) {
   try {
 
     const data = {};
@@ -37,16 +35,18 @@ module.exports = function formatterXeSectionCurrency(response, timestamp, bootst
       const unitsPerUSD = $(tds[2]).text();
       const USDPerUnits = $(tds[3]).text();
       data[code] = {
-        name,
-        unitsPerUSD,
-        USDPerUnits
+        'xe-name': name,
+        'xe-unitsPerUSD': unitsPerUSD,
+        'xe-USDPerUnits': USDPerUnits,
       }
     }
-    appBootstrapData.currency = data;
+
+    await perSecondSave(data, timestamp);
     return {data, timestamp};
+
   }
   catch(error) {
-    const message = `formatterXeSectionCurrency(): ${error}`;
+    const message = `formatterCurrency(): ${error}`;
     logger.error(message);
     return {message, error: true};
   }

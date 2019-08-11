@@ -57,8 +57,8 @@ function filterData(socket, data) {
   let requiredFields = new Set();
 
   if (socket) {
-    let columns = gnp(socket, 'handshake.query.cols') || '';
-    columns = columns.split(',');
+    const cols = gnp(socket, 'handshake.query.cols');
+    const columns = cols.columns.split(',');
     if (!Array.isArray(columns)) throw new Error('data-on-before-emit.js no columns provided');
     for (const col of columns) {
       for (field of settings.columnDependencies[col]) {

@@ -61,12 +61,14 @@ export default async function startServer(config) {
 
       socket = sock;
 
-      socket.on('cols', async columns => {
+      socket.on('cols', async data => {
 
         console.log('received request for cols update');
-        const cols = columns.split(',');
-        console.log(cols);
-        await getRows(cols).then(v => {
+        const cols = JSON.parse(data);
+        const columns = cols.columns;
+        const sort = cols.sort;
+        console.log(columns, sort);
+        await getRows(columns).then(v => {
           const output = JSON.stringify({data: v, type: 'dbDiff'});
           socket.emit('data', output);
         });

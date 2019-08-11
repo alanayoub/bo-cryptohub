@@ -40,8 +40,6 @@ window.bo = {
 
 window.bo.clas.CellInteractions = CellInteractions;
 window.bo.clas.State = State;
-
-window.initData = window.initData || null
 window.initStore = window.initStore || {};
 
 window.refs = {

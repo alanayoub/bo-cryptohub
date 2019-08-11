@@ -290,10 +290,12 @@ export default class State {
     // If columns have changed emit a socket event with the new column state
     if (columnsUpdated && bo.inst.socket) {
       const oldCols = gnp(agState, 'columns') || [];
-      const newColFields = State.columnsChanged(oldCols, newState.columns)
+      const sort = newState.sort;
+      const newColFields = State.columnsChanged(oldCols, newState.columns);
       if (newColFields) {
-        const cols = newColFields.join();
-        bo.inst.socket.emit('cols', cols);
+        const columns = newColFields.join();
+        const emitData = JSON.stringify({columns, sort});
+        bo.inst.socket.emit('cols', emitData);
       }
     }
 

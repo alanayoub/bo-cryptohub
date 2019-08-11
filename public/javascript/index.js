@@ -37,41 +37,29 @@ import style                       from '../stylesheet/index.css';
 function dataEmitHandler(data) {
 
   window.bo.func.updated('now');
+  console.log('data update');
 
-  let newSocketData = JSON.parse(data);
-  const type = newSocketData.type;
-  newSocketData = newSocketData.data;
+  const newSocketData = JSON.parse(data).data;
 
-  if (type === 'changeset') {
-    console.log('BAD: changeset');
-    window.DataTable.changesets.applyChanges(window.refs.workingData, newSocketData);
+  if (!window.refs.workingData) {
+    // init workingData
+    window.refs.workingData = newSocketData;
   }
-  else if (type === 'dbDiff') {
-    console.log('GOOD: dbDiff');
-    if (!window.initData) {
-      window.initData = newSocketData;
-      window.refs.workingData = newSocketData;
-    }
-    else {
-      for (const [id, val] of Object.entries(newSocketData)) {
-        if (!window.refs.workingData[id]) window.refs.workingData[id] = val;
-        else {
-          Object.assign(window.refs.workingData[id], val);
-        }
+  else {
+    // update workingData
+    for (const [id, val] of Object.entries(newSocketData)) {
+      if (!window.refs.workingData[id]) {
+        window.refs.workingData[id] = val;
+      }
+      else {
+        Object.assign(window.refs.workingData[id], val);
       }
     }
   }
-  else {
-    console.log('BAD: full change');
-    if (!window.initData) window.initData = newSocketData;
-    window.refs.workingData = newSocketData;
-  }
 
-  if (window.refs.workingData) {
-    window.refs.rowData = convertWorkingDataToRowData(window.refs.workingData);
-    window.bo.agOptions.api.setRowData(window.refs.rowData);
-    window.bo.inst.toolbarView.update(window.refs.workingData);
-  }
+  window.refs.rowData = convertWorkingDataToRowData(window.refs.workingData);
+  window.bo.agOptions.api.setRowData(window.refs.rowData);
+  window.bo.inst.toolbarView.update(window.refs.workingData);
 
 }
 
@@ -91,11 +79,7 @@ function storeEmitHandler(data) {
   const type = newSocketData.type;
   newSocketData = newSocketData.data;
 
-  if (type === 'changeset') {
-    console.log('store changeset');
-    window.DataTable.changesets.applyChanges(window.ch, newSocketData);
-  }
-  else if (type === 'maps') {
+  if (type === 'maps') {
     console.log('store maps');
     for (const item of newSocketData) {
       window.ch[item._id] = item.map;
@@ -120,8 +104,10 @@ window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);
 window.bo.inst.state.init().then(state => {
 
-  const cols = state.columns.map(v => v.id);
-  window.bo.inst.socket = io({query: { cols } });
+  const columns = state.columns.map(v => v.id);
+  const sort = state.sort;
+  const emitData = JSON.stringify({columns, sort});
+  window.bo.inst.socket = io({query: {cols: emitData} });
 
   generateAgOptions().then(agOptions => {
 

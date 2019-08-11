@@ -39,16 +39,18 @@ export default {
   onAfterConnect(event, socket, data) {
     // const emitData = onBeforeEmit({diff: false}, socket, data, initData);
     // if (emitData) socket.emit(event, emitData);
-    const cols = socket.handshake.query.cols.split(',');
-    getRows(cols).then(v => {
+    const cols = JSON.parse(socket.handshake.query.cols);
+    const columns = cols.columns;
+    getRows(columns).then(v => {
       const output = JSON.stringify({data: v, type: 'dbDiff'});
       socket.emit('data', output);
     });
   },
-  onBeforeEmit: partialApplication(onBeforeEmit, {diff: true}),
   onBeforeBootstrapSave: data => {
     initData = getFirstXRows(data, settings.maxRowsTemplatedIn);
     if (!settings.maxRowsTemplatedIn) return data;
     return initData;
-  }
+  },
+  // NOTE: note being used
+  onBeforeEmit: partialApplication(onBeforeEmit, {diff: true}),
 }

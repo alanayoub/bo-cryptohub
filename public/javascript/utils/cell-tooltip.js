@@ -12,7 +12,7 @@ import { timeAgo } from '../libs/bo-utils-client';
  */
 export default function cellTooltip(params) {
   const field = params.colDef.field.split('.')[0];
-  const { lastChecked } = params.data[field];
-  const t = timeAgo(lastChecked) || 'unknown time ago';
+  const data = params.data[field] || {};
+  const t = timeAgo(data.lastChecked) || 'unknown time ago';
   return `Last updated ${t}`;
 }

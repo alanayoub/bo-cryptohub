@@ -77,9 +77,9 @@ export default async function formatterMessariMarkets(data, timestamp, bootstrap
       if (!id) continue;
 
       result[id] = {
-        [`${prefix}id`]                              : item.id,                          //  "0019b21e-cdf4-44ef-aee6-11b4b3376e08",
+        [`${prefix}id`]                              : item.id,                          // "0019b21e-cdf4-44ef-aee6-11b4b3376e08",
         [`${prefix}exchange`]                        : item.exchange,                    // "bitstamp",
-        [`${prefix}exchange_id`]                     : item.exchange_id,                 //"3663f00d-91fc-48a2-98a2-8af76325927a",
+        [`${prefix}exchange_id`]                     : item.exchange_id,                 // "3663f00d-91fc-48a2-98a2-8af76325927a",
         [`${prefix}base`]                            : item.base,                        // "BTC",
         [`${prefix}base_asset_id`]                   : item.base_asset_id,               // "1e31218a-e44e-4285-820c-8282ee222035",
         [`${prefix}quote`]                           : item.quote,                       // "USD",

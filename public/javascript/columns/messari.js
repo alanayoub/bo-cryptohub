@@ -22,7 +22,10 @@ export default {
     headerTooltip: 'Sectors',
     lockPinned: true,
     width: 120,
-    type: ['cryptohubText'],
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText'
+    ],
     valueFormatter(params) {
       const value = gnp(params, 'value.value');
       if (!Array.isArray(value) || !value.length) return ch.emptyCellValue;
@@ -35,7 +38,7 @@ export default {
   //
   athUSDMessari: {
     colId: 'athUSDMessari',
-    field: 'm-metrics-all_time_high_price',
+    field: 'm-prices-athUsd',
     headerName: 'ATH $',
     headerClass: 'CH-col',
     headerTooltip: 'All Time High (USD)\n\nData Source: OnChainFX',
@@ -56,7 +59,7 @@ export default {
   //
   athPercentDownUSDMessari: {
     colId: 'athPercentDownUSDMessari',
-    field: 'm-metrics-all_time_high_percent_down',
+    field: 'm-prices-percentageDownFromAth',
     headerName: 'ATH % Down',
     headerClass: 'CH-col',
     headerTooltip: '% Down from All Time High (USD)\n\nData Source: OnChainFX',
@@ -82,7 +85,7 @@ export default {
   //
   cycleLowUSDMessari: {
     colId: 'cycleLowUSDMessari',
-    field: 'm-metrics-cycle_low_price',
+    field: 'm-prices-cycleLowUsd',
     headerName: 'Cycle Low $',
     headerClass: 'CH-col',
     headerTooltip: 'The lowest trading price (in USD) of the asset since its All-Time-High\n\nData Source: OnChainFX',
@@ -99,14 +102,86 @@ export default {
   },
 
   //
+  // 24 Hour Percent Change (USD)
+  //
+  percentChange24hUSDMessari: {
+    colId: 'percentChange24hUSDMessari',
+    field: 'm-prices-percentageChange24HrUsd',
+    headerName: 'Δ 24h $',
+    headerClass: 'CH-col',
+    headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Messari',
+    lockPinned: true,
+    width: 80,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+      'cryptohubPercent'
+    ],
+  },
+
+  //
+  // 24 Hour Percent Change (BTC)
+  //
+  percentChange24hBTCMessari: {
+    colId: 'percentChange24hBTCMessari',
+    field: 'm-prices-percentageChange24HrBtc',
+    headerName: 'Δ 24h ฿',
+    headerClass: 'CH-col',
+    headerTooltip: 'Percent change over 24 hours against BTC\n\nData Source: Messari',
+    lockPinned: true,
+    width: 80,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+      'cryptohubPercent'
+    ],
+  },
+
+  //
+  // 7 Day Percent change (USD)
+  //
+  percentChange7dUSDMessari: {
+    colId: 'percentChange7dUSDMessari',
+    field: 'm-prices-percentageChange7dUsd',
+    headerName: '7D Δ $',
+    headerClass: 'CH-col',
+    headerTooltip: 'Percent change over the last 7 days against USD\n\nData Source: Messari',
+    lockPinned: true,
+    width: 80,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+      'cryptohubPercent'
+    ],
+  },
+
+  //
   // 7 Day Percent change (BTC)
   //
   percentChange7dBTCMessari: {
     colId: 'percentChange7dBTCMessari',
-    field: 'm-metrics-roi_data_percent_change_btc_last_1_week',
+    field: 'm-prices-percentageChange7dBtc',
     headerName: '7D Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 7 days against BTC\n\nData Source: Messari',
+    lockPinned: true,
+    width: 80,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+      'cryptohubPercent'
+    ],
+  },
+
+  //
+  // 1 Month Percent change (USD)
+  //
+  percentChange1mUSDMessari: {
+    colId: 'percentChange1mUSDMessari',
+    field: 'm-metrics-roi_data_percent_change_last_1_month',
+    headerName: '1M Δ $',
+    headerClass: 'CH-col',
+    headerTooltip: 'Percent change over the last 1 month against USD\n\nData Source: Messari',
     lockPinned: true,
     width: 80,
     type: [
@@ -135,14 +210,50 @@ export default {
   },
 
   //
+  // 3 Month Percent change (USD)
+  //
+  percentChange3mUSDMessari: {
+    colId: 'percentChange3mUSDMessari',
+    field: 'm-prices-percentageChange90dUsd',
+    headerName: '3M Δ $',
+    headerClass: 'CH-col',
+    headerTooltip: 'Percent change over the last 3 months against USD\n\nData Source: Messari',
+    lockPinned: true,
+    width: 80,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+      'cryptohubPercent'
+    ],
+  },
+
+  //
   // 3 Month Percent change (BTC)
   //
   percentChange3mBTCMessari: {
     colId: 'percentChange3mBTCMessari',
-    field: 'm-metrics-roi_data_percent_change_btc_last_3_months',
+    field: 'm-prices-percentageChange90dBtc',
     headerName: '3M Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 3 months against BTC\n\nData Source: Messari',
+    lockPinned: true,
+    width: 80,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+      'cryptohubPercent'
+    ],
+  },
+
+  //
+  // 1 Year Percent change (USD)
+  //
+  percentChange1yUSDMessari: {
+    colId: 'percentChange1yUSDMessari',
+    field: 'm-prices-percentageChange1yrUsd',
+    headerName: '1Y Δ $',
+    headerClass: 'CH-col',
+    headerTooltip: 'Percent change over the last 1 year against BTC\n\nData Source: Messari',
     lockPinned: true,
     width: 80,
     type: [
@@ -157,7 +268,7 @@ export default {
   //
   percentChange1yBTCMessari: {
     colId: 'percentChange1yBTCMessari',
-    field: 'm-metrics-roi_data_percent_change_btc_last_1_year',
+    field: 'm-prices-percentageChange1yrBtc',
     headerName: '1Y Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 1 year against BTC\n\nData Source: Messari',
@@ -175,7 +286,7 @@ export default {
   //
   priceUSDMessari: {
     colId: 'priceUSDMessari',
-    field: 'm-metrics-market_data_price_usd',
+    field: 'm-prices-priceUsd',
     headerName: 'Price $',
     headerClass: 'CH-col',
     headerTooltip: 'Price in USD\n\nData Source: Messari',
@@ -199,7 +310,7 @@ export default {
   //
   priceBTCMessari: {
     colId: 'priceBTCMessari',
-    field: 'm-metrics-market_data_price_btc',
+    field: 'm-prices-priceBtc',
     headerName: 'Price ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Price in BTC\n\nData Source: Messari',
@@ -227,7 +338,7 @@ export default {
   //
   volume24hUSDMessari: {
     colId: 'volume24hUSDMessari',
-    field: 'm-metrics-market_data_volume_last_24_hours',
+    field: 'm-prices-vol24HrUsd',
     headerName: 'Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Messari',
@@ -248,7 +359,7 @@ export default {
   //
   realVolume24hUSDMessari: {
     colId: 'realVolume24hUSDMessari',
-    field: 'm-metrics-market_data_real_volume_last_24_hours',
+    field: 'm-prices-realVol24HrUsd',
     headerName: 'Real Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'Real Volume according to Messari. 24 hours displayed in USD\n\nData Source: Messari',
@@ -265,44 +376,29 @@ export default {
   },
 
   //
-  // 24 Hour Percent Change (USD)
+  // Volume Overstatement Multiple
   //
-  percentChange24hUSDMessari: {
-    colId: 'percentChange24hUSDMessari',
-    field: 'm-metrics-market_data_percent_change_usd_last_24_hours',
-    headerName: 'Δ 24h $',
+  volume24hUSDOverstatementMultipleMessari: {
+    colId: 'volume24hUSDOverstatementMultipleMessari',
+    field: 'm-prices-volOverstatementMultiple',
+    headerName: 'Volume 24h $ Overstatement Multiple',
     headerClass: 'CH-col',
-    headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Messari',
+    headerTooltip: 'Volume according to Messari. 24 hours displayed in USD\n\nData Source: Messari',
     lockPinned: true,
-    width: 80,
+    width: 150,
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
     ],
-  },
-
-  //
-  // 24 Hour Percent Change (BTC)
-  //
-  percentChange24hBTCMessari: {
-    colId: 'percentChange24hBTCMessari',
-    field: 'm-metrics-market_data_percent_change_btc_last_24_hours',
-    headerName: 'Δ 24h ฿',
-    headerClass: 'CH-col',
-    headerTooltip: 'Percent change over 24 hours against BTC\n\nData Source: Messari',
-    lockPinned: true,
-    width: 80,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-      'cryptohubPercent'
-    ],
+    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
+    cellRendererParams: {
+      currency: 'USD',
+    },
   },
 
   marketcapUSDMessari: {
     colId: 'marketcapUSDMessari',
-    field: 'm-metrics-marketcap_current_marketcap_usd',
+    field: 'm-prices-currentMarketcap',
     headerName: 'Market Cap $',
     headerClass: 'CH-col',
     headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Messari',
@@ -320,7 +416,7 @@ export default {
 
   marketcapUSD2050Messari: {
     colId: 'marketcapUSD2050Messari',
-    field: 'm-metrics-marketcap_y_2050_marketcap_usd',
+    field: 'm-prices-y2050Marketcap',
     headerName: 'Market Cap $ (Y2050)',
     headerClass: 'CH-col',
     headerTooltip: 'This is the fully diluted (Y2050) Marketcap, it takes into account known future dilution up to Jan 1, 2050.\n\nData Source: Messari',

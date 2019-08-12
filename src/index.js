@@ -93,8 +93,10 @@ try {
   });
 
   datatable.newSource('messari', messari.config).then(() => {
+    datatable.sources.messari.add(messari.assets);
     datatable.sources.messari.add(messari.markets);
     datatable.sources.messari.add(messari.metrics);
+    datatable.sources.messari.add(messari.prices);
   });
 
   datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {

@@ -163,7 +163,9 @@ const fieldTypeMap = {
   'cc-total-vol-full-CHANGE24HOUR'             :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -288.78999999999905
   'cc-total-vol-full-CHANGEDAY'                :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -83.03000000000065
   'cc-total-vol-full-CHANGEPCT24HOUR'          :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -2.8625521011443578
+  'cc-total-vol-full-CHANGEPCTHOUR'            :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -0.8401473672920365
   'cc-total-vol-full-CHANGEPCTDAY'             :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -0.8401473672920365
+  'cc-total-vol-full-CHANGEHOUR'               :'String|Number|Boolean|Null|Undefined',      // :'Number',  // -0.8401473672920365
   'cc-total-vol-full-DocumentType'             :'String|Number|Boolean|Null|Undefined',      // :'String',  // "Webpagecoinp"
   'cc-total-vol-full-FLAGS'                    :'String|Number|Boolean|Null|Undefined',      // :'String',  // "1"
   'cc-total-vol-full-FROMSYMBOL'               :'String|Number|Boolean|Null|Undefined',      // :'String',  // "BTC"

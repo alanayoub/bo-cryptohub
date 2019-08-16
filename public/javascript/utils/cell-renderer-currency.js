@@ -26,7 +26,7 @@ import getCssClass from './get-cell-css-class-diff.js';
 export default function cellRendererCurrency(refs, params) {
 
   let result = ch.emptyCellValue;
-  if (!params.value) return result;
+  if (!params.value || !params.value.value) return result;
 
   const { colDef, data } = params;
   const html = document.createElement('div');

@@ -40,15 +40,19 @@ export default {
     // const emitData = onBeforeEmit({diff: false}, socket, data, initData);
     // if (emitData) socket.emit(event, emitData);
     const cols = JSON.parse(socket.handshake.query.cols);
+    const sort = cols.sort.column;
     const columns = cols.columns;
-    getRows(columns).then(v => {
-      const firstX = getFirstXRows(v, settings.maxRowsTemplatedIn);
+
+    getRows(columns, sort, settings.maxRowsTemplatedIn).then(firstX => {
       const firstXStr = JSON.stringify({data: firstX, type: 'dbDiff'});
       socket.emit('data', firstXStr);
-      const output = v;
-      const outputStr = JSON.stringify({data: output, type: 'dbDiff'});
-      socket.emit('data', outputStr);
     });
+
+    getRows(columns, sort).then(results => {
+      const resultsStr = JSON.stringify({data: results, type: 'dbDiff'});
+      socket.emit('data', resultsStr);
+    });
+
   },
   onBeforeBootstrapSave: data => {
     initData = getFirstXRows(data, settings.maxRowsTemplatedIn);

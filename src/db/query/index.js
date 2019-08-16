@@ -42,52 +42,140 @@ function makeDataShit(objectData) {
  * @return {Object}
  *
  */
-async function getRows(columns, sort) {
+async function getRows(columns, sort, limit) {
 
   // db.tsseconds.find({ _id: { $regex: "^m-metrics-all_time_high_percent_down" } }).sort({ "samples.1": 1 })
 
-  let field;
-  let fields;
-  let column;
-  let fieldSet = new Set();
-  for (column of columns) {
-    fields = columnDependencies[column];
-    for (field of fields) {
-      if (idsList.includes(field)) {
-        fieldSet.add(field);
+  /**
+   *
+   *
+   */
+  async function getIds(columns, sortField, limit) {
+
+    console.log(columns, sortField, limit);
+    data = await PerSecondModel
+      .find({_id: {$regex: `^${sortField}:`}})
+      .sort({'samples.1.1': -1})
+      .limit(limit)
+      .lean();
+
+    const ids = data.map(v => v._id.split(':')[1]);
+    return ids;
+
+  }
+
+  /**
+   *
+   *
+   */
+  async function getFirstXSorted(ids, fieldSet) {
+
+    const idsStr = ids.join('|');
+    const fieldsStr = Array.from(fieldSet).join('|');
+    const regex = `^(${fieldsStr}):(${idsStr})$`;
+    const query = {
+      _id: {$regex: regex}
+    }
+    const results = await PerSecondModel
+      .find(query)
+      .sort({'samples.1.1': -1})
+      .lean();
+
+    return results;
+
+  }
+
+  /**
+   *
+   *
+   *
+   */
+  async function getAllResultsUnsorted(fieldSet) {
+
+    const regex = '^'+ Array.from(fieldSet).join('|^');
+    const query = {
+      _id: { $regex: regex }
+    }
+    data = await PerSecondModel.find(query).lean();
+
+    return data;
+
+  }
+
+  /**
+   *
+   *
+   */
+  function convertResultsToOutput(data, sortField) {
+
+    let id;
+    let field;
+    const objectData = {};
+    for (const item of data) {
+      [field, id] = item._id.split(':');
+      if (!objectData[id]) objectData[id] = {};
+      objectData[id][field] = item;
+    }
+
+    let output;
+    output = objectData;
+    output = makeDataShit(output);
+    for (const [key, item] of Object.entries(output)) {
+      if (!item['cc-total-vol-full-Id']) delete output[key]; // Required field(s)
+    }
+
+    if (sortField) {
+      // if (!Array.isArray(sort) sort = [sort];
+      // data.sort((a, b) => {
+      //   a.samples[1][1] - b.samples[1][1];
+      // });
+    }
+
+    return output;
+
+  }
+
+  /**
+   *
+   *
+   */
+  function getFieldSet(columns, columnDependencies) {
+
+    let field;
+    let fields;
+    let column;
+    let fieldSet = new Set();
+    for (column of columns) {
+      fields = columnDependencies[column];
+      for (field of fields) {
+        if (idsList.includes(field)) {
+          fieldSet.add(field);
+        }
       }
     }
+
+    return fieldSet;
+
   }
 
-  const regex = '^'+ Array.from(fieldSet).join('|^');
-  const query = {
-    _id: { $regex: regex }
-  }
-
-  const data = await PerSecondModel.find(query).lean();
-
-  let id;
-  const objectData = {};
-  for (const item of data) {
-    [field, id] = item._id.split(':');
-    if (!objectData[id]) objectData[id] = {};
-    objectData[id][field] = item;
-  }
-
+  let data;
   let output;
-  output = objectData;
-  output = makeDataShit(output);
-  for (const [key, item] of Object.entries(output)) {
-    if (!item['cc-total-vol-full-Id']) delete output[key]; // Required field(s)
-  }
+  let sortField;
+  const fieldSet = getFieldSet(columns, columnDependencies);
 
-  // Organize data first
-  // if (sort) {
-  //   if (!Array.isArray(sort) sort = [sort];
-  //   data.sort((a, b) => {
-  //     a.samples[1][1] - b.samples[1][1];
-  //   });
-  // }
+  if (!fieldSet) throw new Error(`Invalid fieldSet ${fieldSet}`);
+
+  if (sort) sortField = columnDependencies[sort][0];
+
+  if (limit) {
+    const ids = await getIds(columns, sortField, limit);
+    data = await getFirstXSorted(ids, fieldSet);
+    output = convertResultsToOutput(data);
+  }
+  else {
+    data = await getAllResultsUnsorted(fieldSet);
+    output = convertResultsToOutput(data, sortField);
+  }
 
   return output;
 

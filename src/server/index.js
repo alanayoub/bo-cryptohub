@@ -9,6 +9,7 @@ import compression  from 'compression';
 import cookieParser from 'cookie-parser';
 
 import { getRows }  from '../db/query';
+import settings     from '../settings';
 
 const app = express();
 app.use(compression());
@@ -65,13 +66,24 @@ export default async function startServer(config) {
 
         console.log('received request for cols update');
         const cols = JSON.parse(data);
-        const columns = cols.columns;
+        const columns = cols.columns.split(',');
         const sort = cols.sort;
-        console.log(columns, sort);
-        await getRows(columns).then(v => {
-          const output = JSON.stringify({data: v, type: 'dbDiff'});
-          socket.emit('data', output);
+        // console.log(columns, sort);
+        // await getRows(columns, sort.column).then(v => {
+        //   const output = JSON.stringify({data: v, type: 'dbDiff'});
+        //   socket.emit('data', output);
+        // });
+
+        getRows(columns, sort, settings.maxRowsTemplatedIn).then(firstX => {
+          const firstXStr = JSON.stringify({data: firstX, type: 'dbDiff'});
+          socket.emit('data', firstXStr);
         });
+
+        getRows(columns, sort).then(results => {
+          const resultsStr = JSON.stringify({data: results, type: 'dbDiff'});
+          socket.emit('data', resultsStr);
+        });
+
 
       });
 

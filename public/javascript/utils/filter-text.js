@@ -15,7 +15,7 @@ export default class TextFilter extends Filter {
     if (isObject(value)) {
       value = value.value;
     }
-    else if (value === void 0) {
+    if (value === void 0 || value === null) {
       return 0;
     }
     if (Array.isArray(value)) {

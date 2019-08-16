@@ -40,7 +40,7 @@ export default {
     // const emitData = onBeforeEmit({diff: false}, socket, data, initData);
     // if (emitData) socket.emit(event, emitData);
     const cols = JSON.parse(socket.handshake.query.cols);
-    const sort = cols.sort.column;
+    const sort = cols.sort;
     const columns = cols.columns;
 
     getRows(columns, sort, settings.maxRowsTemplatedIn).then(firstX => {

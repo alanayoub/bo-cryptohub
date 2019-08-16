@@ -50,12 +50,11 @@ async function getRows(columns, sort, limit) {
    *
    *
    */
-  async function getIds(columns, sortField, limit) {
+  async function getIds(columns, sortField, sortDirection, limit) {
 
-    console.log(columns, sortField, limit);
     data = await PerSecondModel
       .find({_id: {$regex: `^${sortField}:`}})
-      .sort({'samples.1.1': -1})
+      .sort({'samples.1.1': sortDirection})
       .limit(limit)
       .lean();
 
@@ -68,7 +67,7 @@ async function getRows(columns, sort, limit) {
    *
    *
    */
-  async function getFirstXSorted(ids, fieldSet) {
+  async function getFirstXSorted(ids, fieldSet, sortDirection) {
 
     const idsStr = ids.join('|');
     const fieldsStr = Array.from(fieldSet).join('|');
@@ -78,7 +77,7 @@ async function getRows(columns, sort, limit) {
     }
     const results = await PerSecondModel
       .find(query)
-      .sort({'samples.1.1': -1})
+      .sort({'samples.1.1': sortDirection})
       .lean();
 
     return results;
@@ -161,15 +160,19 @@ async function getRows(columns, sort, limit) {
   let data;
   let output;
   let sortField;
+  let sortDirection;
   const fieldSet = getFieldSet(columns, columnDependencies);
 
   if (!fieldSet) throw new Error(`Invalid fieldSet ${fieldSet}`);
 
-  if (sort) sortField = columnDependencies[sort][0];
+  if (sort) {
+    sortField = columnDependencies[sort.column][0];
+    sortDirection = sort.direction === 'desc' ? -1 : 1;
+  }
 
   if (limit) {
-    const ids = await getIds(columns, sortField, limit);
-    data = await getFirstXSorted(ids, fieldSet);
+    const ids = await getIds(columns, sortField, sortDirection, limit);
+    data = await getFirstXSorted(ids, fieldSet, sortDirection);
     output = convertResultsToOutput(data);
   }
   else {

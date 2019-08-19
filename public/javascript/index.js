@@ -37,7 +37,6 @@ import style                       from '../stylesheet/index.css';
 function dataEmitHandler(data) {
 
   window.bo.func.updated('now');
-  console.log('data update');
 
   const newSocketData = JSON.parse(data).data;
 
@@ -80,21 +79,12 @@ function storeEmitHandler(data) {
   newSocketData = newSocketData.data;
 
   if (type === 'maps') {
-    console.log('store maps');
     for (const item of newSocketData) {
       window.ch[item._id] = item.map;
     }
   }
   else if (type === 'exchanges') {
-    console.log('store exchanges');
     window.ch.exchanges = newSocketData;
-  }
-  else {
-    console.log('store other');
-    window.ch = {
-      ...window.ch,
-      ...newSocketData
-    };
   }
   if (!window.initStore) window.initStore = window.ch;
 

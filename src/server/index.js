@@ -64,15 +64,9 @@ export default async function startServer(config) {
 
       socket.on('cols', async data => {
 
-        console.log('received request for cols update');
         const cols = JSON.parse(data);
-        const columns = cols.columns.split(',');
         const sort = cols.sort;
-        // console.log(columns, sort);
-        // await getRows(columns, sort.column).then(v => {
-        //   const output = JSON.stringify({data: v, type: 'dbDiff'});
-        //   socket.emit('data', output);
-        // });
+        const columns = cols.columns.split(',');
 
         getRows(columns, sort, settings.maxRowsTemplatedIn).then(firstX => {
           const firstXStr = JSON.stringify({data: firstX, type: 'dbDiff'});
@@ -83,7 +77,6 @@ export default async function startServer(config) {
           const resultsStr = JSON.stringify({data: results, type: 'dbDiff'});
           socket.emit('data', resultsStr);
         });
-
 
       });
 

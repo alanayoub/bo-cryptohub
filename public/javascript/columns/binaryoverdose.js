@@ -75,18 +75,47 @@ export default {
   //
   sparklineUSD: {
     colId: 'sparklineUSD',
-    field: 'cryptohub-price-history',
+    field: 'cryptohub-cc-price-history-USD',
     headerName: '7D Trend $',
     headerClass: 'CH-col',
     headerTooltip: '7 Day USD price and volume trend\n\nTop & bottom numbers are % swing in price (top) & volume (bottom)\n\nData Source: BinaryOverdose / Cryptocompare',
     lockPinned: true,
     width: 124,
+    type: [
+      'cryptohubDefaults',
+    ],
     cellRenderer: CellRendererSparkline,
     cellRendererParams: {
       range: true,
       price: true,
       volume: true,
-      volumeDays: 7,
+      days: 7,
+    }
+  },
+
+  //
+  // Sparkline (BTC)
+  //
+  // 7 Day BTC price & volume trend
+  // Top & bottom numbers are % swing in price (top) & volume (bottom)
+  //
+  sparklineBTC: {
+    colId: 'sparklineBTC',
+    field: 'cryptohub-cc-price-history-BTC',
+    headerName: '7D Trend ฿',
+    headerClass: 'CH-col',
+    headerTooltip: '7 Day BTC price and volume trend\n\nTop & bottom numbers are % swing in price (top) & volume (bottom)\n\nData Source: BinaryOverdose / Cryptocompare',
+    lockPinned: true,
+    width: 124,
+    type: [
+      'cryptohubDefaults',
+    ],
+    cellRenderer: CellRendererSparkline,
+    cellRendererParams: {
+      range: true,
+      price: true,
+      volume: true,
+      days: 7,
     }
   },
 

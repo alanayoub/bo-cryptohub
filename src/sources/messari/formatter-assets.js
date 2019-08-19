@@ -160,7 +160,7 @@ import { perSecondSave }                  from '../../db';
  *       tagline: "Peer-to-peer electronic cash",
  *       overview: "...grammable, native currency.",
  *       background: "Bitcoin is a decentralized...",
- *       technology: ""Bitcoin",
+ *       technology: "Bitcoin",
  *       token_distribution: {
  *         sale_start: "2009-01-03",
  *         sale_end: "2009-01-03",
@@ -371,24 +371,27 @@ export default async function formatterMessariSectionMetrics(data, timestamp, bo
 
         [`${prefix}profile-is_verified`]                                             : gnp(item, 'profile.is_verified'),
         [`${prefix}profile-tagline`]                                                 : gnp(item, 'profile.tagline'),
-        [`${prefix}profile-overview`]                                                : gnp(item, 'profile.overview'),
-        [`${prefix}profile-packground`]                                              : gnp(item, 'profile.background'),
-        [`${prefix}profile-technology`]                                              : gnp(item, 'profile.technology'),
+        // [`${prefix}profile-overview`]                                                : gnp(item, 'profile.overview'),
+        // [`${prefix}profile-background`]                                              : gnp(item, 'profile.background'),
+        // [`${prefix}profile-technology`]                                              : gnp(item, 'profile.technology'),
         [`${prefix}profile-token_distribution_sale_start`]                           : gnp(item, 'profile.token_distribution.sale_start'),
         [`${prefix}profile-token_distribution_sale_end`]                             : gnp(item, 'profile.token_distribution.sale_end'),
-        [`${prefix}profile-token_distribution_initial_distribution`]                 : gnp(item, 'profile.token_distribution.initial_distribution'),
+        // [`${prefix}profile-token_distribution_initial_distribution`]                 : gnp(item, 'profile.token_distribution.initial_distribution'),
         [`${prefix}profile-token_distribution_current_supply`]                       : gnp(item, 'profile.token_distribution.current_supply'),
         [`${prefix}profile-token_distribution_max_supply`]                           : gnp(item, 'profile.token_distribution.max_supply'),
         [`${prefix}profile-token_distribution_description`]                          : gnp(item, 'profile.token_distribution.description'),
         [`${prefix}profile-token_details_usage`]                                     : gnp(item, 'profile.token_details.usage'),
         [`${prefix}profile-token_details_type`]                                      : gnp(item, 'profile.token_details.type'),
         [`${prefix}profile-token_details_sales_rounds`]                              : gnp(item, 'profile.token_details.sales_rounds'),
-        [`${prefix}profile-organizations`]                                           : gnp(item, 'profile.organizations'),
-        [`${prefix}profile-people_founding_team`]                                    : gnp(item, 'profile.people.founding_team'),
-        [`${prefix}profile-people_contributors`]                                     : JSON.stringify(gnp(item, 'profile.people.contributors')),
-        [`${prefix}profile-people_investors`]                                        : gnp(item, 'profile.people.investors'),
-        [`${prefix}profile-people_advisors`]                                         : gnp(item, 'profile.people.advisors'),
-        [`${prefix}profile-relevant_resources`]                                      : JSON.stringify(gnp(item, 'profile.relevant_resources')),
+        //
+        // NOTE: Big Objects
+        //
+        // [`${prefix}profile-organizations`]                                           : JSON.stringify(gnp(item, 'profile.organizations')),
+        // [`${prefix}profile-people_founding_team`]                                    : JSON.stringify(gnp(item, 'profile.people.founding_team')),
+        // [`${prefix}profile-people_contributors`]                                     : JSON.stringify(gnp(item, 'profile.people.contributors')),
+        // [`${prefix}profile-people_investors`]                                        : JSON.stringify(gnp(item, 'profile.people.investors')),
+        // [`${prefix}profile-people_advisors`]                                         : JSON.stringify(gnp(item, 'profile.people.advisors')),
+        // [`${prefix}profile-relevant_resources`]                                      : JSON.stringify(gnp(item, 'profile.relevant_resources')),
         [`${prefix}profile-consensus_algorithm`]                                     : gnp(item, 'profile.consensus_algorithm'),
 
       }

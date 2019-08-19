@@ -37,8 +37,7 @@ export default {
   onBeforeHandleData: analyticsMergeDataByKey,
   onHandleData: partialApplication(onHandleData, {}),
   onAfterConnect(event, socket, data) {
-    // const emitData = onBeforeEmit({diff: false}, socket, data, initData);
-    // if (emitData) socket.emit(event, emitData);
+
     const cols = JSON.parse(socket.handshake.query.cols);
     const sort = cols.sort;
     const columns = cols.columns;

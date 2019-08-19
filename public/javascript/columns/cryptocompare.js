@@ -15,6 +15,29 @@ import sortNumbers            from '../utils/sort-numbers.js';
 
 export default {
 
+  ////
+  //// Sparkline (USD)
+  ////
+  //// 7 Day USD price & volume trend
+  //// Top & bottom numbers are % swing in price (top) & volume (bottom)
+  ////
+  //sparklineUSDCC: {
+  //  colId: 'sparklineUSDCC',
+  //  field: 'cryptohub-cc-price-history-USD',
+  //  headerName: '7D Trend $',
+  //  headerClass: 'CH-col',
+  //  headerTooltip: '7 Day USD price and volume trend\n\nTop & bottom numbers are % swing in price (top) & volume (bottom)\n\nData Source: BinaryOverdose / Cryptocompare',
+  //  lockPinned: true,
+  //  width: 124,
+  //  cellRenderer: CellRendererSparkline,
+  //  cellRendererParams: {
+  //    range: true,
+  //    price: true,
+  //    volume: true,
+  //    days: 7,
+  //  }
+  //},
+
   //
   // Name
   // Asset icon, name & symbol

@@ -13,7 +13,7 @@ import { d3SimpleBarChart } from '../libs/bo-utils-client';
  * @param {Boolean} range
  *
  */
-function price(arr, range) {
+function price(arr, range, days = 7) {
 
   const priceData = arr.reduce((acc, val) => {
     acc.push({
@@ -38,10 +38,10 @@ function price(arr, range) {
  *
  * @param {Array} arr
  * @param {Boolean} range
- * @param {Object} [volumeDays]
+ * @param {Object} [days]
  *
  */
-function volume(arr, range, volumeDays = 7) {
+function volume(arr, range, days = 7) {
 
   const volumeData = [];
   const data = arr.reduce((acc, val) => {
@@ -51,7 +51,7 @@ function volume(arr, range, volumeDays = 7) {
     return acc;
   }, []);
 
-  const numDays = volumeDays;
+  const numDays = days;
   const steps = Math.max(Math.floor(data.length / numDays), 1);
   for (let i = 0; i < data.length; i = i + steps) {
 
@@ -91,12 +91,12 @@ export default class cellRendererSparkline {
   // gets called once before the renderer is used
   init(params) {
 
-    if (!params.value) return;
+    if (!params.value || !params.value.value) return;
 
-    let ts = JSON.parse(JSON.stringify(params.value));
+    let ts = JSON.parse(params.value.value);
 
-    if (params.price)  this.price  = price(ts.value, !!params.range);
-    if (params.volume) this.volume = volume(ts.value, !!params.range, params.volumeDays);
+    if (params.price)  this.price  = price(ts, !!params.range, params.days);
+    if (params.volume) this.volume = volume(ts, !!params.range, params.days);
 
   }
 

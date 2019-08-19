@@ -29,6 +29,7 @@ import startServer                     from './server';
 import formatterCryptocompareBootstrap from './sources/cryptocompare/formatter-bootstrap.js';
 
 // Sources
+import binaryoverdose                  from './sources/binaryoverdose';
 import cryptocompare                   from './sources/cryptocompare';
 import coinmarketcap                   from './sources/coinmarketcap';
 import messari                         from './sources/messari';
@@ -85,6 +86,10 @@ try {
 
   const datatable = new DataTable(options);
 
+  datatable.newSource('binaryoverdose', binaryoverdose.config).then(() => {
+    datatable.sources.binaryoverdose.add(binaryoverdose.custom);
+  });
+
   datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
     datatable.sources.cryptocompare.add(cryptocompare.coinList);
     datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
@@ -93,7 +98,8 @@ try {
   });
 
   datatable.newSource('messari', messari.config).then(() => {
-    datatable.sources.messari.add(messari.assets);
+    // TODO: Assets only returns 20 results for some reason
+    // datatable.sources.messari.add(messari.assets);
     datatable.sources.messari.add(messari.markets);
     datatable.sources.messari.add(messari.metrics);
     datatable.sources.messari.add(messari.prices);

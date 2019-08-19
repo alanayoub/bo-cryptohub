@@ -48,6 +48,7 @@ process.on('SIGINT', () => {
 
 mongoose.connect(`${uri}/${database}?replicaSet=rs01`, {
   useNewUrlParser: true,
+  useCreateIndex: true,
   // poolSize: 200,
   // auto_reconnect: true,
   // socketTimeoutMS: 0,

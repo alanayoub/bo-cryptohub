@@ -105,6 +105,9 @@ const fieldTypeMap = {
   // Once we have more data in the database we can see what it looks like
   //
 
+  //
+  // Custom
+  //
   'cryptohub-price-btc'                        :'String|Number|Boolean|Null|Undefined',
   'cryptohub-price-history'                    :'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-exchanges'                        :'String|Number|Boolean|Null|Undefined',
@@ -119,6 +122,17 @@ const fieldTypeMap = {
   'cryptohub-numberOfDex'                      :'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-exchangesListFiatOnly'            :'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-circulating-percent-total'        :'String|Number|Boolean|Null|Undefined|Array',
+
+  'cryptohub-cc-circulating-percent-total'     :'String|Number',
+  'cryptohub-m-price-history-BTC'              :'String|Number',
+  'cryptohub-m-price-history-USD'              :'String|Number',
+  'cryptohub-cmc-price-history-BTC'            :'String|Number',
+  'cryptohub-cmc-price-history-USD'            :'String|Number',
+  'cmc-listings-quote_USD_price_BTC'           :'String|Number',
+  'cryptohub-cc-price-history-BTC'             :'String|Number',
+  'cryptohub-cc-price-history-USD'             :'String|Number',
+  'cc-total-vol-full-PRICE-cryptohub-BTC'      :'String|Number',
+
   // 'cryptohub-pairs': symbols[symbol].pairs,
   // 'cryptohub-fiatCurrencies': symbols[symbol]._fiatCurrencies,
   // 'cryptohub-exchagnesRank': symbols[symbol]._exchagnesRank,
@@ -450,24 +464,24 @@ const fieldTypeMap = {
 
   'm-assets-profile-is_verified'                                               :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-tagline'                                                   :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-overview'                                                  :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-packground'                                                :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-technology'                                                :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-overview'                                                  :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-packground'                                                :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-technology'                                                :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-token_distribution_sale_start'                             :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-token_distribution_sale_end'                               :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-token_distribution_initial_distribution'                   :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-token_distribution_current_supply'                         :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-token_distribution_max_supply'                             :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-token_distribution_description'                            :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-token_distribution_description'                            :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-token_details_usage'                                       :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-token_details_type'                                        :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-token_details_sales_rounds'                                :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-organizations'                                             :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-people_founding_team'                                      :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-people_contributors'                                       :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-people_investors'                                          :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-people_advisors'                                           :'String|Number|Boolean|Null|Undefined|Array',
-  'm-assets-profile-relevant_resources'                                        :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-organizations'                                             :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-people_founding_team'                                      :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-people_contributors'                                       :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-people_investors'                                          :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-people_advisors'                                           :'String|Number|Boolean|Null|Undefined|Array',
+  // 'm-assets-profile-relevant_resources'                                        :'String|Number|Boolean|Null|Undefined|Array',
   'm-assets-profile-consensus_algorithm'                                       :'String|Number|Boolean|Null|Undefined|Array',
 
   'm-markets-id'                           :'String|Number|Boolean|Null|Undefined|Array', // "0019b21e-cdf4-44ef-aee6-11b4b3376e08",
@@ -604,7 +618,10 @@ const columnDependencies = {
     'cryptohub-price-btc',
   ],
   sparklineUSD: [
-    'cryptohub-price-history',
+    'cryptohub-cc-price-history-USD',
+  ],
+  sparklineBTC: [
+    'cryptohub-cc-price-history-BTC',
   ],
   exchanges: [
     'cryptohub-exchangesListDex',

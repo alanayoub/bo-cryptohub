@@ -20,7 +20,13 @@ import { objectGetNestedProperty as gnp }  from 'bo-utils';
  *   max_supply: 21000000,
  *   name: "Bitcoin",
  *   num_market_pairs: 7589,
- *   platform: null,
+ *   platform: {
+ *     id: 1027,
+ *     name: "Ethereum",
+ *     symbol: "ETH",
+ *     slug: "ethereum",
+ *     token_address: "0x2af5d2ad76741191d15dfe7bf6ac92d4bd912ca3"
+ *   },
  *   quote: {
  *     USD: {
  *       last_updated: "2019-06-14T09:24:28.000Z",
@@ -37,7 +43,6 @@ import { objectGetNestedProperty as gnp }  from 'bo-utils';
  *   tags: ["mineable"],
  *   total_supply: 17758112
  * }
- *
  *
  * Prefix fields with "cmc-listings-"
  * ----------------------------------------------

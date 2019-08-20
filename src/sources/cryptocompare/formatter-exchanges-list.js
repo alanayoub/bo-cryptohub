@@ -21,13 +21,13 @@ function addSymbol(symbols, symbol) {
       exchangeListFiatOnly: new Set(),
       exchangeListCryptoOnly: new Set(),
       exchangeListAcceptsBoth: new Set(),
-      _fiatCurrencies: new Set(),
-      _exchangesRank: 0,
-      _numberOfExchanges: 0,
-      _numberOfDex: 0,
-      _numberOfPairs: 0,
-      _numberOfFiatPairs: 0,
-      _numberOfFiatCurrencies: 0,
+      fiatCurrencies: new Set(),
+      exchangesRank: 0,
+      numberOfExchanges: 0,
+      numberOfDex: 0,
+      numberOfPairs: 0,
+      numberOfFiatPairs: 0,
+      numberOfFiatCurrencies: 0,
     }
   }
 }
@@ -43,15 +43,15 @@ function addExchange(exchanges, name, id) {
     id,
     name,
     pairs: new Set(),
-    _cryptoCurrencies: new Set(),
-    _fiatCurrencies: new Set(),
-    _points: 0,
-    _numberOfPairs: 0,
-    _numberOfFiatPairs: 0,
-    _numberOfCryptoPairs: 0,
-    _numberOfCurrencies: 0,
-    _numberOfCryptoCurrencies: 0,
-    _numberOfFiatCurrencies: 0,
+    cryptoCurrencies: new Set(),
+    fiatCurrencies: new Set(),
+    points: 0,
+    numberOfPairs: 0,
+    numberOfFiatPairs: 0,
+    numberOfCryptoPairs: 0,
+    numberOfCurrencies: 0,
+    numberOfCryptoCurrencies: 0,
+    numberOfFiatCurrencies: 0,
   };
 }
 
@@ -230,23 +230,23 @@ export default async function formatterExchangesList(response, timestamp, bootst
     //   btc: {
     //     exchangesList: [1234, 4322],
     //     pairs: ['eth,ltc'],
-    //     _fiatCurrencies: [usd, eur],
-    //     _exchagnesRank: 87,
-    //     _numberOfFiatCurrencies: 2,
-    //     _numberOfExchanges: 33,
-    //     _numberOfPairs: 123,
-    //     _numberOfFiatPairs: 31
+    //     fiatCurrencies: [usd, eur],
+    //     exchagnesRank: 87,
+    //     numberOfFiatCurrencies: 2,
+    //     numberOfExchanges: 33,
+    //     numberOfPairs: 123,
+    //     numberOfFiatPairs: 31
     //   }
     // }
     // exchanges: {
     // 1234: {
     //     pairs: ['eth,ltc'],
-    //     _points: 84,
-    //     _fiatCurrencies: [usd, eur],
-    //     _cryptoCurrencies: [btc, ltc],
-    //     _numberOfFiatCurrencies: 2,
-    //     _numberOfSymbold: 34,
-    //     _numberOfPairs: 32,
+    //     points: 84,
+    //     fiatCurrencies: [usd, eur],
+    //     cryptoCurrencies: [btc, ltc],
+    //     numberOfFiatCurrencies: 2,
+    //     numberOfSymbold: 34,
+    //     numberOfPairs: 32,
     //   }
     // }
     //
@@ -256,20 +256,20 @@ export default async function formatterExchangesList(response, timestamp, bootst
 
     // Symbols
     for (obj of Object.values(symbols)) {
-      obj._numberOfPairs = obj.pairs.size;
+      obj.numberOfPairs = obj.pairs.size;
       for (pair of obj.pairs.values()) {
         [symbol1, symbol2] = pair.split(',');
 
-        // add to _fiatCurrencies or _cryptoCurrencies
-        if (currencyCodes.includes(symbol1)) obj._fiatCurrencies.add(symbol1);
-        if (currencyCodes.includes(symbol2)) obj._fiatCurrencies.add(symbol2);
+        // add to fiatCurrencies or cryptoCurrencies
+        if (currencyCodes.includes(symbol1)) obj.fiatCurrencies.add(symbol1);
+        if (currencyCodes.includes(symbol2)) obj.fiatCurrencies.add(symbol2);
 
         if (currencyCodes.includes(symbol1) || currencyCodes.includes(symbol2)) {
-          obj._numberOfFiatPairs++;
+          obj.numberOfFiatPairs++;
         }
       }
-      obj._numberOfFiatCurrencies = obj._fiatCurrencies.size;
-      // _exchangesRank
+      obj.numberOfFiatCurrencies = obj.fiatCurrencies.size;
+      // exchangesRank
     }
 
     // Exchanges
@@ -280,15 +280,15 @@ export default async function formatterExchangesList(response, timestamp, bootst
         [symbol1, symbol2] = pair.split(',');
 
         if (currencyCodes.includes(symbol1) || currencyCodes.includes(symbol2)) {
-          obj._numberOfFiatPairs++;
+          obj.numberOfFiatPairs++;
         }
 
-        // add to _fiatCurrencies or _cryptoCurrencies
-        if (currencyCodes.includes(symbol1)) obj._fiatCurrencies.add(symbol1);
-        else obj._cryptoCurrencies.add(symbol1);
+        // add to fiatCurrencies or cryptoCurrencies
+        if (currencyCodes.includes(symbol1)) obj.fiatCurrencies.add(symbol1);
+        else obj.cryptoCurrencies.add(symbol1);
 
-        if (currencyCodes.includes(symbol2)) obj._fiatCurrencies.add(symbol2);
-        else obj._cryptoCurrencies.add(symbol2);
+        if (currencyCodes.includes(symbol2)) obj.fiatCurrencies.add(symbol2);
+        else obj.cryptoCurrencies.add(symbol2);
 
         //
         // Need per exchange volume to do this. Looks like too many requests
@@ -298,12 +298,12 @@ export default async function formatterExchangesList(response, timestamp, bootst
         // addFiatVolume(currencyCodes, symbol1, symbol2);
 
       }
-      obj._numberOfFiatCurrencies = obj._fiatCurrencies.size;
-      obj._numberOfCryptoCurrencies = obj._cryptoCurrencies.size;
-      obj._numberOfCurrencies = obj._numberOfFiatCurrencies + obj._numberOfCryptoCurrencies;
+      obj.numberOfFiatCurrencies = obj.fiatCurrencies.size;
+      obj.numberOfCryptoCurrencies = obj.cryptoCurrencies.size;
+      obj.numberOfCurrencies = obj.numberOfFiatCurrencies + obj.numberOfCryptoCurrencies;
 
-      obj._numberOfPairs = obj.pairs.size;
-      obj._numberOfCryptoPairs = obj._numberOfPairs - obj._numberOfFiatPairs;
+      obj.numberOfPairs = obj.pairs.size;
+      obj.numberOfCryptoPairs = obj.numberOfPairs - obj.numberOfFiatPairs;
 
     }
 
@@ -318,8 +318,8 @@ export default async function formatterExchangesList(response, timestamp, bootst
         [symbol1, symbol2] = pair.split(',');
 
         hasFiat = hasCrypto = false;
-        if (obj._numberOfFiatCurrencies) hasFiat = true;
-        if (obj._numberOfCryptoCurrencies) hasCrypto = true;
+        if (obj.numberOfFiatCurrencies) hasFiat = true;
+        if (obj.numberOfCryptoCurrencies) hasCrypto = true;
 
         if (hasFiat && hasCrypto) addExchangeToSymbol(symbols, symbol1, exchangeId, 'both');
         else if (hasCrypto)       addExchangeToSymbol(symbols, symbol1, exchangeId, 'crypto');
@@ -331,8 +331,8 @@ export default async function formatterExchangesList(response, timestamp, bootst
 
     // Symbols part 2
     for (obj of Object.values(symbols)) {
-      obj._numberOfExchanges = obj.exchangeListFiatOnly.size + obj.exchangeListCryptoOnly.size + obj.exchangeListAcceptsBoth.size;
-      obj._numberOfDex = obj.exchangeListDex.size;
+      obj.numberOfExchanges = obj.exchangeListFiatOnly.size + obj.exchangeListCryptoOnly.size + obj.exchangeListAcceptsBoth.size;
+      obj.numberOfDex = obj.exchangeListDex.size;
     }
 
     //
@@ -354,7 +354,7 @@ export default async function formatterExchangesList(response, timestamp, bootst
     //   }
     // }
     //
-    async function handleData(timestamp, bootstrapData) {
+    async function getData(timestamp, bootstrapData) {
 
       let result = {};
       const map = bootstrapData['symbolIdMap'];
@@ -368,49 +368,59 @@ export default async function formatterExchangesList(response, timestamp, bootst
             result[id] = {
 
               // 'cryptohub-pairs': symbols[symbol].pairs,
-              // 'cryptohub-fiatCurrencies': symbols[symbol]._fiatCurrencies,
-              // 'cryptohub-exchagnesRank': symbols[symbol]._exchagnesRank,
+              // 'cryptohub-fiatCurrencies': symbols[symbol].fiatCurrencies,
+              // 'cryptohub-exchagnesRank': symbols[symbol].exchagnesRank,
 
-              'cryptohub-exchangesListDex': Array.from(symbols[symbol].exchangeListDex),
-              'cryptohub-exchangesListFiatOnly': Array.from(symbols[symbol].exchangeListFiatOnly),
-              'cryptohub-exchangesListCryptoOnly': Array.from(symbols[symbol].exchangeListCryptoOnly),
+              'cryptohub-exchangesListDex'        : Array.from(symbols[symbol].exchangeListDex),
+              'cryptohub-exchangesListFiatOnly'   : Array.from(symbols[symbol].exchangeListFiatOnly),
+              'cryptohub-exchangesListCryptoOnly' : Array.from(symbols[symbol].exchangeListCryptoOnly),
               'cryptohub-exchangesListAcceptsBoth': Array.from(symbols[symbol].exchangeListAcceptsBoth),
 
-              'cryptohub-numberOfFiatCurrencies': symbols[symbol]._numberOfFiatCurrencies,
-              'cryptohub-numberOfFiatCurrencies-timestamp': timestamp,
-
-              'cryptohub-numberOfExchanges': symbols[symbol]._numberOfExchanges,
-              'cryptohub-numberOfExchanges-timestamp': timestamp,
-
-              'cryptohub-numberOfPairs': symbols[symbol]._numberOfPairs,
-              'cryptohub-numberOfPairs-timestamp': timestamp,
-
-              'cryptohub-numberOfFiatPairs': symbols[symbol]._numberOfFiatPairs,
-              'cryptohub-numberOfFiatPairs-timestamp': timestamp,
-
-              'cryptohub-numberOfDex': symbols[symbol]._numberOfExchanges,
+              'cryptohub-numberOfFiatCurrencies'  : symbols[symbol].numberOfFiatCurrencies,
+              'cryptohub-numberOfExchanges'       : symbols[symbol].numberOfExchanges,
+              'cryptohub-numberOfPairs'           : symbols[symbol].numberOfPairs,
+              'cryptohub-numberOfFiatPairs'       : symbols[symbol].numberOfFiatPairs,
+              'cryptohub-numberOfDex'             : symbols[symbol].numberOfExchanges,
 
             }
           }
         }
       }
 
-      await perSecondSave(result, timestamp);
+      // await perSecondSave(result, timestamp);
       return {data: result, timestamp};
 
     }
 
-    async function handleStore(timestamp) {
-      await exchangeSave(exchanges);
-      return {data: {data: exchanges}, timestamp};
+    /**
+     *
+     * GET EXCHANGES DATA
+     *
+     */
+    function getExchangesData(data) {
+      const output = {};
+      for (const [id, val] of Object.entries(data)) {
+        output[id] = {
+          'cc-id': val.id,
+          'cc-name': val.name,
+          'cryptohub-pairs': Array.from(val.pairs),
+          'cryptohub-cryptoCurrencies': Array.from(val.cryptoCurrencies),
+          'cryptohub-fiatCurrencies': Array.from(val.fiatCurrencies),
+          'cryptohub-points': val.points,
+          'cryptohub-numberOfPairs': val.numberOfPairs,
+          'cryptohub-numberOfFiatPairs': val.numberOfFiatPairs,
+          'cryptohub-numberOfCryptoPairs': val.numberOfCryptoPairs,
+          'cryptohub-numberOfCurrencies': val.numberOfCurrencies,
+          'cryptohub-numberOfCryptoCurrencies': val.numberOfCryptoCurrencies,
+          'cryptohub-numberOfFiatCurrencies': val.numberOfFiatCurrencies,
+        }
+      }
+      return output;
     }
 
-    switch (event) {
-      case 'data':
-        return handleData(timestamp, bootstrapData) || emptyReturn;
-      case 'store':
-        return handleStore(timestamp) || emptyReturn;
-    }
+    const result = getData(timestamp, bootstrapData);
+    await perSecondSave(result, timestamp);
+    await exchangeSave(getExchangesData(exchanges));
 
   }
   catch(error) {

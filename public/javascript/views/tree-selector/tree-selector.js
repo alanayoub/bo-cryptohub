@@ -71,11 +71,23 @@ export default class Selector {
       nodata: 'No data yo',
       icon: false,
       checkbox: true,
+
+      // icon: function(event, data) {
+      //  var node = data.node;
+      //  // Create custom icons
+      //  if( node.data.refType === "foo" ) {
+      //    return "foo-icon-class";
+      //  }
+
       clickFolderMode: 3,
       glyph: {
         preset: 'awesome5',
         map: {
           dropMarker: 'fas fa-angle-double-right',
+
+          // folder: "fa-folder",
+          // folderOpen: "fa-folder-open"
+
           // nodata: 'fas fa-meh',
         }
       },

@@ -154,7 +154,7 @@ export default {
       ];
 
       output = new Set();
-      for (const id of exchangeIds) output.add(ch.exchanges[id].Name);
+      for (const id of exchangeIds) output.add(ch.exchanges[id]['cc-Name']);
       }
       catch (error) {
         console.log(error);
@@ -200,7 +200,7 @@ export default {
       ];
 
       const output = new Set();
-      for (const id of exchangeIds) output.add(ch.exchanges[id].Country);
+      for (const id of exchangeIds) output.add(ch.exchanges[id]['cc-Country']);
 
       return Array.from(output).join(', ') || ch.emptyCellValue;
 

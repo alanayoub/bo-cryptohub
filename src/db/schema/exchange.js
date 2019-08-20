@@ -132,39 +132,39 @@ const options = {
   'cryptohub-pairs': {
     type: [String],
   },
-  // _cryptoCurrencies: {}
+  // cryptoCurrencies: {}
   'cryptohub-cryptoCurrencies': {
-    type: String,
+    type: [String],
   },
-  // _fiatCurrencies: {}
+  // fiatCurrencies: {}
   'cryptohub-fiatCurrencies': {
-    type: String,
+    type: [String],
   },
-  // _numberOfCryptoCurrencies: 6
+  // numberOfCryptoCurrencies: 6
   'cryptohub-numberOfCryptoCurrencies': {
     type: String,
   },
-  // _numberOfCryptoPairs: 5
+  // numberOfCryptoPairs: 5
   'cryptohub-numberOfCryptoPairs': {
     type: String,
   },
-  // _numberOfCurrencies: 8
+  // numberOfCurrencies: 8
   'cryptohub-numberOfCurrencies': {
     type: String,
   },
-  // _numberOfFiatCurrencies: 2
+  // numberOfFiatCurrencies: 2
   'cryptohub-numberOfFiatCurrencies': {
     type: String,
   },
-  // _numberOfFiatPairs: 13
+  // numberOfFiatPairs: 13
   'cryptohub-numberOfFiatPairs': {
     type: String,
   },
-  // _numberOfPairs: 18
+  // numberOfPairs: 18
   'cryptohub-numberOfPairs': {
     type: String,
   },
-  // _points: 0
+  // points: 0
   'cryptohub-points': {
     type: Number,
   }

@@ -686,6 +686,9 @@ const columnDependencies = {
   hashesPerSecondCC: [
     'cc-total-vol-full-NetHashesPerSecond',
   ],
+  builtOnCC: [
+    'cc-coinlist-BuiltOn',
+  ],
 
   //
   // CoinMarketCap

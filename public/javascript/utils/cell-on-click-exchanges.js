@@ -30,18 +30,18 @@ export default function cellOnClickExchanges(params) {
     // id : "2431"
     // name : "Bitstamp"
     // pairs : Set(18) {"XRP,EUR", "XRP,BTC", "XRP,USD", "BTC,USD", "BTC,EUR", …}
-    // _cryptoCurrencies : Set(6) {"XRP", "BTC", "ETH", "BCH", "BCHABC", …}
-    // _fiatCurrencies : Set(2) {"EUR", "USD"}
-    // _numberOfCryptoCurrencies : 6
-    // _numberOfCryptoPairs : 5
-    // _numberOfCurrencies : 8
-    // _numberOfFiatCurrencies : 2
-    // _numberOfFiatPairs : 13
-    // _numberOfPairs : 18
-    // _points : 0
+    // cryptoCurrencies : Set(6) {"XRP", "BTC", "ETH", "BCH", "BCHABC", …}
+    // fiatCurrencies : Set(2) {"EUR", "USD"}
+    // numberOfCryptoCurrencies : 6
+    // numberOfCryptoPairs : 5
+    // numberOfCurrencies : 8
+    // numberOfFiatCurrencies : 2
+    // numberOfFiatPairs : 13
+    // numberOfPairs : 18
+    // points : 0
 
-    const fiatIds   = params.data['cryptohub-exchangesListAcceptsBoth'] || [];
-    const cryptoIds = params.data['cryptohub-exchangesListCryptoOnly'] || [];
+    const fiatIds   = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
+    const cryptoIds = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
     const exchanges = gnp(window.ch, 'exchanges');
 
     //
@@ -65,7 +65,7 @@ export default function cellOnClickExchanges(params) {
         for (id of ids) {
           exchange = exchanges[id];
           if (!exchange) continue;
-          country = exchange.Country;
+          country = exchange['cc-Country'];
           if (!outputObject[country]) {
             outputObject[country] = {
               fiat: [],
@@ -74,12 +74,12 @@ export default function cellOnClickExchanges(params) {
           }
           outputObject[country][type].push({
             // TODO: get exchange urls
-            url: `https://www.cryptocompare.com${exchange.Url}`,
-            name: exchange.Name,
-            logoUrl: exchange.LogoUrl,
-            dex: exchange.CentralizationType === 'Decentralized',
-            numberOfFiatCurrencies: exchange._numberOfFiatCurrencies,
-            numberOfCryptocurrencies: exchange._numberOfCryptoCurrencies
+            url: `https://www.cryptocompare.com${exchange['cc-Url']}`,
+            name: exchange['cc-Name'],
+            logoUrl: exchange['cc-LogoUrl'],
+            dex: exchange['cc-CentralizationType'] === 'Decentralized',
+            numberOfFiatCurrencies: exchange['cryptohub-numberOfFiatCurrencies'],
+            numberOfCryptocurrencies: exchange['cryptohub-numberOfCryptoCurrencies']
           });
         }
       }
@@ -115,9 +115,9 @@ export default function cellOnClickExchanges(params) {
     const name          = gnp(params, 'data.cc-total-vol-full-FullName.value');
     const total         = numberGroupDigits(gnp(params, 'value.value'));
     const classes       = 'ch-numberofexchanges';
-    const dexList       = params.data['cryptohub-exchangesListDex'] || [];
-    const fiatIds       = params.data['cryptohub-exchangesListAcceptsBoth'] || [];
-    const cryptoIds     = params.data['cryptohub-exchangesListCryptoOnly'] || [];
+    const dexList       = gnp(params, 'data.cryptohub-exchangesListDex.value') || [];
+    const fiatIds       = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
+    const cryptoIds     = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
     const outputArray   = exchangeDataModel();
     const numberOfPairs = gnp(params, 'data.cryptohub-numberOfPairs.value');
 

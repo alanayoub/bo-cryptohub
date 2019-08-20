@@ -213,4 +213,25 @@ export default {
     cellRenderer: cellRendererNumber,
   },
 
+  //
+  // Built on
+  //
+  builtOnCC: {
+    colId: 'builtOnCC',
+    field: 'cc-coinlist-BuiltOn',
+    headerName: 'Built On',
+    headerClass: 'CH-col',
+    headerTooltip: 'Built on\n\nData Source: Cryptocompare',
+    lockPinned: true,
+    width: 180,
+    columnGroupShow: 'both',
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText',
+    ],
+    cellRenderer(params) {
+      return params.value && params.value.value;
+    },
+  },
+
 }

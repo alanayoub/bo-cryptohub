@@ -39,6 +39,9 @@ import xe                              from './sources/xe';
 import data                            from './outputs/data';
 import store                           from './outputs/store';
 
+import { mapSave }                     from './db';
+import getRows                         from './db/query/rows';
+
 const logger = require('./logger');
 
 try {
@@ -63,6 +66,15 @@ try {
         ...store
       }
     }
+  });
+
+  // generate some stuff
+  getRows(null, false, false, ['cc-total-vol-full-FullName']).then(data => {
+    const map = {};
+    for (const [key, val] of Object.entries(data)) {
+      map[key] = val['cc-total-vol-full-FullName'];
+    }
+    mapSave('projectMapIdName', JSON.stringify(map));
   });
 
   const options = {

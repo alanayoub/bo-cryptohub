@@ -71,7 +71,7 @@ const custom = {
     const btcPrice = btc.samples[1][1];
 
     //
-    // 2. Get all proxy fields
+    // 2.1. Get all proxy fields
     //
     const proxyFields = [
       'cc-total-vol-full-Id',
@@ -81,9 +81,25 @@ const custom = {
       'cmc-listings-quote_USD_volume_24h',
       'm-metrics-market_data_price_usd',
       'm-metrics-market_data_price_btc',
-      'm-metrics-market_data_volume_last_24_hours'
+      'm-metrics-market_data_volume_last_24_hours',
     ];
-    const data = await getRows(null, false, false, proxyFields);
+
+    //
+    // 2.2. Get all fields to be created
+    //
+    const newFields = [
+      'cc-total-vol-full-PRICE-cryptohub-BTC',
+      'cryptohub-cc-price-history-USD',
+      'cryptohub-cc-price-history-BTC',
+      'cmc-listings-quote_USD_price_BTC',
+      'cryptohub-cmc-price-history-USD',
+      'cryptohub-cmc-price-history-BTC',
+      'cryptohub-m-price-history-USD',
+      'cryptohub-m-price-history-BTC',
+      'cryptohub-cc-circulating-percent-total',
+    ];
+
+    const data = await getRows(null, false, false, [...proxyFields, ...newFields]);
 
     //
     // 3. Loop through results and add / update custom records

@@ -71,14 +71,15 @@ export default class Selector {
       nodata: 'No data yo',
       icon: false,
       checkbox: true,
-
+      //
+      // TODO: Add information icon
+      //
       // icon: function(event, data) {
       //  var node = data.node;
       //  // Create custom icons
       //  if( node.data.refType === "foo" ) {
       //    return "foo-icon-class";
       //  }
-
       clickFolderMode: 3,
       glyph: {
         preset: 'awesome5',

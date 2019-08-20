@@ -166,6 +166,8 @@ export default async function getRows(columns, sort, limit, fields) {
   let sortDirection;
   const fieldSet = fields ? new Set(fields) : getFieldSet(columns, columnDependencies);
 
+  fieldSet.add('cc-total-vol-full-Id'); // required
+
   if (!fieldSet) throw new Error(`Invalid fieldSet ${fieldSet}`);
 
   if (sort) {

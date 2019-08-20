@@ -11,7 +11,7 @@ export default {
   onBeforeHandleData: data => data,
   onHandleData: partialApplication(onHandleData, {}),
   onAfterConnect(event, socket, data) {
-    const mapIds = ['exchangeMapNameId', 'exchangeMapIdName'];
+    const mapIds = ['exchangeMapNameId', 'exchangeMapIdName', 'projectMapIdName'];
     getMaps(mapIds).then(value => {
       const output = JSON.stringify({data: value, type: 'maps'});
       socket.emit('store', output);

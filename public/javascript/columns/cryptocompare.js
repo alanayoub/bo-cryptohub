@@ -44,7 +44,7 @@ export default {
   //
   nameCC: {
     colId: 'nameCC',
-    field: 'cc-total-vol-full-FullName.value',
+    field: 'cc-total-vol-full-FullName',
     headerName: 'Name',
     headerClass: 'CH-col',
     headerTooltip: 'Name',
@@ -188,7 +188,7 @@ export default {
   //
   proofTypeCC: {
     colId: 'proofTypeCC',
-    field: 'cc-total-vol-full-ProofType.value',
+    field: 'cc-total-vol-full-ProofType',
     headerName: 'Proof',
     headerClass: 'CH-col',
     headerTooltip: 'Proof Type\n\nData Source: Cryptocompare',
@@ -198,6 +198,9 @@ export default {
       'cryptohubDefaults',
       'cryptohubText',
     ],
+    cellRenderer(params) {
+      return params.value && params.value.value || ch.emptyCellValue;
+    },
   },
 
   //
@@ -205,7 +208,7 @@ export default {
   //
   algoCC: {
     colId: 'algoCC',
-    field: 'cc-total-vol-full-Algorithm.value',
+    field: 'cc-total-vol-full-Algorithm',
     headerName: 'Algorithm',
     headerClass: 'CH-col',
     headerTooltip: 'Algorithm\n\nData Source: Cryptocompare',
@@ -215,6 +218,9 @@ export default {
       'cryptohubDefaults',
       'cryptohubText',
     ],
+    cellRenderer(params) {
+      return params.value && params.value.value || ch.emptyCellValue;
+    },
   },
 
   //

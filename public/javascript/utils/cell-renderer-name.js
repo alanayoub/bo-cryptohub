@@ -18,7 +18,7 @@ export default function cellRendererName(params) {
   const output = `
     <div class="ch-col-name">
       ${img}
-      <strong>${params.value}</strong><span> (${symbol})</span>
+      <strong>${params.value.value}</strong><span> (${symbol})</span>
     </div>
   `
 

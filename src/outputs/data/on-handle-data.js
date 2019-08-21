@@ -146,6 +146,9 @@ function getCryptohubFields(oldData, data) {
 export default function dataOnHandleData(options = {}, data, cache, oldData = {}, appBootstrapData) {
   try {
 
+    console.log('Not being used');
+    debugger;
+
     let newData = data;
     let cryptohubData;
 

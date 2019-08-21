@@ -62,6 +62,14 @@ function dataEmitHandler(data) {
 
 }
 
+function flipMap(map) {
+  const out = {};
+  for(const key in map) {
+    out[map[key]] = key;
+  }
+  return out;
+}
+
 /**
  *
  * Handle store events
@@ -81,6 +89,12 @@ function storeEmitHandler(data) {
   if (type === 'maps') {
     for (const item of newSocketData) {
       window.ch[item._id] = item.map;
+      if (item._id === 'exchangeMapIdName') {
+        window.ch['exchangeMapNameId'] = flipMap(item.map);
+      }
+      if (item._id === 'projectMapIdName') {
+        window.ch['projectMapNameId'] = flipMap(item.map);
+      }
     }
   }
   else if (type === 'exchanges') {

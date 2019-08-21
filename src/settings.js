@@ -82,7 +82,6 @@ const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf
 const fieldLastValue = [
 
   'cc-total-vol-full-PRICE',
-  'cryptohub-price-btc',
 
   // Volume
   'cc-total-vol-full-TOTALVOLUME24HTO',
@@ -108,7 +107,6 @@ const fieldTypeMap = {
   //
   // Custom
   //
-  'cryptohub-price-btc'                        :'String|Number|Boolean|Null|Undefined',
   'cryptohub-price-history'                    :'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-exchanges'                        :'String|Number|Boolean|Null|Undefined',
   'cryptohub-exchange-locations'               :'String|Number|Boolean|Null|Undefined|Array',
@@ -614,9 +612,6 @@ const columnDependencies = {
     'cc-total-vol-full-Id',
     'cc-total-vol-full-CHANGEPCTDAY',
   ],
-  priceBTC: [
-    'cryptohub-price-btc',
-  ],
   sparklineUSD: [
     'cryptohub-cc-price-history-USD',
   ],
@@ -653,6 +648,9 @@ const columnDependencies = {
   numberOfFiatCurrencies: [
     'cryptohub-numberOfFiatCurrencies',
   ],
+  numberOfDex: [
+    'cryptohub-numberOfDex',
+  ],
 
   //
   // CryptoCompare
@@ -664,6 +662,9 @@ const columnDependencies = {
   ],
   priceUSDCC: [
     'cc-total-vol-full-PRICE',
+  ],
+  priceBTCCC: [
+    'cc-total-vol-full-PRICE-cryptohub-BTC',
   ],
   percentChange24hUSDCC: [
     'cc-total-vol-full-CHANGEPCTDAY',
@@ -858,10 +859,10 @@ const settings = {
   // Cache
   // NOTE: we dont really need this if we are using rate limits. Using it for dev though
   //
-  cacheForXe:                                  isProd ? 0 : 1000 * 60 * 10,
-  cacheForMessari:                             isProd ? 0 : 1000 * 60 * 10,
-  cacheForCryptocompare:                       isProd ? 0 : 1000 * 60 * 10,
-  cacheForCoinmarketcap:                       isProd ? 0 : 1000 * 60 * 60 * 24,
+  cacheForXe:                                 0, // isProd ? 0 : 1000 * 60 * 10,
+  cacheForMessari:                            0, // isProd ? 0 : 1000 * 60 * 10,
+  cacheForCryptocompare:                      0, // isProd ? 0 : 1000 * 60 * 10,
+  cacheForCoinmarketcap:                      0, // isProd ? 0 : 1000 * 60 * 60 * 24,
 
   //
   // RateLimits

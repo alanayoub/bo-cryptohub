@@ -126,7 +126,8 @@ const custom = {
       if (item['cc-total-vol-full-PRICE']) {
 
         // BTC copy of cc PRICE
-        ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = 1 / (btcPrice / item['cc-total-vol-full-PRICE']);
+        ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = Math.ceil((1 / (btcPrice / item['cc-total-vol-full-PRICE'])) * 100000000); // sats
+        // ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = 1 / (btcPrice / item['cc-total-vol-full-PRICE']);
 
         if (item['cc-total-vol-full-TOTALVOLUME24HTO']) {
 
@@ -158,7 +159,9 @@ const custom = {
       if (item['cmc-listings-quote_USD_price']) {
 
         // BTC copy of cmc price
-        ref['cmc-listings-quote_USD_price_BTC'] = 1 / (btcPrice / item['cmc-listings-quote_USD_price']);
+
+        ref['cmc-listings-quote_USD_price_BTC'] = Math.ceil((1 / (btcPrice / item['cmc-listings-quote_USD_price'])) * 100000000); // sats
+        // ref['cmc-listings-quote_USD_price_BTC'] = 1 / (btcPrice / item['cmc-listings-quote_USD_price']);
 
         if (item['cmc-listings-quote_USD_volume_24h']) {
 

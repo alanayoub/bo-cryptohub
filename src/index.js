@@ -69,12 +69,15 @@ try {
   });
 
   // generate some stuff
-  getRows(null, false, false, ['cc-total-vol-full-FullName']).then(data => {
-    const map = {};
-    for (const [key, val] of Object.entries(data)) {
-      map[key] = val['cc-total-vol-full-FullName'];
+  getRows(null, false, false, ['cc-total-vol-full-FullName', 'cc-coinlist-Symbol']).then(data => {
+    let mapIdName = {};
+    let mapSymbolId = {};
+    for (const [id, val] of Object.entries(data)) {
+      mapIdName[id] = val['cc-total-vol-full-FullName'];
+      mapSymbolId[val['cc-coinlist-Symbol']] = id;
     }
-    mapSave('projectMapIdName', JSON.stringify(map));
+    mapSave('projectMapIdName', JSON.stringify(mapIdName));
+    mapSave('projectMapSymbolId', JSON.stringify(mapSymbolId));
   });
 
   const options = {

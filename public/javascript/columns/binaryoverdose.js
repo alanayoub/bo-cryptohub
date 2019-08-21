@@ -44,30 +44,6 @@ export default {
   },
 
   //
-  // BTC Price
-  //
-  priceBTC: {
-    colId: 'priceBTC',
-    field: 'cryptohub-price-btc',
-    headerName: 'Price ฿',
-    headerClass: 'CH-col',
-    headerTooltip: 'Price in BTC\n\nData Source: BinaryOverdose, calculated from Cryptocompare data',
-    lockPinned: true,
-    width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-      'cryptohubHover'
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'SAT',
-      symbolTo: 'BTC'
-    },
-    onCellClicked,
-  },
-
-  //
   // Sparkline (USD)
   //
   // 7 Day USD price & volume trend
@@ -280,6 +256,25 @@ export default {
     field: 'cryptohub-numberOfFiatCurrencies',
     headerName: 'Fiat Currencies',
     headerTooltip: 'Number of fiat Currencies\n\nData Source: BinaryOverdose / Cryptocompare',
+    headerClass: 'CH-col',
+    lockPinned: true,
+    width: 100,
+    columnGroupShow: 'closed',
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: cellRendererNumber,
+  },
+
+  //
+  // Number of DEX
+  //
+  numberOfDex: {
+    colId: 'numberOfDex',
+    field: 'cryptohub-numberOfDex',
+    headerName: '# of DEX',
+    headerTooltip: 'Number of Decentralized Exchanges this project is listed on\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     lockPinned: true,
     width: 100,

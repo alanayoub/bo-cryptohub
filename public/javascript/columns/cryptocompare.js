@@ -79,6 +79,30 @@ export default {
   },
 
   //
+  // BTC Price
+  //
+  priceBTCCC: {
+    colId: 'priceBTCCC',
+    field: 'cc-total-vol-full-PRICE-cryptohub-BTC',
+    headerName: 'Price ฿',
+    headerClass: 'CH-col',
+    headerTooltip: 'Price in BTC\n\nData Source: Cryptocompare',
+    lockPinned: true,
+    width: 120,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+      'cryptohubHover'
+    ],
+    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
+    cellRendererParams: {
+      currency: 'SAT',
+      symbolTo: 'BTC'
+    },
+    onCellClicked,
+  },
+
+  //
   // 24 Hour Percent Change (USD)
   // NOTE: We want percent change against BTC too!
   //

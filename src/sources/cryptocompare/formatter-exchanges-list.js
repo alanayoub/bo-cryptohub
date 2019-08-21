@@ -157,6 +157,7 @@ export default async function formatterExchangesList(response, timestamp, bootst
     const mapNameId = maps[0].map;
     const dbExchanges = await getExchanges();
     const dbCurrencies = await getCurrencies();
+    const [ dbSymbolId ] = await getMaps(['projectMapSymbolId']);
 
     if (!mapNameId || (!response && !response.Data) || response.Response !== 'Success') {
       return emptyReturn;
@@ -195,7 +196,7 @@ export default async function formatterExchangesList(response, timestamp, bootst
 
     for ([exchangeName, data] of Object.entries(response.Data)) {
       exchangeId = mapNameId[exchangeName];
-      centralizationType = getNestedProp(dbExchanges, `${exchangeId}.CentralizationType`);
+      centralizationType = getNestedProp(dbExchanges, `${exchangeId}.cc-CentralizationType`);
       if (!data.isActive) continue;
       if (!exchanges[exchangeId]) addExchange(exchanges, exchangeName, exchangeId);
       data = data.pairs;
@@ -354,41 +355,34 @@ export default async function formatterExchangesList(response, timestamp, bootst
     //   }
     // }
     //
-    async function getData(timestamp, bootstrapData) {
+    async function getData() {
 
       let result = {};
-      const map = bootstrapData['symbolIdMap'];
-      if (bootstrapData.coinList) {
-        const coinList = bootstrapData.coinList;
-        let id;
-        let symbol;
-        for ([symbol] of Object.entries(coinList)) {
-          if (symbols[symbol]) {
-            id = map[symbol];
-            result[id] = {
 
-              // 'cryptohub-pairs': symbols[symbol].pairs,
-              // 'cryptohub-fiatCurrencies': symbols[symbol].fiatCurrencies,
-              // 'cryptohub-exchagnesRank': symbols[symbol].exchagnesRank,
+      for (const [symbol, id] of Object.entries(dbSymbolId.map)) {
+        if (symbols[symbol]) {
+          result[id] = {
 
-              'cryptohub-exchangesListDex'        : Array.from(symbols[symbol].exchangeListDex),
-              'cryptohub-exchangesListFiatOnly'   : Array.from(symbols[symbol].exchangeListFiatOnly),
-              'cryptohub-exchangesListCryptoOnly' : Array.from(symbols[symbol].exchangeListCryptoOnly),
-              'cryptohub-exchangesListAcceptsBoth': Array.from(symbols[symbol].exchangeListAcceptsBoth),
+            // 'cryptohub-pairs': symbols[symbol].pairs,
+            // 'cryptohub-fiatCurrencies': symbols[symbol].fiatCurrencies,
+            // 'cryptohub-exchagnesRank': symbols[symbol].exchagnesRank,
 
-              'cryptohub-numberOfFiatCurrencies'  : symbols[symbol].numberOfFiatCurrencies,
-              'cryptohub-numberOfExchanges'       : symbols[symbol].numberOfExchanges,
-              'cryptohub-numberOfPairs'           : symbols[symbol].numberOfPairs,
-              'cryptohub-numberOfFiatPairs'       : symbols[symbol].numberOfFiatPairs,
-              'cryptohub-numberOfDex'             : symbols[symbol].numberOfExchanges,
+            'cryptohub-exchangesListDex'        : Array.from(symbols[symbol].exchangeListDex),
+            'cryptohub-exchangesListFiatOnly'   : Array.from(symbols[symbol].exchangeListFiatOnly),
+            'cryptohub-exchangesListCryptoOnly' : Array.from(symbols[symbol].exchangeListCryptoOnly),
+            'cryptohub-exchangesListAcceptsBoth': Array.from(symbols[symbol].exchangeListAcceptsBoth),
 
-            }
+            'cryptohub-numberOfFiatCurrencies'  : symbols[symbol].numberOfFiatCurrencies,
+            'cryptohub-numberOfExchanges'       : symbols[symbol].numberOfExchanges,
+            'cryptohub-numberOfPairs'           : symbols[symbol].numberOfPairs,
+            'cryptohub-numberOfFiatPairs'       : symbols[symbol].numberOfFiatPairs,
+            'cryptohub-numberOfDex'             : symbols[symbol].numberOfDex,
+
           }
         }
       }
 
-      // await perSecondSave(result, timestamp);
-      return {data: result, timestamp};
+      return result;
 
     }
 
@@ -418,7 +412,7 @@ export default async function formatterExchangesList(response, timestamp, bootst
       return output;
     }
 
-    const result = getData(timestamp, bootstrapData);
+    const result = await getData();
     await perSecondSave(result, timestamp);
     await exchangeSave(getExchangesData(exchanges));
 

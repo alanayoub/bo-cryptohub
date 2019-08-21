@@ -7,7 +7,7 @@ export default {
         {id: 'rowIndex'},
         {id: 'nameCC'},
         {id: 'priceUSDCC'},
-        {id: 'priceBTC'},
+        {id: 'priceBTCCC'},
         {id: 'percentChange24hBTCMessari'},
         {id: 'percentChange7dBTCMessari'},
         {id: 'sparklineUSD'},

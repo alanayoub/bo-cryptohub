@@ -13,10 +13,24 @@ import formatterBootstrap        from './formatter-bootstrap.js';
 
 const { scrapeDir } = settings;
 
+//
+// From cryptocompare.com:
+//   Caching: 10 seconds
+//   Rate limits:
+//     Month  - 100000
+//     Day    - 3200
+//     Hour   - 130
+//     Minute - 2
+//     Second - 0.038
+//
+//  26784 ms between requests :(
+//
+const rateLimitCryptocompare = 26784;
+
 const config = {
   cacheFor: settings.cacheForCryptocompare,
   bootstrap: formatterBootstrap,
-  rateLimitDelayMs: settings.rateLimitCryptocompare,
+  rateLimitDelayMs: rateLimitCryptocompare,
 }
 
 //
@@ -28,7 +42,7 @@ const config = {
 const coinList = {
   event: 'data',
   name: 'coinList',
-  interval: 1000 * 5,
+  interval: 1000 * 30,
   //
   // TODO: can we remove this and just search for the key?
   //
@@ -69,7 +83,7 @@ const exchangesList = {
 const topTotalVolume = {
   event: 'data',
   name: 'totalVolFull',
-  interval: 1000 * 10,
+  interval: 1000 * 30,
   watchDirs: [settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`, 'all'],
   getJobs: getJobsTotalVolFull,
   handler(oldData, newData) {

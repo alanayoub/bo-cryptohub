@@ -2,6 +2,8 @@
 
 import { MapModel, ExchangeModel, PerSecondModel } from './schema';
 
+const logger = require('../logger');
+
 /**
  *
  * data:
@@ -163,11 +165,12 @@ async function perSecondSave(data, timestamp = +new Date()) {
           ts.samples = [ts.samples[1], [unixTime, value]]
         }
         ts.lastChecked = unixTime;
+        if (!ts && !ts.save) debugger;
         ts = await ts.save();
 
       }
       catch (error) {
-        console.log('error saving', error);
+        logger.error(`error saving: ${error.name}: ${error}`);
         debugger;
       }
 

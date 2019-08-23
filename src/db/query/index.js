@@ -8,16 +8,16 @@ import { columnDependencies }                      from '../../settings';
 
 /**
  *
- * GET ALL SYMBOLS
+ * GET MESSARI SYMBOLS
  *
  * @param {Array} columns
  * @param {String} sort
  * @return {Object}
  *
  */
-async function getAllSymbols() {
+async function getMessariSymbols() {
 
-  const query = {_id: {$regex: "m-markets-base"}};
+  const query = {_id: {$regex: 'm-markets-base'}};
   const data = await PerSecondModel.find(query).lean();
   const symbols = new Set();
 
@@ -136,6 +136,6 @@ export {
   getMaps,
   getRows,
   getExchanges,
-  getAllSymbols,
+  getMessariSymbols,
   getCurrencies,
 }

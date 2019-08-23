@@ -9,7 +9,7 @@ import { perSecondSave }                  from '../../db';
 
 /**
  *
- * METRICS
+ * PRICES
  *
  * Original Data
  * -------------

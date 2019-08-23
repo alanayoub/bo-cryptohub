@@ -905,8 +905,8 @@ const settings = {
   //
   uriMessariPrices:                            `https://data.messari.io/api/v1/markets/prices-legacy`,
   keyMessariPrices:                            `${scrapeDir}/messari-prices/data.json`,
-  uriMessariAssetsWithMetrics:              `https://data.messari.io/api/v1/assets?with-metrics`,
-  keyMessariAssetsWithMetrics:              `${scrapeDir}/messari-assets-with-metric/data.json`,
+  uriMessariAssetsWithMetrics:                 `https://data.messari.io/api/v1/assets?with-metrics`,
+  keyMessariAssetsWithMetrics:                 `${scrapeDir}/messari-assets-with-metric/data.json`,
   tagUriMessariMetrics:                        (str, id) => `https://data.messari.io/api/v1/assets/${id}/metrics`,
   tagKeyMessariMetrics:                        (str, id) => `${scrapeDir}/messari-metric/${id}/data.json`,
   tagKeyMessariMetricsGrouped:                 (str, ob) => `${scrapeDir}/messari-metric-grouped/data.json`,

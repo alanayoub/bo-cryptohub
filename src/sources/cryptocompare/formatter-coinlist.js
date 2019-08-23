@@ -77,6 +77,7 @@ export default async function formatterCryptocompareSectionCoinlist(data, timest
 
   }
   catch(error) {
+    debugger;
     const message = `formatterCryptocompareSectionCoinlist(): ${error}`;
     logger.error(message);
     return {message, error: true};

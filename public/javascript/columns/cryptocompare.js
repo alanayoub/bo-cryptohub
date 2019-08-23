@@ -51,6 +51,9 @@ export default {
     width: 180,
     pinned: 'left',
     lockPinned: true,
+    type: [
+      'cryptohubDefaults',
+    ],
     cellRenderer: cellRendererName,
   },
 

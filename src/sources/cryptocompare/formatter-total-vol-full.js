@@ -121,6 +121,7 @@ export default async function totalVolFull(price, timestamp, bootstrapData, appB
 
   }
   catch(error) {
+    debugger;
     const message = `totalVolFull(): ${error}`;
     logger.error(message);
     return {message, error: true};

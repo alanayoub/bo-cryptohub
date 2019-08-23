@@ -14,10 +14,13 @@ import getJobsPrices    from './get-jobs-prices.js';
 
 const { scrapeDir } = settings;
 
+// Messari api rate limit unknow at the moment
+const rateLimit = 1000 * 10;
+
 const config = {
   cacheFor: settings.cacheForMessari,
   bootstrap: cache => {return {}},
-  rateLimitDelayMs: settings.rateLimitMessari,
+  rateLimitDelayMs: rateLimit,
 };
 
 const assets = {
@@ -32,7 +35,7 @@ const assets = {
 const metrics = {
   event: 'data',
   name: 'messari-metrics',
-  interval: 1000 * 30,
+  interval: 1000 * 10,
   watchDirs: [`${scrapeDir}/messari-metric/**/*`, 'all'],
   getJobs: getJobsMetrics,
   formatter: formatterMetrics,

@@ -4,7 +4,7 @@
 const logger = require('../../logger');
 const settings = require('../../settings');
 
-import { getAllSymbols } from '../../db/query';
+import { getMessariSymbols } from '../../db/query';
 
 /**
  *
@@ -18,7 +18,7 @@ module.exports = async function getJobsMessariMetrics(queue, bootstrapData, appB
 
     let symbol;
     let jobs = 0;
-    const symbols = await getAllSymbols();
+    const symbols = await getMessariSymbols();
 
     for (symbol of symbols) {
       queue.push({

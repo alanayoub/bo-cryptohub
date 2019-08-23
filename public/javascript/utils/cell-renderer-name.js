@@ -15,10 +15,11 @@ export default function cellRendererName(params) {
   const symbol = gnp(params, 'data.cc-coinlist-Symbol.value');
   const img = imgUrl ? `<img src="${imgUrl}" class="ch-icons" />` : '';
 
+  const name = gnp(params, 'value.value') || ch.emptyCellValue;
   const output = `
     <div class="ch-col-name">
       ${img}
-      <strong>${params.value.value}</strong><span> (${symbol})</span>
+      <strong>${name}</strong><span> (${symbol})</span>
     </div>
   `
 

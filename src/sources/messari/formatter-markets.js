@@ -6,10 +6,22 @@ const logger = require('../../logger');
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 import { perSecondSave }                  from '../../db';
+import { getMaps }                        from '../../db/query';
+
+function dataIsValid(data) {
+  if (Array.isArray(data.data)) return true;
+  else return false;
+}
+
+function getSymbolsWithData(data) {
+  const set = new Set(data.map(v => typeof v.price_usd === 'number' && v.base && v.base.toUpperCase()))
+  const list = Array.from(set).filter(Boolean);
+  return list;
+}
 
 /**
  *
- * METRICS
+ * MARKETS
  *
  * Original Data
  * -------------
@@ -56,11 +68,6 @@ export default async function formatterMessariMarkets(data, timestamp, bootstrap
 
   try {
 
-    function dataIsValid(data) {
-      if (Array.isArray(data.data)) return true;
-      else return false;
-    }
-
     if (!dataIsValid(data)) return;
     data = data.data;
 
@@ -68,11 +75,14 @@ export default async function formatterMessariMarkets(data, timestamp, bootstrap
     let prop;
     let result = {};
     const prefix = 'm-markets-';
+    const validSymbols = getSymbolsWithData(data);
+    const [ dbSymbolId ] = await getMaps(['projectMapSymbolId']);
 
     for (item of data) {
 
       const symbol = item.base.toUpperCase();
-      const id = appBootstrapData.symbolIdMap[symbol]; // TODO: need proper mapping for ids
+      if (!validSymbols.includes(symbol)) continue;
+      const id = dbSymbolId.map[symbol];
 
       if (!id) continue;
 

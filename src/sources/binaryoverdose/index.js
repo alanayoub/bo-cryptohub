@@ -54,7 +54,7 @@ function getNewTimeseriesData(fields, item, limit = 7, period = 1000 * 60 * 60 *
 const custom = {
   event: 'data',
   name: 'binaryoverdose',
-  interval: 1000 * 5,
+  interval: 1000 * 20,
   getJobs(queue) {
     queue.push({
       local: true

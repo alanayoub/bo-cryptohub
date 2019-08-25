@@ -17,7 +17,7 @@ module.exports = async function getJobsCryptocompareSectionTotalVolFull(queue, b
     let page = 0;
     let jobs = 0;
     const limit = 100;
-    const maxPages = 50;
+    const maxPages = 20;
     const groupKey = settings.tagKeyCryptocompareTotalVolFullGrouped`${{}}`;
 
     while (page < maxPages) {

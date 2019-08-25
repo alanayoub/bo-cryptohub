@@ -1,6 +1,7 @@
 'use strict';
 
 import { timeAgo } from '../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 
 /**
  *
@@ -11,8 +12,7 @@ import { timeAgo } from '../libs/bo-utils-client';
  *
  */
 export default function cellTooltip(params) {
-  const field = params.colDef.field.split('.')[0];
-  const data = params.data[field] || {};
-  const t = timeAgo(data.lastChecked) || 'unknown time ago';
+  const lastChecked = gnp(params, 'value.lastChecked');
+  const t = timeAgo(lastChecked) || 'unknown time ago';
   return `Last updated ${t}`;
 }

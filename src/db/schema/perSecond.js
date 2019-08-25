@@ -94,6 +94,7 @@ const options = {
 }
 
 const PerSecond = new Schema(options, {collection: 'tsseconds'});
+PerSecond.set('versionKey', false);
 PerSecond.index({samples: -1});
 
 export default PerSecond;

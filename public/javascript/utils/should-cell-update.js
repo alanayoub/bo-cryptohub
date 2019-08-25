@@ -16,9 +16,18 @@ import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
  *
  */
 export default function shouldCellUpdate(oldValue, newValue) {
+
   try {
-    return (gnp(oldValue, 'value') === gnp(newValue, 'value'))
-      && (gnp(oldValue, 'timestamp') === gnp(newValue, 'timestamp'));
+
+    let out = true;
+    let ov = JSON.stringify(gnp(oldValue, 'value'));
+    let nv = JSON.stringify(gnp(newValue, 'value'));
+    if (ov !== nv) {
+      out = false;
+    }
+
+    return out;
+
   }
   catch(error) {
     debugger;

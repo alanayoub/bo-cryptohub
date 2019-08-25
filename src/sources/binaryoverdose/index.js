@@ -2,7 +2,7 @@
 
 import settings            from '../../settings';
 import { getBtc, getRows } from '../../db/query';
-import { perSecondSave }   from '../../db';
+import { perSecondSave }   from '../../db/save';
 
 const { scrapeDir } = settings;
 

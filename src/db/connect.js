@@ -6,6 +6,7 @@ const database = 'binaryoverdose';
 const db = mongoose.connection;
 
 import { columnDependencies } from '../settings';
+import { getIds } from './query';
 
 // When successfully connected
 mongoose.connection.on('connected', () => {
@@ -59,7 +60,7 @@ let startTime = +new Date();
 let endTime;
 let changes = [];
 
-function doEmit(changes) {
+async function doEmit(changes) {
 
   let id;
   let data;
@@ -70,6 +71,19 @@ function doEmit(changes) {
   let fields;
 
   const sockets = global.io.sockets.sockets;
+
+  let idFields;
+  if (sockets) {
+    //
+    // Get id fields instead of removing updates that dont have changes to the ids
+    //
+    const ids = Array.from(new Set(changes.map(v => v._id.split(':')[1])));
+    idFields = await getIds(ids);
+  }
+
+  // Id fields are required for updates
+  changes = [...changes, ...idFields];
+
   for (const socketId in sockets) {
 
     // Get socket and required fields
@@ -94,8 +108,14 @@ function doEmit(changes) {
       }
     }
 
+    //
+    // Remove updates that:
+    //   - are only Id fields
+    //   - have no Id field
+    //
     for (const [key, item] of Object.entries(data)) {
-      if (!item['cc-total-vol-full-Id']) delete data[key]; // Required field(s)
+      if (!item['cc-total-vol-full-Id']) delete data[key];       // Required field(s)
+      else if (Object.keys(item).length === 3) delete data[key]; // if there are only 3 fields they have to be Ids only
     }
 
     //
@@ -120,7 +140,7 @@ mongoose.connection.once('open', () => {
 
   changeStream.on('change', change => {
     changes.push(change.fullDocument);
-    if ((+new Date() - startTime) > 1000) {
+    if ((+new Date() - startTime) > 5000) {
       doEmit(changes);
       changes = [];
       startTime = +new Date();

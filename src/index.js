@@ -39,7 +39,7 @@ import xe                              from './sources/xe';
 import data                            from './outputs/data';
 import store                           from './outputs/store';
 
-import { mapSave }                     from './db';
+import { mapSave }                     from './db/save';
 import getRows                         from './db/query/rows';
 
 const logger = require('./logger');

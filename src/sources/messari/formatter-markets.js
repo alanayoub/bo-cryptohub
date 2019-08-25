@@ -5,7 +5,7 @@ const logger = require('../../logger');
 
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
-import { perSecondSave }                  from '../../db';
+import { perSecondSave }                  from '../../db/save';
 import { getMaps }                        from '../../db/query';
 
 function dataIsValid(data) {

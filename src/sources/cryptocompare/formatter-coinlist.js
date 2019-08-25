@@ -3,7 +3,7 @@
 // Cryptohub
 const logger = require('../../logger');
 
-import { perSecondSave } from '../../db';
+import { perSecondSave } from '../../db/save';
 
 /**
  *

@@ -9,7 +9,7 @@ import { timeseriesScale }                      from 'bo-utils';
 // Cryptohub util functions
 import logger                                   from '../../logger';
 import settings                                 from '../../settings';
-import { perSecondSave }                        from '../../db';
+import { perSecondSave }                        from '../../db/save';
 import { getRows }                              from '../../db/query';
 
 /**

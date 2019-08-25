@@ -1,6 +1,6 @@
 'use strict';
 
-import { perSecondSave } from '../../db';
+import { perSecondSave } from '../../db/save';
 
 /**
  *

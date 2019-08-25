@@ -3,6 +3,7 @@
 // Binary Overdose
 import getRows                                     from './rows';
 import getBtc                                      from './btc';
+import getIds                                      from './ids';
 import { PerSecondModel, MapModel, ExchangeModel } from '../schema';
 import { columnDependencies }                      from '../../settings';
 
@@ -35,8 +36,7 @@ async function getMessariSymbols() {
  *
  * GET MAPS
  *
- * @param {Array} columns
- * @param {String} sort
+ * @param {Array} ids
  * @return {Object}
  *
  */
@@ -133,6 +133,7 @@ async function getCurrencies() {
 
 export {
   getBtc,
+  getIds,
   getMaps,
   getRows,
   getExchanges,

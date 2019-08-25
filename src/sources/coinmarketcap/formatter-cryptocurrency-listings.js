@@ -1,7 +1,7 @@
 // Cryptohub
 const logger = require('../../logger');
 
-import { perSecondSave }                   from '../../db';
+import { perSecondSave }                   from '../../db/save';
 import { objectGetNestedProperty as gnp }  from 'bo-utils';
 
 /**

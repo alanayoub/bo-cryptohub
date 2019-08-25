@@ -108,6 +108,7 @@ export default {
     width: 200,
     columnGroupShow: 'closed',
     type: [
+      'cryptohubDefaults',
       'cryptohubText'
     ],
     valueGetter(params) {
@@ -158,6 +159,7 @@ export default {
     width: 200,
     columnGroupShow: 'closed',
     type: [
+      'cryptohubDefaults',
       'cryptohubText'
     ],
     valueGetter(params) {

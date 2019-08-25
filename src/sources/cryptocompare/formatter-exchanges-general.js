@@ -3,7 +3,7 @@
 // Cryptohub
 const logger = require('../../logger');
 
-import { mapSave, exchangeSave } from '../../db';
+import { mapSave, exchangeSave } from '../../db/save';
 
 /**
  *

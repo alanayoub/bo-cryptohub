@@ -1,7 +1,8 @@
 // Cryptohub
 const logger = require('../../logger');
 
-import { perSecondSave } from '../../db';
+import { perSecondSave } from '../../db/save';
+import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 /**
  *
@@ -82,6 +83,9 @@ export default async function totalVolFull(price, timestamp, bootstrapData, appB
     const prefix = 'cc-total-vol-full-';
 
     let result = {};
+    let id;
+    let key;
+    let val;
     let idx;
     let dataItem;
     let RAW;
@@ -89,28 +93,28 @@ export default async function totalVolFull(price, timestamp, bootstrapData, appB
 
     for ([idx, dataItem] of Object.entries(price.Data)) {
 
-      try {
-        RAW = price.Data[idx].RAW.USD;
+      if (price.Data && price.Data[idx]) {
+        RAW = price.Data[idx].RAW && price.Data[idx].RAW.USD;
         coinInfo = price.Data[idx].CoinInfo;
       }
-      catch (error) {
-        logger.error(`totalVolFull(): idx:${idx}, ${error}`);
-      }
 
-      let key;
-      let val;
-      const id = coinInfo.Id;
+      if (coinInfo) {
+        id = coinInfo.Id;
 
-      result[id] = {};
+        result[id] = {};
 
-      for ([key, val] of Object.entries(RAW)) {
-        result[id][`${prefix}${key}-timestamp`] = timestamp;
-        result[id][`${prefix}${key}`] = val;
-      }
+        for ([key, val] of Object.entries(coinInfo)) {
+          result[id][`${prefix}${key}-timestamp`] = timestamp;
+          result[id][`${prefix}${key}`] = val;
+        }
 
-      for ([key, val] of Object.entries(coinInfo)) {
-        result[id][`${prefix}${key}-timestamp`] = timestamp;
-        result[id][`${prefix}${key}`] = val;
+        if (RAW) {
+          for ([key, val] of Object.entries(RAW)) {
+            result[id][`${prefix}${key}-timestamp`] = timestamp;
+            result[id][`${prefix}${key}`] = val;
+          }
+        }
+
       }
 
     }

@@ -5,7 +5,7 @@ import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 import logger   from '../../logger';
 import settings from '../../settings';
 
-import { perSecondSave, exchangeSave }          from '../../db';
+import { perSecondSave, exchangeSave }          from '../../db/save';
 import { getMaps, getExchanges, getCurrencies } from '../../db/query';
 
 /**

@@ -53,6 +53,7 @@ export default {
     lockPinned: true,
     type: [
       'cryptohubDefaults',
+      'cryptohubText',
     ],
     cellRenderer: cellRendererName,
   },

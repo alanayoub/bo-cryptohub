@@ -79,15 +79,6 @@ const validator = {
 
 }
 
-// _id: 1182
-// field: "cc-total-vol-full-PRICE"
-// year: 2019,
-// samples: [
-//   [1234, 1233],
-//   ...
-// ]
-// cc-total-vol-full-PRICE where year = 2019 return samples.2.01
-
 const yearArray = Array(12).fill().map(a => Array(31).fill(null));
 
 const options = {

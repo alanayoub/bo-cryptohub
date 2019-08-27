@@ -13,34 +13,35 @@
 import './db/connect';
 
 // Node
-import { join }                        from 'path';
+import { join }                           from 'path';
 
 // Libs
 import '@babel/polyfill';
 
 // Binary Overdose Projects
-import DataTable                       from 'bo-datatable';
+import DataTable                          from 'bo-datatable';
+import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 // CryptoHub
-import settings                        from './settings';
-import startServer                     from './server';
+import settings                           from './settings';
+import startServer                        from './server';
 
 // Formatters
-import formatterCryptocompareBootstrap from './sources/cryptocompare/formatter-bootstrap.js';
+import formatterCryptocompareBootstrap    from './sources/cryptocompare/formatter-bootstrap.js';
 
 // Sources
-import binaryoverdose                  from './sources/binaryoverdose';
-import cryptocompare                   from './sources/cryptocompare';
-import coinmarketcap                   from './sources/coinmarketcap';
-import messari                         from './sources/messari';
-import xe                              from './sources/xe';
+import binaryoverdose                     from './sources/binaryoverdose';
+import cryptocompare                      from './sources/cryptocompare';
+import coinmarketcap                      from './sources/coinmarketcap';
+import messari                            from './sources/messari';
+import xe                                 from './sources/xe';
 
 // Outputs
-import data                            from './outputs/data';
-import store                           from './outputs/store';
+import data                               from './outputs/data';
+import store                              from './outputs/store';
 
-import { mapSave }                     from './db/save';
-import getRows                         from './db/query/rows';
+import { mapSave }                        from './db/save';
+import getRows                            from './db/query/rows';
 
 const logger = require('./logger');
 
@@ -72,9 +73,15 @@ try {
   getRows(null, false, false, ['cc-total-vol-full-FullName', 'cc-coinlist-Symbol']).then(data => {
     let mapIdName = {};
     let mapSymbolId = {};
+    let name;
+    let symbol;
     for (const [id, val] of Object.entries(data)) {
-      mapIdName[id] = val['cc-total-vol-full-FullName'];
-      mapSymbolId[val['cc-coinlist-Symbol']] = id;
+      name = gnp(val, 'cc-total-vol-full-FullName.value');
+      symbol = gnp(val, 'cc-coinlist-Symbol.value');
+      if (name && symbol) {
+        mapIdName[id] = name;
+        mapSymbolId[symbol] = id;
+      }
     }
     mapSave('projectMapIdName', JSON.stringify(mapIdName));
     mapSave('projectMapSymbolId', JSON.stringify(mapSymbolId));

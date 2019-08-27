@@ -30,18 +30,19 @@ export default class Toolbar {
    */
   update(data) {
 
-    if (!isObject(data)) return false;
+    if (!Array.isArray(data)) return false;
 
     const model = {}
 
-    let key;
+    let item;
     let val;
     let up = 0;
     let dn = 0;
     let nc = 0;
-    for (key of Object.keys(data)) {
-      if (!data[key]) continue;
-      val = data[key]['cc-total-vol-full-CHANGEPCTDAY'];
+    for (item of data) {
+      if (!item['cc-total-vol-full-CHANGEPCTDAY']) continue;
+      val = item['cc-total-vol-full-CHANGEPCTDAY'];
+      if (val.value) val = val.value;
       if (val > 0) up++;
       else if (val < 0) dn++;
       else nc++;

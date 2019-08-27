@@ -102,10 +102,6 @@ export default async function formatterMessariMarkets(data, timestamp, bootstrap
         [`${prefix}excluded_from_price`]             : item.excluded_from_price,         // false
       };
 
-      for (prop of Object.keys(result[id])) {
-        result[id][`${prop}-timestamp`] = timestamp;
-      }
-
     }
 
     await perSecondSave(result, timestamp);

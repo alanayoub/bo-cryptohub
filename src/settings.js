@@ -76,27 +76,6 @@ const dbDir        = `${cacheDir}/db`;
 const coinmarketcapApiKey = '84e034e2-3972-47eb-9349-5e4dc20211cd';
 const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf77338a59b1222';
 
-// Keep the last value of each of these fields
-// in a new field with the suffix `:last`
-// This is used to show changes in values
-const fieldLastValue = [
-
-  'cc-total-vol-full-PRICE',
-
-  // Volume
-  'cc-total-vol-full-TOTALVOLUME24HTO',
-  'cmc-listings-volume_24h',
-  'm-metrics-real-volume-last-24-hours',
-  'm-metrics-volume-last-24-hours',
-
-  // Marketcap
-  'cc-total-vol-full-MKTCAP',
-  'cmc-listings-market_cap',
-  'm-metrics-current-marketcap-usd',
-  'm-metrics-y-2050-marketcap-usd',
-
-];
-
 const fieldTypeMap = {
 
   //
@@ -591,12 +570,7 @@ const fieldTypeMap = {
 
 }
 
-let fieldWhitelist = [
-  ...Object.keys(fieldTypeMap),
-  ...fieldLastValue.map(field => `${field}:last`)
-];
-
-fieldWhitelist = [...fieldWhitelist, ...fieldWhitelist.map(v => v +='-timestamp'), ...fieldWhitelist.map(v => v +='-lastChecked')];
+let fieldWhitelist = Object.keys(fieldTypeMap);
 
 //
 // This should be generated
@@ -778,23 +752,6 @@ const columnDependencies = {
   ],
 }
 
-//
-// Add timestamp, :last and default fields
-//
-{
-  let copy;
-  for (const values of Object.values(columnDependencies)) {
-    copy = [];
-    for (const field of values) {
-      copy.push(`${field}-timestamp`);
-      if (fieldLastValue.includes(field)) {
-        copy.push(`${field}:last`);
-      }
-    }
-    values = values.push(...copy);
-  }
-}
-
 /**
  *
  *  uriCryptocompareList:
@@ -848,7 +805,6 @@ const settings = {
   // Lists
   //
   fieldWhitelist,
-  fieldLastValue,
 
   //
   // Maps

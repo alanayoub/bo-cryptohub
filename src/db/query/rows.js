@@ -2,38 +2,9 @@
 
 // Binary Overdose
 import { fieldTypeMap, columnDependencies } from '../../settings';
-import { PerSecondModel }                   from '../schema';
+import { PerDayModel, PerSecondModel }      from '../schema';
 
 const idsList = Object.keys(fieldTypeMap);
-
-/**
- *
- * MAKE DATA SHIT
- *
- * To support legacy data format. TMP situation untill we fully
- * move to db data
- *
- */
-function makeDataShit(objectData) {
-
-  const data = {};
-  for (const [id, obj] of Object.entries(objectData)) {
-    if (!data[id]) data[id] = {};
-    for (const [field, value] of Object.entries(obj)) {
-      data[id][field]                  = obj[field].samples[1][1]; // value
-      data[id][`${field}:last`]        = obj[field].samples[0][1]; // last value
-      data[id][`${field}-timestamp`]   = obj[field].samples[1][0]; // timestamp
-      data[id][`${field}-lastChecked`] = obj[field].lastChecked; // last time value was checked
-      //
-      // TODO: Add last checked
-      // data[id][`${field}-lastChecked`] = obj[field]; // timestamp
-      //
-    }
-  }
-
-  return data;
-
-}
 
 /**
  *
@@ -102,12 +73,16 @@ function convertResultsToOutput(data, sortField) {
   for (const item of data) {
     [field, id] = item._id.split(':');
     if (!objectData[id]) objectData[id] = {};
-    objectData[id][field] = item;
+    objectData[id][field] = {
+      lastChecked: item.lastChecked,
+      lastValue: item.samples[0][1],
+      timestamp: item.samples[1][0],
+      value: item.samples[1][1]
+    }
   }
 
   let output;
   output = objectData;
-  output = makeDataShit(output);
   for (const [key, item] of Object.entries(output)) {
     if (!item['cc-total-vol-full-Id']) delete output[key]; // Required field(s)
   }
@@ -159,14 +134,15 @@ function getFieldSet(columns, columnDependencies) {
  */
 export default async function getRows(columns, sort, limit, fields) {
 
-  const startTime = +new Date();
   let data;
   let output;
   let sortField;
   let sortDirection;
   const fieldSet = fields ? new Set(fields) : getFieldSet(columns, columnDependencies);
 
-  fieldSet.add('cc-total-vol-full-Id'); // required
+  // Required
+  fieldSet.add('cc-total-vol-full-Id');
+  fieldSet.add('cc-total-vol-full-CHANGEPCTDAY');
 
   if (!fieldSet) throw new Error(`Invalid fieldSet ${fieldSet}`);
 
@@ -175,17 +151,76 @@ export default async function getRows(columns, sort, limit, fields) {
     sortDirection = sort.direction === 'desc' ? -1 : 1;
   }
 
+  let startTime;
   if (limit) {
+
+    startTime = +new Date();
     const ids = await getIds(sortField, sortDirection, limit);
     data = await getFirstXSorted(ids, fieldSet, sortDirection);
+    console.log(`queryTime-rows first x: ${+new Date() - startTime}`);
+
+    startTime = +new Date();
     output = convertResultsToOutput(data);
+    console.log(`parseTime-rows first x: ${+new Date() - startTime}`);
+
   }
   else {
+
+    startTime = +new Date();
     data = await getAllResultsUnsorted(fieldSet);
+    console.log(`queryTime-rows: ${+new Date() - startTime}`);
+
+    startTime = +new Date();
     output = convertResultsToOutput(data, sortField);
+    console.log(`parseTime-rows: ${+new Date() - startTime}`);
+
   }
 
-  console.log(`rows query time: ${+new Date() - startTime}`);
+  const aggregate = [
+     {
+       $match: {
+         field: {
+           $in: Array.from(fieldSet)
+         }
+       }
+     },
+     {
+       $project: {
+         id: 1,
+         field: 1,
+         month: {$arrayElemAt: ["$samples", 7]}
+       }
+     },
+     {
+       $project: {
+         _id: 0,
+         id: 1,
+         field: 1,
+         value: {$arrayElemAt: ["$month", 25]}
+       }
+     },
+     {
+      $group: {
+        _id: "$id",
+        data: {
+          $push: {"k" : "$field", "v" : "$value"}
+        }
+      }
+     },
+     {
+       $project: {
+         id: "$_id",
+         _id: 0,
+         data: {
+           $arrayToObject: "$data"
+         }
+       }
+     }
+  ];
+  startTime = +new Date();
+  const tmp = await PerDayModel.aggregate(aggregate);
+  console.log(`queryTime-perDay: ${+new Date() - startTime}`);
+
   return output;
 
 }

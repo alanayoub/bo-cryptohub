@@ -242,10 +242,6 @@ export default async function formatterPrices(data, timestamp, bootstrapData, ap
 
       };
 
-      for (prop of Object.keys(result[id])) {
-        result[id][`${prop}-timestamp`] = timestamp;
-      }
-
     }
 
     await perSecondSave(result, timestamp);

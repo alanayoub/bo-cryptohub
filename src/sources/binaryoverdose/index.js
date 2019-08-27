@@ -1,8 +1,10 @@
 'use strict';
 
-import settings            from '../../settings';
-import { getBtc, getRows } from '../../db/query';
-import { perSecondSave }   from '../../db/save';
+import { objectGetNestedProperty as gnp } from 'bo-utils';
+
+import settings                           from '../../settings';
+import { getBtc, getRows }                from '../../db/query';
+import { perSecondSave }                  from '../../db/save';
 
 const { scrapeDir } = settings;
 
@@ -22,10 +24,10 @@ const config = {
  */
 function getNewTimeseriesData(fields, item, limit = 7, period = 1000 * 60 * 60 * 24) {
 
-  const price     = item[fields.price];
-  const volume    = item[fields.volume];
-  const timestamp = item[`${fields.price}-timestamp`];
-  let timeseries  = item[fields.timeseries] || [];
+  const price     = gnp(item, `${fields.price}.value`);
+  const volume    = gnp(item, `${fields.volume}.value`);
+  const timestamp = gnp(item, `${fields.price}.timestamp`);
+  let timeseries  = gnp(item, `${fields.timeseries}.value`) || [];
 
   if (typeof timeseries === 'string') timeseries = JSON.parse(timeseries);
 
@@ -114,7 +116,7 @@ const custom = {
       if (isNaN(key)) continue;
 
       ref = {
-        'cc-total-vol-full-Id': item['cc-total-vol-full-Id'] // Required by getRows
+        'cc-total-vol-full-Id': gnp(item, 'cc-total-vol-full-Id.value') // Required by getRows
       };
 
       //

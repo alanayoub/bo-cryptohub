@@ -32,7 +32,7 @@ export default function cellRendererCurrency(refs, params) {
   const html = document.createElement('div');
 
   const newValue = gnp(params, 'value.value');
-  const oldValue = gnp(params, `data.${params.colDef.field}:last`);
+  const oldValue = gnp(params, `data.${params.colDef.field}.lastValue`);
 
   // format number
   let newVal;

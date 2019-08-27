@@ -101,10 +101,12 @@ async function doEmit(changes) {
       [ field, id ] = change._id.split(':');
       if (fields.includes(field)) {
         if (!data[id]) data[id] = {};
-        // data[id][field] = change.samples;
-        data[id][field]                = change.samples[1][1]; // value
-        data[id][`${field}:last`]      = change.samples[0][1]; // last value
-        data[id][`${field}-timestamp`] = change.samples[1][0]; // timestamp
+        data[id][field] = {
+          lastChecked: change.lastChecked,
+          lastValue: change.samples[0][1],
+          timestamp: change.samples[1][0],
+          value: change.samples[1][1]
+        }
       }
     }
 
@@ -115,7 +117,7 @@ async function doEmit(changes) {
     //
     for (const [key, item] of Object.entries(data)) {
       if (!item['cc-total-vol-full-Id']) delete data[key];       // Required field(s)
-      else if (Object.keys(item).length === 3) delete data[key]; // if there are only 3 fields they have to be Ids only
+      else if (Object.keys(item).length === 1) delete data[key]; // if there are only 3 fields they have to be Ids only
     }
 
     //

@@ -2,7 +2,6 @@
 
 import { partialApplication }      from 'bo-utils';
 
-import onBeforeEmit                from './on-before-emit.js';
 import onHandleData                from './on-handle-data';
 
 import analyticsMergeDataByKey     from '../../utils/analytics-merge-data-by-key';
@@ -58,6 +57,6 @@ export default {
     if (!settings.maxRowsTemplatedIn) return data;
     return initData;
   },
-  // NOTE: note being used
-  onBeforeEmit: partialApplication(onBeforeEmit, {diff: true}),
+  onBeforeEmit: partialApplication((options, socket, newData, oldData) => {
+  }, {diff: true}),
 }

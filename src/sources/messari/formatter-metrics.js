@@ -238,13 +238,6 @@ export default async function formatterMessariSectionMetrics(data, timestamp, bo
         }
       };
 
-      let item;
-      let prop;
-      for (item of Object.values(result)) {
-        for (prop of Object.keys(item)) {
-          item[`${prop}-timestamp`] = timestamp;
-        }
-      }
     }
 
     await perSecondSave(result, timestamp);

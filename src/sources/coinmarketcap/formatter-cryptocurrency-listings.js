@@ -143,14 +143,6 @@ export default async function formatter(data, timestamp, bootstrapData, appBoots
       }
     }
 
-    let item;
-    let prop;
-    for (item of Object.values(result)) {
-      for (prop of Object.keys(item)) {
-        item[`${prop}-timestamp`] = timestamp;
-      }
-    }
-
     await perSecondSave(result, timestamp);
 
     return {data: result, timestamp};

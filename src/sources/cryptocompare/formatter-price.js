@@ -74,7 +74,6 @@ module.exports = function formatterCryptocompareSectionPrice(price, timestamp, b
           val = val.USD;
           fData[id] = {};
           for (field of Object.keys(val)) {
-            fData[id][`${prefix}${field}-timestamp`] = timestamp;
             fData[id][`${prefix}${field}`] = val[field];
           }
         }

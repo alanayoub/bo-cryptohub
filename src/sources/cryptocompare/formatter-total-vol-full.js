@@ -104,13 +104,11 @@ export default async function totalVolFull(price, timestamp, bootstrapData, appB
         result[id] = {};
 
         for ([key, val] of Object.entries(coinInfo)) {
-          result[id][`${prefix}${key}-timestamp`] = timestamp;
           result[id][`${prefix}${key}`] = val;
         }
 
         if (RAW) {
           for ([key, val] of Object.entries(RAW)) {
-            result[id][`${prefix}${key}-timestamp`] = timestamp;
             result[id][`${prefix}${key}`] = val;
           }
         }

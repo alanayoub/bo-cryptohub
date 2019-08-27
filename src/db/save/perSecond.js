@@ -1,28 +1,10 @@
 'use strict';
 
-import { PerSecondModel } from '../schema';
+import { PerDayModel, PerSecondModel } from '../schema';
 
 const logger = require('../../logger');
 
-/**
- *
- * data:
- * ```
- * {
- *   1182: {
- *     'cc-coinlist-Algorithm': "SHA-256"
- *     'cc-coinlist-Algorithm-timestamp': "2019-07-18T15:02:10.457Z"
- *     'cc-coinlist-BlockNumber': 585945
- *     'cc-coinlist-BlockNumber:last': 585945
- *     'cc-coinlist-BlockNumber-timestamp': "2019-07-18T15:02:10.457Z"
- *   },
- *   ...
- * }
- *
- * ```
- *
- */
-export default async function perSecond(data, timestamp = +new Date()) {
+async function perSecondSave(data, timestamp = +new Date()) {
 
   let ts;
   let _id;
@@ -34,21 +16,18 @@ export default async function perSecond(data, timestamp = +new Date()) {
   let defaultDoc;
   let projectData;
 
-  const regex = RegExp('^.*(-timestamp|:last)$');
-
+  const startTime = +new Date();
   for ([projectId, projectData] of Object.entries(data)) {
     for ([field, value] of Object.entries(projectData)) {
 
       try {
 
-        // NOTE: tmp solution while migrating from files to db
-        // Ignores -timestamp and :last files
-        if (regex.test(field)) continue;
-
         if (projectId === void 0 || projectId === 'undefined') {
           debugger;
         }
         _id = `${field}:${projectId}`;
+
+        if (value && value.value) value = value.value;
 
         filter = { _id };
         unixTime = +new Date(timestamp);
@@ -76,7 +55,81 @@ export default async function perSecond(data, timestamp = +new Date()) {
 
     }
   }
+  console.log('save-perSecond', +new Date() - startTime);
 
-  return ts;
+}
 
+async function perDaySave(data, timestamp = +new Date()) {
+
+  let ts;
+  let id;
+  let field;
+  let value;
+  let filter;
+  let unixTime;
+  let projectId;
+  let defaultDoc;
+  let projectData;
+
+  const startTime = +new Date();
+  for ([projectId, projectData] of Object.entries(data)) {
+    for ([field, value] of Object.entries(projectData)) {
+
+      try {
+
+        if (projectId === void 0 || projectId === 'undefined') {
+          debugger;
+        }
+        id = projectId;
+
+        const t = new Date(timestamp);
+        const dd = t.getDate() - 1; // First day is 1
+        const mm = t.getMonth();    // First month is 0
+        const yyyy = ''+t.getFullYear();
+        const yearArray = Array(12).fill().map(a => Array(31).fill(null));
+        yearArray[mm][dd] = value;
+
+        const query = {id, field, year: yyyy};
+
+        ts = await PerDayModel.findOne(query);
+        if (ts === null) {
+          ts = await PerDayModel.create({...query, samples: yearArray});
+        }
+        else {
+          ts.samples[mm][dd] = value;
+        }
+        if (!ts && !ts.save) debugger;
+        ts = await ts.save();
+
+      }
+      catch (error) {
+        logger.error(`error saving: ${error.name}: ${error}`);
+        debugger;
+      }
+
+    }
+  }
+  console.log('save-perDay', +new Date() - startTime);
+
+}
+
+/**
+ *
+ * data:
+ * ```
+ * {
+ *   1182: {
+ *     'cc-coinlist-Algorithm': "SHA-256"
+ *     'cc-coinlist-BlockNumber': 585945
+ *     'cc-coinlist-BlockNumber:last': 585945
+ *   },
+ *   ...
+ * }
+ *
+ * ```
+ *
+ */
+export default async function perSecond(data, timestamp = +new Date()) {
+  await perSecondSave(data, timestamp);
+  await perDaySave(data, timestamp);
 }

@@ -45,7 +45,7 @@ function dataEmitHandler(data) {
     window.refs.workingData = newSocketData;
   }
   else {
-    // update workingData
+    // merge new data with workingData
     for (const [id, val] of Object.entries(newSocketData)) {
       if (!window.refs.workingData[id]) {
         window.refs.workingData[id] = val;
@@ -58,7 +58,7 @@ function dataEmitHandler(data) {
 
   window.refs.rowData = convertWorkingDataToRowData(window.refs.workingData);
   window.bo.agOptions.api.setRowData(window.refs.rowData);
-  window.bo.inst.toolbarView.update(window.refs.workingData);
+  window.bo.inst.toolbarView.update(window.refs.rowData);
 
 }
 

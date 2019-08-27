@@ -345,13 +345,9 @@ export default async function formatterExchangesList(response, timestamp, bootst
     //     'cryptohub-exchangesListCryptoOnly': ['Binance'],
     //     'cryptohub-exchangesListAcceptsBoth': ['Kraken'],
     //     'cryptohub-numberOfFiatCurrencies': 32,
-    //     'cryptohub-numberOfFiatCurrencies-timestamp': 1550696919978,
     //     'cryptohub-numberOfExchanges': 23,
-    //     'cryptohub-numberOfExchanges-timestamp': 1550696919978,
     //     'cryptohub-numberOfPairs': 4,
-    //     'cryptohub-numberOfPairs-timestamp': 1550696919978,
     //     'cryptohub-numberOfFiatPairs': 3,
-    //     'cryptohub-numberOfFiatPairs-timestamp': 1550696919978
     //   }
     // }
     //

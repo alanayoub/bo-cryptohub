@@ -238,7 +238,7 @@ export default {
     colId: 'numberOfFiatPairs',
     field: 'cryptohub-numberOfFiatPairs',
     headerName: '# of Fiat pairs',
-    headerTooltip: 'Number of fiat pairs\n\nData Source: BinaryOverdose / Cryptocompare',
+    headerTooltip: 'The number of fiat currencies this token can be directly exchanged for\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     lockPinned: true,
     width: 100,
@@ -250,24 +250,26 @@ export default {
     cellRenderer: cellRendererNumber,
   },
 
-  //
-  // Number of Fiat currencies
-  //
-  numberOfFiatCurrencies: {
-    colId: 'numberOfFiatCurrencies',
-    field: 'cryptohub-numberOfFiatCurrencies',
-    headerName: '# of Fiat Currencies',
-    headerTooltip: 'Number of fiat Currencies this token can be directly exchanged for\n\nData Source: BinaryOverdose / Cryptocompare',
-    headerClass: 'CH-col',
-    lockPinned: true,
-    width: 100,
-    columnGroupShow: 'closed',
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: cellRendererNumber,
-  },
+  ////
+  //// Number of Fiat currencies
+  ////
+  //// Kind of useless? commenting out for now
+  ////
+  //numberOfFiatCurrencies: {
+  //  colId: 'numberOfFiatCurrencies',
+  //  field: 'cryptohub-numberOfFiatCurrencies',
+  //  headerName: '# of Fiat Currencies',
+  //  headerTooltip: 'The number of fiat currencies available to trade with on the same exchanges as the token\n\nData Source: BinaryOverdose / Cryptocompare',
+  //  headerClass: 'CH-col',
+  //  lockPinned: true,
+  //  width: 100,
+  //  columnGroupShow: 'closed',
+  //  type: [
+  //    'cryptohubDefaults',
+  //    'cryptohubNumeric',
+  //  ],
+  //  cellRenderer: cellRendererNumber,
+  //},
 
   //
   // Number of DEX

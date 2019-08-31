@@ -18,7 +18,7 @@ import { columnDependencies }                      from '../../settings';
  */
 async function getMessariSymbols() {
 
-  const query = {_id: {$regex: 'm-markets-base'}};
+  const query = {field: 'm-markets-base'};
   const data = await PerSecondModel.find(query).lean();
   const symbols = new Set();
 
@@ -70,7 +70,7 @@ async function getMaps(ids) {
  */
 async function getExchanges() {
 
-  const regex = '^'+[
+  const fields = [
     'exchange',
     'cryptohub-pairs',
     'cryptohub-cryptoCurrencies',
@@ -82,19 +82,20 @@ async function getExchanges() {
     'cryptohub-numberOfFiatPairs',
     'cryptohub-numberOfPairs',
     'cryptohub-points',
-  ].join('|^');
+  ];
 
   const query = {
-    _id: {$regex: regex}
-  }
+    field: {$in: fields}
+  };
+  const projection = {_id: 0};
 
-  const data = await ExchangeModel.find(query).lean();
+  const data = await ExchangeModel.find(query, projection).lean();
 
   let id;
   let item;
   const output = {};
   for (item of data) {
-    id = item._id.split(':')[1];
+    id = item.id;
     if (!output[id]) output[id] = {};
     output[id] = item;
   }
@@ -113,16 +114,18 @@ async function getExchanges() {
 async function getCurrencies() {
 
   const query = {
-    _id: {$regex: "xe-"}
+    field: {$regex: 'xe-'}
   }
+  const projection = {_id: 0};
 
-  const data = await PerSecondModel.find(query).lean();
+  const data = await PerSecondModel.find(query, projection).lean();
 
   let id;
   let field;
   const output = {};
   for (const item of data) {
-    [field, id] = item._id.split(':');
+    id = item.id;
+    field = item.field;
     if (!output[id]) output[id] = {};
     output[id][field] = item.samples[1][1];
   }

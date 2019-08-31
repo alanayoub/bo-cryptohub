@@ -14,9 +14,13 @@ export default async function getIds(ids) {
 
   if (!Array.isArray(ids)) ids = [ids];
 
-  const regex = 'cc-total-vol-full-Id:' + ids.join('|cc-total-vol-full-Id:');
-  const query = {_id: {$regex: regex}};
-  let results = await PerSecondModel.find(query).lean();
+  ids.push('cc-total-vol-full-Id');
+  const query = {
+    id: {$in: ids}
+  };
+  const projection = {_id: 0};
+
+  let results = await PerSecondModel.find(query, projection).lean();
 
   if (!Array.isArray(results)) results = [results];
 

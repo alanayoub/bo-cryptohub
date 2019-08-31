@@ -101,6 +101,7 @@ export default async function totalVolFull(price, timestamp, bootstrapData, appB
       if (coinInfo) {
         id = coinInfo.Id;
 
+        if (Number(id) <= 10) debugger;
         result[id] = {};
 
         for ([key, val] of Object.entries(coinInfo)) {

@@ -49,7 +49,7 @@ import { perSecondSave } from '../../db/save';
 export default async function formatterCryptocompareSectionCoinlist(data, timestamp, bootstrapData, appBootstrapData = {}) {
   try {
 
-    const { idSymbolMap, symbolIdMap } = appBootstrapData;
+    const { idSymbolMap } = appBootstrapData;
     const prefix = 'cc-coinlist-';
     const objAllCoins = data.Data;
     const result = {};

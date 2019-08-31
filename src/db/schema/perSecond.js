@@ -10,11 +10,19 @@ const idsList = Object.keys(fieldTypeMap);
 
 const validator = {
 
-  id(val) {
-    const [ field, projectId ] = val.split(':');
-    const isValid = idsList.includes(field) && projectId.length < 10;
+  id(id) {
+    const isValid = id.length < 10;
     if (!isValid) {
-      console.log(field, projectId, idsList);
+      console.log(id);
+      debugger;
+    }
+    return isValid;
+  },
+
+  field(field) {
+    const isValid = idsList.includes(field) && field.length < 200;
+    if (!isValid) {
+      console.log(field);
       debugger;
     }
     return isValid;
@@ -38,7 +46,7 @@ const validator = {
 
       if (arrayIsValid) {
 
-        let type = fieldTypeMap[this._id.split(':')[0]];
+        let type = fieldTypeMap[this.field];
         type = type.includes('|') ? type.split('|') : [type];
 
         const [date, val] = tsItem;
@@ -51,7 +59,7 @@ const validator = {
         arrayDataIsValid = validDate && validVal;
 
         if (!(arrayIsValid && arrayDataIsValid)) {
-          console.log(type, date, val, this._id, dateType, valType);
+          console.log(type, date, val, this.id, dateType, valType);
           debugger;
         }
 
@@ -74,10 +82,15 @@ const validator = {
 }
 
 const options = {
-  _id: {
+  id: {
     type: String,
     required: true,
     validate: [validator.id, '{PATH} is not valid']
+  },
+  field: {
+    type: String,
+    required: true,
+    validate: [validator.field, '{PATH} is not a valid field']
   },
   lastChecked: {
     type: Number,
@@ -96,5 +109,6 @@ const options = {
 const PerSecond = new Schema(options, {collection: 'tsseconds'});
 PerSecond.set('versionKey', false);
 PerSecond.index({samples: -1});
+PerSecond.index({id: -1, field: -1});
 
 export default PerSecond;

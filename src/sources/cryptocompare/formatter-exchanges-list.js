@@ -414,9 +414,9 @@ export default async function formatterExchangesList(response, timestamp, bootst
 
   }
   catch(error) {
-    debugger;
     const message = `formatterExchangesList(): ${error}`;
     logger.error(message);
+    debugger;
     return {message, error: true};
   }
 }

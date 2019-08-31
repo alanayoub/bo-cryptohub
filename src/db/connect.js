@@ -75,9 +75,10 @@ async function doEmit(changes) {
   let idFields;
   if (sockets) {
     //
-    // Get id fields instead of removing updates that dont have changes to the ids
+    // Get id fields instead of removing updates that dont have
+    // changes to the ids
     //
-    const ids = Array.from(new Set(changes.map(v => v._id.split(':')[1])));
+    const ids = Array.from(new Set(changes.map(v => v.id)));
     idFields = await getIds(ids);
   }
 
@@ -98,7 +99,8 @@ async function doEmit(changes) {
     // Generate data by filtering by required fields
     data = {};
     for (change of changes) {
-      [ field, id ] = change._id.split(':');
+      id = change.id;
+      field = change.field;
       if (fields.includes(field)) {
         if (!data[id]) data[id] = {};
         data[id][field] = {

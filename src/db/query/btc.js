@@ -13,10 +13,13 @@ import { PerSecondModel } from '../schema';
  */
 export default async function getBTC() {
 
+  const query = {
+    id: '1182',
+    field: 'cc-total-vol-full-PRICE'
+  };
+  const projection = {_id: 0};
   const results = await PerSecondModel
-    .find({
-      _id: {$regex: 'cc-total-vol-full-PRICE:1182'}
-    })
+    .find(query, projection)
     .lean();
 
   return results;

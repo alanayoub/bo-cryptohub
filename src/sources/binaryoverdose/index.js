@@ -70,6 +70,7 @@ const custom = {
     //
     // 1. Get BTC price in USD
     const [ btc ] = await getBtc();
+    if (!btc) return {};
     const btcPrice = btc.samples[1][1];
 
     //
@@ -128,7 +129,7 @@ const custom = {
       if (item['cc-total-vol-full-PRICE']) {
 
         // BTC copy of cc PRICE
-        ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = Math.ceil((1 / (btcPrice / item['cc-total-vol-full-PRICE'])) * 100000000); // sats
+        ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = Math.ceil((1 / (btcPrice / gnp(item, 'cc-total-vol-full-PRICE.value'))) * 100000000); // sats
         // ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = 1 / (btcPrice / item['cc-total-vol-full-PRICE']);
 
         if (item['cc-total-vol-full-TOTALVOLUME24HTO']) {
@@ -162,7 +163,7 @@ const custom = {
 
         // BTC copy of cmc price
 
-        ref['cmc-listings-quote_USD_price_BTC'] = Math.ceil((1 / (btcPrice / item['cmc-listings-quote_USD_price'])) * 100000000); // sats
+        ref['cmc-listings-quote_USD_price_BTC'] = Math.ceil((1 / (btcPrice / gnp(item, 'cmc-listings-quote_USD_price.value'))) * 100000000); // sats
         // ref['cmc-listings-quote_USD_price_BTC'] = 1 / (btcPrice / item['cmc-listings-quote_USD_price']);
 
         if (item['cmc-listings-quote_USD_volume_24h']) {
@@ -224,8 +225,8 @@ const custom = {
       // Create:
       //   cryptohub-cc-circulating-percent-total
       //
-      const supplyTotal       = item['cc-coinlist-TotalCoinSupply'];
-      const supplyCirculating = item['cc-total-vol-full-SUPPLY'];
+      const supplyTotal       = gnp(item, 'cc-coinlist-TotalCoinSupply.value');
+      const supplyCirculating = gnp(item, 'cc-total-vol-full-SUPPLY.value');
       if (supplyTotal && supplyCirculating) {
         ref['cryptohub-cc-circulating-percent-total'] = (supplyCirculating / supplyTotal) * 100;
       }

@@ -7,10 +7,10 @@ const logger = require('../../logger');
 async function perSecondSave(data, timestamp = +new Date()) {
 
   let ts;
+  let id;
   let _id;
   let field;
   let value;
-  let filter;
   let unixTime;
   let projectId;
   let defaultDoc;
@@ -25,26 +25,26 @@ async function perSecondSave(data, timestamp = +new Date()) {
         if (projectId === void 0 || projectId === 'undefined') {
           debugger;
         }
-        _id = `${field}:${projectId}`;
+        id = projectId;
 
         if (value && value.value) value = value.value;
 
-        filter = { _id };
         unixTime = +new Date(timestamp);
         defaultDoc = {
-          _id,
+          id,
+          field,
           lastChecked: unixTime,
           samples: [[unixTime, value], [unixTime, value]]
         }
-        ts = await PerSecondModel.findOne({ _id });
+        ts = await PerSecondModel.findOne({id, field});
         if (ts === null) {
           ts = await PerSecondModel.create(defaultDoc);
         }
         else if (ts.samples[1][1] !== value) {
-          ts.samples = [ts.samples[1], [unixTime, value]]
+          ts.samples = [ts.samples[1], [unixTime, value]];
         }
-        ts.lastChecked = unixTime;
         if (!ts && !ts.save) debugger;
+        ts.lastChecked = unixTime;
         ts = await ts.save();
 
       }
@@ -65,7 +65,6 @@ async function perDaySave(data, timestamp = +new Date()) {
   let id;
   let field;
   let value;
-  let filter;
   let unixTime;
   let projectId;
   let defaultDoc;

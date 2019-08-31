@@ -70,7 +70,7 @@ async function getMaps(ids) {
  */
 async function getExchanges() {
 
-  const fields = [
+  const regex = '^'+[
     'exchange',
     'cryptohub-pairs',
     'cryptohub-cryptoCurrencies',
@@ -82,20 +82,19 @@ async function getExchanges() {
     'cryptohub-numberOfFiatPairs',
     'cryptohub-numberOfPairs',
     'cryptohub-points',
-  ];
+  ].join('|^');
 
   const query = {
-    field: {$in: fields}
-  };
-  const projection = {_id: 0};
+    _id: {$regex: regex}
+  }
 
-  const data = await ExchangeModel.find(query, projection).lean();
+  const data = await ExchangeModel.find(query).lean();
 
   let id;
   let item;
   const output = {};
   for (item of data) {
-    id = item.id;
+    id = item._id.split(':')[1];
     if (!output[id]) output[id] = {};
     output[id] = item;
   }

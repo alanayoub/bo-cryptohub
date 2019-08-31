@@ -237,7 +237,7 @@ export default {
   numberOfFiatPairs: {
     colId: 'numberOfFiatPairs',
     field: 'cryptohub-numberOfFiatPairs',
-    headerName: 'Fiat pairs',
+    headerName: '# of Fiat pairs',
     headerTooltip: 'Number of fiat pairs\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     lockPinned: true,
@@ -256,8 +256,8 @@ export default {
   numberOfFiatCurrencies: {
     colId: 'numberOfFiatCurrencies',
     field: 'cryptohub-numberOfFiatCurrencies',
-    headerName: 'Fiat Currencies',
-    headerTooltip: 'Number of fiat Currencies\n\nData Source: BinaryOverdose / Cryptocompare',
+    headerName: '# of Fiat Currencies',
+    headerTooltip: 'Number of fiat Currencies this token can be directly exchanged for\n\nData Source: BinaryOverdose / Cryptocompare',
     headerClass: 'CH-col',
     lockPinned: true,
     width: 100,

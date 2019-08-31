@@ -33,19 +33,13 @@ export default class CompoundCellRenderer {
 
   cryptohubLoadCell(params) {
 
-    const value = params.valueFormatted
-      ? params.valueFormatted
-      : gnp(params, 'value.value');
-
-    const data = `<span class="cryptohub-cell-data">-</span>`;
-
-    this.eGui.innerHTML = data;
+    this.eGui.innerHTML = '<span class="cryptohub-cell-data">-</span>';
 
     // get references to the elements we want
     this.eValue = this.eGui.querySelector('.cryptohub-cell-data');
 
     // set value into cell
-    this.eValue.innerHTML = value;
+    this.eValue.innerHTML = params.valueFormatted || (value && value.value);
 
   }
 

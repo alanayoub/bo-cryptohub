@@ -27,7 +27,7 @@ async function getIds(sortField, sortDirection, limit) {
  *
  *
  */
-async function getFirstXSorted(fieldSet, sortField = false, sortDirection = false, limit = false) {
+async function getRecords(fieldSet, sortField = false, sortDirection = false, limit = false) {
 
   // const requiredFields = ['cc-total-vol-full-Id'];
 
@@ -157,14 +157,14 @@ export default async function getRows(columns, sort, limit, fields) {
   if (!isNaN(limit)) {
 
     startTime = +new Date();
-    output = await getFirstXSorted(fieldSet, sortField, sortDirection, limit);
+    output = await getRecords(fieldSet, sortField, sortDirection, limit);
     console.log(`queryTime-rows first x: ${+new Date() - startTime}`);
 
   }
   else {
 
     startTime = +new Date();
-    output = await getFirstXSorted(fieldSet, sortField, sortDirection);
+    output = await getRecords(fieldSet, sortField, sortDirection);
     console.log(`queryTime-rows: ${+new Date() - startTime}`);
 
   }

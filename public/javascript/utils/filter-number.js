@@ -1,5 +1,6 @@
 'use strict';
 
+import { isNumber } from '../libs/bo-utils-client';
 import Filter from '../classes/class-filter.js';
 
 export default class NumberFilter extends Filter {
@@ -21,6 +22,7 @@ export default class NumberFilter extends Filter {
 
     const value = this.valueGetter(params);
 
+    if (!isNumber(value && value.value)) return 0;
     if (!split) return 1;
     if (split.length < 1) return 1;
 

@@ -4,35 +4,6 @@ const path = require('path');
 // Libs
 const argv = require('argv');
 
-// Settings
-global.githubClientId = 'c7a2c111a27dee50bba0';
-global.githubClientSecret = '5e4b8b348c8165536391bdbf6041685f270503f0';
-
-// Cache for days
-// global.cacheForXe = 1;
-global.cacheForGitlog = 7;
-global.cacheForGithubRepo = 7;
-global.cacheForGithubForks = 30;
-// global.cacheForCryptocompare = 30;
-// global.cacheForCoinmarketcap = 30;
-// global.cacheForCoinmarketcapProjectsJson = 1;
-// global.cacheForCoinmarketcapProjectHtml = 30;
-
-// Leave in execution order
-global.settingsScrapeCryptocompare = true;
-global.settingsScrapeCoinmarketcap = false;
-global.settingsScrapeXe = false;
-// global.settingsGetRepoData = true;
-// global.settingsCloneRepos = true;
-// global.settingsGetLogData = true;
-// global.settingsGetForkData = true;
-// global.settingsSetFirstCommit = true;
-// global.settingsSyncCommits = true;
-// global.settingsHashFiles = true;
-
-// Stuff we found while parsing the data
-global.notes = [];
-
 // Bitbucket :/
 // Ardor: https://bitbucket.org/Jelurida/ardor/src
 // NXT: https://bitbucket.org/JeanLucPicard/nxt/src
@@ -65,9 +36,7 @@ const args = argv.option([
 
 const isProd = process.env.NODE_ENV === 'production' && args.options.local !== true;
 
-const cacheDir = isProd
-  ? '/home/ubuntu/cryptohub-cache'
-  : path.join(__dirname, '/../cache');
+const cacheDir = isProd ? '/home/ubuntu/cryptohub-cache' : path.join(__dirname, '/../cache');
 
 const generatedDir = `${cacheDir}/tmp-generated`;
 const scrapeDir    = `${cacheDir}/tmp-scrape`;

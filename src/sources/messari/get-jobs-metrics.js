@@ -6,13 +6,15 @@ const settings = require('../../settings');
 
 import { getMessariSymbols } from '../../db/query';
 
+const uri = (str, id) => `https://data.messari.io/api/v1/assets/${id}/metrics`;
+const key = (str, id) => `${scrapeDir}/messari-metric/${id}/data.json`;
+
 /**
  *
  * @param {Array} queue
- * @param {Object} bootstrapData
  *
  */
-module.exports = async function getJobsMessariMetrics(queue, bootstrapData, appBootstrapData) {
+export default async function getJobsMessariMetrics(queue) {
 
   try {
 
@@ -22,8 +24,8 @@ module.exports = async function getJobsMessariMetrics(queue, bootstrapData, appB
 
     for (symbol of symbols) {
       queue.push({
-        uri: settings.tagUriMessariMetrics`${symbol}`,
-        key: settings.tagKeyMessariMetrics`${symbol}`,
+        uri: uri`${symbol}`,
+        key: key`${symbol}`,
         cacheForDays: settings.cacheForMessari,
       });
       jobs++;

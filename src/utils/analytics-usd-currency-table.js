@@ -5,10 +5,6 @@
  *
  */
 
-//
-// NOTE: MAKE THIS A FORMATTER and put it on bootstrapData
-//
-
 // Libs
 const cheerio = require('cheerio');
 

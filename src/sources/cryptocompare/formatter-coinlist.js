@@ -3,6 +3,7 @@
 // Cryptohub
 const logger = require('../../logger');
 
+import { getMaps }       from '../../db/query';
 import { perSecondSave } from '../../db/save';
 
 /**
@@ -42,14 +43,13 @@ import { perSecondSave } from '../../db/save';
  *
  * @param {String?} data
  * @param {String?} timestamp
- * @param {Object} bootstrapData
  * @return {Object}
  *
  */
-export default async function formatterCryptocompareSectionCoinlist(data, timestamp, bootstrapData, appBootstrapData = {}) {
-  try {
+export default async function formatterCryptocompareSectionCoinlist(data, timestamp) {
 
-    const { idSymbolMap } = appBootstrapData;
+    const maps = await getMaps(['projectMapIdSymbol']);
+    const idSymbolMap = maps[0].map;
     const prefix = 'cc-coinlist-';
     const objAllCoins = data.Data;
     const result = {};
@@ -71,15 +71,9 @@ export default async function formatterCryptocompareSectionCoinlist(data, timest
       result[id] = currentCoinOut;
     }
 
+    // mapSave('projectMapIdName', JSON.stringify(mapIdName));
     await perSecondSave(result, timestamp);
 
     return {data: result, timestamp};
 
-  }
-  catch(error) {
-    debugger;
-    const message = `formatterCryptocompareSectionCoinlist(): ${error}`;
-    logger.error(message);
-    return {message, error: true};
-  }
 }

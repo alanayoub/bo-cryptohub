@@ -6,13 +6,7 @@ import formatterCryptocurrencyListings from './formatter-cryptocurrency-listings
 
 const logger = require('../../logger');
 
-const { scrapeDir } = settings;
-
-//
-// rateLimitDelayMs: Make sure this domain isnt scrapped more that this limit
-//
-// interval: How often to execute jobs in the queue but not more than rateLimitDelayMs
-//
+const { scrapeDir, coinmarketcapApiKey } = settings;
 
 const config = {
   cacheFor: settings.cacheForCoinmarketcap,
@@ -20,20 +14,24 @@ const config = {
   rateLimitDelayMs: 1000 * 60 * 60,
 };
 
-const cryptocurrencyListings = {
-  event: 'data',
-  name: 'cmc-listings',
-  interval: 1000 * 60 * 60,
-  watchDirs: [`${scrapeDir}/coinmarketcap-cryptocurrency-listings/**/*`, 'all'],
-  getJobs: (queue, bootstrapData, appBootstrapData) => {
-    queue.push({
-      uri: settings.uriCoinmarketcapCryptocurrencyListings,
-      key: settings.keyCoinmarketcapCryptocurrencyListings,
-      cacheForDays: 30
-    });
-    logger.info(`getJobsCryptocurrencyListings(): 1 job created`);
-  },
-  formatter: formatterCryptocurrencyListings,
+let cryptocurrencyListings;
+{
+  const uri = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?CMC_PRO_API_KEY=${coinmarketcapApiKey}&start=1&limit=1000&convert=USD`;
+  const key = `${scrapeDir}/coinmarketcap-cryptocurrency-listings/data.json`;
+  cryptocurrencyListings = {
+    event: 'data',
+    name: 'cmc-listings',
+    interval: 1000 * 60 * 60,
+    watchDirs: [`${scrapeDir}/coinmarketcap-cryptocurrency-listings/**/*`, 'all'],
+    getJobs: (queue) => {
+      queue.push({
+        uri, key,
+        cacheForDays: 30
+      });
+      logger.info(`getJobsCryptocurrencyListings(): 1 job created`);
+    },
+    formatter: formatterCryptocurrencyListings,
+  };
 };
 
 export default {

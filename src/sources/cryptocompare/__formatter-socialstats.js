@@ -90,7 +90,7 @@ import { perSecondSave } from '../../db/save';
  *
  */
 const logger = require('../../logger');
-module.exports = function formatterCryptocompareSocialstats(socialstats) {
+export default async function formatterCryptocompareSocialstats(socialstats) {
   try {
     const prefix = 'cc-socialstats-';
     const data = {};

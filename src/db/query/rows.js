@@ -1,6 +1,7 @@
 'use strict';
 
 // Binary Overdose
+import logger                               from '../../logger';
 import { fieldTypeMap, columnDependencies } from '../../settings';
 import { PerDayModel, PerSecondModel }      from '../schema';
 
@@ -158,14 +159,14 @@ export default async function getRows(columns, sort, limit, fields) {
 
     startTime = +new Date();
     output = await getRecords(fieldSet, sortField, sortDirection, limit);
-    console.log(`queryTime-rows first x: ${+new Date() - startTime}`);
+    logger.info(`db queryTime-rows first x: ${+new Date() - startTime}`);
 
   }
   else {
 
     startTime = +new Date();
     output = await getRecords(fieldSet, sortField, sortDirection);
-    console.log(`queryTime-rows: ${+new Date() - startTime}`);
+    logger.info(`db queryTime-rows: ${+new Date() - startTime}`);
 
   }
 

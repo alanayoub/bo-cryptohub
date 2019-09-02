@@ -3,6 +3,7 @@ const logger = require('../../logger');
 
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
+import { getMaps }                        from '../../db/query';
 import { perSecondSave }                  from '../../db/save';
 
 /**
@@ -218,11 +219,10 @@ import { perSecondSave }                  from '../../db/save';
  *
  * @param {Array} data - response from Messari api request
  * @param {String} timestamp
- * @param {Object} bootstrapData
  * @return {Object}
  *
  */
-export default async function formatterMessariSectionMetrics(data, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
+export default async function formatterMessariSectionMetrics(data, timestamp) {
 
   try {
 
@@ -234,6 +234,8 @@ export default async function formatterMessariSectionMetrics(data, timestamp, bo
     if (!dataIsValid(data)) return;
     data = data.data;
 
+    const maps = await getMaps(['projectMapSymbolId']);
+    const symbolIdMap = maps[0].map;
     const prefix = 'm-assets-';
     let id;
     let item;
@@ -243,7 +245,7 @@ export default async function formatterMessariSectionMetrics(data, timestamp, bo
     for (item of data) {
 
       symbol = item.symbol.toUpperCase();
-      id = appBootstrapData.symbolIdMap[symbol]; // TODO: need proper mapping for ids
+      id = symbolIdMap[symbol]; // TODO: need proper mapping for ids
       if (id === void 0) continue;
 
       result[id] = {

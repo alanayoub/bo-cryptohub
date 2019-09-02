@@ -2,11 +2,8 @@
 
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
-import settings                           from '../../settings';
 import { getBtc, getRows }                from '../../db/query';
 import { perSecondSave }                  from '../../db/save';
-
-const { scrapeDir } = settings;
 
 const config = {
   cacheFor: 0,

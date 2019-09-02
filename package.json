@@ -13,7 +13,7 @@
     "build:dev": "npm run build:client-dev && npm run build:server-dev",
     "build:prod": "npm run build:client-prod && npm run build:server-prod",
     "build:link": "npm link ../bo-datatable && npm link ../bo-utils",
-    "start:dev": "npx babel-node --inspect --use-strict ./src/index.js --local=true",
+    "start:dev": "npx babel-node --inspect --use-strict ./src/index.js --local=true --logger=true",
     "start:prod": "node --use-strict ./dist/index.js",
     "start:prod-local": "node --inspect --use-strict ./dist/index.js --local=true --logger=true",
     "start:dev-all": "npm run build:link && npm run build:dev && npm run start:dev",

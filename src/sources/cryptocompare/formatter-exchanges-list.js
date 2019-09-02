@@ -3,7 +3,6 @@ import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 
 // Cryptohub
 import logger   from '../../logger';
-import settings from '../../settings';
 
 import { perSecondSave, exchangeSave }          from '../../db/save';
 import { getMaps, getExchanges, getCurrencies } from '../../db/query';
@@ -141,14 +140,10 @@ function addPairsToExchange(exchanges, id, pair) {
  *
  * @param {Object} response - response object
  * @param {String} timestamp - time data was received
- * @param {Object} bootstrapData - legacy bootstrap data (will be merged with appBootstrapData
- * @param {Object} addBootstrapData - data store for non row data
- * @param {String} fileName - file name of stored request
- * @param {String} event - type of event
  * @return {Object}
  *
  */
-export default async function formatterExchangesList(response, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
+export default async function formatterExchangesList(response, timestamp) {
   try {
 
     const emptyReturn = {data: {}, timestamp};

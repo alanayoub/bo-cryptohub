@@ -60,11 +60,10 @@ function getSymbolsWithData(data) {
  *
  * @param {Array} data - response from Messari api request
  * @param {String} timestamp
- * @param {Object} bootstrapData
  * @return {Object}
  *
  */
-export default async function formatterMessariMarkets(data, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
+export default async function formatterMessariMarkets(data, timestamp) {
 
   try {
 

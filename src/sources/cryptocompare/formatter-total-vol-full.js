@@ -73,11 +73,10 @@ import { objectGetNestedProperty as gnp } from 'bo-utils';
  *
  * @param {Array} price is an array of the responses of batched cryptocompare api price data
  * @param {String} timestamp
- * @param {Object} bootstrapData
  * @return {Object}
  *
  */
-export default async function totalVolFull(price, timestamp, bootstrapData, appBootstrapData) {
+export default async function totalVolFull(price, timestamp) {
   try {
 
     const prefix = 'cc-total-vol-full-';

@@ -2,39 +2,14 @@
 
 import { partialApplication }      from 'bo-utils';
 
-import onHandleData                from './on-handle-data';
-
 import analyticsMergeDataByKey     from '../../utils/analytics-merge-data-by-key';
 
 import settings                    from '../../settings';
 import { getRows }                 from '../../db/query';
 
-function getFirstXRows(data, numRows = 50) {
-
-  let id;
-  let ids;
-  let rows;
-  let output = {};
-
-  const idField = 'cc-total-vol-full-Id';
-  const volField = 'cc-total-vol-full-TOTALVOLUME24HTO';
-
-  rows = Object
-    .values(data)
-    .filter(a => a[idField])
-    .sort((a, b) => b[volField] - a[volField])
-    .slice(0, numRows);
-
-  ids = rows.map(a => a[idField]);
-  for (id of ids) output[id] = data[id];
-  return output;
-}
-
-let initData = null;
-
 export default {
   onBeforeHandleData: analyticsMergeDataByKey,
-  onHandleData: partialApplication(onHandleData, {}),
+  onHandleData() {},
   onAfterConnect(event, socket, data) {
 
     const cols = JSON.parse(socket.handshake.query.cols);
@@ -50,13 +25,5 @@ export default {
       });
     });
 
-
-  },
-  onBeforeBootstrapSave: data => {
-    initData = getFirstXRows(data, settings.maxRowsTemplatedIn);
-    if (!settings.maxRowsTemplatedIn) return data;
-    return initData;
-  },
-  onBeforeEmit: partialApplication((options, socket, newData, oldData) => {
-  }, {diff: true}),
+  }
 }

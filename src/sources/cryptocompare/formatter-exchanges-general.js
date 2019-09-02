@@ -11,14 +11,10 @@ import { mapSave, exchangeSave } from '../../db/save';
  *
  * @param {Object} response - response object
  * @param {String} timestamp - time data was received
- * @param {Object} bootstrapData - legacy bootstrap data (will be merged with appBootstrapData
- * @param {Object} addBootstrapData - data store for non row data
- * @param {String} fileName - file name of stored request
- * @param {String} event - type of event
  * @return {Object}
  *
  */
-export default async function formatterCryptocompareSectionExchangesGeneral(response, timestamp, bootstrapData, appBootstrapData, fileName, event) {
+export default async function formatterCryptocompareSectionExchangesGeneral(response, timestamp) {
   try {
 
     const emptyReturn = {data: {}, timestamp};

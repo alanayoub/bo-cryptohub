@@ -11,8 +11,13 @@ const settings = require('./settings');
 //
 const logger = winston.createLogger({
   level: 'silly',
-  format: winston.format.json(),
+  // format: winston.format.json(),
   exitOnError: false,
+  timestamp: true,
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
   transports: [
     new winston.transports.File({filename: 'logs/error.log', level: 'error'}),
     new winston.transports.File({filename: 'logs/debug.log', level: 'debug'}),
@@ -26,10 +31,11 @@ if (settings.logger) {
       filename: 'logs/console.log',
       format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.simple(),
-        winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'})
+        winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
+        // winston.format.simple(),
+        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`),
       ),
-      level: 'debug'
+      level: 'info'
     })
   );
 }

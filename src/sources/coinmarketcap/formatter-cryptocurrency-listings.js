@@ -1,7 +1,8 @@
 // Cryptohub
 const logger = require('../../logger');
 
-import { perSecondSave }                   from '../../db/save';
+import { mapSave, perSecondSave }          from '../../db/save';
+import { getMaps }                         from '../../db/query';
 import { objectGetNestedProperty as gnp }  from 'bo-utils';
 
 /**
@@ -50,11 +51,10 @@ import { objectGetNestedProperty as gnp }  from 'bo-utils';
  *
  * @param {Array} data - response from Messari api request
  * @param {String} timestamp
- * @param {Object} bootstrapData
  * @return {Object}
  *
  */
-export default async function formatter(data, timestamp, bootstrapData, appBootstrapData, fileName, event, cache) {
+export default async function formatter(data, timestamp) {
 
   try {
 
@@ -78,39 +78,44 @@ export default async function formatter(data, timestamp, bootstrapData, appBoots
         cmcSymbolId[v.symbol] = v.id;
         cmcIdSymbol[v.id] = v.symbol;
       });
-
-      appBootstrapData.cmcSymbolId = cmcSymbolId;
-      appBootstrapData.cmcIdSymbol = cmcIdSymbol;
+      mapSave('cmcMapSymbolId', JSON.stringify(cmcSymbolId));
+      mapSave('cmcMapIdSymbol', JSON.stringify(cmcIdSymbol));
     }
 
     //
     // NOTE: just for testing. We need a static mapping unfortunately
     // Or at least a static backfill
     //
+    const mapCmcIdCcId = {};
     {
+      const maps = await getMaps(['projectMapSymbolId', 'projectMapCoinList', 'projectCcMapNameSymbol']);
+      let symbolIdMap;
+      // let coinList;
+      let ccNameSymbol;
+      for (const map of maps) {
+        if (map._id === 'projectMapSymbolId') symbolIdMap = map.map;
+        // else if (map._id === 'projectMapCoinList') coinList = map.map;
+        else if (map._id === 'projectCcMapNameSymbol') ccNameSymbol = map.map;
+      }
+
       const sync = val => {
         return val.replace('-', '').replace(' ', '').toLowerCase();
       }
 
-      const ccNameSymbol = {};
-      for (const [s, val] of Object.entries(appBootstrapData.symbolIdMap)) {
-        const name = sync(appBootstrapData.coinList[s].CoinName);
-        ccNameSymbol[name] = appBootstrapData.coinList[s];
-      }
-
       const cmcData = Object.values(data);
-      const mapCmcIdCcId = {};
       for (const val of cmcData) {
         const cmcname = sync(val.name);
         const cmcsymbol = sync(val.symbol);
-        if (ccNameSymbol[cmcname]) {
-          mapCmcIdCcId[val.id] = appBootstrapData.coinList[ccNameSymbol[cmcname].Symbol].Id
+        if (ccNameSymbol[cmcname] && val.id) {
+          const symbol = ccNameSymbol[cmcname];
+          const id = val.id;
+          mapCmcIdCcId[id] = symbolIdMap[symbol];
         }
         else {
           //console.log('map manually ', sync(cmcname));
         }
       }
-      appBootstrapData.mapCmcIdCcId = mapCmcIdCcId;
+      mapSave('cmcCcMapIdSymbol', JSON.stringify(mapCmcIdCcId));
     }
 
     //
@@ -119,7 +124,7 @@ export default async function formatter(data, timestamp, bootstrapData, appBoots
     const result = {};
     const prefix = 'cmc-listings-';
     for (const val of Object.values(data)) {
-      const id = appBootstrapData.mapCmcIdCcId[val.id];
+      const id = mapCmcIdCcId[val.id];
       if (id === void 0) continue;
       result[id] = {
         [`${prefix}circulating_supply`]           : val.circulating_supply,

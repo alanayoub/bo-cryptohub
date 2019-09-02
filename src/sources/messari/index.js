@@ -1,16 +1,13 @@
 'use strict';
 
-import settings         from '../../settings';
+import settings              from '../../settings';
+import logger                from '../../logger';
+import { getMessariSymbols } from '../../db/query';
 
-import formatterMetrics from './formatter-metrics.js';
-import formatterAssets  from './formatter-assets.js';
-import formatterMarkets from './formatter-markets.js';
-import formatterPrices  from './formatter-prices.js';
-
-import getJobsMetrics   from './get-jobs-metrics.js';
-import getJobsAssets    from './get-jobs-assets.js';
-import getJobsMarkets   from './get-jobs-markets.js';
-import getJobsPrices    from './get-jobs-prices.js';
+import formatterMetrics      from './formatter-metrics.js';
+import formatterAssets       from './formatter-assets.js';
+import formatterMarkets      from './formatter-markets.js';
+import formatterPrices       from './formatter-prices.js';
 
 const { scrapeDir } = settings;
 
@@ -23,41 +20,92 @@ const config = {
   rateLimitDelayMs: rateLimit,
 };
 
-const assets = {
-  event: 'data',
-  name: 'messari-assets',
-  interval: 1000 * 30,
-  watchDirs: [`${scrapeDir}/messari-assets/**/*`, 'all'],
-  getJobs: getJobsAssets,
-  formatter: formatterAssets,
+let assets;
+{
+  const uri = `https://data.messari.io/api/v1/assets?with-metrics`;
+  const key = `${scrapeDir}/messari-assets-with-metric/data.json`;
+  assets = {
+    event: 'data',
+    name: 'messari-assets',
+    interval: 1000 * 30,
+    watchDirs: [`${scrapeDir}/messari-assets/**/*`, 'all'],
+    async getJobs(queue) {
+      queue.push({
+        uri, key,
+        cacheForDays: settings.cacheForMessari,
+      });
+      logger.info(`getJobs messari assets: 1 asset jobs created`);
+    },
+    formatter: formatterAssets,
+  };
 };
 
-const metrics = {
-  event: 'data',
-  name: 'messari-metrics',
-  interval: 1000 * 10,
-  watchDirs: [`${scrapeDir}/messari-metric/**/*`, 'all'],
-  getJobs: getJobsMetrics,
-  formatter: formatterMetrics,
+let metrics;
+{
+  const uri = (str, id) => `https://data.messari.io/api/v1/assets/${id}/metrics`;
+  const key = (str, id) => `${scrapeDir}/messari-metric/${id}/data.json`;
+  metrics = {
+    event: 'data',
+    name: 'messari-metrics',
+    interval: 1000 * 10,
+    watchDirs: [`${scrapeDir}/messari-metric/**/*`, 'all'],
+    async getJobs(queue) {
+      let jobs = 0;
+      let symbol;
+      const symbols = await getMessariSymbols();
+      for (symbol of symbols) {
+        queue.push({
+          uri: uri`${symbol}`,
+          key: key`${symbol}`,
+          cacheForDays: settings.cacheForMessari,
+        });
+        jobs++;
+      }
+      logger.info(`getJobs messari metrics: ${jobs} metrics jobs created`);
+    },
+    formatter: formatterMetrics,
+  };
 };
 
-const markets = {
-  event: 'data',
-  name: 'messari-markets',
-  interval: 1000 * 60 * 60 * 24,
-  watchDirs: [`${scrapeDir}/messari-markets/**/*`, 'all'],
-  getJobs: getJobsMarkets,
-  formatter: formatterMarkets,
+let markets;
+{
+  const uri = `https://data.messari.io/api/v1/markets`;
+  const key = `${settings.scrapeDir}/messari-markets/data.json`;
+  markets = {
+    event: 'data',
+    name: 'messari-markets',
+    interval: 1000 * 60 * 60 * 24,
+    watchDirs: [`${scrapeDir}/messari-markets/**/*`, 'all'],
+    async getJobs(queue) {
+      queue.push({
+        uri, key,
+        cacheForDays: settings.cacheForMessari,
+      });
+      logger.info(`getJobs messari markets: 1 markets jobs created`);
+    },
+    formatter: formatterMarkets,
+  };
 };
 
 // Not an official endpoint
-const prices = {
-  event: 'data',
-  name: 'messari-prices',
-  interval: 1000 * 60 * 5,
-  watchDirs: [`${scrapeDir}/messari-prices/**/*`, 'all'],
-  getJobs: getJobsPrices,
-  formatter: formatterPrices,
+let prices;
+{
+  const uri = `https://data.messari.io/api/v1/markets/prices-legacy`;
+  const key = `${scrapeDir}/messari-prices/data.json`;
+  prices = {
+    event: 'data',
+    name: 'messari-prices',
+    interval: 1000 * 60 * 5,
+    watchDirs: [`${scrapeDir}/messari-prices/**/*`, 'all'],
+    async getJobs(queue) {
+      queue.push({
+        uri, key,
+        cacheForDays: settings.cacheForMessari,
+      });
+      logger.info(`getJobs messari prices: 1 prices jobs created`);
+    },
+    formatter: formatterPrices,
+  };
 };
 
 export default {

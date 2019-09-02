@@ -12,11 +12,11 @@
 // Database connect
 import './db/connect';
 
-// Node
-import { join }                           from 'path';
-
 // Libs
 import '@babel/polyfill';
+
+// Node
+import { join }                           from 'path';
 
 // Binary Overdose Projects
 import DataTable                          from 'bo-datatable';
@@ -25,9 +25,6 @@ import { objectGetNestedProperty as gnp } from 'bo-utils';
 // CryptoHub
 import settings                           from './settings';
 import startServer                        from './server';
-
-// Formatters
-import formatterCryptocompareBootstrap    from './sources/cryptocompare/formatter-bootstrap.js';
 
 // Sources
 import binaryoverdose                     from './sources/binaryoverdose';
@@ -73,6 +70,8 @@ try {
   getRows(null, false, false, ['cc-total-vol-full-FullName', 'cc-coinlist-Symbol']).then(data => {
     let mapIdName = {};
     let mapSymbolId = {};
+    let mapIdSymbol = {};
+    let mapCcNameSymbol = {};
     let name;
     let symbol;
     for (const [id, val] of Object.entries(data)) {
@@ -81,10 +80,14 @@ try {
       if (name && symbol) {
         mapIdName[id] = name;
         mapSymbolId[symbol] = id;
+        mapIdSymbol[id] = symbol;
+        mapCcNameSymbol[name] = symbol;
       }
     }
     mapSave('projectMapIdName', JSON.stringify(mapIdName));
     mapSave('projectMapSymbolId', JSON.stringify(mapSymbolId));
+    mapSave('projectMapIdSymbol', JSON.stringify(mapIdSymbol));
+    mapSave('projectCcMapNameSymbol', JSON.stringify(mapCcNameSymbol));
   });
 
   const options = {
@@ -92,8 +95,6 @@ try {
     dbDir: settings.dbDir,
     cacheDir: settings.cacheDir,
     generatedDir: settings.generatedDir,
-
-    bootstrap: formatterCryptocompareBootstrap,
 
     events: {
       data: {

@@ -55,7 +55,7 @@ async function perSecondSave(data, timestamp = +new Date()) {
 
     }
   }
-  console.log('save-perSecond', +new Date() - startTime);
+  logger.info('db save-perSecond', +new Date() - startTime);
 
 }
 
@@ -108,7 +108,7 @@ async function perDaySave(data, timestamp = +new Date()) {
 
     }
   }
-  console.log('save-perDay', +new Date() - startTime);
+  logger.info('db save-perDay', +new Date() - startTime);
 
 }
 

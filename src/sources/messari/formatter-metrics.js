@@ -1,3 +1,5 @@
+'use strict';
+
 // Cryptohub
 const logger = require('../../logger');
 

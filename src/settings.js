@@ -1,3 +1,5 @@
+'use strict';
+
 // Node
 const path = require('path');
 

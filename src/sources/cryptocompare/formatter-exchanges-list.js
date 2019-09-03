@@ -1,3 +1,5 @@
+'use strict';
+
 // Binary Overdose
 import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 

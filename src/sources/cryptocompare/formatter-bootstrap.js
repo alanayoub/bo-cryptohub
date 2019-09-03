@@ -41,7 +41,7 @@ const settings   = require('../../settings');
  * @return {Object}
  *
  */
-module.exports = async function formatterCryptocompareBootstrap(cache) {
+export default async function formatterCryptocompareBootstrap(cache) {
   try {
 
     return;

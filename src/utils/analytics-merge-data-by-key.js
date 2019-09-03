@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * NOTE: -- Comments need updateing --

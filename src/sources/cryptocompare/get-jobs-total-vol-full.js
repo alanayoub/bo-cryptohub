@@ -1,3 +1,5 @@
+'use strict';
+
 // Node
 const crypto   = require('crypto');
 
@@ -14,7 +16,7 @@ const tagGroup = (str, ob) => `${settings.scrapeDir}/cryptocompare-totalvolfull-
  * @param {Array} queue
  *
  */
-module.exports = async function getJobsCryptocompareSectionTotalVolFull(queue) {
+export default async function getJobsCryptocompareSectionTotalVolFull(queue) {
   try {
 
     let page = 0;

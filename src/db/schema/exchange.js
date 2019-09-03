@@ -172,5 +172,6 @@ const options = {
 }
 
 const Exchange = new Schema(options, {collection: 'exchanges'});
+Exchange.set('versionKey', false);
 
 export default Exchange;

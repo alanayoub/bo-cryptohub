@@ -1,9 +1,10 @@
-// Cryptohub
-const logger = require('../../logger');
+'use strict';
 
-import { mapSave, perSecondSave }          from '../../db/save';
-import { getMaps }                         from '../../db/query';
-import { objectGetNestedProperty as gnp }  from 'bo-utils';
+// Cryptohub
+import logger                             from '../../logger';
+import { mapSave, perSecondSave }         from '../../db/save';
+import { getMaps }                        from '../../db/query';
+import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 /**
  *

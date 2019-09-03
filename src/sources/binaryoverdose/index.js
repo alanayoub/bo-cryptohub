@@ -67,7 +67,10 @@ const custom = {
     //
     // 1. Get BTC price in USD
     const [ btc ] = await getBtc();
-    if (!btc) return {};
+    if (!btc) {
+      logger.warn(`sources/binaryoverdose/index.js: Couldnt get 'btc', bailing out`);
+      return;
+    }
     const btcPrice = btc.samples[1][1];
 
     //
@@ -98,8 +101,11 @@ const custom = {
       'cryptohub-m-price-history-BTC',
       'cryptohub-cc-circulating-percent-total',
     ];
-
     const data = await getRows(null, false, false, [...proxyFields, ...newFields]);
+    if (!data) {
+      logger.warn(`sources/binaryoverdose/index.js: Couldnt get rows, bailing out`);
+      return;
+    };
 
     //
     // 3. Loop through results and add / update custom records

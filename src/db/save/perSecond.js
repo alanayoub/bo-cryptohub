@@ -95,7 +95,7 @@ async function perDaySave(data, timestamp = +new Date()) {
           ts = await PerDayModel.create({...query, samples: yearArray});
         }
         else {
-          ts.samples[mm][dd] = value;
+          ts.set(`samples.${mm}.${dd}`, value);
         }
         if (!ts && !ts.save) debugger;
         ts = await ts.save();

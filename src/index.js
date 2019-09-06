@@ -120,21 +120,21 @@ try {
     datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
   });
 
-  // datatable.newSource('messari', messari.config).then(() => {
-  //   // TODO: Assets only returns 20 results for some reason
-  //   // datatable.sources.messari.add(messari.assets);
-  //   datatable.sources.messari.add(messari.markets);
-  //   datatable.sources.messari.add(messari.metrics);
-  //   datatable.sources.messari.add(messari.prices);
-  // });
+  datatable.newSource('messari', messari.config).then(() => {
+    // TODO: Assets only returns 20 results for some reason
+    // datatable.sources.messari.add(messari.assets);
+    datatable.sources.messari.add(messari.markets);
+    datatable.sources.messari.add(messari.metrics);
+    datatable.sources.messari.add(messari.prices);
+  });
 
-  // datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
-  //   datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
-  // });
+  datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
+    datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
+  });
 
-  // datatable.newSource('xe', xe.config).then(() => {
-  //   datatable.sources.xe.add(xe.currency);
-  // });
+  datatable.newSource('xe', xe.config).then(() => {
+    datatable.sources.xe.add(xe.currency);
+  });
 
 }
 

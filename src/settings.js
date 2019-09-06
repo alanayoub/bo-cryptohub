@@ -47,9 +47,6 @@ const cryptocompareApiKey = 'b3ad47012cc134911a4775d955ef2b9cf8b85f54d383d81c1bf
 
 const fieldTypeMap = {
 
-  coinmarketcapApiKey,
-  cryptocompareApiKey,
-
   //
   // NOTE: Allowing String, Number and Boolean becaues none of the data sources can make their mind up :(
   // Once we have more data in the database we can see what it looks like
@@ -753,6 +750,9 @@ const columnDependencies = {
  *
  */
 const settings = {
+
+  coinmarketcapApiKey,
+  cryptocompareApiKey,
 
   //
   // App settings

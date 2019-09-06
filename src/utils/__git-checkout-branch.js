@@ -13,7 +13,7 @@ module.exports = async function gitCheckoutBranch(path, branch) {
     console.log(`gitCheckoutBranch(): Checked out branch:${branch} from ${path}`);
     return true;
   }
-  catch(error) {
+  catch (error) {
     console.log(`gitCheckoutBranch(): Failed to checked out branch:${branch} from ${path}`);
     return {error: true, message: `gitCheckoutBranch(): ${error}`};
   }

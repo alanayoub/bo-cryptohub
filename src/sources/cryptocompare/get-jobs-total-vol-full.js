@@ -1,5 +1,3 @@
-'use strict';
-
 // Node
 const crypto   = require('crypto');
 
@@ -40,7 +38,7 @@ export default async function getJobsCryptocompareSectionTotalVolFull(queue) {
     logger.info(`getJobs Cryptocompare TotalVolFull: ${jobs} price jobs created`);
 
   }
-  catch(error) {
+  catch (error) {
     const message = `getJobs Cryptocompare TotalVolFull: ${error}`;
     logger.error(message);
     return {message, error: true};

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  *
  * NOTE: -- Comments need updateing --
@@ -29,9 +27,8 @@ module.exports = function mergeDataByKey(data) {
     }
     return result;
   }
-  catch(error) {
+  catch (error) {
     logger.error(`mergeDataByKey: ${error}`);
-    if (process.env.NODE_ENV === 'development') debugger;
     return false;
   }
 }

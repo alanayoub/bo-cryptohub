@@ -1,13 +1,10 @@
-'use strict';
-
-import settings          from '../../settings';
-
 import formatterCurrency from './formatter-currency.js';
+import settings          from '../../settings';
 
 const config = {
   cacheFor: settings.cacheForXe,
   bootstrap: () => {return {}},
-  rateLimitDelayMs: settings.rateLimitXe,
+  rateLimitDelayMs: settings.rateLimitXe
 };
 
 let currency;
@@ -32,5 +29,5 @@ let currency;
 
 export default {
   config,
-  currency,
+  currency
 }

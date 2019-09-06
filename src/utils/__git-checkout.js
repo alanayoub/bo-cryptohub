@@ -15,7 +15,7 @@ module.exports = async function gitCheckout(path, hash) {
     console.log(`gitCheckout(): Checked out ${hash} from ${path}`);
     return true;
   }
-  catch(error) {
+  catch (error) {
     console.log(`gitCheckout(): Failed to checked out ${hash} from ${path}`);
     return {error: true, message: `gitCheckout(): ${error}`};
   }

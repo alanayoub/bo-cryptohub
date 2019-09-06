@@ -1,10 +1,7 @@
-'use strict';
-
-// Libs
 import { Schema } from 'mongoose';
 
-// Binary Overdose
 import { fieldTypeMap } from '../../settings';
+import logger from '../../logger';
 
 const idsList = Object.keys(fieldTypeMap);
 
@@ -13,8 +10,7 @@ const validator = {
   id(id) {
     const isValid = id.length < 10;
     if (!isValid) {
-      console.log(id);
-      debugger;
+      logger.warn('perSecond schema, id is not valid:', id);
     }
     return isValid;
   },
@@ -22,17 +18,15 @@ const validator = {
   field(field) {
     const isValid = idsList.includes(field) && field.length < 200;
     if (!isValid) {
-      console.log(field);
-      debugger;
+      logger.warn('perSecond schema, field is not valid:', field);
     }
     return isValid;
   },
 
   lastChecked(val) {
-    const isValid = (!isNaN(val) && String(val).length === 13)
+    const isValid = !isNaN(val) && String(val).length === 13
     if (!isValid) {
-      console.log(val);
-      debugger;
+      logger.warn('perSecond schema, lastChecked is not valid:', lastChecked);
     }
     return isValid;
   },
@@ -41,7 +35,7 @@ const validator = {
 
     const tsItemIsValid = tsItem => {
 
-      const arrayIsValid = (Array.isArray(tsItem) && tsItem.length === 2);
+      const arrayIsValid = Array.isArray(tsItem) && tsItem.length === 2;
       let arrayDataIsValid;
 
       if (arrayIsValid) {
@@ -58,11 +52,6 @@ const validator = {
 
         arrayDataIsValid = validDate && validVal;
 
-        if (!(arrayIsValid && arrayDataIsValid)) {
-          console.log(type, date, val, this.id, dateType, valType);
-          debugger;
-        }
-
       }
 
       return arrayIsValid && arrayDataIsValid;
@@ -71,13 +60,12 @@ const validator = {
 
     const tsIsValid = Array.isArray(arr) && arr.length === 2 && tsItemIsValid(arr[0]) && tsItemIsValid(arr[1]);
     if (!tsIsValid) {
-      debugger;
-      throw new Error('fuck');
+      logger.warn('perSecond schema, samples is not valid:', arr);
     }
 
     return tsIsValid;
 
-  },
+  }
 
 }
 
@@ -85,25 +73,26 @@ const options = {
   id: {
     type: String,
     required: true,
-    validate: [validator.id, '{PATH} is not valid']
+    validate: [validator.id, 'id is not valid']
   },
   field: {
     type: String,
     required: true,
-    validate: [validator.field, '{PATH} is not a valid field']
+    validate: [validator.field, 'field is not valid']
   },
   lastChecked: {
     type: Number,
     required: true,
-    validate: [validator.lastChecked, '{PATH} is not valid timestamp']
+    validate: [validator.lastChecked, 'lastChecked is not valid']
   },
   samples: {
     type: [[{
-      type: Schema.Types.Mixed,
-      required: true,
+      type: Schema.Types.Mixed
     }]],
-    validate: [validator.samples, '{PATH} is not valid']
-  },
+    default: [[+new Date(), null], [+new Date(), null]],
+    required: true,
+    validate: [validator.samples, 'samples is not valid']
+  }
 }
 
 const PerSecond = new Schema(options, {collection: 'tsseconds'});

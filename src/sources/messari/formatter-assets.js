@@ -1,12 +1,8 @@
-'use strict';
-
-// Cryptohub
-const logger = require('../../logger');
-
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
-import { getMaps }                        from '../../db/query';
-import { perSecondSave }                  from '../../db/save';
+import logger from '../../logger';
+import { getMaps } from '../../db/query';
+import { perSecondSave } from '../../db/save';
 
 /**
  *
@@ -221,20 +217,16 @@ import { perSecondSave }                  from '../../db/save';
  *
  * @param {Array} data - response from Messari api request
  * @param {String} timestamp
- * @return {Object}
+ * @returns {Object}
  *
  */
 export default async function formatterMessariSectionMetrics(data, timestamp) {
 
   try {
 
-    function dataIsValid(data) {
-      if (Array.isArray(data.data)) return true;
-      else return false;
-    }
-
-    if (!dataIsValid(data)) return;
     data = data.data;
+
+    if (!Array.isArray(data)) return;
 
     const maps = await getMaps(['projectMapSymbolId']);
     const symbolIdMap = maps[0].map;
@@ -248,145 +240,145 @@ export default async function formatterMessariSectionMetrics(data, timestamp) {
 
       symbol = item.symbol.toUpperCase();
       id = symbolIdMap[symbol]; // TODO: need proper mapping for ids
-      if (id === void 0) continue;
+      if (id === undefined) continue;
 
       result[id] = {
-        [`${prefix}id`]                                                      : item.id,
-        [`${prefix}symbol`]                                                  : item.symbol,
-        [`${prefix}name`]                                                    : item.name,
-        [`${prefix}slug`]                                                    : item.slug,
+        [`${prefix}id`]: item.id,
+        [`${prefix}symbol`]: item.symbol,
+        [`${prefix}name`]: item.name,
+        [`${prefix}slug`]: item.slug,
 
-        [`${prefix}metrics-market_data_price_usd`]                                   : gnp(item, 'metrics.market_data.price_usd'),
-        [`${prefix}metrics-market_data_price_btc`]                                   : gnp(item, 'metrics.market_data.price_btc'),
-        [`${prefix}metrics-market_data_volume_last_24_hours`]                        : gnp(item, 'metrics.market_data.volume_last_24_hours'),
-        [`${prefix}metrics-market_data_real_volume_last_24_hours`]                   : gnp(item, 'metrics.market_data.real_volume_last_24_hours'),
-        [`${prefix}metrics-market_data_volume_last_24_hours_overstatement_multiple`] : gnp(item, 'metrics.market_data.volume_last_24_hours_overstatement_multiple'),
-        [`${prefix}metrics-market_data_percent_change_usd_last_24_hours`]            : gnp(item, 'metrics.market_data.percent_change_usd_last_24_hours'),
-        [`${prefix}metrics-market_data_percent_change_btc_last_24_hours`]            : gnp(item, 'metrics.market_data.percent_change_btc_last_24_hours'),
-        [`${prefix}metrics-market_data_last_trade_at`]                               : gnp(item, 'metrics.market_data.last_trade_at'),
+        [`${prefix}metrics-market_data_price_usd`]: gnp(item, 'metrics.market_data.price_usd'),
+        [`${prefix}metrics-market_data_price_btc`]: gnp(item, 'metrics.market_data.price_btc'),
+        [`${prefix}metrics-market_data_volume_last_24_hours`]: gnp(item, 'metrics.market_data.volume_last_24_hours'),
+        [`${prefix}metrics-market_data_real_volume_last_24_hours`]: gnp(item, 'metrics.market_data.real_volume_last_24_hours'),
+        [`${prefix}metrics-market_data_volume_last_24_hours_overstatement_multiple`]: gnp(item, 'metrics.market_data.volume_last_24_hours_overstatement_multiple'),
+        [`${prefix}metrics-market_data_percent_change_usd_last_24_hours`]: gnp(item, 'metrics.market_data.percent_change_usd_last_24_hours'),
+        [`${prefix}metrics-market_data_percent_change_btc_last_24_hours`]: gnp(item, 'metrics.market_data.percent_change_btc_last_24_hours'),
+        [`${prefix}metrics-market_data_last_trade_at`]: gnp(item, 'metrics.market_data.last_trade_at'),
 
-        [`${prefix}metrics-marketcap_current_marketcap_usd`]                         : gnp(item, 'metrics.marketcap.current_marketcap_usd'),
-        [`${prefix}metrics-marketcap_y_2050_marketcap_usd`]                          : gnp(item, 'metrics.marketcap.y_2050_marketcap_usd'),
-        [`${prefix}metrics-marketcap_y_plus10_marketcap_usd`]                        : gnp(item, 'metrics.marketcap.y_plus10_marketcap_usd'),
-        [`${prefix}metrics-marketcap_liquid_marketcap_usd`]                          : gnp(item, 'metrics.marketcap.liquid_marketcap_usd'),
-        [`${prefix}metrics-marketcap_volume_turnover_last_24_hours_percent`]         : gnp(item, 'metrics.marketcap.volume_turnover_last_24_hours_percent'),
+        [`${prefix}metrics-marketcap_current_marketcap_usd`]: gnp(item, 'metrics.marketcap.current_marketcap_usd'),
+        [`${prefix}metrics-marketcap_y_2050_marketcap_usd`]: gnp(item, 'metrics.marketcap.y_2050_marketcap_usd'),
+        [`${prefix}metrics-marketcap_y_plus10_marketcap_usd`]: gnp(item, 'metrics.marketcap.y_plus10_marketcap_usd'),
+        [`${prefix}metrics-marketcap_liquid_marketcap_usd`]: gnp(item, 'metrics.marketcap.liquid_marketcap_usd'),
+        [`${prefix}metrics-marketcap_volume_turnover_last_24_hours_percent`]: gnp(item, 'metrics.marketcap.volume_turnover_last_24_hours_percent'),
 
-        [`${prefix}metrics-supply_y_2050`]                                           : gnp(item, 'metrics.supply.y_2050'),
-        [`${prefix}metrics-supply_y_plus10`]                                         : gnp(item, 'metrics.supply.y_plus10'),
-        [`${prefix}metrics-supply_liquid`]                                           : gnp(item, 'metrics.supply.liquid'),
-        [`${prefix}metrics-supply_circulating`]                                      : gnp(item, 'metrics.supply.circulating'),
-        [`${prefix}metrics-supply_y_2050_issued_percent`]                            : gnp(item, 'metrics.supply.y_2050_issued_percent'),
-        [`${prefix}metrics-supply_annual_inflation_percent`]                         : gnp(item, 'metrics.supply.annual_inflation_percent'),
-        [`${prefix}metrics-supply_y_plus10_issued_percent`]                          : gnp(item, 'metrics.supply.y_plus10_issued_percent'),
+        [`${prefix}metrics-supply_y_2050`]: gnp(item, 'metrics.supply.y_2050'),
+        [`${prefix}metrics-supply_y_plus10`]: gnp(item, 'metrics.supply.y_plus10'),
+        [`${prefix}metrics-supply_liquid`]: gnp(item, 'metrics.supply.liquid'),
+        [`${prefix}metrics-supply_circulating`]: gnp(item, 'metrics.supply.circulating'),
+        [`${prefix}metrics-supply_y_2050_issued_percent`]: gnp(item, 'metrics.supply.y_2050_issued_percent'),
+        [`${prefix}metrics-supply_annual_inflation_percent`]: gnp(item, 'metrics.supply.annual_inflation_percent'),
+        [`${prefix}metrics-supply_y_plus10_issued_percent`]: gnp(item, 'metrics.supply.y_plus10_issued_percent'),
 
-        [`${prefix}metrics-blockchain_stats_24_hours_transaction_volume`]            : gnp(item, 'metrics.blockchain_stats_24_hours.transaction_volume'),
-        [`${prefix}metrics-blockchain_stats_24_hours_adjusted_transaction_volume`]   : gnp(item, 'metrics.blockchain_stats_24_hours.adjusted_transaction_volume'),
-        [`${prefix}metrics-blockchain_stats_24_hours_nvt`]                           : gnp(item, 'metrics.blockchain_stats_24_hours.nvt'),
-        [`${prefix}metrics-blockchain_stats_24_hours_adjusted_nvt`]                  : gnp(item, 'metrics.blockchain_stats_24_hours.adjusted_nvt'),
-        [`${prefix}metrics-blockchain_stats_24_hours_sum_of_fees`]                   : gnp(item, 'metrics.blockchain_stats_24_hours.sum_of_fees'),
-        [`${prefix}metrics-blockchain_stats_24_hours_median_tx_value`]               : gnp(item, 'metrics.blockchain_stats_24_hours.median_tx_value'),
-        [`${prefix}metrics-blockchain_stats_24_hours_median_tx_fee`]                 : gnp(item, 'metrics.blockchain_stats_24_hours.median_tx_fee'),
-        [`${prefix}metrics-blockchain_stats_24_hours_count_of_active_addresses`]     : gnp(item, 'metrics.blockchain_stats_24_hours.count_of_active_addresses'),
-        [`${prefix}metrics-blockchain_stats_24_hours_count_of_tx`]                   : gnp(item, 'metrics.blockchain_stats_24_hours.count_of_tx'),
-        [`${prefix}metrics-blockchain_stats_24_hours_count_of_payments`]             : gnp(item, 'metrics.blockchain_stats_24_hours.count_of_payments'),
-        [`${prefix}metrics-blockchain_stats_24_hours_new_issuance`]                  : gnp(item, 'metrics.blockchain_stats_24_hours.new_issuance'),
-        [`${prefix}metrics-blockchain_stats_24_hours_average_difficulty`]            : gnp(item, 'metrics.blockchain_stats_24_hours.average_difficulty'),
-        [`${prefix}metrics-blockchain_stats_24_hours_kilobytes_added`]               : gnp(item, 'metrics.blockchain_stats_24_hours.kilobytes_added'),
-        [`${prefix}metrics-blockchain_stats_24_hours_count_of_blocks_added`]         : gnp(item, 'metrics.blockchain_stats_24_hours.count_of_blocks_added'),
+        [`${prefix}metrics-blockchain_stats_24_hours_transaction_volume`]: gnp(item, 'metrics.blockchain_stats_24_hours.transaction_volume'),
+        [`${prefix}metrics-blockchain_stats_24_hours_adjusted_transaction_volume`]: gnp(item, 'metrics.blockchain_stats_24_hours.adjusted_transaction_volume'),
+        [`${prefix}metrics-blockchain_stats_24_hours_nvt`]: gnp(item, 'metrics.blockchain_stats_24_hours.nvt'),
+        [`${prefix}metrics-blockchain_stats_24_hours_adjusted_nvt`]: gnp(item, 'metrics.blockchain_stats_24_hours.adjusted_nvt'),
+        [`${prefix}metrics-blockchain_stats_24_hours_sum_of_fees`]: gnp(item, 'metrics.blockchain_stats_24_hours.sum_of_fees'),
+        [`${prefix}metrics-blockchain_stats_24_hours_median_tx_value`]: gnp(item, 'metrics.blockchain_stats_24_hours.median_tx_value'),
+        [`${prefix}metrics-blockchain_stats_24_hours_median_tx_fee`]: gnp(item, 'metrics.blockchain_stats_24_hours.median_tx_fee'),
+        [`${prefix}metrics-blockchain_stats_24_hours_count_of_active_addresses`]: gnp(item, 'metrics.blockchain_stats_24_hours.count_of_active_addresses'),
+        [`${prefix}metrics-blockchain_stats_24_hours_count_of_tx`]: gnp(item, 'metrics.blockchain_stats_24_hours.count_of_tx'),
+        [`${prefix}metrics-blockchain_stats_24_hours_count_of_payments`]: gnp(item, 'metrics.blockchain_stats_24_hours.count_of_payments'),
+        [`${prefix}metrics-blockchain_stats_24_hours_new_issuance`]: gnp(item, 'metrics.blockchain_stats_24_hours.new_issuance'),
+        [`${prefix}metrics-blockchain_stats_24_hours_average_difficulty`]: gnp(item, 'metrics.blockchain_stats_24_hours.average_difficulty'),
+        [`${prefix}metrics-blockchain_stats_24_hours_kilobytes_added`]: gnp(item, 'metrics.blockchain_stats_24_hours.kilobytes_added'),
+        [`${prefix}metrics-blockchain_stats_24_hours_count_of_blocks_added`]: gnp(item, 'metrics.blockchain_stats_24_hours.count_of_blocks_added'),
 
-        [`${prefix}metrics-all_time_high_price`]                                     : gnp(item, 'metrics.all_time_high.price'),
-        [`${prefix}metrics-all_time_high_at`]                                        : gnp(item, 'metrics.all_time_high.at'),
-        [`${prefix}metrics-all_time_high_days_since`]                                : gnp(item, 'metrics.all_time_high.days_since'),
-        [`${prefix}metrics-all_time_high_percent_down`]                              : gnp(item, 'metrics.all_time_high.percent_down'),
-        [`${prefix}metrics-all_time_high_breakeven_multiple`]                        : gnp(item, 'metrics.all_time_high.breakeven_multiple'),
+        [`${prefix}metrics-all_time_high_price`]: gnp(item, 'metrics.all_time_high.price'),
+        [`${prefix}metrics-all_time_high_at`]: gnp(item, 'metrics.all_time_high.at'),
+        [`${prefix}metrics-all_time_high_days_since`]: gnp(item, 'metrics.all_time_high.days_since'),
+        [`${prefix}metrics-all_time_high_percent_down`]: gnp(item, 'metrics.all_time_high.percent_down'),
+        [`${prefix}metrics-all_time_high_breakeven_multiple`]: gnp(item, 'metrics.all_time_high.breakeven_multiple'),
 
-        [`${prefix}metrics-cycle_low_price`]                                         : gnp(item, 'metrics.cycle_low.price'),
-        [`${prefix}metrics-cycle_low_at`]                                            : gnp(item, 'metrics.cycle_low.at'),
-        [`${prefix}metrics-cycle_low_percent_up`]                                    : gnp(item, 'metrics.cycle_low.percent_up'),
-        [`${prefix}metrics-cycle_low_days_since`]                                    : gnp(item, 'metrics.cycle_low.days_since'),
-        [`${prefix}metrics-token_sale_stats_sale_proceeds_usd`]                      : gnp(item, 'metrics.token_sale_stats.sale_proceeds_usd'),
-        [`${prefix}metrics-token_sale_stats_sale_start_date`]                        : gnp(item, 'metrics.token_sale_stats.sale_start_date'),
-        [`${prefix}metrics-token_sale_stats_sale_end_date`]                          : gnp(item, 'metrics.token_sale_stats.sale_end_date'),
-        [`${prefix}metrics-token_sale_stats_roi_since_sale_usd_percent`]             : gnp(item, 'metrics.token_sale_stats.roi_since_sale_usd_percent'),
-        [`${prefix}metrics-token_sale_stats_roi_since_sale_btc_percent`]             : gnp(item, 'metrics.token_sale_stats.roi_since_sale_btc_percent'),
-        [`${prefix}metrics-token_sale_stats_roi_since_sale_eth_percent`]             : gnp(item, 'metrics.token_sale_stats.roi_since_sale_eth_percent'),
+        [`${prefix}metrics-cycle_low_price`]: gnp(item, 'metrics.cycle_low.price'),
+        [`${prefix}metrics-cycle_low_at`]: gnp(item, 'metrics.cycle_low.at'),
+        [`${prefix}metrics-cycle_low_percent_up`]: gnp(item, 'metrics.cycle_low.percent_up'),
+        [`${prefix}metrics-cycle_low_days_since`]: gnp(item, 'metrics.cycle_low.days_since'),
+        [`${prefix}metrics-token_sale_stats_sale_proceeds_usd`]: gnp(item, 'metrics.token_sale_stats.sale_proceeds_usd'),
+        [`${prefix}metrics-token_sale_stats_sale_start_date`]: gnp(item, 'metrics.token_sale_stats.sale_start_date'),
+        [`${prefix}metrics-token_sale_stats_sale_end_date`]: gnp(item, 'metrics.token_sale_stats.sale_end_date'),
+        [`${prefix}metrics-token_sale_stats_roi_since_sale_usd_percent`]: gnp(item, 'metrics.token_sale_stats.roi_since_sale_usd_percent'),
+        [`${prefix}metrics-token_sale_stats_roi_since_sale_btc_percent`]: gnp(item, 'metrics.token_sale_stats.roi_since_sale_btc_percent'),
+        [`${prefix}metrics-token_sale_stats_roi_since_sale_eth_percent`]: gnp(item, 'metrics.token_sale_stats.roi_since_sale_eth_percent'),
 
-        [`${prefix}metrics-staking_stats_staking_yield_percent`]                     : gnp(item, 'metrics.staking_stats.staking_yield_percent'),
-        [`${prefix}metrics-staking_stats_staking_type`]                              : gnp(item, 'metrics.staking_stats.staking_type'),
-        [`${prefix}metrics-staking_stats_staking_minimum`]                           : gnp(item, 'metrics.staking_stats.staking_minimum'),
-        [`${prefix}metrics-staking_stats_tokens_staked`]                             : gnp(item, 'metrics.staking_stats.tokens_staked'),
-        [`${prefix}metrics-staking_stats_tokens_staked_percent`]                     : gnp(item, 'metrics.staking_stats.tokens_staked_percent'),
-        [`${prefix}metrics-staking_stats_real_staking_yield_percent`]                : gnp(item, 'metrics.staking_stats.real_staking_yield_percent'),
+        [`${prefix}metrics-staking_stats_staking_yield_percent`]: gnp(item, 'metrics.staking_stats.staking_yield_percent'),
+        [`${prefix}metrics-staking_stats_staking_type`]: gnp(item, 'metrics.staking_stats.staking_type'),
+        [`${prefix}metrics-staking_stats_staking_minimum`]: gnp(item, 'metrics.staking_stats.staking_minimum'),
+        [`${prefix}metrics-staking_stats_tokens_staked`]: gnp(item, 'metrics.staking_stats.tokens_staked'),
+        [`${prefix}metrics-staking_stats_tokens_staked_percent`]: gnp(item, 'metrics.staking_stats.tokens_staked_percent'),
+        [`${prefix}metrics-staking_stats_real_staking_yield_percent`]: gnp(item, 'metrics.staking_stats.real_staking_yield_percent'),
 
-        [`${prefix}metrics-mining_stats_mining_algo`]                                : gnp(item, 'metrics.mining_stats.mining_algo'),
-        [`${prefix}metrics-mining_stats_network_hash_rate`]                          : gnp(item, 'metrics.mining_stats.network_hash_rate'),
-        [`${prefix}metrics-mining_stats_available_on_nicehash_percent`]              : gnp(item, 'metrics.mining_stats.available_on_nicehash_percent'),
-        [`${prefix}metrics-mining_stats_1_hour_attack_cost`]                         : gnp(item, 'metrics.mining_stats.1_hour_attack_cost'),
-        [`${prefix}metrics-mining_stats_24_hours_attack_cost`]                       : gnp(item, 'metrics.mining_stats.24_hours_attack_cost'),
-        [`${prefix}metrics-mining_stats_attack_appeal`]                              : gnp(item, 'metrics.mining_stats.attack_appeal'),
+        [`${prefix}metrics-mining_stats_mining_algo`]: gnp(item, 'metrics.mining_stats.mining_algo'),
+        [`${prefix}metrics-mining_stats_network_hash_rate`]: gnp(item, 'metrics.mining_stats.network_hash_rate'),
+        [`${prefix}metrics-mining_stats_available_on_nicehash_percent`]: gnp(item, 'metrics.mining_stats.available_on_nicehash_percent'),
+        [`${prefix}metrics-mining_stats_1_hour_attack_cost`]: gnp(item, 'metrics.mining_stats.1_hour_attack_cost'),
+        [`${prefix}metrics-mining_stats_24_hours_attack_cost`]: gnp(item, 'metrics.mining_stats.24_hours_attack_cost'),
+        [`${prefix}metrics-mining_stats_attack_appeal`]: gnp(item, 'metrics.mining_stats.attack_appeal'),
 
-        [`${prefix}metrics-developer_activity_stars`]                                : gnp(item, 'metrics.developer_activity.stars'),
-        [`${prefix}metrics-developer_activity_watchers`]                             : gnp(item, 'metrics.developer_activity.watchers'),
-        [`${prefix}metrics-developer_activity_commits_last_3_months`]                : gnp(item, 'metrics.developer_activity.commits_last_3_months'),
-        [`${prefix}metrics-developer_activity_commits_last_1_year`]                  : gnp(item, 'metrics.developer_activity.commits_last_1_year'),
-        [`${prefix}metrics-developer_activity_lines_added_last_3_months`]            : gnp(item, 'metrics.developer_activity.lines_added_last_3_months'),
-        [`${prefix}metrics-developer_activity_lines_added_last_1_year`]              : gnp(item, 'metrics.developer_activity.lines_added_last_1_year'),
-        [`${prefix}metrics-developer_activity_lines_deleted_last_3_months`]          : gnp(item, 'metrics.developer_activity.lines_deleted_last_3_months'),
-        [`${prefix}metrics-developer_activity_lines_deleted_last_1_year`]            : gnp(item, 'metrics.developer_activity.lines_deleted_last_1_year'),
+        [`${prefix}metrics-developer_activity_stars`]: gnp(item, 'metrics.developer_activity.stars'),
+        [`${prefix}metrics-developer_activity_watchers`]: gnp(item, 'metrics.developer_activity.watchers'),
+        [`${prefix}metrics-developer_activity_commits_last_3_months`]: gnp(item, 'metrics.developer_activity.commits_last_3_months'),
+        [`${prefix}metrics-developer_activity_commits_last_1_year`]: gnp(item, 'metrics.developer_activity.commits_last_1_year'),
+        [`${prefix}metrics-developer_activity_lines_added_last_3_months`]: gnp(item, 'metrics.developer_activity.lines_added_last_3_months'),
+        [`${prefix}metrics-developer_activity_lines_added_last_1_year`]: gnp(item, 'metrics.developer_activity.lines_added_last_1_year'),
+        [`${prefix}metrics-developer_activity_lines_deleted_last_3_months`]: gnp(item, 'metrics.developer_activity.lines_deleted_last_3_months'),
+        [`${prefix}metrics-developer_activity_lines_deleted_last_1_year`]: gnp(item, 'metrics.developer_activity.lines_deleted_last_1_year'),
 
-        [`${prefix}metrics-roi_data_percent_change_last_1_week`]                     : gnp(item, 'metrics.roi_data.percent_change_last_1_week'),
-        [`${prefix}metrics-roi_data_percent_change_last_1_month`]                    : gnp(item, 'metrics.roi_data.percent_change_last_1_month'),
-        [`${prefix}metrics-roi_data_percent_change_last_3_months`]                   : gnp(item, 'metrics.roi_data.percent_change_last_3_months'),
-        [`${prefix}metrics-roi_data_percent_change_last_1_year`]                     : gnp(item, 'metrics.roi_data.percent_change_last_1_year'),
-        [`${prefix}metrics-roi_data_percent_change_btc_last_1_week`]                 : gnp(item, 'metrics.roi_data.percent_change_btc_last_1_week'),
-        [`${prefix}metrics-roi_data_percent_change_btc_last_1_month`]                : gnp(item, 'metrics.roi_data.percent_change_btc_last_1_month'),
-        [`${prefix}metrics-roi_data_percent_change_btc_last_3_months`]               : gnp(item, 'metrics.roi_data.percent_change_btc_last_3_months'),
-        [`${prefix}metrics-roi_data_percent_change_btc_last_1_year`]                 : gnp(item, 'metrics.roi_data.percent_change_btc_last_1_year'),
-        [`${prefix}metrics-roi_data_percent_change_month_to_date`]                   : gnp(item, 'metrics.roi_data.percent_change_month_to_date'),
-        [`${prefix}metrics-roi_data_percent_change_quarter_to_date`]                 : gnp(item, 'metrics.roi_data.percent_change_quarter_to_date'),
-        [`${prefix}metrics-roi_data_percent_change_year_to_date`]                    : gnp(item, 'metrics.roi_data.percent_change_year_to_date'),
+        [`${prefix}metrics-roi_data_percent_change_last_1_week`]: gnp(item, 'metrics.roi_data.percent_change_last_1_week'),
+        [`${prefix}metrics-roi_data_percent_change_last_1_month`]: gnp(item, 'metrics.roi_data.percent_change_last_1_month'),
+        [`${prefix}metrics-roi_data_percent_change_last_3_months`]: gnp(item, 'metrics.roi_data.percent_change_last_3_months'),
+        [`${prefix}metrics-roi_data_percent_change_last_1_year`]: gnp(item, 'metrics.roi_data.percent_change_last_1_year'),
+        [`${prefix}metrics-roi_data_percent_change_btc_last_1_week`]: gnp(item, 'metrics.roi_data.percent_change_btc_last_1_week'),
+        [`${prefix}metrics-roi_data_percent_change_btc_last_1_month`]: gnp(item, 'metrics.roi_data.percent_change_btc_last_1_month'),
+        [`${prefix}metrics-roi_data_percent_change_btc_last_3_months`]: gnp(item, 'metrics.roi_data.percent_change_btc_last_3_months'),
+        [`${prefix}metrics-roi_data_percent_change_btc_last_1_year`]: gnp(item, 'metrics.roi_data.percent_change_btc_last_1_year'),
+        [`${prefix}metrics-roi_data_percent_change_month_to_date`]: gnp(item, 'metrics.roi_data.percent_change_month_to_date'),
+        [`${prefix}metrics-roi_data_percent_change_quarter_to_date`]: gnp(item, 'metrics.roi_data.percent_change_quarter_to_date'),
+        [`${prefix}metrics-roi_data_percent_change_year_to_date`]: gnp(item, 'metrics.roi_data.percent_change_year_to_date'),
 
-        [`${prefix}metrics-roi_by_year_2018_usd_percent`]                            : gnp(item, 'metrics.roi_by_year.2018_usd_percent'),
-        [`${prefix}metrics-roi_by_year_2017_usd_percent`]                            : gnp(item, 'metrics.roi_by_year.2017_usd_percent'),
-        [`${prefix}metrics-roi_by_year_2016_usd_percent`]                            : gnp(item, 'metrics.roi_by_year.2016_usd_percent'),
-        [`${prefix}metrics-roi_by_year_2015_usd_percent`]                            : gnp(item, 'metrics.roi_by_year.2015_usd_percent'),
-        [`${prefix}metrics-roi_by_year_2014_usd_percent`]                            : gnp(item, 'metrics.roi_by_year.2014_usd_percent'),
-        [`${prefix}metrics-roi_by_year_2013_usd_percent`]                            : gnp(item, 'metrics.roi_by_year.2013_usd_percent'),
-        [`${prefix}metrics-roi_by_year_2012_usd_percent`]                            : gnp(item, 'metrics.roi_by_year.2012_usd_percent'),
-        [`${prefix}metrics-roi_by_year_2011_usd_percent`]                            : gnp(item, 'metrics.roi_by_year.2011_usd_percent'),
+        [`${prefix}metrics-roi_by_year_2018_usd_percent`]: gnp(item, 'metrics.roi_by_year.2018_usd_percent'),
+        [`${prefix}metrics-roi_by_year_2017_usd_percent`]: gnp(item, 'metrics.roi_by_year.2017_usd_percent'),
+        [`${prefix}metrics-roi_by_year_2016_usd_percent`]: gnp(item, 'metrics.roi_by_year.2016_usd_percent'),
+        [`${prefix}metrics-roi_by_year_2015_usd_percent`]: gnp(item, 'metrics.roi_by_year.2015_usd_percent'),
+        [`${prefix}metrics-roi_by_year_2014_usd_percent`]: gnp(item, 'metrics.roi_by_year.2014_usd_percent'),
+        [`${prefix}metrics-roi_by_year_2013_usd_percent`]: gnp(item, 'metrics.roi_by_year.2013_usd_percent'),
+        [`${prefix}metrics-roi_by_year_2012_usd_percent`]: gnp(item, 'metrics.roi_by_year.2012_usd_percent'),
+        [`${prefix}metrics-roi_by_year_2011_usd_percent`]: gnp(item, 'metrics.roi_by_year.2011_usd_percent'),
 
-        [`${prefix}metrics-risk_metrics_sharpe_ratios_last_30_days`]                 : gnp(item, 'metrics.risk_metrics.sharpe_ratios.last_30_days'),
-        [`${prefix}metrics-risk_metrics_sharpe_ratios_last_90_days`]                 : gnp(item, 'metrics.risk_metrics.sharpe_ratios.last_90_days'),
-        [`${prefix}metrics-risk_metrics_sharpe_ratios_last_1_year`]                  : gnp(item, 'metrics.risk_metrics.sharpe_ratios.last_1_year'),
-        [`${prefix}metrics-risk_metrics_sharpe_ratios_last_3_years`]                 : gnp(item, 'metrics.risk_metrics.sharpe_ratios.last_3_years'),
+        [`${prefix}metrics-risk_metrics_sharpe_ratios_last_30_days`]: gnp(item, 'metrics.risk_metrics.sharpe_ratios.last_30_days'),
+        [`${prefix}metrics-risk_metrics_sharpe_ratios_last_90_days`]: gnp(item, 'metrics.risk_metrics.sharpe_ratios.last_90_days'),
+        [`${prefix}metrics-risk_metrics_sharpe_ratios_last_1_year`]: gnp(item, 'metrics.risk_metrics.sharpe_ratios.last_1_year'),
+        [`${prefix}metrics-risk_metrics_sharpe_ratios_last_3_years`]: gnp(item, 'metrics.risk_metrics.sharpe_ratios.last_3_years'),
 
-        [`${prefix}metrics-risk_metrics_volatility_stats_volatility_last_30_days`]   : gnp(item, 'metrics.risk_metrics.volatility_stats.volatility_last_30_days'),
-        [`${prefix}metrics-risk_metrics_volatility_stats_volatility_last_90_days`]   : gnp(item, 'metrics.risk_metrics.volatility_stats.volatility_last_90_days'),
-        [`${prefix}metrics-risk_metrics_volatility_stats_volatility_last_1_year`]    : gnp(item, 'metrics.risk_metrics.volatility_stats.volatility_last_1_year'),
-        [`${prefix}metrics-risk_metrics_volatility_stats_volatility_last_3_years`]   : gnp(item, 'metrics.risk_metrics.volatility_stats.volatility_last_3_years'),
+        [`${prefix}metrics-risk_metrics_volatility_stats_volatility_last_30_days`]: gnp(item, 'metrics.risk_metrics.volatility_stats.volatility_last_30_days'),
+        [`${prefix}metrics-risk_metrics_volatility_stats_volatility_last_90_days`]: gnp(item, 'metrics.risk_metrics.volatility_stats.volatility_last_90_days'),
+        [`${prefix}metrics-risk_metrics_volatility_stats_volatility_last_1_year`]: gnp(item, 'metrics.risk_metrics.volatility_stats.volatility_last_1_year'),
+        [`${prefix}metrics-risk_metrics_volatility_stats_volatility_last_3_years`]: gnp(item, 'metrics.risk_metrics.volatility_stats.volatility_last_3_years'),
 
-        [`${prefix}metrics-misc_data_vladimir_club_cost`]                            : gnp(item, 'metrics.misc_data.vladimir_club_cost'),
-        [`${prefix}metrics-misc_data_btc_current_normalized_supply_price_usd`]       : gnp(item, 'metrics.misc_data.btc_current_normalized_supply_price_usd'),
-        [`${prefix}metrics-misc_data_btc_y2050_normalized_supply_price_usd`]         : gnp(item, 'metrics.misc_data.btc_y2050_normalized_supply_price_usd'),
-        [`${prefix}metrics-misc_data_asset_created_at`]                              : gnp(item, 'metrics.misc_data.asset_created_at'),
-        [`${prefix}metrics-misc_data_asset_age_days`]                                : gnp(item, 'metrics.misc_data.asset_age_days'),
-        [`${prefix}metrics-misc_data_categories`]                                    : JSON.stringify(gnp(item, 'metrics.misc_data.categories')),
-        [`${prefix}metrics-misc_data_sectors`]                                       : JSON.stringify(gnp(item, 'metrics.misc_data.sectors')),
+        [`${prefix}metrics-misc_data_vladimir_club_cost`]: gnp(item, 'metrics.misc_data.vladimir_club_cost'),
+        [`${prefix}metrics-misc_data_btc_current_normalized_supply_price_usd`]: gnp(item, 'metrics.misc_data.btc_current_normalized_supply_price_usd'),
+        [`${prefix}metrics-misc_data_btc_y2050_normalized_supply_price_usd`]: gnp(item, 'metrics.misc_data.btc_y2050_normalized_supply_price_usd'),
+        [`${prefix}metrics-misc_data_asset_created_at`]: gnp(item, 'metrics.misc_data.asset_created_at'),
+        [`${prefix}metrics-misc_data_asset_age_days`]: gnp(item, 'metrics.misc_data.asset_age_days'),
+        [`${prefix}metrics-misc_data_categories`]: JSON.stringify(gnp(item, 'metrics.misc_data.categories')),
+        [`${prefix}metrics-misc_data_sectors`]: JSON.stringify(gnp(item, 'metrics.misc_data.sectors')),
 
-        [`${prefix}profile-is_verified`]                                             : gnp(item, 'profile.is_verified'),
-        [`${prefix}profile-tagline`]                                                 : gnp(item, 'profile.tagline'),
+        [`${prefix}profile-is_verified`]: gnp(item, 'profile.is_verified'),
+        [`${prefix}profile-tagline`]: gnp(item, 'profile.tagline'),
         // [`${prefix}profile-overview`]                                                : gnp(item, 'profile.overview'),
         // [`${prefix}profile-background`]                                              : gnp(item, 'profile.background'),
         // [`${prefix}profile-technology`]                                              : gnp(item, 'profile.technology'),
-        [`${prefix}profile-token_distribution_sale_start`]                           : gnp(item, 'profile.token_distribution.sale_start'),
-        [`${prefix}profile-token_distribution_sale_end`]                             : gnp(item, 'profile.token_distribution.sale_end'),
+        [`${prefix}profile-token_distribution_sale_start`]: gnp(item, 'profile.token_distribution.sale_start'),
+        [`${prefix}profile-token_distribution_sale_end`]: gnp(item, 'profile.token_distribution.sale_end'),
         // [`${prefix}profile-token_distribution_initial_distribution`]                 : gnp(item, 'profile.token_distribution.initial_distribution'),
-        [`${prefix}profile-token_distribution_current_supply`]                       : gnp(item, 'profile.token_distribution.current_supply'),
-        [`${prefix}profile-token_distribution_max_supply`]                           : gnp(item, 'profile.token_distribution.max_supply'),
-        [`${prefix}profile-token_distribution_description`]                          : gnp(item, 'profile.token_distribution.description'),
-        [`${prefix}profile-token_details_usage`]                                     : gnp(item, 'profile.token_details.usage'),
-        [`${prefix}profile-token_details_type`]                                      : gnp(item, 'profile.token_details.type'),
-        [`${prefix}profile-token_details_sales_rounds`]                              : gnp(item, 'profile.token_details.sales_rounds'),
+        [`${prefix}profile-token_distribution_current_supply`]: gnp(item, 'profile.token_distribution.current_supply'),
+        [`${prefix}profile-token_distribution_max_supply`]: gnp(item, 'profile.token_distribution.max_supply'),
+        [`${prefix}profile-token_distribution_description`]: gnp(item, 'profile.token_distribution.description'),
+        [`${prefix}profile-token_details_usage`]: gnp(item, 'profile.token_details.usage'),
+        [`${prefix}profile-token_details_type`]: gnp(item, 'profile.token_details.type'),
+        [`${prefix}profile-token_details_sales_rounds`]: gnp(item, 'profile.token_details.sales_rounds'),
         //
         // NOTE: Big Objects
         //
@@ -396,7 +388,7 @@ export default async function formatterMessariSectionMetrics(data, timestamp) {
         // [`${prefix}profile-people_investors`]                                        : JSON.stringify(gnp(item, 'profile.people.investors')),
         // [`${prefix}profile-people_advisors`]                                         : JSON.stringify(gnp(item, 'profile.people.advisors')),
         // [`${prefix}profile-relevant_resources`]                                      : JSON.stringify(gnp(item, 'profile.relevant_resources')),
-        [`${prefix}profile-consensus_algorithm`]                                     : gnp(item, 'profile.consensus_algorithm'),
+        [`${prefix}profile-consensus_algorithm`]: gnp(item, 'profile.consensus_algorithm')
 
       }
 
@@ -408,7 +400,7 @@ export default async function formatterMessariSectionMetrics(data, timestamp) {
 
   }
 
-  catch(error) {
+  catch (error) {
 
     const message = `formatterMessariMetrics(): ${error}`;
     logger.error(message);

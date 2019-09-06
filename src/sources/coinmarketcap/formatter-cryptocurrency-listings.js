@@ -1,10 +1,15 @@
-'use strict';
-
 // Cryptohub
-import logger                             from '../../logger';
-import { mapSave, perSecondSave }         from '../../db/save';
-import { getMaps }                        from '../../db/query';
+import logger from '../../logger';
+import { mapSave, perSecondSave } from '../../db/save';
+import { getMaps } from '../../db/query';
 import { objectGetNestedProperty as gnp } from 'bo-utils';
+
+function dataIsValid(data) {
+  if (data.status && data.status.error_code === 0 && Array.isArray(data.data)) {
+    return true;
+  }
+  else return false;
+}
 
 /**
  *
@@ -51,20 +56,13 @@ import { objectGetNestedProperty as gnp } from 'bo-utils';
  * cmc_rank -> cmc-listings-cmc_rank
  *
  * @param {Array} data - response from Messari api request
- * @param {String} timestamp
- * @return {Object}
+ * @param {String} timestamp - time the data was created
+ * @returns {Object} - formatted data and timestamp
  *
  */
 export default async function formatter(data, timestamp) {
 
   try {
-
-    function dataIsValid(data) {
-      if (data.status && data.status.error_code === 0 && Array.isArray(data.data)) {
-        return true;
-      }
-      else return false;
-    }
 
     if (!dataIsValid(data)) return;
     data = data.data;
@@ -126,26 +124,26 @@ export default async function formatter(data, timestamp) {
     const prefix = 'cmc-listings-';
     for (const val of Object.values(data)) {
       const id = mapCmcIdCcId[val.id];
-      if (id === void 0) continue;
+      if (id === undefined) continue;
       result[id] = {
-        [`${prefix}circulating_supply`]           : val.circulating_supply,
-        [`${prefix}cmc_rank`]                     : val.cmc_rank,
-        [`${prefix}date_added`]                   : val.date_added,
-        [`${prefix}id`]                           : val.id,
-        [`${prefix}last_updated`]                 : val.last_updated,
-        [`${prefix}max_supply`]                   : val.max_supply,
-        [`${prefix}name`]                         : val.name,
-        [`${prefix}num_market_pairs`]             : val.num_market_pairs,
-        [`${prefix}tags`]                         : val.tags,
-        [`${prefix}total_supply`]                 : val.total_supply,
-        [`${prefix}quote_USD_market_cap`]         : gnp(val, 'quote.USD.market_cap'),
-        [`${prefix}quote_USD_percent_change_1h`]  : gnp(val, 'quote.USD.percent_change_1h'),
-        [`${prefix}quote_USD_percent_change_7d`]  : gnp(val, 'quote.USD.percent_change_7d'),
-        [`${prefix}quote_USD_percent_change_24h`] : gnp(val, 'quote.USD.percent_change_24h'),
-        [`${prefix}quote_USD_volume_24h`]         : gnp(val, 'quote.USD.volume_24h'),
-        [`${prefix}quote_USD_price`]              : gnp(val, 'quote.USD.price'),
-        [`${prefix}slug`]                         : val.slug,
-        [`${prefix}symbol`]                       : val.symbol,
+        [`${prefix}circulating_supply`]: val.circulating_supply,
+        [`${prefix}cmc_rank`]: val.cmc_rank,
+        [`${prefix}date_added`]: val.date_added,
+        [`${prefix}id`]: val.id,
+        [`${prefix}last_updated`]: val.last_updated,
+        [`${prefix}max_supply`]: val.max_supply,
+        [`${prefix}name`]: val.name,
+        [`${prefix}num_market_pairs`]: val.num_market_pairs,
+        [`${prefix}tags`]: val.tags,
+        [`${prefix}total_supply`]: val.total_supply,
+        [`${prefix}quote_USD_market_cap`]: gnp(val, 'quote.USD.market_cap'),
+        [`${prefix}quote_USD_percent_change_1h`]: gnp(val, 'quote.USD.percent_change_1h'),
+        [`${prefix}quote_USD_percent_change_7d`]: gnp(val, 'quote.USD.percent_change_7d'),
+        [`${prefix}quote_USD_percent_change_24h`]: gnp(val, 'quote.USD.percent_change_24h'),
+        [`${prefix}quote_USD_volume_24h`]: gnp(val, 'quote.USD.volume_24h'),
+        [`${prefix}quote_USD_price`]: gnp(val, 'quote.USD.price'),
+        [`${prefix}slug`]: val.slug,
+        [`${prefix}symbol`]: val.symbol
       }
     }
 
@@ -155,7 +153,7 @@ export default async function formatter(data, timestamp) {
 
   }
 
-  catch(error) {
+  catch (error) {
 
     const message = `formatterCoinmarketcapSectionCryptocurrencyListings(): ${error}`;
     logger.error(message);

@@ -6,7 +6,7 @@ const logger = require('../logger');
  * Map Coinmarketcap ids to Cryptocompare ids
  * @param {Object} cmc
  * @param {Object} cc
- * @return {Object} mapping
+ * @returns {Object} mapping
  *
  */
 module.exports = function mapCMCToCC(cmc, cc) {
@@ -30,7 +30,7 @@ module.exports = function mapCMCToCC(cmc, cc) {
         symbol2b = symbol2.replace(regexNonAlphaNumeric, '');
         name2 = name2.trim().replace(regexIgnoreSpace, '').toLowerCase();
 
-        if ((symbol1 === symbol2) || (symbol1 === symbol2b && name1 === name2)) {
+        if (symbol1 === symbol2 || symbol1 === symbol2b && name1 === name2) {
           map[k1] = parseInt(k2);
         }
 
@@ -41,7 +41,7 @@ module.exports = function mapCMCToCC(cmc, cc) {
     return map;
 
   }
-  catch(error) {
+  catch (error) {
     logger.error(`mapCMCToCC(): ${error}`);
     return {error};
   }

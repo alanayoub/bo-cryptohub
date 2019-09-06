@@ -1,5 +1,3 @@
-'use strict';
-
 import { MapModel } from '../schema';
 
 /**
@@ -7,7 +5,7 @@ import { MapModel } from '../schema';
  * GET MAPS
  *
  * @param {Array} ids
- * @return {Object}
+ * @returns {Object}
  *
  */
 export default async function getMaps(ids) {

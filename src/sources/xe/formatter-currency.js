@@ -1,5 +1,3 @@
-'use strict';
-
 import { perSecondSave } from '../../db/save';
 
 // Libs
@@ -14,7 +12,7 @@ const settings = require('../../settings');
  * XE
  *
  * USD Currency Table
- * @return {Object}
+ * @returns {Object}
  *
  * Currency conversion data for USD
  *
@@ -37,7 +35,7 @@ export default async function formatterCurrency(response, timestamp) {
       data[code] = {
         'xe-name': name,
         'xe-unitsPerUSD': unitsPerUSD,
-        'xe-USDPerUnits': USDPerUnits,
+        'xe-USDPerUnits': USDPerUnits
       }
     }
 
@@ -45,7 +43,7 @@ export default async function formatterCurrency(response, timestamp) {
     return {data, timestamp};
 
   }
-  catch(error) {
+  catch (error) {
     const message = `formatterCurrency(): ${error}`;
     logger.error(message);
     return {message, error: true};

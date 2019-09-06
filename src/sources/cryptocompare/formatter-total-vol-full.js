@@ -1,5 +1,3 @@
-'use strict';
-
 // Cryptohub
 const logger = require('../../logger');
 
@@ -75,7 +73,7 @@ import { objectGetNestedProperty as gnp } from 'bo-utils';
  *
  * @param {Array} price is an array of the responses of batched cryptocompare api price data
  * @param {String} timestamp
- * @return {Object}
+ * @returns {Object}
  *
  */
 export default async function totalVolFull(price, timestamp) {
@@ -102,7 +100,6 @@ export default async function totalVolFull(price, timestamp) {
       if (coinInfo) {
         id = coinInfo.Id;
 
-        if (Number(id) <= 10) debugger;
         result[id] = {};
 
         for ([key, val] of Object.entries(coinInfo)) {
@@ -124,8 +121,7 @@ export default async function totalVolFull(price, timestamp) {
     return {data: result, timestamp};
 
   }
-  catch(error) {
-    debugger;
+  catch (error) {
     const message = `totalVolFull(): ${error}`;
     logger.error(message);
     return {message, error: true};

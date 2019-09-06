@@ -1,12 +1,10 @@
-'use strict';
-
 import { PerSecondModel } from '../schema';
 
 /**
  *
  * GET CURRENCIES
  *
- * @return {Object}
+ * @returns {Object}
  *
  */
 export default async function getCurrencies() {

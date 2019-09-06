@@ -1,5 +1,3 @@
-'use strict';
-
 import { PerSecondModel } from '../schema';
 
 /**
@@ -7,7 +5,7 @@ import { PerSecondModel } from '../schema';
  * GET IDS
  *
  * @param {Array} ids
- * @return {Object}
+ * @returns {Object}
  *
  */
 export default async function getIds(ids) {

@@ -1,5 +1,3 @@
-'use strict';
-
 import { join }     from 'path';
 import http         from 'http';
 import mkdirp       from 'mkdirp'
@@ -111,9 +109,8 @@ export default async function startServer(config) {
 
   }
 
-  catch(error) {
+  catch (error) {
     logger.error(`bo-datatable: Um some error happened yo: ${error}`);
-    debugger
     process.exit(1);
   }
 

@@ -16,7 +16,7 @@ module.exports = function swapObjectKeys(obj, map) {
     }
     return result;
   }
-  catch(error) {
+  catch (error) {
     const message = `swapObjectKeys(): ${error}`;
     logger.error(message);
     return {message, error: true};

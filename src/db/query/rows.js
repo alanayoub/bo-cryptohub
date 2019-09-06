@@ -1,9 +1,6 @@
-'use strict';
-
-// Binary Overdose
-import logger                               from '../../logger';
+import logger from '../../logger';
+import { PerDayModel, PerSecondModel } from '../schema';
 import { fieldTypeMap, columnDependencies } from '../../settings';
-import { PerDayModel, PerSecondModel }      from '../schema';
 
 const idsList = Object.keys(fieldTypeMap);
 
@@ -33,51 +30,51 @@ async function getRecords(fieldSet, sortField = false, sortDirection = false, li
   // const requiredFields = ['cc-total-vol-full-Id'];
 
   const aggregate = [
-     {
-       $match: {
-         field: {
-           $in: Array.from(fieldSet)
-         }
-       }
-     },
-     {
-       $project: {
-         id: 1,
-         field: 1,
-         lastChecked: 1,
-         l: {$arrayElemAt: ["$samples", 0]},
-         s: {$arrayElemAt: ["$samples", 1]}
-       }
-     },
-     {
+    {
+      $match: {
+        field: {
+          $in: Array.from(fieldSet)
+        }
+      }
+    },
+    {
+      $project: {
+        id: 1,
+        field: 1,
+        lastChecked: 1,
+        l: {$arrayElemAt: ['$samples', 0]},
+        s: {$arrayElemAt: ['$samples', 1]}
+      }
+    },
+    {
       $group: {
-        _id: "$id",
+        _id: '$id',
         data: {
           $push: {
-            "k" : "$field",
-            "v" : {
-              value: {$arrayElemAt: ["$s", 1]},
-              lastValue: {$arrayElemAt: ["$l", 1]},
-              timestamp: {$arrayElemAt: ["$s", 0]},
-              lastChecked: "$lastChecked",
+            'k': '$field',
+            'v': {
+              value: {$arrayElemAt: ['$s', 1]},
+              lastValue: {$arrayElemAt: ['$l', 1]},
+              timestamp: {$arrayElemAt: ['$s', 0]},
+              lastChecked: '$lastChecked'
 
             }
           }
         }
       }
-     },
-     {
-       $project: {
-         data: {
-           $arrayToObject: "$data"
-         }
-       }
-     },
-     {
-       $match: {
-         "data.cc-total-vol-full-Id": {$exists: true}
-       }
-     },
+    },
+    {
+      $project: {
+        data: {
+          $arrayToObject: '$data'
+        }
+      }
+    },
+    {
+      $match: {
+        'data.cc-total-vol-full-Id': {$exists: true}
+      }
+    }
   ];
 
   if (sortField) {
@@ -130,7 +127,7 @@ function getFieldSet(columns, columnDependencies) {
  *
  * @param {Array} columns
  * @param {String} sort
- * @return {Object}
+ * @returns {Object}
  *
  * TODO: Remove column / fields hack and implement correctly
  *

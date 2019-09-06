@@ -1,5 +1,3 @@
-'use strict';
-
 import { PerSecondModel } from '../schema';
 
 /**
@@ -8,7 +6,7 @@ import { PerSecondModel } from '../schema';
  *
  * @param {Array} columns
  * @param {String} sort
- * @return {Object}
+ * @returns {Object}
  *
  */
 export default async function getMessariSymbols() {

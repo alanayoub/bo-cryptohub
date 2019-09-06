@@ -3,7 +3,7 @@
  * Pack Data
  *
  * @param {Object} data
- * @return {Object}
+ * @returns {Object}
  *
  */
 export default function packData(data) {

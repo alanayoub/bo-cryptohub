@@ -1,5 +1,3 @@
-'use strict';
-
 import { partialApplication }     from 'bo-utils';
 
 import onHandleData               from './on-handle-data';
@@ -18,5 +16,5 @@ export default {
       const output = JSON.stringify({data: value, type: 'exchanges'});
       socket.emit('store', output);
     });
-  },
+  }
 }

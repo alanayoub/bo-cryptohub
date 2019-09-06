@@ -1,8 +1,5 @@
-'use strict';
-
 import { ExchangeModel } from '../schema';
-
-const logger = require('../../logger');
+import logger from '../../logger';
 
 /**
  *
@@ -32,10 +29,6 @@ export default async function exchangeSave(data) {
 
   for ([exchangeId, exchangeData] of Object.entries(data)) {
 
-    if (exchangeId === void 0 || exchangeId === 'undefined') {
-      debugger;
-    }
-
     try {
 
       _id = `exchange:${exchangeId}`;
@@ -46,7 +39,6 @@ export default async function exchangeSave(data) {
       }
 
       doc = await ExchangeModel.findOne({ _id });
-      if (!doc && !doc.save) debugger;
       doc = await doc.save();
       if (doc === null) {
         doc = await ExchangeModel.create(defaultDoc);
@@ -61,8 +53,7 @@ export default async function exchangeSave(data) {
 
     }
     catch (error) {
-      console.log('error saving', error);
-      debugger;
+      logger.error('error saving', error);
     }
 
   }

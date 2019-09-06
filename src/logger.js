@@ -1,5 +1,3 @@
-'use strict';
-
 // Libs
 const winston = require('winston');
 
@@ -22,7 +20,7 @@ const logger = winston.createLogger({
     new winston.transports.File({filename: 'logs/error.log', level: 'error'}),
     new winston.transports.File({filename: 'logs/warn.log', level: 'warn'}),
     new winston.transports.File({filename: 'logs/debug.log', level: 'debug'}),
-    new winston.transports.File({filename: 'logs/info.log', level: 'info'}),
+    new winston.transports.File({filename: 'logs/info.log', level: 'info'})
   ]
 });
 
@@ -34,7 +32,7 @@ if (settings.logger) {
         winston.format.colorize(),
         winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
         // winston.format.simple(),
-        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`),
+        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
       ),
       level: 'info'
     })

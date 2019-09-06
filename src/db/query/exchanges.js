@@ -1,5 +1,3 @@
-'use strict';
-
 import { ExchangeModel } from '../schema';
 
 /**
@@ -8,7 +6,7 @@ import { ExchangeModel } from '../schema';
  *
  * @param {Array} columns
  * @param {String} sort
- * @return {Object}
+ * @returns {Object}
  *
  */
 export default async function getExchanges() {
@@ -24,7 +22,7 @@ export default async function getExchanges() {
     'cryptohub-numberOfFiatCurrencies',
     'cryptohub-numberOfFiatPairs',
     'cryptohub-numberOfPairs',
-    'cryptohub-points',
+    'cryptohub-points'
   ].join('|^');
 
   const query = {

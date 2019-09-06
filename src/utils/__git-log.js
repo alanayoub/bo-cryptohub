@@ -48,9 +48,9 @@ module.exports = function gitLog(path, branch) {
             date: commit.date(),
             author: {
               name: author.name(),
-              email: author.email(),
+              email: author.email()
             },
-            message: commit.message(),
+            message: commit.message()
           };
           results.unshift(details);
         }
@@ -63,7 +63,7 @@ module.exports = function gitLog(path, branch) {
       history.start();
 
     }
-    catch(error) {
+    catch (error) {
       console.log(`gitLog(): ${error}`);
     }
   });

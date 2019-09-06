@@ -1,5 +1,3 @@
-'use strict';
-
 // Libs
 import { model }        from 'mongoose';
 

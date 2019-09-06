@@ -52,23 +52,23 @@ function StringToBinary(string) {
   chars = [];
   isUCS2 = false;
   for (i = _i = 0; 0 <= len ? _i < len : _i > len; i = 0 <= len ? ++_i : --_i) {
-      code = String.prototype.charCodeAt.call(string, i);
-      if (code > 255) {
-          isUCS2 = true;
-          chars = null;
-          break;
-      } else {
-          chars.push(code);
-      }
+    code = String.prototype.charCodeAt.call(string, i);
+    if (code > 255) {
+      isUCS2 = true;
+      chars = null;
+      break;
+    } else {
+      chars.push(code);
+    }
   }
   if (isUCS2 === true) {
-      return unescape(encodeURIComponent(string));
+    return unescape(encodeURIComponent(string));
   } else {
-      // NOTE: “RangeError: Maximum call stack size exceeded” Why?
-      // Well, you are exceeding the browsers maximum number of supported arguments doing it this way. (normally ~65536). A for loop would probably be more sensible. – Xotic750 Mar 2 '14 at 4:27 
-      debugger
-      const res = String.fromCharCode.apply(null, Array.prototype.slice.apply(chars))
-      return res;
+    // NOTE: “RangeError: Maximum call stack size exceeded” Why?
+    // Well, you are exceeding the browsers maximum number of supported arguments doing it this way. (normally ~65536). A for loop would probably be more sensible. – Xotic750 Mar 2 '14 at 4:27
+    debugger
+    const res = String.fromCharCode.apply(null, Array.prototype.slice.apply(chars))
+    return res;
   }
 }
 
@@ -102,5 +102,5 @@ function stringToArrayBuffer(string) {
 
 module.exports = {
   arrayBufferToString,
-  stringToArrayBuffer,
+  stringToArrayBuffer
 };

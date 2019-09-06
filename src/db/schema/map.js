@@ -1,5 +1,3 @@
-'use strict';
-
 // Libs
 import { Schema } from 'mongoose';
 
@@ -22,7 +20,7 @@ const options = {
   //     }
   //   }
   // }
-  map: String,
+  map: String
 }
 
 const MapSchema = new Schema(options, {collection: 'maps'});

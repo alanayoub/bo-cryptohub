@@ -13,7 +13,7 @@ module.exports = async function gitStatus(path) {
     console.log(`gitStatus(): Got status for ${path}`);
     return statusArr;
   }
-  catch(error) {
+  catch (error) {
     console.log(`gitStatus(): Failed to get status for ${path}`);
     return {error: true, message: `gitStatus(): ${error}`};
   }

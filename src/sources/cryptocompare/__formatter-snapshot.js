@@ -43,7 +43,7 @@ module.exports = function formatterCryptocompareSnapshot(data) {
     }
     return result;
   }
-  catch(error) {
+  catch (error) {
     const message = `formatterCryptocompareSnapshot(): ${error}`;
     logger.error(message);
     return {message, error: true};

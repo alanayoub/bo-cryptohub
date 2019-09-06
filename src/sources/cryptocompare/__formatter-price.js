@@ -46,7 +46,7 @@ const logger = require('../../logger');
  * @param {Array} price is an array of the responses of batched cryptocompare api price data
  * @param {String} timestamp
  * @param {Object} bootstrapData
- * @return {Object}
+ * @returns {Object}
  *
  */
 module.exports = function formatterCryptocompareSectionPrice(price, timestamp, bootstrapData) {
@@ -85,7 +85,7 @@ module.exports = function formatterCryptocompareSectionPrice(price, timestamp, b
     return {data: fData, timestamp};
 
   }
-  catch(error) {
+  catch (error) {
     const message = `formatterCryptocompareSectionPrice(): ${error}`;
     logger.error(message);
     return {message, error: true};

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  *
  * @param {String} uri
@@ -27,7 +25,7 @@ module.exports = async function scrapeJSON(uri, key, cacheFor, cache) {
     }
     return file;
   }
-  catch(error) {
+  catch (error) {
     logger.error(`scrape-json.js: Failed to scrape ${uri}`);
     return {error: true, message: `scrapeJSON(): ${error}`};
   }

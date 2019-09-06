@@ -30,7 +30,7 @@ module.exports = function mergeHandler(dataArray, db) {
     //
     return dataArray[0];
   }
-  catch(error) {
+  catch (error) {
     const message = `mergeHandler(): ${error}`;
     logger.error(message);
     return {message, error: true};

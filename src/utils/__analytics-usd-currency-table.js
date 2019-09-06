@@ -41,7 +41,7 @@ module.exports = function USDCurrencyTable() {
     }
     return data;
   }
-  catch(error) {
+  catch (error) {
     logger.error(`usdCurrencyTable: ${error}`);
     return false;
   }

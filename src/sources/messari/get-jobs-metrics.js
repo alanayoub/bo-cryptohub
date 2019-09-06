@@ -1,9 +1,5 @@
-'use strict';
-
-// Cryptohub
-const logger = require('../../logger');
-const settings = require('../../settings');
-
+import logger from '../../logger';
+import settings from '../../settings';
 import { getMessariSymbols } from '../../db/query';
 
 const uri = (str, id) => `https://data.messari.io/api/v1/assets/${id}/metrics`;
@@ -26,7 +22,7 @@ export default async function getJobsMessariMetrics(queue) {
       queue.push({
         uri: uri`${symbol}`,
         key: key`${symbol}`,
-        cacheForDays: settings.cacheForMessari,
+        cacheForDays: settings.cacheForMessari
       });
       jobs++;
     }
@@ -34,7 +30,7 @@ export default async function getJobsMessariMetrics(queue) {
     logger.info(`getJobsMessariMetrics(): ${jobs} metrics jobs created`);
 
   }
-  catch(error) {
+  catch (error) {
 
     const message = `getJobsMessariMetrics(): ${error}`;
     logger.error(message);

@@ -76,7 +76,7 @@ module.exports = async function gitDiff(path, hash1, hash2) {
     return result;
 
   }
-  catch(error) {
+  catch (error) {
     console.log(`gitDiff(): Failed to diff ${hash1} & ${hash2} for ${path}`);
     return {error: true, message: `gitStatus(): ${error}`};
   }

@@ -112,14 +112,14 @@ module.exports = function formatterCryptocompareFiatVolumeUSD(exchangePairVolume
       data[id] = {
         // 'Symbol': 'BTC',
         // 'Fiat Exchanges': 3,
-        'Fiat Volume USD': val,
+        'Fiat Volume USD': val
         // 'Crypto Volume USD': 32432,
       }
     }
 
     return data;
   }
-  catch(error) {
+  catch (error) {
     const message = `formatterCryptocompareFiatVolumeUSD(): ${error}`;
     logger.error(message);
     return {message, error: true};

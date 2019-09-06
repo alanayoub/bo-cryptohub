@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  *
  * @param {String} uri
@@ -28,7 +26,7 @@ module.exports = async function scrapeHTML(uri, key, cacheFor, cache) {
     }
     return file;
   }
-  catch(error) {
+  catch (error) {
     const message = `scrapeHTML(): Failed to scrape ${uri}: ${error}`;
     logger.error(message);
     return {message, error: true};

@@ -15,6 +15,38 @@ export default {
   // 'cmc-listings-date_added'         : val.date_added,
   // 'cmc-listings-percent_change_1h'  : gnp(val, 'quote.USD.percent_change_1h'),
 
+  rankCMC: {
+    colId: 'rankCMC',
+    field: 'cmc-listings-cmc_rank',
+    headerName: 'Coinmarketcap rank',
+    headerClass: 'CH-col',
+    headerTooltip: [
+      'Coinmarketcaps Cryptoasset Rank as described below can be found on Coinmarketcap at https://coinmarketcap.com/methodology/',
+      'Due to the launch of the CoinMarketCap indices a project’s eligibility for a Top 200 Cryptoasset Rank will now be determined by market capitalization (8) and the following factors:',
+      '-\tOur ability to verify the project’s supply information with no incongruities',
+      '-\tStrengths in a number of areas of Listings Review Criteria\'s Section C (Evaluation Framework) below',
+      '-\tSignificant liquidity/trading activity with normal bid-ask spreads across sufficient sources of market data',
+      '-\tAbsence of significant price discrepancies across CMC-supported exchanges',
+      '-\tThe asset is traded on at least three non-decentralized exchanges that possess a number of the following attributes:',
+      '-\t\tDATA Partner',
+      '-\t\tRegulated/Licensed',
+      '-\t\tPublishes granular API endpoints',
+      '-\t\tActive product development and communication from the team',
+      '-\t\tActive/engaged community',
+      '-\t\tAccredited/Audited by a credible 3rd party',
+      'The aforementioned factors are intended to provide general guidance without disclosing internal thresholds so as to prevent projects from ‘gaming’ or manipulating the rankings. Further, the sheer variety of monetary and accounting models used by projects adds complexity to the process of verification, which means that there will be occasions where CoinMarketCap will have to exercise its discretion in determining a project’s circulating supply and/or eligibility for a Top 200 ranking (e.g. stablecoins, privacy coins, sidechains, and exchange tokens). Consequently, maximum rank eligibility of a project will fall under one of three categories:',
+      'Top 200 Rank: The project must minimally have a CMC-verified market capitalization and fulfill the requirements outlined in 10a - 10e.',
+      'Top 201 Rank and beyond: The project must minimally have a CMC-verified market capitalization but does not need to fulfill the requirements in 10a - 10e.',
+      'Unranked: Cryptoassets without a CMC-verified market capitalization sorted by 24h trading volume.',
+      'Data Source: CoinMarketcap'].join('\n\n'),
+    lockPinned: true,
+    width: 150,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+  },
+
   marketcapUSDCMC: {
     colId: 'marketcapUSDCMC',
     field: 'cmc-listings-quote_USD_market_cap',

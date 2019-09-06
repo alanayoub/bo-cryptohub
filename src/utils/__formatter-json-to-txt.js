@@ -1,6 +1,6 @@
 /**
  *
- * @return {Object} json
+ * @returns {Object} json
  *
  */
 module.exports = function formatterJSONToTxt(json) {
@@ -21,7 +21,7 @@ module.exports = function formatterJSONToTxt(json) {
     }
     return txt;
   }
-  catch(error) {
+  catch (error) {
     return {error: true, message: `formatterJSONToTxt(): ${error}`};
   }
 }

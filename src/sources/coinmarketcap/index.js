@@ -1,17 +1,13 @@
-'use strict';
-
-import settings                        from '../../settings';
-
 import formatterCryptocurrencyListings from './formatter-cryptocurrency-listings.js';
-
-const logger = require('../../logger');
+import logger from '../../logger';
+import settings from '../../settings';
 
 const { scrapeDir, coinmarketcapApiKey } = settings;
 
 const config = {
   cacheFor: settings.cacheForCoinmarketcap,
   bootstrap: cache => {return {}},
-  rateLimitDelayMs: 1000 * 60 * 60,
+  rateLimitDelayMs: 1000 * 60 * 60
 };
 
 let cryptocurrencyListings;
@@ -28,13 +24,13 @@ let cryptocurrencyListings;
         uri, key,
         cacheForDays: 30
       });
-      logger.info(`getJobsCryptocurrencyListings(): 1 job created`);
+      logger.info('getJobsCryptocurrencyListings(): 1 job created');
     },
-    formatter: formatterCryptocurrencyListings,
+    formatter: formatterCryptocurrencyListings
   };
 };
 
 export default {
   config,
-  cryptocurrencyListings,
+  cryptocurrencyListings
 }

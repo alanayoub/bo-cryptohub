@@ -1,9 +1,6 @@
-'use strict';
-
 import { partialApplication }      from 'bo-utils';
 
 import analyticsMergeDataByKey     from '../../utils/analytics-merge-data-by-key';
-
 import settings                    from '../../settings';
 import { getRows }                 from '../../db/query';
 

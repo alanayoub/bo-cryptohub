@@ -10,7 +10,7 @@ module.exports = function delay(milliseconds) {
     logger.debug(`common-delay.js: Waiting ${milliseconds} milliseconds`);
     return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
-  catch(error) {
+  catch (error) {
     const message = `common-delay.js: ${error}`;
     logger.error(message);
     return {message, error: true};

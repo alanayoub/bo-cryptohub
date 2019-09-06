@@ -1,15 +1,12 @@
-'use strict';
-
-import settings                  from '../../settings';
-import logger                    from '../../logger';
-
 import formatterCoinlist         from './formatter-coinlist.js';
 import formatterBootstrap        from './formatter-bootstrap.js';
 import formatterExchangesList    from './formatter-exchanges-list.js';
 import formatterTotalVolFull     from './formatter-total-vol-full.js';
 import formatterExchangesGeneral from './formatter-exchanges-general.js';
-
 import getJobsTotalVolFull       from './get-jobs-total-vol-full.js';
+
+import settings                  from '../../settings';
+import logger                    from '../../logger';
 
 const { scrapeDir, cryptocompareApiKey } = settings;
 
@@ -30,7 +27,7 @@ const rateLimitCryptocompare = 26784;
 const config = {
   cacheFor: settings.cacheForCryptocompare,
   bootstrap: formatterBootstrap,
-  rateLimitDelayMs: rateLimitCryptocompare,
+  rateLimitDelayMs: rateLimitCryptocompare
 }
 
 //
@@ -51,7 +48,7 @@ let coinList;
     watchDirs: [`${scrapeDir}/cryptocompare-coinlist/data.json`, 'all'],
     getJobs(queue) {
       queue.push({uri, key, cacheForDays: 0});
-      logger.info(`getJobs Cryptocompare coinList: 1 coinList job created`);
+      logger.info('getJobs Cryptocompare coinList: 1 coinList job created');
     },
     formatter: formatterCoinlist
   };
@@ -77,7 +74,7 @@ let exchangesList;
     watchDirs: [key, 'all'],
     getJobs(queue) {
       queue.push({uri, key, cacheForDays: 0});
-      logger.info(`getJobs Cryptocompare exchangeList: 1 exchangeList job created`);
+      logger.info('getJobs Cryptocompare exchangeList: 1 exchangeList job created');
     },
     formatter: formatterExchangesList
   };
@@ -117,7 +114,7 @@ let exchangesGeneral;
     watchDirs: [key, 'all'],
     getJobs(queue) {
       queue.push({uri, key, cacheForDays: 0});
-      logger.info(`getJobs Cryptocompare exchangeGeneral: 1 exchangeGeneral job created`);
+      logger.info('getJobs Cryptocompare exchangeGeneral: 1 exchangeGeneral job created');
     },
     formatter: formatterExchangesGeneral
   };
@@ -128,5 +125,5 @@ export default {
   coinList,
   exchangesList,
   topTotalVolume,
-  exchangesGeneral,
+  exchangesGeneral
 }

@@ -1,5 +1,3 @@
-'use strict';
-
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 import { getBtc, getRows }                from '../../db/query';
@@ -8,15 +6,18 @@ import { perSecondSave }                  from '../../db/save';
 const config = {
   cacheFor: 0,
   bootstrap: cache => {return {}},
-  rateLimitDelayMs: 1000 * 60 * 60 * 24,
+  rateLimitDelayMs: 1000 * 10// * 60 * 24
 };
 
 /**
  *
  * Timeseries Rescale
  *
- * @param {Array} timeseries - Array of timeseries objects
- * @return {Array} - Array of updated timeseries object
+ * @param {Object} fields - price, volume and timeseries field names
+ * @param {Object} item - reference to the current data object
+ * @param {Number} limit - limit timeseries length
+ * @param {Number} period - period after which we should create a new timeseries item
+ * @returns {String} - Stringified Array of updated timeseries object
  *
  */
 function getNewTimeseriesData(fields, item, limit = 7, period = 1000 * 60 * 60 * 24) {
@@ -34,7 +35,7 @@ function getNewTimeseriesData(fields, item, limit = 7, period = 1000 * 60 * 60 *
 
   if (price && volume && timestamp) {
     const lastItem = timeseries[timeseries.length - 1];
-    if (!lastItem || (timestamp - lastItem.timestamp) > period) {
+    if (!lastItem || timestamp - lastItem.timestamp > period) {
       timeseries.push({
         price,
         volume,
@@ -68,7 +69,7 @@ const custom = {
     // 1. Get BTC price in USD
     const [ btc ] = await getBtc();
     if (!btc) {
-      logger.warn(`sources/binaryoverdose/index.js: Couldnt get 'btc', bailing out`);
+      logger.warn('sources/binaryoverdose/index.js: Couldnt get \'btc\', bailing out');
       return;
     }
     const btcPrice = btc.samples[1][1];
@@ -84,7 +85,7 @@ const custom = {
       'cmc-listings-quote_USD_volume_24h',
       'm-metrics-market_data_price_usd',
       'm-metrics-market_data_price_btc',
-      'm-metrics-market_data_volume_last_24_hours',
+      'm-metrics-market_data_volume_last_24_hours'
     ];
 
     //
@@ -99,11 +100,11 @@ const custom = {
       'cryptohub-cmc-price-history-BTC',
       'cryptohub-m-price-history-USD',
       'cryptohub-m-price-history-BTC',
-      'cryptohub-cc-circulating-percent-total',
+      'cryptohub-cc-circulating-percent-total'
     ];
     const data = await getRows(null, false, false, [...proxyFields, ...newFields]);
     if (!data) {
-      logger.warn(`sources/binaryoverdose/index.js: Couldnt get rows, bailing out`);
+      logger.warn('sources/binaryoverdose/index.js: Couldnt get rows, bailing out');
       return;
     };
 
@@ -132,7 +133,7 @@ const custom = {
       if (item['cc-total-vol-full-PRICE']) {
 
         // BTC copy of cc PRICE
-        ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = Math.ceil((1 / (btcPrice / gnp(item, 'cc-total-vol-full-PRICE.value'))) * 100000000); // sats
+        ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = Math.ceil(1 / (btcPrice / gnp(item, 'cc-total-vol-full-PRICE.value')) * 100000000); // sats
         // ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = 1 / (btcPrice / item['cc-total-vol-full-PRICE']);
 
         if (item['cc-total-vol-full-TOTALVOLUME24HTO']) {
@@ -166,7 +167,7 @@ const custom = {
 
         // BTC copy of cmc price
 
-        ref['cmc-listings-quote_USD_price_BTC'] = Math.ceil((1 / (btcPrice / gnp(item, 'cmc-listings-quote_USD_price.value'))) * 100000000); // sats
+        ref['cmc-listings-quote_USD_price_BTC'] = Math.ceil(1 / (btcPrice / gnp(item, 'cmc-listings-quote_USD_price.value')) * 100000000); // sats
         // ref['cmc-listings-quote_USD_price_BTC'] = 1 / (btcPrice / item['cmc-listings-quote_USD_price']);
 
         if (item['cmc-listings-quote_USD_volume_24h']) {
@@ -231,7 +232,7 @@ const custom = {
       const supplyTotal       = gnp(item, 'cc-coinlist-TotalCoinSupply.value');
       const supplyCirculating = gnp(item, 'cc-total-vol-full-SUPPLY.value');
       if (supplyTotal && supplyCirculating) {
-        ref['cryptohub-cc-circulating-percent-total'] = (supplyCirculating / supplyTotal) * 100;
+        ref['cryptohub-cc-circulating-percent-total'] = supplyCirculating / supplyTotal * 100;
       }
 
       cryptohubData[key] = ref;
@@ -242,10 +243,10 @@ const custom = {
 
     return cryptohubData;
 
-  },
+  }
 };
 
 export default {
   config,
-  custom,
+  custom
 }

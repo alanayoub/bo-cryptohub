@@ -27,7 +27,7 @@ module.exports = async function getJobsCryptocompareSectionSnapshot(queue, boots
     logger.info(`scrape-cryptocompare(): ${jobs} snapshot jobs created`);
 
   }
-  catch(error) {
+  catch (error) {
     const message = `getJobsCryptocompareSectionSnapshot(): ${error}`;
     logger.error(message);
     return {message, error: true};

@@ -1,8 +1,5 @@
-'use strict';
-
 import { MapModel } from '../schema';
-
-const logger = require('../../logger');
+import logger from '../../logger';
 
 /**
  *
@@ -29,11 +26,15 @@ export default async function mapSave(_id, map) {
   if (doc === null) {
     doc = await MapModel.create(defaultDoc);
     if (doc) doc = await doc.save();
-    else debugger;
+    else {
+      logger.error('error saving map: no save method on doc');
+    };
   }
   else {
     doc.map = map;
-    if (!doc && !doc.save) debugger;
+    if (!doc && !doc.save) {
+      logger.error('error saving map: no save method on doc');
+    };
     doc = await doc.save();
   }
 

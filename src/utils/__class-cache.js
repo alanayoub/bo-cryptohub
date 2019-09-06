@@ -15,7 +15,7 @@ const globPromise = Promise.promisify(glob);
 /**
  *
  * @param {Object} date
- * @return {String}
+ * @returns {String}
  *
  */
 function getISODate(date = new Date()) {
@@ -28,7 +28,7 @@ function getISODate(date = new Date()) {
  *
  * @param {String} dir
  * @param {Boolean} allowEmpty - allow caching of 'empty' data, for example an empty object {}
- * @return {Object} - an instance of Cache
+ * @returns {Object} - an instance of Cache
  *
  */
 module.exports = class Cache {
@@ -40,7 +40,7 @@ module.exports = class Cache {
 
   /**
    * @param {String} key
-   * @return {Array} [Boolean, hash, date]
+   * @returns {Array} [Boolean, hash, date]
    */
   check(key) {
     try {
@@ -52,7 +52,7 @@ module.exports = class Cache {
       logger.debug(`cache.js: check(): Checking if ${key} is cached`);
       return [true, newestFileHash, newestFileDate];
     }
-    catch(error) {
+    catch (error) {
       logger.error(`cache.js: check(): ${error}`);
     }
   }
@@ -61,7 +61,7 @@ module.exports = class Cache {
    *
    * @param {String} key
    * @param {String} flag - if 'all' get a sorted list of all files that match
-   * @return {Array|Object} [file, age] or a map of filename to files
+   * @returns {Array|Object} [file, age] or a map of filename to files
    *
    */
   get(key, flag) {
@@ -82,13 +82,13 @@ module.exports = class Cache {
       const newestFile = sortedFilesList.pop();
       const newestFileDate = newestFile.replace(/.*\[(.*)\].*/, '$1');
       const dateNow = +new Date();
-      const age = ((dateNow - +new Date(newestFileDate)) / (1000*60*60*24));
+      const age = (dateNow - +new Date(newestFileDate)) / (1000*60*60*24);
       const file = fs.readFileSync(newestFile);
       logger.debug(`cache.js: get(): ${newestFile}`);
       if (isNaN(age)) debugger;
       return [file.toString(), age];
     }
-    catch(error) {
+    catch (error) {
       logger.error(`cache.js: get(): ${error}`);
       return [false];
     }
@@ -121,7 +121,7 @@ module.exports = class Cache {
       const path = join(this.dir, `${key}-[${date}]-<${hash}>`);
       const [oldExists, oldHash, oldDate] = this.check(key);
       const oldPath = join(this.dir, `${key}-[${oldDate}]-<${oldHash}>`);
-      if (oldExists && (oldHash === hash)) {
+      if (oldExists && oldHash === hash) {
         fs.renameSync(oldPath, path);
         logger.debug(`cache.js: set(): (renamed) ${path}`);
       }
@@ -131,7 +131,7 @@ module.exports = class Cache {
         logger.debug(`cache.js: set(): (saved) ${path}`);
       }
     }
-    catch(error) {
+    catch (error) {
       logger.error(`cache.js: set(): ${error}`);
     }
   }
@@ -139,7 +139,7 @@ module.exports = class Cache {
   /**
    *
    * @param {String} key
-   * @return {Boolean}
+   * @returns {Boolean}
    *
    */
   del(key) {

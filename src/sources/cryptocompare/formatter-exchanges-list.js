@@ -1,12 +1,7 @@
-'use strict';
-
-// Binary Overdose
 import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 
-// Cryptohub
-import logger   from '../../logger';
-
-import { perSecondSave, exchangeSave }          from '../../db/save';
+import logger from '../../logger';
+import { perSecondSave, exchangeSave } from '../../db/save';
 import { getMaps, getExchanges, getCurrencies } from '../../db/query';
 
 /**
@@ -28,7 +23,7 @@ function addSymbol(symbols, symbol) {
       numberOfDex: 0,
       numberOfPairs: 0,
       numberOfFiatPairs: 0,
-      numberOfFiatCurrencies: 0,
+      numberOfFiatCurrencies: 0
     }
   }
 }
@@ -52,7 +47,7 @@ function addExchange(exchanges, name, id) {
     numberOfCryptoPairs: 0,
     numberOfCurrencies: 0,
     numberOfCryptoCurrencies: 0,
-    numberOfFiatCurrencies: 0,
+    numberOfFiatCurrencies: 0
   };
 }
 
@@ -142,7 +137,7 @@ function addPairsToExchange(exchanges, id, pair) {
  *
  * @param {Object} response - response object
  * @param {String} timestamp - time data was received
- * @return {Object}
+ * @returns {Object}
  *
  */
 export default async function formatterExchangesList(response, timestamp) {
@@ -156,7 +151,7 @@ export default async function formatterExchangesList(response, timestamp) {
     const dbCurrencies = await getCurrencies();
     const [ dbSymbolId ] = await getMaps(['projectMapSymbolId']);
 
-    if (!mapNameId || (!response && !response.Data) || response.Response !== 'Success') {
+    if (!mapNameId || !response && !response.Data || response.Response !== 'Success') {
       return emptyReturn;
     }
 
@@ -334,7 +329,7 @@ export default async function formatterExchangesList(response, timestamp) {
     }
 
     //
-    // Step 3: Save exchange data to core dataset
+    // Step 3: Save timeseries data
     //
     // data: {
     //   1182: {
@@ -348,72 +343,59 @@ export default async function formatterExchangesList(response, timestamp) {
     //   }
     // }
     //
-    async function getData() {
+    const resultData = {};
+    for (const [symbol, id] of Object.entries(dbSymbolId.map)) {
+      if (symbols[symbol]) {
+        resultData[id] = {
 
-      let result = {};
+          // 'cryptohub-pairs': symbols[symbol].pairs,
+          // 'cryptohub-fiatCurrencies': symbols[symbol].fiatCurrencies,
+          // 'cryptohub-exchagnesRank': symbols[symbol].exchagnesRank,
 
-      for (const [symbol, id] of Object.entries(dbSymbolId.map)) {
-        if (symbols[symbol]) {
-          result[id] = {
+          'cryptohub-exchangesListDex': Array.from(symbols[symbol].exchangeListDex),
+          'cryptohub-exchangesListFiatOnly': Array.from(symbols[symbol].exchangeListFiatOnly),
+          'cryptohub-exchangesListCryptoOnly': Array.from(symbols[symbol].exchangeListCryptoOnly),
+          'cryptohub-exchangesListAcceptsBoth': Array.from(symbols[symbol].exchangeListAcceptsBoth),
 
-            // 'cryptohub-pairs': symbols[symbol].pairs,
-            // 'cryptohub-fiatCurrencies': symbols[symbol].fiatCurrencies,
-            // 'cryptohub-exchagnesRank': symbols[symbol].exchagnesRank,
+          'cryptohub-numberOfFiatCurrencies': symbols[symbol].numberOfFiatCurrencies,
+          'cryptohub-numberOfExchanges': symbols[symbol].numberOfExchanges,
+          'cryptohub-numberOfPairs': symbols[symbol].numberOfPairs,
+          'cryptohub-numberOfFiatPairs': symbols[symbol].numberOfFiatPairs,
+          'cryptohub-numberOfDex': symbols[symbol].numberOfDex
 
-            'cryptohub-exchangesListDex'        : Array.from(symbols[symbol].exchangeListDex),
-            'cryptohub-exchangesListFiatOnly'   : Array.from(symbols[symbol].exchangeListFiatOnly),
-            'cryptohub-exchangesListCryptoOnly' : Array.from(symbols[symbol].exchangeListCryptoOnly),
-            'cryptohub-exchangesListAcceptsBoth': Array.from(symbols[symbol].exchangeListAcceptsBoth),
-
-            'cryptohub-numberOfFiatCurrencies'  : symbols[symbol].numberOfFiatCurrencies,
-            'cryptohub-numberOfExchanges'       : symbols[symbol].numberOfExchanges,
-            'cryptohub-numberOfPairs'           : symbols[symbol].numberOfPairs,
-            'cryptohub-numberOfFiatPairs'       : symbols[symbol].numberOfFiatPairs,
-            'cryptohub-numberOfDex'             : symbols[symbol].numberOfDex,
-
-          }
         }
       }
-
-      return result;
-
     }
+    await perSecondSave(resultData, timestamp);
 
-    /**
-     *
-     * GET EXCHANGES DATA
-     *
-     */
-    function getExchangesData(data) {
-      const output = {};
-      for (const [id, val] of Object.entries(data)) {
-        output[id] = {
-          'cc-id': val.id,
-          'cc-name': val.name,
-          'cryptohub-pairs': Array.from(val.pairs),
-          'cryptohub-cryptoCurrencies': Array.from(val.cryptoCurrencies),
-          'cryptohub-fiatCurrencies': Array.from(val.fiatCurrencies),
-          'cryptohub-points': val.points,
-          'cryptohub-numberOfPairs': val.numberOfPairs,
-          'cryptohub-numberOfFiatPairs': val.numberOfFiatPairs,
-          'cryptohub-numberOfCryptoPairs': val.numberOfCryptoPairs,
-          'cryptohub-numberOfCurrencies': val.numberOfCurrencies,
-          'cryptohub-numberOfCryptoCurrencies': val.numberOfCryptoCurrencies,
-          'cryptohub-numberOfFiatCurrencies': val.numberOfFiatCurrencies,
-        }
+    //
+    //
+    // Step 4: Save exchange data
+    //
+    //
+    const resultExchanges = {};
+    for (const [id, val] of Object.entries(exchanges)) {
+      resultExchanges[id] = {
+        'cc-id': val.id,
+        'cc-name': val.name,
+        'cryptohub-pairs': Array.from(val.pairs),
+        'cryptohub-cryptoCurrencies': Array.from(val.cryptoCurrencies),
+        'cryptohub-fiatCurrencies': Array.from(val.fiatCurrencies),
+        'cryptohub-points': val.points,
+        'cryptohub-numberOfPairs': val.numberOfPairs,
+        'cryptohub-numberOfFiatPairs': val.numberOfFiatPairs,
+        'cryptohub-numberOfCryptoPairs': val.numberOfCryptoPairs,
+        'cryptohub-numberOfCurrencies': val.numberOfCurrencies,
+        'cryptohub-numberOfCryptoCurrencies': val.numberOfCryptoCurrencies,
+        'cryptohub-numberOfFiatCurrencies': val.numberOfFiatCurrencies
       }
-      return output;
     }
-
-    const result = await getData();
-    await perSecondSave(result, timestamp);
-    await exchangeSave(getExchangesData(exchanges));
+    await exchangeSave(resultExchanges);
 
   }
-  catch(error) {
+  catch (error) {
     const message = `formatterExchangesList(): ${error}`;
     logger.error(message);
-    debugger;
     return {message, error: true};
   }
 }

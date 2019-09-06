@@ -6,7 +6,7 @@ import { perSecondSave }                  from '../../db/save';
 const config = {
   cacheFor: 0,
   bootstrap: cache => {return {}},
-  rateLimitDelayMs: 1000 * 10// * 60 * 24
+  rateLimitDelayMs: 1000 * 10 * 60 * 24
 };
 
 /**

@@ -10,24 +10,22 @@ import logger                    from '../../logger';
 
 const { scrapeDir, cryptocompareApiKey } = settings;
 
-//
-// From cryptocompare.com:
-//   Caching: 10 seconds
-//   Rate limits:
-//     Month  - 100000
-//     Day    - 3200
-//     Hour   - 130
-//     Minute - 2
-//     Second - 0.038
-//
-//  26784 ms between requests :(
-//
-const rateLimitCryptocompare = 26784;
-
 const config = {
   cacheFor: settings.cacheForCryptocompare,
   bootstrap: formatterBootstrap,
-  rateLimitDelayMs: rateLimitCryptocompare
+  //
+  // From cryptocompare.com:
+  //   Caching: 10 seconds
+  //   Rate limits:
+  //     Month  - 100000
+  //     Day    - 3200
+  //     Hour   - 130
+  //     Minute - 2
+  //     Second - 0.038
+  //
+  //  26784 ms between requests :(
+  //
+  rateLimitDelayMs: 26784
 }
 
 //
@@ -41,7 +39,7 @@ let coinList;
   coinList = {
     event: 'data',
     name: 'coinList',
-    interval: 1000 * 30,
+    interval: 1000 * 60,
     //
     // TODO: can we remove this and just search for the key?
     //
@@ -68,7 +66,7 @@ let exchangesList;
   exchangesList = {
     event: 'data,store',
     name: 'exchanges-list',
-    interval: 1000 * 60 * 1,
+    interval: 1000 * 60 * 60,
     // TODO: rename this fucking bit, this is where the watcher will look for files to load
     // so if we are saving them in different places they will never be added!
     watchDirs: [key, 'all'],

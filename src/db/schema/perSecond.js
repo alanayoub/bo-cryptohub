@@ -95,7 +95,14 @@ const options = {
   }
 }
 
-const PerSecond = new Schema(options, {collection: 'tsseconds'});
+const PerSecond = new Schema(options, {
+  collection: 'tsseconds',
+  writeConcern: {
+    w: 1, // 'majority',
+    j: true,
+    // wtimeout: 1000
+  }
+});
 PerSecond.set('versionKey', false);
 PerSecond.index({samples: -1});
 PerSecond.index({id: -1, field: -1});

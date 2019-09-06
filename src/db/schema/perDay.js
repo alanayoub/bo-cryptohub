@@ -112,7 +112,14 @@ const options = {
   }
 }
 
-const PerDay = new Schema(options, {collection: 'tsdays'});
+const PerDay = new Schema(options, {
+  collection: 'tsdays',
+  writeConcern: {
+    w: 1, // 'majority',
+    j: true,
+    // wtimeout: 1000
+  }
+});
 PerDay.set('versionKey', false);
 PerDay.index({id: -1, field: -1, year: -1});
 

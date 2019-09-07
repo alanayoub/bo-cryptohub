@@ -16,7 +16,8 @@ export default async function getMessariSymbols() {
   const symbols = new Set();
 
   for (const obj of Object.values(data)) {
-    symbols.add(obj.samples[1][1]);
+    const value = obj.samples.length === 2 ? obj.samples[1][1] : obj.samples[1];
+    symbols.add(value);
   }
 
   const output = Array.from(symbols);

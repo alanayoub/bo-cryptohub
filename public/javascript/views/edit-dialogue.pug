@@ -10,8 +10,13 @@ div(class='BO-edit-dialogue')
       tr
         th
           header Available Columns
+          div(class='bo-search')
+            i(class='fas fa-window-close')
+            input(type='text' placeholder='Search')
         th
           header Displayed Columns
+          div(class='bo-search bo-placeholder')
+            input(type='text')
       tr
         td(rowspan=2 class='bo-left')
           div(id='tree')

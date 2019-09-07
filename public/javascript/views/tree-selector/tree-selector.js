@@ -39,8 +39,26 @@ export default class Selector {
    */
   init() {
     if (this.initSource && this.initDest) {
+
       this.sourceTree.addEventListener('click', event => this.checkboxHandler(event), false);
       this.dropHandler();
+
+      // Filter
+      const ft = $('#tree').fancytree('getTree');
+      const input = document.querySelector('.BO-edit-dialogue .bo-search input');
+      const deleteButton = document.querySelector('.bo-search .fa-window-close');
+
+      // TODO: Create close method and unbind these handlers
+      input.onkeyup = () => {
+        const filter = input.value.toUpperCase();
+        ft.filterNodes(filter);
+      }
+
+      deleteButton.onclick = () => {
+        input.value = '';
+        ft.filterNodes('');
+      }
+
     }
     else {
       setTimeout(() => this.init(), 100);
@@ -66,9 +84,9 @@ export default class Selector {
    */
   getSourceOptions() {
     const options = {
-      extensions: ['dnd5', 'glyph'],
+      extensions: ['dnd5', 'glyph', 'filter'],
       treeId: '1',
-      nodata: 'No data yo',
+      nodata: 'No data',
       icon: false,
       checkbox: true,
       //
@@ -81,14 +99,20 @@ export default class Selector {
       //    return "foo-icon-class";
       //  }
       clickFolderMode: 3,
+      filter: {         // override default settings
+        autoExpand: true,
+        leavesOnly: false,
+        hideExpanders: true,
+        highlight: true,
+        counter: false, // No counter badges
+        mode: 'hide'    // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
+      },
       glyph: {
         preset: 'awesome5',
         map: {
           dropMarker: 'fas fa-angle-double-right',
-
           // folder: "fa-folder",
           // folderOpen: "fa-folder-open"
-
           // nodata: 'fas fa-meh',
         }
       },

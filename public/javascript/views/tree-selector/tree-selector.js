@@ -79,6 +79,9 @@ export default class Selector {
       }
 
       btnClearFilter.onclick = clear;
+      btnClearSelections.onclick = () => {
+        this.checkboxHandler(new CustomEvent('clear'));
+      };
 
       btnClearMatches.onclick = () => {
         const list = document.querySelectorAll('.fancytree-match .fancytree-checkbox');
@@ -438,9 +441,22 @@ export default class Selector {
     const destSelections = ($destT.toDict() || []).map(v => v.title);
 
     const target = event.target;
-    const clickedNode = $sourceT.toDict().filter(v => v.title === target.parentElement.textContent)[0];
-    const targetIsCheckbox = $(target).hasClass('fancytree-checkbox');
-    const targetIsFolder = !!target.closest('.fancytree-folder');
+    let clickedNode;
+    let targetIsCheckbox;
+    let targetIsFolder;
+    if (target) {
+      clickedNode = $sourceT.toDict().filter(v => v.title === target.parentElement.textContent)[0];
+      targetIsCheckbox = $(target).hasClass('fancytree-checkbox');
+      targetIsFolder = !!target.closest('.fancytree-folder');
+    }
+
+    if (event.type === 'clear') {
+      $sourceT.visit(node => {
+        if (!node.folder) {
+          node.setSelected(false);
+        }
+      });
+    }
 
     if (event.type === 'matches') {
       $sourceT.visit(node => {

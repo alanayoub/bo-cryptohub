@@ -40,6 +40,8 @@
 
 .BO-edit-dialogue {
 
+  counter-reset: columns;
+
   > header {
     margin: 0 0 20px 0;
     padding: 20px;
@@ -57,6 +59,22 @@
   button {
     margin: 5px 5px 0 0;
     padding: 5px;
+  }
+
+  .bo-right .fancytree-title::before {
+    counter-increment: columns;
+    content: counter(columns);
+    position: absolute;
+    background: #eee;
+    color: #ccc;
+    padding: 5px 8px 5px 5px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    width: 23px;
   }
 
   .bo-search {
@@ -238,6 +256,9 @@
                 margin-top: 0;
                 &:hover {
                   background-color: #73965d55;
+                  .fancytree-title::before {
+                    color: #73965d;
+                  }
                 }
               }
             }
@@ -256,7 +277,7 @@
             color: #f00;
           }
           .fancytree-title {
-            padding: 12px 5px 12px 15px;
+            padding: 12px 5px 12px 45px;
           }
           .fancytree-expander {
             display: none;

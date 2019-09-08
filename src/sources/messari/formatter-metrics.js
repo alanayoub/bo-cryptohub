@@ -174,7 +174,7 @@ export default async function formatterMessariSectionMetrics(data, timestamp) {
 
     data = data.data;
 
-    if (!data && !data.symbol) return;
+    if (!data && !data.symbol && data.symbol !== null) return;
 
     const symbol = data.symbol.toUpperCase();
     const sectors = gnp(data, 'misc_data.sectors');

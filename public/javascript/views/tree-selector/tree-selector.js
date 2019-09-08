@@ -41,23 +41,83 @@ export default class Selector {
     if (this.initSource && this.initDest) {
 
       this.sourceTree.addEventListener('click', event => this.checkboxHandler(event), false);
+      this.sourceTree.addEventListener('matches', event => this.checkboxHandler(event), false);
+
       this.dropHandler();
 
       // Filter
       const ft = $('#tree').fancytree('getTree');
       const input = document.querySelector('.BO-edit-dialogue .bo-search input');
-      const deleteButton = document.querySelector('.bo-search .fa-window-close');
+      const matches = document.querySelector('.BO-edit-dialogue .bo-matches');
+      const btnAddMatches = document.querySelector('.BO-edit-dialogue .bo-add-matches');
+      const btnClearMatches = document.querySelector('.BO-edit-dialogue .bo-clear-matches');
+      const btnClearFilter = document.querySelector('.BO-edit-dialogue .bo-search .fa-window-close');
+      const btnClearSelections = document.querySelector('.BO-edit-dialogue .bo-clear-selections');
+
+      function clear() {
+        input.value = '';
+        matches.textContent = 0;
+        ft.clearFilter();
+
+        btnClearMatches.classList.add('bo-btn-disabled');
+        btnAddMatches.classList.add('bo-btn-disabled');
+        // btnClearSelections.classList.remove('bo-btn-disabled');
+      }
 
       // TODO: Create close method and unbind these handlers
       input.onkeyup = () => {
         const filter = input.value.toUpperCase();
-        ft.filterNodes(filter);
+        matches.textContent = ft.filterNodes(filter) || 0;
+        if (matches.textContent === '0') {
+          btnClearMatches.classList.add('bo-btn-disabled');
+          btnAddMatches.classList.add('bo-btn-disabled');
+        }
+        else {
+          btnClearMatches.classList.remove('bo-btn-disabled');
+          btnAddMatches.classList.remove('bo-btn-disabled');
+        }
       }
 
-      deleteButton.onclick = () => {
-        input.value = '';
-        ft.filterNodes('');
-      }
+      btnClearFilter.onclick = clear;
+
+      btnClearMatches.onclick = () => {
+        const list = document.querySelectorAll('.fancytree-match .fancytree-checkbox');
+        const matches = [];
+        let item;
+        for (item of list) {
+          const checked = item.classList.contains('fa-check-square');
+          if (checked) {
+            matches.push(item.parentElement.textContent);
+          }
+        }
+        item.dispatchEvent(new CustomEvent('matches', {
+          bubbles: true,
+          detail: {
+            matches,
+            select: false
+          }
+        }));
+      };
+
+      btnAddMatches.onclick = () => {
+        const list = document.querySelectorAll('.fancytree-match .fancytree-checkbox');
+        const matches = [];
+        let item;
+        for (item of list) {
+          const checked = item.classList.contains('fa-check-square');
+          if (!checked) {
+            matches.push(item.parentElement.textContent);
+          }
+        }
+        item.dispatchEvent(new CustomEvent('matches', {
+          bubbles: true,
+          detail: {
+            matches,
+            select: true
+          }
+        }));
+        item.dispatchEvent(new CustomEvent('update', {bubbles: true}));
+      };
 
     }
     else {
@@ -101,7 +161,7 @@ export default class Selector {
       clickFolderMode: 3,
       filter: {         // override default settings
         autoExpand: true,
-        leavesOnly: false,
+        leavesOnly: true,
         hideExpanders: true,
         highlight: true,
         counter: false, // No counter badges
@@ -381,6 +441,20 @@ export default class Selector {
     const clickedNode = $sourceT.toDict().filter(v => v.title === target.parentElement.textContent)[0];
     const targetIsCheckbox = $(target).hasClass('fancytree-checkbox');
     const targetIsFolder = !!target.closest('.fancytree-folder');
+
+    if (event.type === 'matches') {
+      console.log(event.target);
+      $sourceT.visit(node => {
+        if (!node.folder) {
+          const selectState = event.detail.select ? true : false;
+          for (const match of event.detail.matches) {
+            if (match === node.title) {
+              node.setSelected(selectState);
+            }
+          }
+        }
+      });
+    }
 
     if (targetIsFolder && targetIsCheckbox) {
       $sourceT.visit(node => {

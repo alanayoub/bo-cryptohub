@@ -9,18 +9,18 @@ div(class='BO-edit-dialogue')
     table
       tr
         th
-          header Available Columns
+          header Available
           div(class='bo-search')
             i(class='fas fa-window-close')
             input(type='text' placeholder='Search')
         th
-          header Displayed Columns
+          header Displayed
           div(class='bo-search bo-placeholder')
             input(type='text')
       tr
-        td(rowspan=2 class='bo-left')
+        td(rowspan=2 class='bo-left' style='margin-top: -1px')
           div(id='tree')
-        td(style="height: 1px")
+        td(style="height: 1px; display: none")
           ul(class='bo-active-columns-frozen')
             each column in frozenColumns
               li(data-id=column.id)
@@ -28,5 +28,14 @@ div(class='BO-edit-dialogue')
       tr
         td
           div(id='tree2' class='bo-right')
+      tr
+        td
+          div(class='bo-footer')
+            button(class='BO-btn bo-btn-secondary bo-add-matches bo-btn-disabled') Add Matches
+            button(class='BO-btn bo-btn-secondary bo-clear-matches bo-btn-disabled') Clear Matches
+            | (#[span(class='bo-matches') 0] Matches)
+        td
+          div(class='bo-footer')
+            button(class='BO-btn bo-btn-secondary bo-clear-selections') Clear Selections
 
   footer

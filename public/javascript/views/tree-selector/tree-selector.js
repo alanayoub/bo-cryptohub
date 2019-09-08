@@ -443,13 +443,12 @@ export default class Selector {
     const targetIsFolder = !!target.closest('.fancytree-folder');
 
     if (event.type === 'matches') {
-      console.log(event.target);
       $sourceT.visit(node => {
         if (!node.folder) {
-          const selectState = event.detail.select ? true : false;
-          for (const match of event.detail.matches) {
+          const { select, matches } = event.detail;
+          for (const match of matches) {
             if (match === node.title) {
-              node.setSelected(selectState);
+              node.setSelected(select ? true : false);
             }
           }
         }

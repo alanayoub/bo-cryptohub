@@ -75,18 +75,18 @@
     }
 
     .fa-window-close {
-      display: none;
+      position: absolute;
+      bottom: 18px;
+      right: 8px;
+      color: #eee;
+      cursor: pointer;
     }
 
     &:hover {
       .fa-window-close {
-        display: block;
-        position: absolute;
-        bottom: 18px;
-        right: 8px;
+        color: #555;
         &:hover {
           color: #f00;
-          cursor: pointer;
         }
       }
     }

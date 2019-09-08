@@ -41,7 +41,7 @@ pug_html = pug_html + "\u003Cinput type=\"text\"\u002F\u003E\u003C\u002Fdiv\u003
 ;pug_debug_line = 20;
 pug_html = pug_html + "\u003Ctr\u003E";
 ;pug_debug_line = 21;
-pug_html = pug_html + "\u003Ctd class=\"bo-left\" rowspan=\"2\" style=\"margin-top: -1px\"\u003E";
+pug_html = pug_html + "\u003Ctd class=\"bo-left\" rowspan=\"2\"\u003E";
 ;pug_debug_line = 22;
 pug_html = pug_html + "\u003Cdiv id=\"tree\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Ftd\u003E";
 ;pug_debug_line = 23;
@@ -83,7 +83,7 @@ pug_html = pug_html + "\u003Ctr\u003E";
 ;pug_debug_line = 29;
 pug_html = pug_html + "\u003Ctd\u003E";
 ;pug_debug_line = 30;
-pug_html = pug_html + "\u003Cdiv class=\"bo-right\" id=\"tree2\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"bo-right\" id=\"tree2\" style=\"margin-top: -1px\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
 ;pug_debug_line = 31;
 pug_html = pug_html + "\u003Ctr\u003E";
 ;pug_debug_line = 32;

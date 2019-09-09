@@ -99,9 +99,22 @@ export default class EditDialogue {
    */
   async open() {
 
-    const colLib = flatten(columnLibrary);
     const groupMapping = {};
     const frozen = [];
+    const state = await bo.inst.state.get();
+
+    // Adding custom columns to colLib
+    const customColumnGroup = {};
+    state.columns.forEach(custom => {
+      if (/^c-\d{1,4}$/.test(custom.id)) {
+        customColumnGroup[custom.id] = custom;
+      }
+    });
+    if (Object.keys(customColumnGroup).length) {
+      columnLibrary.custom = customColumnGroup;
+    }
+
+    const colLib = flatten(columnLibrary);
 
     // Source data
     const source = [];
@@ -121,7 +134,6 @@ export default class EditDialogue {
 
     // Destination Data
     const destination = [];
-    const state = await bo.inst.state.get();
     const columns = state.columns;
     const frozenFields = frozen.map(v => v.key);
     for (const col of columns) {

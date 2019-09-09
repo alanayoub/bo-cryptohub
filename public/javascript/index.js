@@ -8,6 +8,7 @@ import defaultConfig               from './default-config.js';
 
 // Binary Overdose Projects
 import { DataTable }               from './libs/bo-datatable-client';
+import { objectFlattenObject as flatten } from './libs/bo-utils-client';
 
 // Binary Overdose classes
 import CellInteractions            from './classes/class-cell-interactions.js';
@@ -23,8 +24,12 @@ import convertWorkingDataToRowData from './utils/convert-working-data-to-row-dat
 import generateAgOptions           from './ag-grid-options-generate.js';
 import generateColumnDefs          from './ag-grid-column-defs-generate.js';
 
+import columnLibrary               from './columns';
+
 // CSS
 import style                       from '../stylesheet/index.css';
+
+const colLib = flatten(columnLibrary);
 
 /**
  *
@@ -40,25 +45,67 @@ function dataEmitHandler(data) {
 
   const newSocketData = JSON.parse(data).data;
 
-  if (!window.refs.workingData) {
-    // init workingData
-    window.refs.workingData = newSocketData;
-  }
-  else {
-    // merge new data with workingData
-    for (const [id, val] of Object.entries(newSocketData)) {
-      if (!window.refs.workingData[id]) {
-        window.refs.workingData[id] = val;
+  bo.inst.state.get().then(v => {
+
+    function evil(fn) {
+      return new Function('return ' + fn)();
+    }
+
+    for (const column of v.columns) {
+
+      const id = column.id;
+      const custom = /^c-\d{1,4}$/.test(id);
+
+      if (custom) {
+
+        const calc = column.calc;
+        const sources = column.sources;
+
+        for (const [idx, source] of Object.entries(sources)) {
+
+          const field = colLib[source].field;
+          const sourceCode = `s${+idx}`;
+
+          for (const item of Object.values(newSocketData)) {
+            const calcResults = {};
+            if (!item[field]) continue;
+
+            for (const f of ['value', 'lastValue']) {
+              const value = item[field][f];
+              calcResults[f] = evil(calc.replace(sourceCode, value));
+            }
+            calcResults.timestamp = calcResults.lastChecked = +new Date();
+
+            item[column.id] = calcResults;
+          }
+
+        }
+
       }
-      else {
-        Object.assign(window.refs.workingData[id], val);
+
+    }
+
+    if (!window.refs.workingData) {
+      // init workingData
+      window.refs.workingData = newSocketData;
+    }
+    else {
+      // merge new data with workingData
+      for (const [id, val] of Object.entries(newSocketData)) {
+        if (!window.refs.workingData[id]) {
+          window.refs.workingData[id] = val;
+        }
+        else {
+          Object.assign(window.refs.workingData[id], val);
+        }
       }
     }
-  }
 
-  window.refs.rowData = convertWorkingDataToRowData(window.refs.workingData);
-  window.bo.agOptions.api.setRowData(window.refs.rowData);
-  window.bo.inst.toolbarView.update(window.refs.rowData);
+    window.refs.rowData = convertWorkingDataToRowData(window.refs.workingData);
+    window.bo.agOptions.api.setRowData(window.refs.rowData);
+    window.bo.inst.toolbarView.update(window.refs.rowData);
+
+  });
 
 }
 
@@ -108,7 +155,7 @@ window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);
 window.bo.inst.state.init().then(state => {
 
-  const columns = state.columns.map(v => v.id);
+  const columns = state.columns.filter(v => !/^c-\d{1,4}$/.test(v.id)).map(v => v.id);
   const sort = state.sort;
   const emitData = JSON.stringify({columns, sort});
   window.bo.inst.socket = io({query: {cols: emitData} });

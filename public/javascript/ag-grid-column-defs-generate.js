@@ -1,10 +1,23 @@
 'use strict';
 
-// Binary Overdose Projects
 import { objectFlattenObject as flatten } from './libs/bo-utils-client';
+import { partialApplication } from './libs/bo-utils-client';
+import cellRendererCurrency   from './utils/cell-renderer-currency.js';
+import columnLibrary from './columns';
 
-// ag-grid config
-import columnLibrary                      from './columns/';
+const customDefaults = {
+  cellClass: 'cryptohub-align-right',
+  headerClass: 'CH-col',
+  type: [
+    'cryptohubDefaults',
+    'cryptohubNumeric',
+  ],
+  width: 120,
+  cellRenderer: partialApplication(cellRendererCurrency, window.refs),
+  cellRendererParams: {
+    currency: 'USD',
+  },
+}
 
 /**
  *
@@ -23,10 +36,27 @@ export default function generateColumnDefs(state) {
   for (column of state.columns) {
 
     const id = column.id;
+    const custom = /^c-\d{1,4}$/.test(id);
 
-    if (id in colLib) {
+    if (id in colLib || custom) {
 
-      const col = Object.assign({}, colLib[id]);
+      let col;
+      if (custom) {
+        if (!column.calc || !column.id || !column.headerName) {
+          continue;
+        }
+        col = {
+          ...customDefaults,
+          calc: column.calc,
+          colId: column.id,
+          sources: column.sources,
+          headerName: column.headerName,
+          field: column.id,
+        }
+      }
+      else {
+        col = Object.assign({}, colLib[id]);
+      }
 
       if (id === state.sort.column) {
         col.sort = state.sort.direction;

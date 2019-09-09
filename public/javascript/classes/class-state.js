@@ -293,7 +293,9 @@ export default class State {
       const sort = newState.sort;
       const newColFields = State.columnsChanged(oldCols, newState.columns);
       if (newColFields) {
-        const columns = newColFields.join();
+        const columns = newColFields
+          .filter(v => !/^c-\d{1,4}$/.test(v)) // filter out custom columns
+          .join();
         const emitData = JSON.stringify({columns, sort});
         bo.inst.socket.emit('cols', emitData);
       }

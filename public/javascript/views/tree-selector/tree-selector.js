@@ -39,93 +39,95 @@ export default class Selector {
    */
   init() {
     if (this.initSource && this.initDest) {
-
       this.sourceTree.addEventListener('click', event => this.checkboxHandler(event), false);
       this.sourceTree.addEventListener('matches', event => this.checkboxHandler(event), false);
-
+      this.initDestinationButtons();
       this.dropHandler();
-
-      // Filter
-      const ft = $('#tree').fancytree('getTree');
-      const input = document.querySelector('.BO-edit-dialogue .bo-search input');
-      const matches = document.querySelector('.BO-edit-dialogue .bo-matches');
-      const btnAddMatches = document.querySelector('.BO-edit-dialogue .bo-add-matches');
-      const btnClearMatches = document.querySelector('.BO-edit-dialogue .bo-clear-matches');
-      const btnClearFilter = document.querySelector('.BO-edit-dialogue .bo-search .fa-window-close');
-      const btnClearSelections = document.querySelector('.BO-edit-dialogue .bo-clear-selections');
-
-      function clear() {
-        input.value = '';
-        matches.textContent = 0;
-        ft.clearFilter();
-
-        btnClearMatches.classList.add('bo-btn-disabled');
-        btnAddMatches.classList.add('bo-btn-disabled');
-        // btnClearSelections.classList.remove('bo-btn-disabled');
-      }
-
-      // TODO: Create close method and unbind these handlers
-      input.onkeyup = () => {
-        const filter = input.value.toUpperCase();
-        matches.textContent = ft.filterNodes(filter) || 0;
-        if (matches.textContent === '0') {
-          btnClearMatches.classList.add('bo-btn-disabled');
-          btnAddMatches.classList.add('bo-btn-disabled');
-        }
-        else {
-          btnClearMatches.classList.remove('bo-btn-disabled');
-          btnAddMatches.classList.remove('bo-btn-disabled');
-        }
-      }
-
-      btnClearFilter.onclick = clear;
-      btnClearSelections.onclick = () => {
-        this.checkboxHandler(new CustomEvent('clear'));
-      };
-
-      btnClearMatches.onclick = () => {
-        const list = document.querySelectorAll('.fancytree-match .fancytree-checkbox');
-        const matches = [];
-        let item;
-        for (item of list) {
-          const checked = item.classList.contains('fa-check-square');
-          if (checked) {
-            matches.push(item.parentElement.textContent);
-          }
-        }
-        item.dispatchEvent(new CustomEvent('matches', {
-          bubbles: true,
-          detail: {
-            matches,
-            select: false
-          }
-        }));
-      };
-
-      btnAddMatches.onclick = () => {
-        const list = document.querySelectorAll('.fancytree-match .fancytree-checkbox');
-        const matches = [];
-        let item;
-        for (item of list) {
-          const checked = item.classList.contains('fa-check-square');
-          if (!checked) {
-            matches.push(item.parentElement.textContent);
-          }
-        }
-        item.dispatchEvent(new CustomEvent('matches', {
-          bubbles: true,
-          detail: {
-            matches,
-            select: true
-          }
-        }));
-        item.dispatchEvent(new CustomEvent('update', {bubbles: true}));
-      };
-
+      this.initFilter();
     }
     else {
       setTimeout(() => this.init(), 100);
     }
+  }
+
+  initFilter() {
+
+    //
+    // TODO: Create close method and unbind these handlers
+    //
+
+    const ft = $('#tree').fancytree('getTree');
+    const input = document.querySelector('.BO-edit-dialogue .bo-search input');
+    const matches = document.querySelector('.BO-edit-dialogue .bo-matches');
+    const btnAddMatches = document.querySelector('.BO-edit-dialogue .bo-add-matches');
+    const btnClearMatches = document.querySelector('.BO-edit-dialogue .bo-clear-matches');
+    const btnClearFilter = document.querySelector('.BO-edit-dialogue .bo-search .fa-window-close');
+
+    // filter input
+    input.onkeyup = () => {
+      const filter = input.value.toUpperCase();
+      matches.textContent = ft.filterNodes(filter) || 0;
+      if (matches.textContent === '0') {
+        btnClearMatches.classList.add('bo-btn-disabled');
+        btnAddMatches.classList.add('bo-btn-disabled');
+      }
+      else {
+        btnClearMatches.classList.remove('bo-btn-disabled');
+        btnAddMatches.classList.remove('bo-btn-disabled');
+      }
+    }
+
+    // Clear filter input button
+    btnClearFilter.onclick = () => {
+      input.value = '';
+      matches.textContent = 0;
+      ft.clearFilter();
+      btnClearMatches.classList.add('bo-btn-disabled');
+      btnAddMatches.classList.add('bo-btn-disabled');
+    };
+
+    // Add / Clear matches buttons
+    for (const args of [[btnClearMatches, false], [btnAddMatches, true]]) {
+      args[0].onclick = () => {
+        let item;
+        const list = document.querySelectorAll('.fancytree-match .fancytree-checkbox');
+        const matches = [];
+        for (item of list) {
+          const checked = item.classList.contains('fa-check-square');
+          if (checked !== args[1]) {
+            matches.push(item.parentElement.textContent);
+          }
+        }
+        item.dispatchEvent(new CustomEvent('matches', {
+          bubbles: true,
+          detail: {
+            matches,
+            select: args[1]
+          }
+        }));
+      };
+    }
+  }
+
+  initDestinationButtons() {
+    const btnClearSelections = document.querySelector('.BO-edit-dialogue .bo-clear-selections');
+    const btnAddCustom = document.querySelector('.BO-edit-dialogue .bo-add-custom');
+    btnClearSelections.onclick = () => {
+      this.checkboxHandler(new CustomEvent('clear'));
+    };
+    btnAddCustom.onclick = () => {
+      this.addCustom();
+    };
+  }
+
+  /**
+   *
+   *
+   */
+  addCustom() {
+    const $destT = $('#tree2').fancytree('getTree');
+    $destT.rootNode.addNode({key: 'custom-1', title: 'Custom colum 1'});
+    document.querySelector('#tree2 li:last-child').scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'});
   }
 
   get() {
@@ -205,7 +207,7 @@ export default class Selector {
     const options = {
       extensions: ['dnd5', 'glyph'],
       treeId: '2',
-      nodata: 'No data yo',
+      nodata: 'No data',
       icon: false,
       checkbox: false,
       clickFolderMode: 3,

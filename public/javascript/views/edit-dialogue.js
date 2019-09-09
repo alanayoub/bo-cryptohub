@@ -138,7 +138,7 @@ export default class EditDialogue {
     const context = {
       header: {
         title: 'Edit',
-        subtitle: 'Drag & Drop the columns you want displayed'
+        subtitle: ''
       },
       frozenColumns: frozen,
     };

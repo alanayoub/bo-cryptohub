@@ -51,6 +51,7 @@ export default function generateColumnDefs(state) {
           colId: column.id,
           sources: column.sources,
           headerName: column.headerName,
+          hide: column.hide,
           field: column.id,
         }
       }
@@ -64,6 +65,10 @@ export default function generateColumnDefs(state) {
 
       if (column.width) {
         col.width = column.width;
+      }
+
+      if (column.hide) {
+        col.hide = column.hide;
       }
 
       output.push(col);

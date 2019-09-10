@@ -61,7 +61,7 @@
     padding: 5px;
   }
 
-  .bo-right .fancytree-title::before {
+  #tree2 > ul > li > .bo-edit-item-show .fancytree-title::before {
     counter-increment: columns;
     content: counter(columns);
     position: absolute;
@@ -75,6 +75,28 @@
     line-height: 30px;
     text-align: center;
     width: 23px;
+  }
+
+  #tree2 .bo-edit-item-hide {
+    background: #eee!important;
+    .fancytree-title {
+      color: #555;
+      font-style: italic;
+      &::after {
+        content: 'Hidden';
+        display: block;
+        width: 55px;
+        height: 20px;
+        background: #555;
+        position: absolute;
+        right: 35px;
+        top: 11px;
+        color: #fff;
+        text-align: center;
+        line-height: 19px;
+        border-radius: 4px;
+      }
+    }
   }
 
   .bo-search {
@@ -145,9 +167,6 @@
           background-color: silver;
         }
 
-        .fancytree-container {
-        }
-
         #tree {
           position: absolute;
           right: 0;
@@ -168,7 +187,8 @@
             padding: 0;
             li {
               position: relative;
-              background-color: #eee;
+              background-color: #fff;
+              border-bottom: 1px solid #eee;
               &:hover {
                 background-color: #73965d55;
                 .fa-caret-down,
@@ -208,13 +228,17 @@
             overflow-y: scroll;
             ul[role=group] {
               padding: 0;
+              border-top: 1px solid #eee;
               li {
                 position: relative;
                 display: block;
                 padding: 0 5px 0 43px;
-                margin-bottom: -1px;
-                border-top: 1px solid #f9f9f9;
+                margin-bottom: -2px;
                 cursor: default;
+                border-top: 1px solid #eee;
+                &:first-child {
+                  border-top: none;
+                }
                 .fancytree-node {
                   padding: 5px 0 5px 0;
                 }
@@ -243,6 +267,9 @@
             width: auto;
             overflow-y: scroll;
             padding: 0;
+            ul {
+              padding: 0;
+            }
             li {
               .fancytree-node {
                 animation-name: yellowfade;

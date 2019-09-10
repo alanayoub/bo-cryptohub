@@ -73,13 +73,15 @@ export default class EditDialogue {
       map[col.id] = i;
     }
 
-    const list = this.selector.get().map(v => v.id);
+    const selectorData = this.selector.get();
+    const list = selectorData.map(v => v.id);
 
     const columns = [];
     for (const field of list) {
       const idx = map[field];
       if (idx > -1) {
-        columns.push(stateCols[idx]);
+        const obj = {...stateCols[idx], ...selectorData[idx]};
+        columns.push(obj);
       }
       else {
         columns.push({
@@ -138,11 +140,14 @@ export default class EditDialogue {
     const frozenFields = frozen.map(v => v.key);
     for (const col of columns) {
       const key = col.id;
+      const hide = col.hide;
       const group = groupMapping[key];
       const name = colLib[key].headerName;
       const title = `${group}: ${name}`;
       if (!frozenFields.includes(key)) {
-        destination.push({key, title});
+        const item = {key, title};
+        if (hide) item.hide = hide;
+        destination.push(item);
       }
     }
 

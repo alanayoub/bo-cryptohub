@@ -21,6 +21,11 @@ export default class Selector {
     this.$destinationTree = $(this.destinationTree);
     this.destinationOptions = this.getDestinationOptions();
     this.destinationOptions.init = () => this.initDest = true;
+
+    for (const d of destination) {
+      d = this.createDestinationItem(d);
+    }
+
     this.destinationOptions.source = destination;
     $(this.destinationTree).fancytree(this.destinationOptions);
 
@@ -30,6 +35,27 @@ export default class Selector {
     this.init();
 
   }
+
+  createDestinationItem(d) {
+    const isCustom = /^c-\d{1,4}$/.test(d.key);
+    const key = `hide-${d.key}`;
+    const hide = !!d.hide;
+    const extraClasses = `bo-edit-item`;
+    const title = `<span><label><input type="checkbox"${hide ? ' checked' : ''}>Hide</label></span>`;
+    const hideChild = {
+      key,
+      title,
+      extraClasses,
+    }
+    d.extraClasses = `${hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`;
+    d.folder = true;
+    d.children = [hideChild];
+    if (isCustom) {
+      // add custom here
+    }
+    return d;
+  }
+
 
   /**
    *
@@ -41,6 +67,7 @@ export default class Selector {
     if (this.initSource && this.initDest) {
       this.sourceTree.addEventListener('click', event => this.checkboxHandler(event), false);
       this.sourceTree.addEventListener('matches', event => this.checkboxHandler(event), false);
+      this.destinationTree.addEventListener('click', this.destinationClickHandler, false);
       this.initDestinationButtons();
       this.dropHandler();
       this.initFilter();
@@ -131,15 +158,19 @@ export default class Selector {
   }
 
   get() {
+    const output = [];
     let frozen = this.frozen;
-    let active = this.$destinationTree.fancytree('getTree').toDict()
-    frozen = frozen.map(v => {
-      return {id: v.key}
-    });
-    active = active.map(v => {
-      return {id: v.key}
-    });
-    return [...frozen, ...active];
+    let active = this.$destinationTree.fancytree('getTree').toDict();
+    for (const type of [frozen, active]) {
+      type.forEach(v => {
+        const obj = {
+          id: v.key,
+          hide: v.data && v.data.hide
+        };
+        output.push(obj);
+      });
+    }
+    return output;
   }
 
   /**
@@ -216,6 +247,12 @@ export default class Selector {
         const node = data.node;
         const $nodeSpan = $(node.span);
 
+        // node.folder = true;
+        // node.children = [
+        //   {id: `doh${+new Date()}`},
+        //   {title: '<span>test</span>'}
+        // ];
+        // node.clickFolderMode = 3;
         if (!$nodeSpan.data('rendered')) {
 
           const $deleteButton = $('<i class="fas fa-window-close"></i>');
@@ -389,19 +426,44 @@ export default class Selector {
 
   /**
    *
+   * Fires when a destination item is clicked
+   *
+   */
+  destinationClickHandler(event) {
+
+    event.stopPropagation();
+
+    const $destT = $('#tree2').fancytree('getTree');
+    const isEditPanel = event.target.closest('.bo-edit-item') !== null;
+    if (isEditPanel) {
+      const title = event.target.closest('ul').parentElement.querySelector('.fancytree-title').textContent;
+      const checkbox = event.target.closest('.bo-edit-item input[type="checkbox"]');
+      const hide = checkbox && checkbox.checked;
+      $destT.visit(n => {
+        if (n.title === title) {
+          n.data.hide = !!hide;
+        };
+      });
+    }
+
+  }
+
+  /**
+   *
    * Sync destination fancytree after a source fancytree checkbox click
    * Also manage some updates to the source checkboxes based on node clicks
    *
    */
   checkboxHandler(event) {
 
-    function updateLeafNode(node, clickedNode) {
+    function updateLeafNode(context, node, clickedNode) {
       const title = `${node.parent.title}: ${node.title}`;
       const key = node.key;
       if (node.isSelected()) {
         // add node
         if (!destSelections.includes(title)) {
-          $destT.rootNode.addNode({key, title});
+          const newItem = context.createDestinationItem({key, title});
+          $destT.rootNode.addNode(newItem);
         }
       }
       else {
@@ -479,7 +541,7 @@ export default class Selector {
           updateFolderNode(node, clickedNode);
         }
         else {
-          updateLeafNode(node, clickedNode);
+          updateLeafNode(this, node, clickedNode);
         }
       });
     }
@@ -487,7 +549,7 @@ export default class Selector {
       $sourceT.visit(node => {
         const folderNodes = new Set();
         if (!node.folder) {
-          updateLeafNode(node, clickedNode);
+          updateLeafNode(this, node, clickedNode);
           folderNodes.add(node.parent);
         }
         for (const folderNode of folderNodes.values()) {

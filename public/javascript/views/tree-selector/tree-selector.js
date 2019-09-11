@@ -37,21 +37,26 @@ export default class Selector {
   }
 
   createDestinationItem(d) {
-    const isCustom = /^c-\d{1,4}$/.test(d.key);
-    const key = `hide-${d.key}`;
+
     const hide = !!d.hide;
-    const extraClasses = `bo-edit-item`;
-    const title = `<span><label><input type="checkbox"${hide ? ' checked' : ''}>Hide</label></span>`;
+
     const hideChild = {
-      key,
-      title,
-      extraClasses,
-    }
+      key: `hide-${d.key}`,
+      title: `<span><label><input type="checkbox"${hide ? ' checked' : ''}>Hide</label></span>`,
+      extraClasses: 'bo-edit-item'
+    };
+
     d.extraClasses = `${hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`;
     d.folder = true;
     d.children = [hideChild];
+
+    const isCustom = /^c-\d{1,4}$/.test(d.key);
     if (isCustom) {
-      // add custom here
+      d.children.push({
+        key: `hide-custom-${d.key}`,
+        title: `<span>Custom yo</span>`,
+        extraClasses: 'bo-edit-item'
+      });
     }
     return d;
   }
@@ -246,14 +251,9 @@ export default class Selector {
 
         const node = data.node;
         const $nodeSpan = $(node.span);
+        const isNode = !node.extraClasses.split(' ').includes('bo-edit-item');
 
-        // node.folder = true;
-        // node.children = [
-        //   {id: `doh${+new Date()}`},
-        //   {title: '<span>test</span>'}
-        // ];
-        // node.clickFolderMode = 3;
-        if (!$nodeSpan.data('rendered')) {
+        if (isNode && !$nodeSpan.data('rendered')) {
 
           const $deleteButton = $('<i class="fas fa-window-close"></i>');
 

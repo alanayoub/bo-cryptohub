@@ -61,44 +61,6 @@
     padding: 5px;
   }
 
-  #tree2 > ul > li > .bo-edit-item-show .fancytree-title::before {
-    counter-increment: columns;
-    content: counter(columns);
-    position: absolute;
-    background: #eee;
-    color: #ccc;
-    padding: 5px 8px 5px 5px;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    font-size: 20px;
-    line-height: 30px;
-    text-align: center;
-    width: 23px;
-  }
-
-  #tree2 .bo-edit-item-hide {
-    background: #eee!important;
-    .fancytree-title {
-      color: #555;
-      font-style: italic;
-      &::after {
-        content: 'Hidden';
-        display: block;
-        width: 55px;
-        height: 20px;
-        background: #555;
-        position: absolute;
-        right: 35px;
-        top: 11px;
-        color: #fff;
-        text-align: center;
-        line-height: 19px;
-        border-radius: 4px;
-      }
-    }
-  }
-
   .bo-search {
     width: 100%;
     margin-bottom: 10px;
@@ -257,6 +219,67 @@
           left: 0;
           top: 0;
           bottom: 0;
+          > ul > li > {
+            ul .bo-edit-item {
+              input {
+                position: relative;
+                top: 2px;
+                margin-right: 5px;
+              }
+              &:hover {
+                background-color: #fff!important;
+              }
+            }
+            .bo-edit-item-show .fancytree-title::before {
+              counter-increment: columns;
+              content: counter(columns);
+              position: absolute;
+              background: #73965d;
+              color: #fff!important;
+              padding: 5px 8px 5px 5px;
+              left: 0;
+              top: 0;
+              bottom: 0;
+              font-size: 20px;
+              line-height: 30px;
+              text-align: center;
+              width: 23px;
+            }
+            .bo-edit-item-hide {
+              background: #eee!important;
+              .fancytree-title {
+                color: #555;
+                font-style: italic;
+                &::after {
+                  content: 'Hidden';
+                  display: block;
+                  width: 55px;
+                  height: 20px;
+                  background: #555;
+                  position: absolute;
+                  right: 35px;
+                  top: 11px;
+                  color: #fff;
+                  text-align: center;
+                  line-height: 19px;
+                  border-radius: 4px;
+                }
+              }
+              .fancytree-expander.fa-caret-right {
+                color: #eee;
+              }
+            }
+          }
+          .fancytree-expander {
+            display: inline-block;
+            padding: 15px 15px 15px 46px;
+            margin: 0 0 0 5px;
+            cursor: pointer;
+            vertical-align: middle;
+            line-height: 0;
+            position: relative;
+            top: 5px;
+          }
           ul.fancytree-container {
             position: absolute;
             left: 0;
@@ -296,7 +319,7 @@
           .fa-window-close {
             position: absolute;
             right: 10px;
-            top: 13px;
+            top: 12px;
             cursor: pointer;
             font-size: 18px;
           }
@@ -304,10 +327,7 @@
             color: #f00;
           }
           .fancytree-title {
-            padding: 12px 5px 12px 45px;
-          }
-          .fancytree-expander {
-            display: none;
+            padding: 12px 5px 12px 0;
           }
         }
 

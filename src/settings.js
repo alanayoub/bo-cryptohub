@@ -650,11 +650,23 @@ const columnDependencies = {
   circulatingSupplyCMC: [
     'cmc-listings-circulating_supply'
   ],
+  maxSupplyCMC: [
+    'cmc-listings-max_supply'
+  ],
+  totalSupplyCMC: [
+    'cmc-listings-total_supply'
+  ],
   percentChange24HourCMC: [
     'cmc-listings-quote_USD_percent_change_24h'
   ],
   percentChange7DayCMC: [
     'cmc-listings-quote_USD_percent_change_7d'
+  ],
+  numberOfMarketPairsCMC: [
+    'cmc-listings-num_market_pairs'
+  ],
+  tagsCMC: [
+    'cmc-listings-tags'
   ],
 
   //

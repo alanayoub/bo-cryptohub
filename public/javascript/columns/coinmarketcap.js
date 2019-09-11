@@ -1,5 +1,6 @@
 'use strict';
 
+import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 import { partialApplication } from '../libs/bo-utils-client';
 import cellRendererCurrency   from '../utils/cell-renderer-currency.js';
 
@@ -88,7 +89,43 @@ export default {
     field: 'cmc-listings-circulating_supply',
     headerName: 'Circulating Supply',
     headerClass: 'CH-col',
-    headerTooltip: 'Circulating Supply\n\nData Source: CoinMarketCap',
+    headerTooltip: 'The best approximation of the number of coins that are circulating in the market and in the general public’s hands. *see Max Supply and Total Supply\n\nData Source: CoinMarketCap',
+    lockPinned: true,
+    width: 150,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
+    cellRendererParams: {
+      currency: 'USD',
+    },
+  },
+
+  maxSupplyCMC: {
+    colId: 'maxSupplyCMC',
+    field: 'cmc-listings-max_supply',
+    headerName: 'Max Supply',
+    headerClass: 'CH-col',
+    headerTooltip: 'The best approximation of the maximum amount of coins that will ever exist in the lifetime of the cryptocurrency. *see Circulating Supply and Total Supply\n\nData Source: CoinMarketCap',
+    lockPinned: true,
+    width: 150,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
+    cellRendererParams: {
+      currency: 'USD',
+    },
+  },
+
+  totalSupplyCMC: {
+    colId: 'totalSupplyCMC',
+    field: 'cmc-listings-total_supply',
+    headerName: 'Total Supply',
+    headerClass: 'CH-col',
+    headerTooltip: 'The total amount of coins in existence right now, minus any coins that have been verifiably burned. *see Circulating Supply and Max Supply\n\nData Source: CoinMarketCap',
     lockPinned: true,
     width: 150,
     type: [
@@ -131,9 +168,40 @@ export default {
     ],
   },
 
-  // 'cmc-listings-max_supply'         : val.max_supply,
-  // 'cmc-listings-num_market_pairs'   : val.num_market_pairs,
-  // 'cmc-listings-tags'               : val.tags,
-  // 'cmc-listings-total_supply'       : val.total_supply,
+  numberOfMarketPairsCMC: {
+    colId: 'numberOfMarketPairsCMC',
+    field: 'cmc-listings-num_market_pairs',
+    headerName: '# Market Pairs',
+    headerClass: 'CH-col',
+    headerTooltip: 'Number of market pairs\n\nData Source: CoinMarketCap',
+    lockPinned: true,
+    width: 120,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    valueFormatter(params) {
+      return gnp(params, 'value.value') || ch.emptyCellValue;
+    }
+  },
+
+  tagsCMC: {
+    colId: 'tagsCMC',
+    field: 'cmc-listings-tags',
+    headerName: 'Tags',
+    headerClass: 'CH-col',
+    headerTooltip: 'Number of market pairs\n\nData Source: CoinMarketCap',
+    lockPinned: true,
+    width: 120,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText'
+    ],
+    valueFormatter(params) {
+      const value = gnp(params, 'value.value');
+      if (!Array.isArray(value) || !value.length) return ch.emptyCellValue;
+      else return value.join(', ');
+    }
+  },
 
 }

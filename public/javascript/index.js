@@ -1,5 +1,3 @@
-'use strict';
-
 // Libs
 import '@babel/polyfill';
 
@@ -9,6 +7,7 @@ import defaultConfig               from './default-config.js';
 // Binary Overdose Projects
 import { DataTable }               from './libs/bo-datatable-client';
 import { objectFlattenObject as flatten } from './libs/bo-utils-client';
+import { objectIsEmptyObject as isEmptyObject } from './libs/bo-utils-client';
 
 // Binary Overdose classes
 import CellInteractions            from './classes/class-cell-interactions.js';
@@ -35,8 +34,7 @@ const colLib = flatten(columnLibrary);
  *
  * Handle data events
  *
- * @param {Object} data
- * @return void
+ * @param {Object} data * @return void
  *
  */
 function dataEmitHandler(data) {
@@ -61,25 +59,82 @@ function dataEmitHandler(data) {
         const calc = column.calc;
         const sources = column.sources;
 
-        for (const [idx, source] of Object.entries(sources)) {
+        let idx;
+        let lastType = null;
+        const calcArr = [];
+        calc.split('').forEach(val => {
+          const type = val === 's' || !isNaN(val)
+            ? 'source'
+            : 'operator'
+          if (lastType !== type) {
+            idx = calcArr.length;
+            lastType = type;
+          }
+          calcArr[idx] = calcArr[idx] ? calcArr[idx] + val : val;
+        });
+        // ['s0', '/', 's1']
 
-          const field = colLib[source].field;
-          const sourceCode = `s${+idx}`;
+        const fields = [];
+        calcArr.forEach(val => {
+          const isSource = /s\d{1,2}/.test(val);
+          if (isSource) {
+            const field = colLib[sources[+val.substr(1)]].field;
+            fields.push(field);
+          }
+        });
+        // ["cmc-listings-quote_USD_market_cap", "cc-social-CodeRepository_Points"]
 
-          for (const item of Object.values(newSocketData)) {
-            const calcResults = {};
-            if (!item[field]) continue;
+        for (const item of Object.values(newSocketData)) {
 
-            for (const f of ['value', 'lastValue']) {
-              const value = item[field][f];
-              calcResults[f] = evil(calc.replace(sourceCode, value));
+          const calcResults = {};
+          const arr = calcArr.slice();
+          for (const f of ['value', 'lastValue']) {
+            const skip = false;
+            for (const [i, c] of Object.entries(arr)) {
+              if (/s\d{1,2}/.test(c)) {
+                const field = fields[c.substr(1)];
+                //
+                // Sort out isNaN bit for other types
+                //
+                if (item[field] && !isNaN(item[field][f]) && item[field][f] !== null) {
+                  arr[i] = item[field][f];
+                }
+                else {
+                  skip = true;
+                }
+              }
             }
-            calcResults.timestamp = calcResults.lastChecked = +new Date();
-
-            item[column.id] = calcResults;
+            if (!skip) {
+              calcResults[f] = evil(arr.join(''));
+            }
           }
 
+          if (!isEmptyObject(calcResults)) {
+            calcResults.timestamp = calcResults.lastChecked = +new Date();
+            item[column.id] = calcResults;
+          }
         }
+
+        // for (const [idx, source] of Object.entries(sources)) {
+
+        //   const field = colLib[source].field;
+        //   const sourceCode = `s${+idx}`;
+
+        //   // Before looping over this calculate as much of the data
+        //   for (const item of Object.values(newSocketData)) {
+        //     const calcResults = {};
+        //     if (!item[field]) continue;
+
+        //     for (const f of ['value', 'lastValue']) {
+        //       const value = item[field][f];
+        //       calcResults[f] = evil(calc.replace(sourceCode, value));
+        //     }
+        //     calcResults.timestamp = calcResults.lastChecked = +new Date();
+
+        //     item[column.id] = calcResults;
+        //   }
+
+        // }
 
       }
 

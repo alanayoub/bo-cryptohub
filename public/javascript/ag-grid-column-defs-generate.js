@@ -2,21 +2,14 @@
 
 import { objectFlattenObject as flatten } from './libs/bo-utils-client';
 import { partialApplication } from './libs/bo-utils-client';
+import cellRendererNumber   from './utils/cell-renderer-number.js';
 import cellRendererCurrency   from './utils/cell-renderer-currency.js';
 import columnLibrary from './columns';
 
 const customDefaults = {
   cellClass: 'cryptohub-align-right',
   headerClass: 'CH-col',
-  type: [
-    'cryptohubDefaults',
-    'cryptohubNumeric',
-  ],
   width: 120,
-  cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-  cellRendererParams: {
-    currency: 'USD',
-  },
 }
 
 /**
@@ -53,6 +46,23 @@ export default function generateColumnDefs(state) {
           headerName: column.headerName,
           hide: column.hide,
           field: column.id,
+        }
+        col.type = [
+          'cryptohubDefaults'
+        ]
+        if (column.type === 'currency') {
+          col.type.push('cryptohubNumeric');
+          col.cellRenderer = partialApplication(cellRendererCurrency, window.refs);
+          col.cellRendererParams = {
+            currency: 'USD'
+          };
+        }
+        else if (column.type === 'number') {
+          col.type.push('cryptohubNumeric');
+          col.cellRenderer = cellRendererNumber;
+        }
+        else {
+          col.type.push('cryptohubText');
         }
       }
       else {

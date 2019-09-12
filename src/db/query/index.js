@@ -1,17 +1,19 @@
 import getBtc from './btc';
-import getCurrencies from './currencies';
-import getExchanges from './exchanges';
 import getIds from './ids';
 import getMaps from './maps';
-import getMessariSymbols from './messari-symbols';
 import getRows from './rows';
+import getExchanges from './exchanges';
+import getCurrencies from './currencies';
+import getMessariSymbols from './messari-symbols';
+import getCryptocompareIds from './cryptocompare-ids';
 
 export {
   getBtc,
-  getCurrencies,
-  getExchanges,
   getIds,
   getMaps,
+  getRows,
+  getExchanges,
+  getCurrencies,
   getMessariSymbols,
-  getRows
+  getCryptocompareIds,
 }

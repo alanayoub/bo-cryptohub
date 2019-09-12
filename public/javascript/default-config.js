@@ -47,23 +47,26 @@ export default {
       columns: [
         {id: 'rowIndex'},
         {id: 'nameCC'},
-        {id: 'priceUSDCC'},
-        {id: 'priceBTCCC'},
-        {id: 'percentChange24hBTCMessari'},
-        {id: 'percentChange7dBTCMessari'},
         {id: 'sparklineUSD'},
         {id: 'volume24hUSDCC'},
-        {id: 'marketcapUSDCMC'},
         {id: 'circulatingSupplyCMC'},
         {id: 'sectorsMessari'},
         {id: 'cycleLowUSDMessari'},
-        {id: 'athUSDMessari'},
-        {id: 'athPercentDownUSDMessari'},
+        {id: 'marketcapUSDCMC'},
         { // Custom Column
           id: 'c-1',
           headerName: '5x Marketcap',
           sources: ['marketcapUSDCMC'],
+          type: 'currency',
           calc: 's0*5'
+        },
+        {id: 'codeRepoPointsCC'},
+        { // Custom Column
+          id: 'c-2',
+          headerName: 'RPV Ratio',
+          sources: ['marketcapUSDCMC', 'codeRepoPointsCC'],
+          type: 'number',
+          calc: 's0/s1'
         }
       ],
       sort: {

@@ -235,7 +235,7 @@ export default {
       const libKeysWhitelist = Object.keys(colLib);
       const agGridColumnState = params.api.columnController.getColumnState();
       for (const [idx, field] of Object.entries(agGridColumnState)) {
-         if (libKeysWhitelist.includes(field.colId)) {
+         if (libKeysWhitelist.includes(field.colId) || /^c-\d{1,2}$/.test(field.colId)) {
            const col = {
              id: field.colId
            };

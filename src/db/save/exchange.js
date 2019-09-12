@@ -39,7 +39,6 @@ export default async function exchangeSave(data) {
       }
 
       doc = await ExchangeModel.findOne({ _id });
-      doc = await doc.save();
       if (doc === null) {
         doc = await ExchangeModel.create(defaultDoc);
         doc = await doc.save();

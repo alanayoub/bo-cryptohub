@@ -115,6 +115,7 @@ try {
 
   datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
     datatable.sources.cryptocompare.add(cryptocompare.coinList);
+    datatable.sources.cryptocompare.add(cryptocompare.social);
     datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
     datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
     datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);

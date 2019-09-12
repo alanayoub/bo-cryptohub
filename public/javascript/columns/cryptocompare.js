@@ -273,4 +273,22 @@ export default {
     },
   },
 
+  //
+  // Code repo points
+  //
+  codeRepoPointsCC: {
+    colId: 'codeRepoPointsCC',
+    field: 'cc-social-CodeRepository_Points',
+    headerName: 'Code Repo Points',
+    headerClass: 'CH-col',
+    headerTooltip: 'Code Repository Points\n\nData Source: Cryptocompare',
+    lockPinned: true,
+    width: 120,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: cellRendererNumber,
+  },
+
 }

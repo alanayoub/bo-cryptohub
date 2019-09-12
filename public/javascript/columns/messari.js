@@ -1,12 +1,12 @@
 'use strict';
 
-// Binary Overdose Projects
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
-import { partialApplication }             from '../libs/bo-utils-client';
+import { partialApplication } from '../libs/bo-utils-client';
 
-import cellRendererCurrency               from '../utils/cell-renderer-currency.js';
+import cellRendererNumber from '../utils/cell-renderer-number.js';
+import cellRendererCurrency from '../utils/cell-renderer-currency.js';
 
-import onCellClicked                      from '../utils/on-cell-clicked.js';
+import onCellClicked from '../utils/on-cell-clicked.js';
 
 export default {
 
@@ -430,6 +430,42 @@ export default {
     cellRendererParams: {
       currency: 'USD',
     },
+  },
+
+  //
+  // NVT
+  //
+  nvtMessari: {
+    colId: 'nvtMessari',
+    field: 'm-prices-nvt24hr',
+    headerName: 'NVT',
+    headerClass: 'CH-col',
+    headerTooltip: 'NVT Ratio (Network Value to Transactions Ratio) is the ratio of the Market Cap divided by the volume transmitted by the blockchain. Simplistically it could be seen as analogus to the PE Ratio used in equity markets. When an assets NVT is high, it indicates that its network valuation is outstripping the value being transmitted through its blockchain.  \n\nData Source: Messari',
+    lockPinned: true,
+    width: 120,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: cellRendererNumber,
+  },
+
+  //
+  // Adjusted NVT
+  //
+  adjustedNvtMessari: {
+    colId: 'adjustedNvtMessari',
+    field: 'm-prices-adjustedNvt24hr',
+    headerName: 'NVT (Adjusted)',
+    headerClass: 'CH-col',
+    headerTooltip: 'Same as NVT but uses the adjusted transaction volume figures calculated by Coinmetrics.io\n\nData Source: Messari',
+    lockPinned: true,
+    width: 120,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: cellRendererNumber,
   },
 
 }

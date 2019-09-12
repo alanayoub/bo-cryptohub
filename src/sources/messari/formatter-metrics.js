@@ -192,9 +192,37 @@ export default async function formatterMessariSectionMetrics(data, timestamp) {
       result = {
         [id]: {
 
-          [`${prefix}misc_data_sectors`]: gnp(data, 'misc_data.sectors'),
-          [`${prefix}misc_data_categories`]: gnp(data, 'misc_data.categories'),
-          [`${prefix}misc_data_asset_created_at`]: gnp(data, 'misc_data.asset_created_at'),
+          [`${prefix}market_data_price_usd`]: gnp(data, 'market_data.price_usd'),
+          [`${prefix}market_data_price_btc`]: gnp(data, 'market_data.price_btc'),
+          [`${prefix}market_data_volume_last_24_hours`]: gnp(data, 'market_data.volume_last_24_hours'),
+          [`${prefix}market_data_real_volume_last_24_hours`]: gnp(data, 'market_data.real_volume_last_24_hours'),
+          [`${prefix}market_data_percent_change_usd_last_24_hours`]: gnp(data, 'market_data.percent_change_usd_last_24_hours'),
+          [`${prefix}market_data_percent_change_btc_last_24_hours`]: gnp(data, 'market_data.percent_change_btc_last_24_hours'),
+
+          [`${prefix}marketcap_current_marketcap_usd`]: gnp(data, 'marketcap.current_marketcap_usd'),
+          [`${prefix}marketcap_y_2050_marketcap_usd`]: gnp(data, 'marketcap.y_2050_marketcap_usd'),
+          // 'm-metrics-y_plus10_marketcap_usd': gnp(data, 'marketcap.y_plus10_marketcap_usd'),
+          // 'm-metrics-liquid_marketcap_usd': gnp(data, 'marketcap.liquid_marketcap_usd'),
+          // 'm-metrics-volume_turnover_last_24_hours_percent': gnp(data, 'marketcap.volume_turnover_last_24_hours_percent')
+
+          // "blockchain_stats_24_hours": {
+          //   "transaction_volume": 3423719699.2928834,
+          //   "adjusted_transaction_volume": 1572846426.8066072,
+          //   "nvt": 27.395889045691852,
+          //   "adjusted_nvt": 60.61607813796638,
+          //   "sum_of_fees": 150177.795038277,
+          //   "median_tx_value": 164.00716844700003,
+          //   "median_tx_fee": 0.23983012446160373,
+          //   "count_of_active_addresses": 706754,
+          //   "count_of_tx": 285567,
+          //   "count_of_payments": 423315,
+          //   "new_issuance": 9637186.770436611,
+          //   "average_difficulty": 6071846049920.75,
+          //   "kilobytes_added": 153443.952,
+          //   "count_of_blocks_added": 149
+          // },
+          [`${prefix}blockchain_stats_24_hours_nvt`]: gnp(data, 'blockchain_stats_24_hours.nvt'),
+          [`${prefix}blockchain_stats_24_hours_adjusted_nvt`]: gnp(data, 'blockchain_stats_24_hours.adjusted_nvt'),
 
           [`${prefix}all_time_high_price`]: gnp(data, 'all_time_high.price'),
           [`${prefix}all_time_high_at`]: gnp(data, 'all_time_high.at'),
@@ -206,6 +234,7 @@ export default async function formatterMessariSectionMetrics(data, timestamp) {
           [`${prefix}cycle_low_at`]: gnp(data, 'cycle_low.at'),
           [`${prefix}cycle_low_percent_up`]: gnp(data, 'cycle_low.percent_up'),
           [`${prefix}cycle_low_days_since`]: gnp(data, 'cycle_low.days_since'),
+          [`${prefix}cycle_low_at`]: gnp(data, 'cycle_low.at'),
 
           [`${prefix}roi_data_percent_change_last_1_week`]: gnp(data, 'roi_data.percent_change_last_1_week'),
           [`${prefix}roi_data_percent_change_last_1_month`]: gnp(data, 'roi_data.percent_change_last_1_month'),
@@ -216,20 +245,10 @@ export default async function formatterMessariSectionMetrics(data, timestamp) {
           [`${prefix}roi_data_percent_change_btc_last_3_months`]: gnp(data, 'roi_data.percent_change_btc_last_3_months'),
           [`${prefix}roi_data_percent_change_btc_last_1_year`]: gnp(data, 'roi_data.percent_change_btc_last_1_year'),
 
-          [`${prefix}cycle_low_at`]: gnp(data, 'cycle_low.at'),
+          [`${prefix}misc_data_sectors`]: gnp(data, 'misc_data.sectors'),
+          [`${prefix}misc_data_categories`]: gnp(data, 'misc_data.categories'),
+          [`${prefix}misc_data_asset_created_at`]: gnp(data, 'misc_data.asset_created_at'),
 
-          [`${prefix}market_data_price_usd`]: gnp(data, 'market_data.price_usd'),
-          [`${prefix}market_data_price_btc`]: gnp(data, 'market_data.price_btc'),
-          [`${prefix}market_data_volume_last_24_hours`]: gnp(data, 'market_data.volume_last_24_hours'),
-          [`${prefix}market_data_real_volume_last_24_hours`]: gnp(data, 'market_data.real_volume_last_24_hours'),
-          [`${prefix}market_data_percent_change_usd_last_24_hours`]: gnp(data, 'market_data.percent_change_usd_last_24_hours'),
-          [`${prefix}market_data_percent_change_btc_last_24_hours`]: gnp(data, 'market_data.percent_change_btc_last_24_hours'),
-
-          [`${prefix}marketcap_current_marketcap_usd`]: gnp(data, 'marketcap.current_marketcap_usd'),
-          [`${prefix}marketcap_y_2050_marketcap_usd`]: gnp(data, 'marketcap.y_2050_marketcap_usd')
-          // 'm-metrics-y_plus10_marketcap_usd': gnp(data, 'marketcap.y_plus10_marketcap_usd'),
-          // 'm-metrics-liquid_marketcap_usd': gnp(data, 'marketcap.liquid_marketcap_usd'),
-          // 'm-metrics-volume_turnover_last_24_hours_percent': gnp(data, 'marketcap.volume_turnover_last_24_hours_percent')
 
         }
       };

@@ -164,6 +164,46 @@ const fieldTypeMap = {
   'cc-total-vol-full-VOLUMEHOUR': 'String|Number|Boolean|Null|Undefined',      // :'Number',  // 833.5320880846975
   'cc-total-vol-full-VOLUMEHOURTO': 'String|Number|Boolean|Null|Undefined',      // :'Number',  // 8163468.329335898
 
+  'cc-social-General_Name': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-General_CoinName': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-General_Type': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-General_Points': 'String|Number|Boolean|Null|Undefined',
+  // 'cc-social-CryptoCompare_SimilarItems': 'String|Number|Boolean|Null|Undefined', // Array
+  // 'cc-social-CryptoCompare_CryptopianFollowers': 'String|Number|Boolean|Null|Undefined', // Array
+  // 'cc-social-CryptoCompare_PageViewsSplit': 'String|Number|Boolean|Null|Undefined', // Array
+  'cc-social-CryptoCompare_Followers': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-CryptoCompare_Posts': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-CryptoCompare_Points': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-CryptoCompare_Comments': 'String|Number|Boolean|Null|Undefined',
+  // 'cc-social-CryptoCompare_PageViews': 'String|Number|Boolean|Null|Undefined', // Array
+  'cc-social-Twitter_account_creation': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Twitter_followers': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Twitter_statuses': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Twitter_link': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Twitter_lists': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Twitter_favourites': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Twitter_following': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Twitter_name': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Twitter_Points': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_posts_per_hour': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_comments_per_hour': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_comments_per_day': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_active_users': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_link': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_community_creation': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_posts_per_day': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_name': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_subscribers': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Reddit_Points': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Facebook_talking_about': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Facebook_is_closed': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Facebook_likes': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Facebook_name': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Facebook_link': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-Facebook_Points': 'String|Number|Boolean|Null|Undefined',
+  'cc-social-CodeRepository_Points': 'String|Number|Boolean|Null|Undefined',
+  // 'cc-social-CodeRepository_List': 'String|Number|Boolean|Null|Undefined', // Array
+
   'cmc-listings-id': 'String|Number|Boolean|Null|Undefined|Array', // :'Number',       // : 1,
   'cmc-listings-name': 'String|Number|Boolean|Null|Undefined|Array', // :'String',       // : "Bitcoin",
   'cmc-listings-symbol': 'String|Number|Boolean|Null|Undefined|Array', // :'String',       // : "BTC",
@@ -634,6 +674,10 @@ const columnDependencies = {
   builtOnCC: [
     'cc-coinlist-BuiltOn'
   ],
+  codeRepoPointsCC: [
+    'cc-social-CodeRepository_Points',
+  ],
+
 
   //
   // CoinMarketCap
@@ -734,6 +778,12 @@ const columnDependencies = {
   ],
   marketcapUSD2050Messari: [
     'm-prices-y2050Marketcap'
+  ],
+  nvtMessari: [
+    'm-prices-nvt24hr'
+  ],
+  adjustedNvtMessari: [
+    'm-prices-adjustedNvt24hr'
   ]
 }
 

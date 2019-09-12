@@ -1,8 +1,11 @@
+import formatterSocial           from './formatter-social.js';
 import formatterCoinlist         from './formatter-coinlist.js';
 import formatterBootstrap        from './formatter-bootstrap.js';
-import formatterExchangesList    from './formatter-exchanges-list.js';
 import formatterTotalVolFull     from './formatter-total-vol-full.js';
+import formatterExchangesList    from './formatter-exchanges-list.js';
 import formatterExchangesGeneral from './formatter-exchanges-general.js';
+
+import getJobsSocial             from './get-jobs-social.js';
 import getJobsTotalVolFull       from './get-jobs-total-vol-full.js';
 
 import settings                  from '../../settings';
@@ -118,8 +121,25 @@ let exchangesGeneral;
   };
 };
 
+//
+// SOCIAL
+//
+let social;
+{
+  const key = (str, ob) => `${scrapeDir}/cryptocompare-social-grouped/data.json`;
+  social = {
+    event: 'data',
+    name: 'social',
+    interval: 1000 * 30,
+    watchDirs: [key`${{}}`, 'all'],
+    getJobs: getJobsSocial,
+    formatter: formatterSocial
+  };
+};
+
 export default {
   config,
+  social,
   coinList,
   exchangesList,
   topTotalVolume,

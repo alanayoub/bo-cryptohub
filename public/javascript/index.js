@@ -78,8 +78,9 @@ function dataEmitHandler(data) {
         calcArr.forEach(val => {
           const isSource = /s\d{1,2}/.test(val);
           if (isSource) {
-            const field = colLib[sources[+val.substr(1)]].field;
-            fields.push(field);
+            const idx = +val.substr(1);
+            const field = colLib[sources[idx]].field;
+            fields[idx] = field;
           }
         });
         // ["cmc-listings-quote_USD_market_cap", "cc-social-CodeRepository_Points"]

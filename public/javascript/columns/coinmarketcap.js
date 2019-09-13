@@ -2,7 +2,8 @@
 
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 import { partialApplication } from '../libs/bo-utils-client';
-import cellRendererCurrency   from '../utils/cell-renderer-currency.js';
+import cellRendererNumber from '../utils/cell-renderer-number.js';
+import cellRendererCurrency from '../utils/cell-renderer-currency.js';
 
 export default {
 
@@ -96,10 +97,7 @@ export default {
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'USD',
-    },
+    cellRenderer: cellRendererNumber,
   },
 
   maxSupplyCMC: {
@@ -114,10 +112,7 @@ export default {
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'USD',
-    },
+    cellRenderer: cellRendererNumber,
   },
 
   totalSupplyCMC: {
@@ -132,10 +127,7 @@ export default {
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'USD',
-    },
+    cellRenderer: cellRendererNumber,
   },
 
   percentChange24HourCMC: {

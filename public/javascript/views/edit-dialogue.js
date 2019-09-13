@@ -67,20 +67,14 @@ export default class EditDialogue {
     const state = await bo.inst.state.get();
     const stateCols = state.columns;
 
-    // Map field names to indexes
-    const map = {};
-    for (const [i, col] of Object.entries(stateCols)) {
-      map[col.id] = i;
-    }
-
     const selectorData = this.selector.get();
     const list = selectorData.map(v => v.id);
 
     const columns = [];
-    for (const field of list) {
-      const idx = map[field];
+    for (const [idx, field] of Object.entries(list)) {
       if (idx > -1) {
-        const obj = {...stateCols[idx], ...selectorData[idx]};
+        const stateItem = stateCols.filter(v => v.id === selectorData[idx].id)[0];
+        const obj = {...stateItem, ...selectorData[idx]};
         columns.push(obj);
       }
       else {

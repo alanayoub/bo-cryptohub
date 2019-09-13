@@ -677,6 +677,9 @@ const columnDependencies = {
   codeRepoPointsCC: [
     'cc-social-CodeRepository_Points',
   ],
+  generalPointsCC: [
+    'cc-social-General_Points',
+  ],
 
 
   //

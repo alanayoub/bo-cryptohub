@@ -40,11 +40,7 @@ export default class Selector {
 
     const hide = !!d.hide;
 
-    const hideChild = {
-      key: `hide-${d.key}`,
-      title: `<span><label><input type="checkbox"${hide ? ' checked' : ''}>Hide</label></span>`,
-      extraClasses: 'bo-edit-item'
-    };
+    const hideChild = this.createHideChild(d);
 
     d.extraClasses = `${hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`;
     d.folder = true;
@@ -234,6 +230,15 @@ export default class Selector {
     return options;
   }
 
+  createHideChild(node) {
+    const hideChild = {
+      key: `hide-${node.key}`,
+      title: `<span><label><input type="checkbox"${node.hide ? ' checked' : ''}>Hide</label></span>`,
+      extraClasses: `bo-edit-item bo-edit-item-${node.hide ? 'hide': 'show'}`
+    };
+    return hideChild;
+  }
+
   /**
    *
    * Default destination fancytree options
@@ -250,10 +255,10 @@ export default class Selector {
       renderNode: (event, data) => {
 
         const node = data.node;
+        // const isNode = !node.extraClasses.split(' ').includes('bo-edit-item');
         const $nodeSpan = $(node.span);
-        const isNode = !node.extraClasses.split(' ').includes('bo-edit-item');
 
-        if (isNode && !$nodeSpan.data('rendered')) {
+        if (!$nodeSpan.data('rendered')) {
 
           const $deleteButton = $('<i class="fas fa-window-close"></i>');
 
@@ -315,18 +320,59 @@ export default class Selector {
           return true;
         },
         dragEnter: (node, data) => {
-          return ['before', 'after'];
+
+          // Only allow changing order
+          let allowDrop;
+          const hasSameParent = node.parent === data.otherNode.parent;
+          const isOpen = node.span.classList.contains('fancytree-expanded')
+          const isSameTree = node.tree.rootNode.key === data.otherNode.tree.rootNode.key;
+
+          if (isSameTree) {
+            if (hasSameParent && isOpen) {
+              allowDrop = ['before', 'after'];
+              data.effectAllowed = 'move';
+              data.dropEffect = 'move';
+            }
+            else if (hasSameParent && !isOpen) {
+              allowDrop = ['before'];
+              data.effectAllowed = 'move';
+              data.dropEffect = 'move';
+            }
+            else if (!hasSameParent) {
+              allowDrop = false;
+            }
+          }
+          else {
+            if (isOpen) {
+              allowDrop = ['before', 'after'];
+              data.effectAllowed = 'copyMove';
+              data.dropEffect = 'copy';
+            }
+            else {
+              allowDrop = ['before'];
+              data.effectAllowed = 'copyMove';
+              data.dropEffect = 'copy';
+            }
+          }
+
+
+          return allowDrop;
+
         },
         dragOver: (node, data) => {
           return false;
         },
+        // dragExpand: function(node, data) {
+        //   return false;
+        // },
         dragDrop: (node, data) => {
+
+          data.originalEvent.stopPropagation();
+          data.originalEvent.preventDefault();
 
           const sourceNodes = data.otherNodeList;
           const destNode = data.hitMode === 'after' ? node : node.getPrevSibling();
           const existingFields = node.tree.toDict().map(v => v.title);
-
-          data.originalEvent.preventDefault(); // don't open links, files
 
           if (data.hitMode === 'after') {
             // If node are inserted directly after tagrget node one-by-one,
@@ -351,7 +397,14 @@ export default class Selector {
                 const title = `${groupTitle}${this.delimiter}${nodes[i].title}`;
                 const key = nodes[i].key;
                 if (!existingFields.includes(title)) {
-                  destNode.appendSibling({key, title});
+                  const hideChild = this.createHideChild(node);
+                  destNode.appendSibling({
+                    key,
+                    title,
+                    children: [hideChild],
+                    extraClasses: 'bo-edit-item-show',
+                    folder: true
+                  });
                 }
               }
             }
@@ -360,7 +413,14 @@ export default class Selector {
               const title = `${groupTitle}${this.delimiter}${data.otherNode.title}`;
               const key = data.otherNode.key;
               if (!existingFields.includes(title)) {
-                destNode.appendSibling({key, title});
+                const hideChild = this.createHideChild(node);
+                destNode.appendSibling({
+                  key,
+                  title,
+                  children: [hideChild],
+                  extraClasses: 'bo-edit-item-show',
+                  folder: true
+                });
               }
             }
 

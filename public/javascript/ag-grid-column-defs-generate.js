@@ -61,6 +61,10 @@ export default function generateColumnDefs(state) {
           col.type.push('cryptohubNumeric');
           col.cellRenderer = cellRendererNumber;
         }
+        else if (column.type === 'percent') {
+          col.type.push('cryptohubNumeric');
+          col.type.push('cryptohubPercentNoFormat');
+        }
         else {
           col.type.push('cryptohubText');
         }

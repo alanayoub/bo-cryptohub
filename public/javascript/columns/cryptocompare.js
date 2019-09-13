@@ -48,7 +48,7 @@ export default {
     headerName: 'Name',
     headerClass: 'CH-col',
     headerTooltip: 'Name',
-    width: 180,
+    width: 200,
     pinned: 'left',
     lockPinned: true,
     type: [
@@ -282,6 +282,24 @@ export default {
     headerName: 'Code Repo Points',
     headerClass: 'CH-col',
     headerTooltip: 'Code Repository Points\n\nData Source: Cryptocompare',
+    lockPinned: true,
+    width: 120,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+    ],
+    cellRenderer: cellRendererNumber,
+  },
+
+  //
+  // General points
+  //
+  generalPointsCC: {
+    colId: 'generalPointsCC',
+    field: 'cc-social-General_Points',
+    headerName: 'General Points',
+    headerClass: 'CH-col',
+    headerTooltip: 'General Points\n\nData Source: Cryptocompare',
     lockPinned: true,
     width: 120,
     type: [

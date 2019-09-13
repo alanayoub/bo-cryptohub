@@ -67,7 +67,29 @@ export default {
           sources: ['marketcapUSDCMC', 'codeRepoPointsCC'],
           type: 'number',
           calc: 's0/s1'
-        }
+        },
+        {id: 'circulatingSupplyCC'},
+        {id: 'maxSupplyCMC'},
+        // circulatingSupplyCMC
+        // circulatingSupplyCC
+        // totalSupplyCMC
+        // maxSupplyCMC
+        // totalSupplyCMC
+        { // Custom Column
+          id: 'c-3',
+          headerName: 'Circulating Supply %',
+          sources: ['maxSupplyCMC', 'circulatingSupplyCMC'],
+          type: 'percent',
+          calc: 's1/(s0/100)'
+        },
+        {id: 'generalPointsCC'},
+        { // Custom Column
+          id: 'c-4',
+          headerName: 'GPV Ratio',
+          sources: ['marketcapUSDCMC', 'generalPointsCC'],
+          type: 'number',
+          calc: 's0/s1'
+        },
       ],
       sort: {
         column: 'volume24hUSDCC',

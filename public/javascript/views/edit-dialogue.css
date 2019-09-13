@@ -227,7 +227,7 @@
                 margin-right: 5px;
               }
               &:hover {
-                background-color: #fff!important;
+                background-color: #fff;
               }
             }
             .bo-edit-item-show .fancytree-title::before {
@@ -265,9 +265,32 @@
                   border-radius: 4px;
                 }
               }
-              .fancytree-expander.fa-caret-right {
-                color: #eee;
+            }
+            ul .bo-edit-item-hide {
+              background: #eee;
+              &:hover {
+                background-color: #eee;
               }
+            }
+            .fancytree-node {
+              animation-name: yellowfade;
+              animation-duration: 0.5s;
+              background-color: #fff;
+              position: relative;
+              display: block;
+              margin-bottom: -1px;
+              border: 1px solid #eee;
+              cursor: default;
+              margin-top: 0;
+              &:hover {
+                background-color: #73965d55;
+                .fancytree-title::before {
+                  color: #73965d;
+                }
+              }
+            }
+            .fancytree-expander.fa-caret-right {
+              color: #eee;
             }
           }
           .fancytree-expander {
@@ -280,7 +303,7 @@
             position: relative;
             top: 5px;
           }
-          ul.fancytree-container {
+          .fancytree-container {
             position: absolute;
             left: 0;
             right: 0;
@@ -294,23 +317,6 @@
               padding: 0;
             }
             li {
-              .fancytree-node {
-                animation-name: yellowfade;
-                animation-duration: 0.5s;
-                background-color: #fff;
-                position: relative;
-                display: block;
-                margin-bottom: -1px;
-                border: 1px solid #eee;
-                cursor: default;
-                margin-top: 0;
-                &:hover {
-                  background-color: #73965d55;
-                  .fancytree-title::before {
-                    color: #73965d;
-                  }
-                }
-              }
             }
           }
           .fancytree-node {

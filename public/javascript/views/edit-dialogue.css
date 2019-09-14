@@ -129,6 +129,13 @@
           background-color: silver;
         }
 
+        #tree, #tree2 {
+          overflow-y: scroll;
+          ul:focus, li:focus {
+              outline: none;
+          }
+        }
+
         #tree {
           position: absolute;
           right: 0;
@@ -311,12 +318,12 @@
             bottom: 0;
             display: block;
             width: auto;
-            overflow-y: scroll;
             padding: 0;
             ul {
               padding: 0;
             }
-            li {
+            li li .fa-window-close {
+              display: none!important;
             }
           }
           .fancytree-node {

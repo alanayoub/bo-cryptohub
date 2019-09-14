@@ -34,29 +34,11 @@ export default class Selector {
 
     this.init();
 
+    this.destinationTree.addEventListener('scroll', event => {
+      this.lastScrollTop = event.srcElement.scrollTop;
+    });
+
   }
-
-  createDestinationItem(d) {
-
-    const hide = !!d.hide;
-
-    const hideChild = this.createHideChild(d);
-
-    d.extraClasses = `${hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`;
-    d.folder = true;
-    d.children = [hideChild];
-
-    const isCustom = /^c-\d{1,4}$/.test(d.key);
-    if (isCustom) {
-      d.children.push({
-        key: `hide-custom-${d.key}`,
-        title: `<span>Custom yo</span>`,
-        extraClasses: 'bo-edit-item'
-      });
-    }
-    return d;
-  }
-
 
   /**
    *
@@ -78,6 +60,11 @@ export default class Selector {
     }
   }
 
+  /**
+   *
+   * Text filter
+   *
+   */
   initFilter() {
 
     //
@@ -137,6 +124,11 @@ export default class Selector {
     }
   }
 
+  /**
+   *
+   * Destination tree buttons
+   *
+   */
   initDestinationButtons() {
     const btnClearSelections = document.querySelector('.BO-edit-dialogue .bo-clear-selections');
     const btnAddCustom = document.querySelector('.BO-edit-dialogue .bo-add-custom');
@@ -150,14 +142,9 @@ export default class Selector {
 
   /**
    *
+   * Get current selections
    *
    */
-  addCustom() {
-    const $destT = $('#tree2').fancytree('getTree');
-    $destT.rootNode.addNode({key: 'custom-1', title: 'Custom colum 1'});
-    document.querySelector('#tree2 li:last-child').scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'});
-  }
-
   get() {
     const output = [];
     let frozen = this.frozen;
@@ -230,15 +217,6 @@ export default class Selector {
     return options;
   }
 
-  createHideChild(node) {
-    const hideChild = {
-      key: `hide-${node.key}`,
-      title: `<span><label><input type="checkbox"${node.hide ? ' checked' : ''}>Hide</label></span>`,
-      extraClasses: `bo-edit-item bo-edit-item-${node.hide ? 'hide': 'show'}`
-    };
-    return hideChild;
-  }
-
   /**
    *
    * Default destination fancytree options
@@ -252,8 +230,14 @@ export default class Selector {
       icon: false,
       checkbox: false,
       clickFolderMode: 3,
+      modifyChild: (event, node) => {
+        if (event.type === 'modifyChild') {
+          document.querySelector('#tree2').scrollTop = this.lastScrollTop;
+        }
+      },
       renderNode: (event, data) => {
 
+        const context = this;
         const node = data.node;
         // const isNode = !node.extraClasses.split(' ').includes('bo-edit-item');
         const $nodeSpan = $(node.span);
@@ -273,6 +257,8 @@ export default class Selector {
 
           $deleteButton.click(
             event => {
+
+              event.stopPropagation();
 
               // Remove from source
               const [groupName, leafName] = node.title.split(this.delimiter);
@@ -397,7 +383,7 @@ export default class Selector {
                 const title = `${groupTitle}${this.delimiter}${nodes[i].title}`;
                 const key = nodes[i].key;
                 if (!existingFields.includes(title)) {
-                  const hideChild = this.createHideChild(node);
+                  const hideChild = Selector.createHideChild(node);
                   destNode.appendSibling({
                     key,
                     title,
@@ -413,7 +399,7 @@ export default class Selector {
               const title = `${groupTitle}${this.delimiter}${data.otherNode.title}`;
               const key = data.otherNode.key;
               if (!existingFields.includes(title)) {
-                const hideChild = this.createHideChild(node);
+                const hideChild = Selector.createHideChild(node);
                 destNode.appendSibling({
                   key,
                   title,
@@ -433,32 +419,6 @@ export default class Selector {
       },
     }
     return options;
-  }
-
-  /**
-   *
-   *
-   */
-  static setFolderCheckbox(node) {
-    let count = 0;
-    for (const childNode of node.children) {
-      if (childNode.selected) count++;
-    }
-    if (count === node.children.length) {
-      node.partsel = false;
-      node.selected = true;
-      node.render();
-    }
-    else if (count > 0 && count < node.children.length) {
-      node.selected = false;
-      node.partsel = true;
-      node.render();
-    }
-    else {
-      node.selected = false;
-      node.partsel = false;
-      node.render();
-    }
   }
 
   /**
@@ -493,11 +453,12 @@ export default class Selector {
 
     event.stopPropagation();
 
+    const target = event.target
     const $destT = $('#tree2').fancytree('getTree');
-    const isEditPanel = event.target.closest('.bo-edit-item') !== null;
+    const isEditPanel = target.closest('.bo-edit-item') !== null;
     if (isEditPanel) {
-      const title = event.target.closest('ul').parentElement.querySelector('.fancytree-title').textContent;
-      const checkbox = event.target.closest('.bo-edit-item input[type="checkbox"]');
+      const title = target.closest('ul').parentElement.querySelector('.fancytree-title').textContent;
+      const checkbox = target.closest('.bo-edit-item input[type="checkbox"]');
       const hide = checkbox && checkbox.checked;
       $destT.visit(n => {
         if (n.title === title) {
@@ -618,6 +579,81 @@ export default class Selector {
       });
     }
 
+  }
+
+  /**
+   *
+   *
+   */
+  createDestinationItem(d) {
+
+    const hide = !!d.hide;
+
+    const hideChild = Selector.createHideChild(d);
+
+    d.extraClasses = `${hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`;
+    d.folder = true;
+    d.children = [hideChild];
+
+    const isCustom = /^c-\d{1,4}$/.test(d.key);
+    if (isCustom) {
+      d.children.push({
+        key: `hide-custom-${d.key}`,
+        title: `<span>Custom yo</span>`,
+        extraClasses: 'bo-edit-item'
+      });
+    }
+    return d;
+  }
+
+
+  /**
+   *
+   *
+   */
+  addCustom() {
+    const $destT = $('#tree2').fancytree('getTree');
+    $destT.rootNode.addNode({key: 'custom-1', title: 'Custom colum 1'});
+    document.querySelector('#tree2 li:last-child').scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'});
+  }
+
+  /**
+   *
+   *
+   */
+  static createHideChild(node) {
+    const hideChild = {
+      key: `hide-${node.key}`,
+      title: `<span><label><input type="checkbox"${node.hide ? ' checked' : ''}>Hide</label></span>`,
+      extraClasses: `bo-edit-item bo-edit-item-${node.hide ? 'hide': 'show'}`
+    };
+    return hideChild;
+  }
+
+  /**
+   *
+   *
+   */
+  static setFolderCheckbox(node) {
+    let count = 0;
+    for (const childNode of node.children) {
+      if (childNode.selected) count++;
+    }
+    if (count === node.children.length) {
+      node.partsel = false;
+      node.selected = true;
+      node.render();
+    }
+    else if (count > 0 && count < node.children.length) {
+      node.selected = false;
+      node.partsel = true;
+      node.render();
+    }
+    else {
+      node.selected = false;
+      node.partsel = false;
+      node.render();
+    }
   }
 
 }

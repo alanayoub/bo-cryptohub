@@ -294,11 +294,11 @@ export default class Selector {
         map: {}
       },
       dnd5: {
-        dropMarkerOffsetX: -4,           // absolute position offset for .fancytree-drop-marker
+        dropMarkerOffsetX: -28,          // absolute position offset for .fancytree-drop-marker
         dropMarkerInsertOffsetX: 0,      // additional offset for drop-marker with hitMode = 'before'/'after'
         preventNonNodes: true,           // Prevent dropping items other than Fancytree nodes
         preventRecursion: true,          // Prevent dropping nodes on own descendants when in move-mode
-        preventSameParent: false,         // Prevent dropping nodes under same direct parent
+        preventSameParent: false,        // Prevent dropping nodes under same direct parent
         preventVoidMoves: true,          // Prevent moving nodes 'before self', etc.
         dragStart: (node, data) => {
           data.effectAllowed = 'move';

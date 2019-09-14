@@ -1,13 +1,16 @@
-@keyframes yellowfade {
-  from { background: yellow; }
-  to { background: transparent; }
-}
-
+/* Fancytree puts in at root */
 #fancytree-drop-marker {
   z-index: 9999!important;
   color: #73965d!important;
 }
 
+/* Move to common */
+@keyframes yellowfade {
+  from { background: yellow; }
+  to { background: transparent; }
+}
+
+/* Move to common */
 .BO-btn {
    display: inline-block;
    margin: 0 .5rem;
@@ -34,13 +37,21 @@
    }
 }
 
-.tingle-modal-box__content {
-  padding: 0!important;
+/* Tingle puts this at root */
+.tingle-modal-box {
+  width: 1366px;
+  height: 768px;
+  .tingle-modal-box__content {
+    padding: 0!important;
+    height: calc(100% - 95px); /* footer is 95px */
+  }
 }
 
 .BO-edit-dialogue {
 
   counter-reset: columns;
+  height: 100%;
+
 
   > header {
     margin: 0 0 20px 0;
@@ -100,10 +111,11 @@
   section {
 
     padding: 20px;
+    height: calc(100% - 110px);
 
     table {
       width: 100%;
-      height: 500px;
+      height: 100%;
       header {
         font-family: 'Alegreya Sans SC', sans-serif;
         margin: 0 0 10px 0;
@@ -131,6 +143,10 @@
 
         #tree, #tree2 {
           overflow-y: scroll;
+          border: 1px dotted gray;
+          .fancytree-container {
+            border: none;
+          }
           ul:focus, li:focus {
               outline: none;
           }
@@ -194,7 +210,6 @@
               padding: 5px 0 5px 0;
               cursor: default;
             }
-            overflow-y: scroll;
             ul[role=group] {
               padding: 0;
               border-top: 1px solid #eee;

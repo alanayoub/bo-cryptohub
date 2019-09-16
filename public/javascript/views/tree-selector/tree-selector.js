@@ -1,5 +1,7 @@
 'use strict';
 
+import initPug from '../../generated/init-pug.generated.js';
+
 export default class Selector {
 
   constructor(sourceElement, destinationElement, source, destination, frozen) {
@@ -22,9 +24,15 @@ export default class Selector {
     this.destinationOptions = this.getDestinationOptions();
     this.destinationOptions.init = () => this.initDest = true;
 
+    // let active = this.$destinationTree.fancytree('getTree').toDict();
+    // console.log(this.destinationOptions.source);
     for (const d of destination) {
-      d = this.createDestinationItem(d);
+      this.nodeGenerate(d, destination);
     }
+    // function showCheckboxes() {
+    //   const checkboxes = document.getElementById("checkboxes");
+    //   checkboxes.style.display = checkboxes.style.display === 'block' ? 'none' : 'block';
+    // }
 
     this.destinationOptions.source = destination;
     $(this.destinationTree).fancytree(this.destinationOptions);
@@ -146,15 +154,28 @@ export default class Selector {
    *
    */
   get() {
+
+    const textareas = document.querySelectorAll('#tree2 textarea');
+    for (const textarea of textareas) {
+      const id = textarea.dataset.id;
+      if (id) {
+        $('#tree2').fancytree('getTree').getNodeByKey(id).data.calc = textarea.value
+      }
+    }
+
     const output = [];
     let frozen = this.frozen;
     let active = this.$destinationTree.fancytree('getTree').toDict();
     for (const type of [frozen, active]) {
       type.forEach(v => {
         const obj = {
-          id: v.key,
-          hide: v.data && v.data.hide
+          id: v.key
         };
+        if (v.data) {
+          obj.calc = v.data.calc;
+          obj.hide = v.data.hide;
+          obj.source = v.data.source;
+        }
         output.push(obj);
       });
     }
@@ -168,6 +189,7 @@ export default class Selector {
    */
   getSourceOptions() {
     const options = {
+      keyboard: false,
       extensions: ['dnd5', 'glyph', 'filter'],
       treeId: '1',
       nodata: 'No data',
@@ -224,6 +246,7 @@ export default class Selector {
    */
   getDestinationOptions() {
     const options = {
+      keyboard: false,
       extensions: ['dnd5', 'glyph'],
       treeId: '2',
       nodata: 'No data',
@@ -234,6 +257,10 @@ export default class Selector {
         if (event.type === 'modifyChild') {
           document.querySelector('#tree2').scrollTop = this.lastScrollTop;
         }
+      },
+      expand: (event, data) => {
+        // console.log(event, data);
+        // this.nodeGenerateChildren(data.node);
       },
       renderNode: (event, data) => {
 
@@ -383,7 +410,7 @@ export default class Selector {
                 const title = `${groupTitle}${this.delimiter}${nodes[i].title}`;
                 const key = nodes[i].key;
                 if (!existingFields.includes(title)) {
-                  const hideChild = Selector.createHideChild(node);
+                  const hideChild = Selector.createOptionsChild(node);
                   destNode.appendSibling({
                     key,
                     title,
@@ -399,7 +426,7 @@ export default class Selector {
               const title = `${groupTitle}${this.delimiter}${data.otherNode.title}`;
               const key = data.otherNode.key;
               if (!existingFields.includes(title)) {
-                const hideChild = Selector.createHideChild(node);
+                const hideChild = Selector.createOptionsChild(node);
                 destNode.appendSibling({
                   key,
                   title,
@@ -454,12 +481,43 @@ export default class Selector {
     event.stopPropagation();
 
     const target = event.target
-    const $destT = $('#tree2').fancytree('getTree');
-    const isEditPanel = target.closest('.bo-edit-item') !== null;
-    if (isEditPanel) {
+    const container = target.closest('.fancytree-title');
+
+    if (container === null) return;
+
+    const isHideCheckbox = target.parentElement.classList.contains('bo-hide');
+    const isSelect = target.classList.contains('bo-overselect');
+    const isChildOfSelect = target.closest('.BO-multiselect');
+    const isCheckbox = target.parentElement.parentElement.classList.contains('bo-checkboxes');
+
+    const checkboxes = container.querySelector('.BO-multiselect .bo-checkboxes');
+
+    if (!isChildOfSelect && checkboxes) {
+      checkboxes.style.display = 'none';
+    }
+
+    if (isCheckbox) {
+      const checked = checkboxes.querySelectorAll('input:checked');
+      const arr = Array.from(checked);
+      let html = '';
+      for (const [idx, checkElement] of Object.entries(arr)) {
+        const title = checkElement.parentElement.textContent;
+        html += `<li>c${idx} = ${title}</li>`;
+      }
+      container.querySelector('.bo-added').innerHTML = html;
+      checkboxes.style.display = 'none';
+    }
+
+    if (isSelect) {
+      const checkboxElement = target.parentElement.nextElementSibling;
+      checkboxElement.style.display = checkboxElement.style.display === 'block'
+        ? 'none'
+        : 'block';
+    }
+    else if (isHideCheckbox) {
       const title = target.closest('ul').parentElement.querySelector('.fancytree-title').textContent;
-      const checkbox = target.closest('.bo-edit-item input[type="checkbox"]');
-      const hide = checkbox && checkbox.checked;
+      const hide = target.checked;
+      const $destT = $('#tree2').fancytree('getTree');
       $destT.visit(n => {
         if (n.title === title) {
           n.data.hide = !!hide;
@@ -483,7 +541,8 @@ export default class Selector {
       if (node.isSelected()) {
         // add node
         if (!destSelections.includes(title)) {
-          const newItem = context.createDestinationItem({key, title});
+          const columns = context.$destinationTree.fancytree('getTree').toDict();
+          const newItem = context.nodeGenerate({key, title}, columns);
           $destT.rootNode.addNode(newItem);
         }
       }
@@ -585,25 +644,23 @@ export default class Selector {
    *
    *
    */
-  createDestinationItem(d) {
+  nodeGenerate(d, columns) {
 
     const hide = !!d.hide;
-
-    const hideChild = Selector.createHideChild(d);
-
     d.extraClasses = `${hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`;
     d.folder = true;
+
+    const hideChild = Selector.createOptionsChild(d);
     d.children = [hideChild];
 
     const isCustom = /^c-\d{1,4}$/.test(d.key);
     if (isCustom) {
-      d.children.push({
-        key: `hide-custom-${d.key}`,
-        title: `<span>Custom yo</span>`,
-        extraClasses: 'bo-edit-item'
-      });
+      const customChild = Selector.createCustomChild(d, columns);
+      d.children.push(customChild);
     }
+
     return d;
+
   }
 
 
@@ -621,10 +678,60 @@ export default class Selector {
    *
    *
    */
-  static createHideChild(node) {
+  static createCustomChild(node, columns) {
+
+    const titles = [];
+
+    columns = JSON.parse(JSON.stringify(columns));
+    columns.forEach(val => {
+      if (val.sources) {
+        val.custom = true;
+      }
+      if (node.sources.includes(val.key)) {
+        const idx = node.sources.indexOf(val.key);
+        titles[idx] = val.title;
+        val.selected = true;
+      }
+    });
+
+    const { id, calc, sources } = node;
+    const title = node.title.split(': ')[1];
+    const rand = Math.ceil(Math.random() * 100000);
+    const html = initPug['tree-selector']({
+      id,
+      calc,
+      rand,
+      title,
+      titles,
+      sources,
+      columns,
+    });
+
+    const child = {
+      key: `hide-custom-${node.key}`,
+      title: html.replace('[CALC]', node.calc || '').replace('[ID]', node.key),
+      extraClasses: `bo-edit-item ${node.hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`
+    };
+
+    return child;
+
+  }
+
+  /**
+   *
+   *
+   */
+  static createOptionsChild(node) {
     const hideChild = {
       key: `hide-${node.key}`,
-      title: `<span><label><input type="checkbox"${node.hide ? ' checked' : ''}>Hide</label></span>`,
+      title: `
+        <span class="bo-options">
+          <h4>Options</h4>
+          <label class="bo-hide">
+            <input type="checkbox"${node.hide ? ' checked' : ''}>Hide
+          </label>
+        </span>
+      `,
       extraClasses: `bo-edit-item bo-edit-item-${node.hide ? 'hide': 'show'}`
     };
     return hideChild;

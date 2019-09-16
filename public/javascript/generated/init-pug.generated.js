@@ -600,4 +600,141 @@ pug_html = pug_html + "\u003Cspan class=\"ch-edit\"\u003E";
 ;pug_debug_line = 35;
 pug_html = pug_html + "\u003Ci class=\"fa fa-bars\"\u003E\u003C\u002Fi\u003E";
 ;pug_debug_line = 36;
-pug_html = pug_html + (pug.escape(null == (pug_interp = ' Edit') ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";}.call(this,"dnPer" in locals_for_with?locals_for_with.dnPer:typeof dnPer!=="undefined"?dnPer:undefined,"ncPer" in locals_for_with?locals_for_with.ncPer:typeof ncPer!=="undefined"?ncPer:undefined,"total" in locals_for_with?locals_for_with.total:typeof total!=="undefined"?total:undefined,"upPer" in locals_for_with?locals_for_with.upPer:typeof upPer!=="undefined"?upPer:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;}}
+pug_html = pug_html + (pug.escape(null == (pug_interp = ' Edit') ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";}.call(this,"dnPer" in locals_for_with?locals_for_with.dnPer:typeof dnPer!=="undefined"?dnPer:undefined,"ncPer" in locals_for_with?locals_for_with.ncPer:typeof ncPer!=="undefined"?ncPer:undefined,"total" in locals_for_with?locals_for_with.total:typeof total!=="undefined"?total:undefined,"upPer" in locals_for_with?locals_for_with.upPer:typeof upPer!=="undefined"?upPer:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'tree-selector': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (calc, columns, rand, sources, title, titles) {;pug_debug_line = 1;
+pug_html = pug_html + "\u003Cspan class=\"bo-custom\"\u003E";
+;pug_debug_line = 2;
+pug_html = pug_html + "\u003Ch4\u003E";
+;pug_debug_line = 2;
+pug_html = pug_html + "Custom Calculation\u003C\u002Fh4\u003E";
+;pug_debug_line = 4;
+pug_html = pug_html + "\u003Cdiv class=\"bo-step1\"\u003E";
+;pug_debug_line = 5;
+pug_html = pug_html + "\u003Cstrong\u003E";
+;pug_debug_line = 5;
+pug_html = pug_html + "Step 1:&nbsp;\u003C\u002Fstrong\u003E";
+;pug_debug_line = 6;
+pug_html = pug_html + "\u003Cspan\u003E";
+;pug_debug_line = 6;
+pug_html = pug_html + "Column name *\u003C\u002Fspan\u003E";
+;pug_debug_line = 7;
+pug_html = pug_html + "\u003Cinput" + (" type=\"text\" placeholder=\"Enter name\""+pug.attr("value", title, true, false)) + "\u002F\u003E\u003C\u002Fdiv\u003E";
+;pug_debug_line = 9;
+pug_html = pug_html + "\u003Cdiv class=\"bo-step2\"\u003E";
+;pug_debug_line = 10;
+pug_html = pug_html + "\u003Cstrong\u003E";
+;pug_debug_line = 10;
+pug_html = pug_html + "Step 2:&nbsp;\u003C\u002Fstrong\u003E";
+;pug_debug_line = 11;
+pug_html = pug_html + "\u003Cspan\u003E";
+;pug_debug_line = 11;
+pug_html = pug_html + "Select columns to use in your calculation *\u003C\u002Fspan\u003E";
+;pug_debug_line = 12;
+pug_html = pug_html + "\u003Cdiv class=\"BO-multiselect\"\u003E";
+;pug_debug_line = 13;
+pug_html = pug_html + "\u003Cdiv class=\"bo-selectbox\"\u003E";
+;pug_debug_line = 14;
+pug_html = pug_html + "\u003Cselect\u003E";
+;pug_debug_line = 15;
+pug_html = pug_html + "\u003Coption\u003E";
+;pug_debug_line = 15;
+pug_html = pug_html + "Select\u003C\u002Foption\u003E\u003C\u002Fselect\u003E";
+;pug_debug_line = 16;
+pug_html = pug_html + "\u003Cdiv class=\"bo-overselect\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
+;pug_debug_line = 17;
+pug_html = pug_html + "\u003Cdiv class=\"bo-checkboxes\"\u003E";
+;pug_debug_line = 18;
+// iterate columns
+;(function(){
+  var $$obj = columns;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index0 = 0, $$l = $$obj.length; pug_index0 < $$l; pug_index0++) {
+        var column = $$obj[pug_index0];
+;pug_debug_line = 19;
+if (!(column.custom)) {
+;pug_debug_line = 20;
+pug_html = pug_html + "\u003Clabel" + (pug.attr("for", rand + column.key, true, false)) + "\u003E";
+;pug_debug_line = 21;
+pug_html = pug_html + "\u003Cinput" + (" type=\"checkbox\""+pug.attr("id", rand + column.key, true, false)+pug.attr("checked", (column.selected===true ? "checked" : undefined), true, false)) + "\u002F\u003E";
+;pug_debug_line = 22;
+pug_html = pug_html + (pug.escape(null == (pug_interp = column.title) ? "" : pug_interp)) + "\u003C\u002Flabel\u003E";
+}
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index0 in $$obj) {
+      $$l++;
+      var column = $$obj[pug_index0];
+;pug_debug_line = 19;
+if (!(column.custom)) {
+;pug_debug_line = 20;
+pug_html = pug_html + "\u003Clabel" + (pug.attr("for", rand + column.key, true, false)) + "\u003E";
+;pug_debug_line = 21;
+pug_html = pug_html + "\u003Cinput" + (" type=\"checkbox\""+pug.attr("id", rand + column.key, true, false)+pug.attr("checked", (column.selected===true ? "checked" : undefined), true, false)) + "\u002F\u003E";
+;pug_debug_line = 22;
+pug_html = pug_html + (pug.escape(null == (pug_interp = column.title) ? "" : pug_interp)) + "\u003C\u002Flabel\u003E";
+}
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
+;pug_debug_line = 24;
+pug_html = pug_html + "\u003Col class=\"bo-added\"\u003E";
+;pug_debug_line = 25;
+// iterate sources
+;(function(){
+  var $$obj = sources;
+  if ('number' == typeof $$obj.length) {
+      for (var idx = 0, $$l = $$obj.length; idx < $$l; idx++) {
+        var source = $$obj[idx];
+;pug_debug_line = 26;
+pug_html = pug_html + "\u003Cli" + (pug.attr("data-key", source, true, false)) + "\u003E";
+;pug_debug_line = 26;
+pug_html = pug_html + "c";
+;pug_debug_line = 26;
+pug_html = pug_html + (pug.escape(null == (pug_interp = idx) ? "" : pug_interp));
+;pug_debug_line = 26;
+pug_html = pug_html + " = ";
+;pug_debug_line = 26;
+pug_html = pug_html + (pug.escape(null == (pug_interp = titles[idx]) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var idx in $$obj) {
+      $$l++;
+      var source = $$obj[idx];
+;pug_debug_line = 26;
+pug_html = pug_html + "\u003Cli" + (pug.attr("data-key", source, true, false)) + "\u003E";
+;pug_debug_line = 26;
+pug_html = pug_html + "c";
+;pug_debug_line = 26;
+pug_html = pug_html + (pug.escape(null == (pug_interp = idx) ? "" : pug_interp));
+;pug_debug_line = 26;
+pug_html = pug_html + " = ";
+;pug_debug_line = 26;
+pug_html = pug_html + (pug.escape(null == (pug_interp = titles[idx]) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Fol\u003E\u003C\u002Fdiv\u003E";
+;pug_debug_line = 28;
+pug_html = pug_html + "\u003Cdiv class=\"bo-step3\"\u003E";
+;pug_debug_line = 29;
+pug_html = pug_html + "\u003Cstrong\u003E";
+;pug_debug_line = 29;
+pug_html = pug_html + "Step 3:&nbsp;\u003C\u002Fstrong\u003E";
+;pug_debug_line = 30;
+pug_html = pug_html + "\u003Cspan\u003E";
+;pug_debug_line = 30;
+pug_html = pug_html + "Write your script using the column references. Example ";
+;pug_debug_line = 30;
+pug_html = pug_html + "\u003Cem\u003E";
+;pug_debug_line = 30;
+pug_html = pug_html + "'c1 \u002F c2'\u003C\u002Fem\u003E";
+;pug_debug_line = 30;
+pug_html = pug_html + " *\u003C\u002Fspan\u003E";
+;pug_debug_line = 31;
+pug_html = pug_html + "\u003Ctextarea placeholder=\"Enter calculation\"\u003E";
+;pug_debug_line = 31;
+pug_html = pug_html + (pug.escape(null == (pug_interp = calc) ? "" : pug_interp)) + "\u003C\u002Ftextarea\u003E\u003C\u002Fdiv\u003E\u003C\u002Fspan\u003E";}.call(this,"calc" in locals_for_with?locals_for_with.calc:typeof calc!=="undefined"?calc:undefined,"columns" in locals_for_with?locals_for_with.columns:typeof columns!=="undefined"?columns:undefined,"rand" in locals_for_with?locals_for_with.rand:typeof rand!=="undefined"?rand:undefined,"sources" in locals_for_with?locals_for_with.sources:typeof sources!=="undefined"?sources:undefined,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined,"titles" in locals_for_with?locals_for_with.titles:typeof titles!=="undefined"?titles:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;}}

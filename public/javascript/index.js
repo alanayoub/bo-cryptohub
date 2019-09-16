@@ -63,8 +63,8 @@ function dataEmitHandler(data) {
         let lastType = null;
         const calcArr = [];
         calc.split('').forEach(val => {
-          const type = val === 's' || !isNaN(val)
-            ? 'source'
+          const type = val === 'c' || !isNaN(val)
+            ? 'column'
             : 'operator'
           if (lastType !== type) {
             idx = calcArr.length;
@@ -72,11 +72,11 @@ function dataEmitHandler(data) {
           }
           calcArr[idx] = calcArr[idx] ? calcArr[idx] + val : val;
         });
-        // ['s0', '/', 's1']
+        // ['c0', '/', 'c1']
 
         const fields = [];
         calcArr.forEach(val => {
-          const isSource = /s\d{1,2}/.test(val);
+          const isSource = /c\d{1,2}/.test(val);
           if (isSource) {
             const idx = +val.substr(1);
             const field = colLib[sources[idx]].field;
@@ -92,7 +92,7 @@ function dataEmitHandler(data) {
           for (const f of ['value', 'lastValue']) {
             const skip = false;
             for (const [i, c] of Object.entries(arr)) {
-              if (/s\d{1,2}/.test(c)) {
+              if (/c\d{1,2}/.test(c)) {
                 const field = fields[c.substr(1)];
                 //
                 // Sort out isNaN bit for other types

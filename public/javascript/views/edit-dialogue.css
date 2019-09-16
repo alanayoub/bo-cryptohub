@@ -1,3 +1,56 @@
+.BO-multiselect {
+
+  width: 200px;
+  margin-bottom: 10px;
+  position: relative;
+  display: inline-block;
+
+  .bo-selectBox {
+    position: relative;
+    margin: 0!important;
+    select {
+      width: 100%;
+      font-weight: bold;
+    }
+    .bo-overSelect {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+
+  .bo-overselect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+  .bo-checkboxes {
+    display: none;
+    position: absolute;
+    border: 1px #dadada solid;
+    min-width: 300px;
+    background: #fff;
+    max-height: 170px;
+    overflow-x: auto;
+    line-height: 18px;
+    z-index: 1;
+    label {
+      display: block;
+      padding: 3px 5px;
+      &:hover {
+        background-color: #1e90ff;
+      }
+    }
+
+  }
+
+}
+
 /* Fancytree puts in at root */
 #fancytree-drop-marker {
   z-index: 9999!important;
@@ -39,8 +92,10 @@
 
 /* Tingle puts this at root */
 .tingle-modal-box {
-  width: 1366px;
-  height: 768px;
+  min-width: 1366px;
+  min-height: 768px;
+  height: 90%;
+  width: 90%;
   .tingle-modal-box__content {
     padding: 0!important;
     height: calc(100% - 95px); /* footer is 95px */
@@ -51,7 +106,6 @@
 
   counter-reset: columns;
   height: 100%;
-
 
   > header {
     margin: 0 0 20px 0;
@@ -70,6 +124,64 @@
   button {
     margin: 5px 5px 0 0;
     padding: 5px;
+  }
+
+  h4 {
+    margin: 0 0 20px 0;
+  }
+
+  .bo-custom {
+    display: block;
+    line-height: 18px;
+    textarea {
+      display: block; padding: 5px; width: 100%; position: relative; height: 60px;
+    }
+    button {
+      height: 20px;
+      line-height: 7px;
+    }
+    div {
+      white-space: normal;
+      span {
+        display: block;
+      }
+    }
+    .bo-step1, .bo-step2, .bo-step3 {
+      margin: 0 0 20px 20px;
+      span {
+        display: inline-block;
+        margin-bottom: 5px;
+      }
+    }
+    .bo-step1 {
+      input {
+        display: block;
+        width: 200px;
+      }
+    }
+    .bo-step2 {
+      .BO-multiselect {
+        display: block;
+      }
+      .bo-added {
+        margin: 0 0 15px 0;
+        background: #f1f1f1;
+        padding: 10px;
+        li {
+          display: block;
+        }
+      }
+      select {
+        width: 200px;
+      }
+    }
+    .bo-step3 {}
+  }
+
+  .bo-options {
+    input {
+      margin-left: 20px;
+    }
   }
 
   .bo-search {
@@ -147,9 +259,16 @@
           .fancytree-container {
             border: none;
           }
-          ul:focus, li:focus {
-              outline: none;
+          .fancytree-title {
+            cursor: default;
+            &:focus {
+              outline: none!important;
+            };
           }
+          ul:focus, li:focus {
+            outline: none;
+          }
+
         }
 
         #tree {
@@ -231,6 +350,7 @@
           }
           .fancytree-title {
             line-height: 26px;
+            cursor: default;
           }
 
         }
@@ -241,6 +361,50 @@
           left: 0;
           top: 0;
           bottom: 0;
+          .fancytree-expanded {
+            background: #73965d!important;
+            .fancytree-expander {
+              color: #fff;
+            }
+            .fancytree-title {
+              color: #fff!important;
+            }
+          }
+          .fancytree-expanded.bo-edit-item-hide {
+            background: #555!important;
+            .fancytree-expander {
+              color: #fff;
+            }
+            .fancytree-title {
+              color: #fff!important;
+            }
+            &+[role=group] {
+              border-bottom: 1px solid #555!important;
+            }
+          }
+          ul[role=group] {
+            margin: 0 1px;
+            background: rgb(248, 248, 248);
+            border-bottom: 1px solid rgb(115, 150, 93);
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px 0px inset;
+          }
+          li li {
+            /* .fancytree-title::before { */
+            /*   content: ''; */
+            /*   position: absolute; */
+            /*   background: #73965d22; */
+            /*   left: 1px; */
+            /*   top: 0; */
+            /*   bottom: -1px; */
+            /*   font-size: 20px; */
+            /*   line-height: 30px; */
+            /*   width: 10px; */
+            /* } */
+            .fancytree-expander {
+              padding-left: 0;
+              margin-left: -5px;
+            }
+          }
           > ul > li > {
             ul .bo-edit-item {
               input {
@@ -248,8 +412,20 @@
                 top: 2px;
                 margin-right: 5px;
               }
-              &:hover {
-                background-color: #fff;
+              /* &:hover { */
+              /*   background-color: #fff; */
+              /* } */
+              &::before {
+                position: absolute;
+                background: #73965d55;
+                padding: 5px 8px 5px 5px;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                font-size: 20px;
+                line-height: 30px;
+                text-align: center;
+                width: 23px;
               }
             }
             .bo-edit-item-show .fancytree-title::before {
@@ -289,9 +465,9 @@
               }
             }
             ul .bo-edit-item-hide {
-              background: #eee;
+              /* background: #eee; */
               &:hover {
-                background-color: #eee;
+                /* background-color: #eee; */
               }
             }
             .fancytree-node {
@@ -325,6 +501,15 @@
             position: relative;
             top: 5px;
           }
+
+          .fancytree-title {
+            padding: 12px 5px 12px 0;
+            right: 0;
+            left: 0;
+            display: inline-block;
+            width: calc(100% - 70px);
+          }
+
           .fancytree-container {
             position: absolute;
             left: 0;
@@ -353,9 +538,6 @@
           }
           .fa-window-close:hover {
             color: #f00;
-          }
-          .fancytree-title {
-            padding: 12px 5px 12px 0;
           }
         }
 

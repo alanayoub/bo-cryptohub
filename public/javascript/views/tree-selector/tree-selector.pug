@@ -1,0 +1,31 @@
+span(class='bo-custom')
+  h4 Custom Calculation
+
+  div(class='bo-step1')
+    strong Step 1:&nbsp;
+    span Column name *
+    input(type='text' placeholder="Enter name" value=title)
+
+  div(class='bo-step2')
+    strong Step 2:&nbsp;
+    span Select columns to use in your calculation *
+    div(class='BO-multiselect')
+      div(class='bo-selectbox')
+        select
+          option Select
+        div(class='bo-overselect')
+      div(class='bo-checkboxes')
+        each column in columns
+          unless column.custom
+            label(for=rand + column.key)
+              input(type='checkbox' id=rand + column.key checked=(column.selected===true ? "checked" : undefined))
+              | #{column.title}
+
+    ol(class='bo-added')
+      each source, idx in sources
+        li(data-key=source) c#{idx} = #{titles[idx]}
+
+  div(class='bo-step3')
+    strong Step 3:&nbsp;
+    span Write your script using the column references. Example #[em 'c1 / c2'] *
+    textarea(placeholder="Enter calculation") #{calc}

@@ -58,7 +58,7 @@ export default {
           headerName: '5x Marketcap',
           sources: ['marketcapUSDCMC'],
           type: 'currency',
-          calc: 's0*5'
+          calc: 'c0*5'
         },
         {id: 'codeRepoPointsCC'},
         { // Custom Column
@@ -66,7 +66,7 @@ export default {
           headerName: 'RPV Ratio',
           sources: ['marketcapUSDCMC', 'codeRepoPointsCC'],
           type: 'number',
-          calc: 's0/s1'
+          calc: 'c0/c1'
         },
         {id: 'circulatingSupplyCC'},
         {id: 'maxSupplyCMC'},
@@ -80,7 +80,7 @@ export default {
           headerName: 'Circulating Supply %',
           sources: ['maxSupplyCMC', 'circulatingSupplyCMC'],
           type: 'percent',
-          calc: 's1/(s0/100)'
+          calc: 'c1/(c0/100)'
         },
         {id: 'generalPointsCC'},
         { // Custom Column
@@ -88,7 +88,7 @@ export default {
           headerName: 'GPV Ratio',
           sources: ['marketcapUSDCMC', 'generalPointsCC'],
           type: 'number',
-          calc: 's0/s1'
+          calc: 'c0/c1'
         },
       ],
       sort: {

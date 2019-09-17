@@ -27,7 +27,7 @@ export default class EditDialogue {
       stickyFooter: false,
       closeMethods: ['overlay', 'button', 'escape'],
       closeLabel: 'Close',
-      cssClass: ['custom-class-2', 'custom-class-2'],
+      cssClass: ['BO-edit-dialog-tingle'],
       onOpen: () => {},
       onClose: () => {},
       beforeClose: () => {
@@ -52,6 +52,20 @@ export default class EditDialogue {
 
   }
 
+  setErrorState(data) {
+    const button = document.querySelector('.BO-edit-dialog-tingle .bo-btn-primary');
+    if (data.error) {
+      button.classList.add('bo-btn-disabled');
+      button.setAttribute('title', data.message);
+      button.setAttribute('disabled', true);
+    }
+    else {
+      button.classList.remove('bo-btn-disabled');
+      button.removeAttribute('title');
+      button.removeAttribute('disabled');
+    }
+  }
+
   /**
    *
    * Ok button handler
@@ -65,26 +79,29 @@ export default class EditDialogue {
   async okButtonHandler() {
 
     const state = await bo.inst.state.get();
+    const selectorData = this.selector.get();
     const stateCols = state.columns;
 
-    const selectorData = this.selector.get();
-    const list = selectorData.map(v => v.id);
-
-    const columns = [];
-    for (const [idx, field] of Object.entries(list)) {
-      if (idx > -1) {
-        const stateItem = stateCols.filter(v => v.id === selectorData[idx].id)[0];
-        const obj = {...stateItem, ...selectorData[idx]};
-        columns.push(obj);
+    if (!selectorData.error) {
+      const list = selectorData.map(v => v.id);
+      const columns = [];
+      for (const [idx, field] of Object.entries(list)) {
+        if (idx > -1) {
+          const stateItem = stateCols.filter(v => v.id === selectorData[idx].id)[0];
+          const obj = {...stateItem, ...selectorData[idx]};
+          columns.push(obj);
+        }
+        else {
+          columns.push({
+            id: field
+          });
+        }
       }
-      else {
-        columns.push({
-          id: field
-        });
-      }
+      bo.inst.state.set('columns', columns);
     }
-
-    bo.inst.state.set('columns', columns);
+    else {
+      return selectorData;
+    }
 
   }
 
@@ -166,7 +183,8 @@ export default class EditDialogue {
       document.querySelector('#tree2'),
       source,
       destination,
-      frozen
+      frozen,
+      this.setErrorState
     );
 
   }

@@ -4,9 +4,10 @@ import initPug from '../../generated/init-pug.generated.js';
 
 export default class Selector {
 
-  constructor(sourceElement, destinationElement, source, destination, frozen) {
+  constructor(sourceElement, destinationElement, source, destination, frozen, errorHandler) {
 
     this.delimiter = ': ';
+    this.errorHandler = errorHandler;
 
     // Source
     this.initSource = false;
@@ -52,7 +53,7 @@ export default class Selector {
     if (this.initSource && this.initDest) {
       this.sourceTree.addEventListener('click', event => this.checkboxHandler(event), false);
       this.sourceTree.addEventListener('matches', event => this.checkboxHandler(event), false);
-      this.destinationTree.addEventListener('click', this.destinationClickHandler, false);
+      this.destinationTree.addEventListener('click', event => this.destinationClickHandler(this, event), false);
       this.initDestinationButtons();
       this.dropHandler();
       this.initFilter();
@@ -140,6 +141,47 @@ export default class Selector {
     btnAddCustom.onclick = () => {
       this.addCustom();
     };
+  }
+
+  /**
+   *
+   * Is Valid Custom Node
+   *
+   */
+  checkValidCustomNode(context, node) {
+
+    const customs = document.querySelectorAll('#tree2 ul[role=group] li .bo-custom');
+    const ft = $('#tree2').fancytree('getTree');
+    let isValid = true;
+
+    for (const custom of customs) {
+      if (node.key === custom.dataset.id) {
+        const calc = custom.querySelector('textarea').value;
+        const type = custom.querySelector('.bo-step3 select').value;
+        const title = custom.querySelector('.bo-step1 input').value;
+        const sources = Array.from(custom.querySelectorAll('.bo-checkboxes input:checked')).map(v => v.dataset.source);
+        if (!calc || !sources.length || !title || !type) {
+          isValid = false;
+        }
+      }
+    }
+
+    if (isValid) {
+      node.removeClass('bo-edit-item-error');
+      this.errorHandler({
+        error: false
+      });
+    }
+    else {
+      node.addClass('bo-edit-item-error');
+      this.errorHandler({
+        error: true,
+        message: 'Please fix all errors before submitting changes'
+      });
+    }
+
+    return isValid;
+
   }
 
   /**
@@ -274,14 +316,17 @@ export default class Selector {
       icon: false,
       checkbox: false,
       clickFolderMode: 3,
-      modifyChild: (event, node) => {
-        if (event.type === 'modifyChild') {
-          document.querySelector('#tree2').scrollTop = this.lastScrollTop;
-        }
+      collapse: (event, data) => {
+        this.checkValidCustomNode(this, data.node);
       },
       expand: (event, data) => {
         // console.log(event, data);
         // this.nodeGenerateChildren(data.node);
+      },
+      modifyChild: (event, node) => {
+        if (event.type === 'modifyChild') {
+          document.querySelector('#tree2').scrollTop = this.lastScrollTop;
+        }
       },
       renderNode: (event, data) => {
 
@@ -501,26 +546,53 @@ export default class Selector {
    * Fires when a destination item is clicked
    *
    */
-  destinationClickHandler(event) {
+  destinationClickHandler(context, event) {
 
     event.stopPropagation();
 
     const target = event.target
+    const group = target.closest('ul[role=group]');
+    const folder = group
+      ? group.closest('li').querySelector('.fancytree-folder')
+      : target.closest('.fancytree-folder');
     const container = target.closest('.fancytree-title');
 
     if (container === null) return;
 
+    const $destT = $('#tree2').fancytree('getTree');
+    const custom = folder.closest('li').querySelector('.bo-custom');
+    const options = folder.closest('li').querySelector('.bo-options');
+
+    const id = custom ? custom.dataset.id : options.dataset.id;
+    const node = $destT.getNodeByKey(id);
+
+    // If is a custom column loop all previously new custom columns, check for errors and delete new flag
+    $destT.visit(n => {
+      if (n.key !== node.key) {
+        if (n.data.new && n.data.custom) {
+          delete n.data.new;
+          context.checkValidCustomNode(context, n);
+        }
+      }
+    });
+    if (custom) {
+      node.data.new = true;
+    }
+
+    const isOptionsHide = target.parentElement.classList.contains('bo-hide');
     const isSelect = target.classList.contains('bo-overselect');
     const isChildOfSelect = target.closest('.BO-multiselect');
-    const isCheckbox = target.parentElement.parentElement.classList.contains('bo-checkboxes');
+    const isCustomSources = target.parentElement.parentElement.classList.contains('bo-checkboxes');
 
     const checkboxes = container.querySelector('.BO-multiselect .bo-checkboxes');
+
 
     if (!isChildOfSelect && checkboxes) {
       checkboxes.style.display = 'none';
     }
 
-    if (isCheckbox) {
+    if (isCustomSources) {
+      console.log('custom sources');
       const checked = checkboxes.querySelectorAll('input:checked');
       const arr = Array.from(checked);
       let html = '';
@@ -537,6 +609,20 @@ export default class Selector {
       checkboxElement.style.display = checkboxElement.style.display === 'block'
         ? 'none'
         : 'block';
+    }
+    else if (isOptionsHide) {
+      const title = target.closest('ul').parentElement.querySelector('.fancytree-title').textContent;
+      const hide = target.checked;
+      node.data.hide = !!hide;
+      if (hide) {
+        node.addClass('bo-edit-item-hide');
+        node.removeClass('bo-edit-item-show');
+      }
+      else {
+        node.removeClass('bo-edit-item-hide');
+        node.addClass('bo-edit-item-show');
+      }
+      console.log('hide');
     }
 
   }
@@ -727,6 +813,7 @@ export default class Selector {
     const newNode = {
       key: `c-${customColumnCount + 1}`,
       title: `custom: ${headerName}`,
+      new: true,
       headerName,
       custom: true,
       sources: []

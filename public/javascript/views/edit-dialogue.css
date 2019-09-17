@@ -387,6 +387,18 @@
               border-bottom: 1px solid #555!important;
             }
           }
+          .fancytree-expanded.bo-edit-item-error {
+            background: #e03c3c!important;
+            .fancytree-expander {
+              color: #fff;
+            }
+            .fancytree-title {
+              color: #fff!important;
+            }
+            &+[role=group] {
+              border-bottom: 1px solid #e03c3c!important;
+            }
+          }
           ul[role=group] {
             margin: 0 1px;
             background: rgb(248, 248, 248);
@@ -433,32 +445,63 @@
                 width: 23px;
               }
             }
-            .bo-edit-item-show .fancytree-title::before {
-              counter-increment: columns;
-              content: counter(columns);
-              position: absolute;
-              background: #73965d;
-              color: #fff!important;
-              padding: 5px 8px 5px 5px;
-              left: 0;
-              top: 0;
-              bottom: 0;
-              font-size: 20px;
-              line-height: 30px;
-              text-align: center;
-              width: 23px;
+            .bo-edit-item-show {
+              .fancytree-title {
+                &::before {
+                  counter-increment: columns;
+                  content: counter(columns);
+                  position: absolute;
+                  background: #73965d;
+                  color: #fff!important;
+                  padding: 5px 8px 5px 5px;
+                  left: 0;
+                  top: 0;
+                  bottom: 0;
+                  font-size: 20px;
+                  line-height: 30px;
+                  text-align: center;
+                  width: 23px;
+                }
+              }
             }
             .bo-edit-item-hide {
               background: #eee!important;
               .fancytree-title {
                 color: #555;
                 font-style: italic;
+                &::before {
+                  display: none;
+                }
                 &::after {
                   content: 'Hidden';
                   display: block;
                   width: 55px;
                   height: 20px;
                   background: #555;
+                  position: absolute;
+                  right: 35px;
+                  top: 11px;
+                  color: #fff;
+                  text-align: center;
+                  line-height: 19px;
+                  border-radius: 4px;
+                }
+              }
+            }
+            .bo-edit-item-error {
+              background: #e7a5a5!important;
+              .fancytree-title {
+                color: #555;
+                font-style: italic;
+                &::before {
+                  background: #e03c3c!important;
+                }
+                &::after {
+                  content: 'Error';
+                  display: block;
+                  width: 55px;
+                  height: 20px;
+                  background: #e03c3c!important;
                   position: absolute;
                   right: 35px;
                   top: 11px;

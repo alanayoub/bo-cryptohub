@@ -135,13 +135,15 @@ export default class EditDialogue {
     for (const col of columns) {
       const key = col.id;
       const sources = col.sources;
+      const type = col.type;
       const calc = col.calc;
       const hide = col.hide;
       const group = groupMapping[key];
-      const name = colLib[key].headerName;
-      const title = `${group}: ${name}`;
+      const headerName = colLib[key].headerName;
+      const title = `${group}: ${headerName}`;
+      const custom = /^c-\d{1,2}/.test(key);
       if (!frozenFields.includes(key)) {
-        const item = {key, title, calc, sources};
+        const item = {key, title, calc, type, sources, headerName, custom};
         if (hide) item.hide = hide;
         destination.push(item);
       }

@@ -146,7 +146,7 @@
         display: block;
       }
     }
-    .bo-step1, .bo-step2, .bo-step3 {
+    .bo-step1, .bo-step2, .bo-step3, .bo-step4 {
       margin: 0 0 20px 20px;
       span {
         display: inline-block;
@@ -166,16 +166,21 @@
       .bo-added {
         margin: 0 0 15px 0;
         background: #f1f1f1;
-        padding: 10px;
         li {
           display: block;
+          padding: 3px 5px 3px 5px;
         }
       }
       select {
         width: 200px;
       }
     }
-    .bo-step3 {}
+    .bo-step3 {
+      select {
+        display: block;
+      }
+    }
+    .bo-step4 {}
   }
 
   .bo-options {

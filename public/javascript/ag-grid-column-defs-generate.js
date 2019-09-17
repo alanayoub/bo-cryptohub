@@ -35,9 +35,11 @@ export default function generateColumnDefs(state) {
 
       let col;
       if (custom) {
+
         if (!column.calc || !column.id || !column.headerName) {
           continue;
         }
+
         col = {
           ...customDefaults,
           calc: column.calc,
@@ -47,9 +49,18 @@ export default function generateColumnDefs(state) {
           hide: column.hide,
           field: column.id,
         }
+
+        const sourceNames = column.sources.map(v => colLib[v].headerName);
+        col.headerTooltip = [
+          'Custom Calculation',
+          `sources: ${sourceNames}`,
+          `calculation: ${column.calc}`
+        ].join('\n');
+
         col.type = [
           'cryptohubDefaults'
-        ]
+        ];
+
         if (column.type === 'currency') {
           col.type.push('cryptohubNumeric');
           col.cellRenderer = partialApplication(cellRendererCurrency, window.refs);
@@ -68,6 +79,7 @@ export default function generateColumnDefs(state) {
         else {
           col.type.push('cryptohubText');
         }
+
       }
       else {
         col = Object.assign({}, colLib[id]);

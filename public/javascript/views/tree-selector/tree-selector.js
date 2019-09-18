@@ -148,32 +148,33 @@ export default class Selector {
    * Is Valid Custom Node
    *
    */
-  checkValidCustomNode(context, node) {
+  checkValidCustomNode(context) {
 
     const customs = document.querySelectorAll('#tree2 ul[role=group] li .bo-custom');
     const ft = $('#tree2').fancytree('getTree');
     let isValid = true;
 
     for (const custom of customs) {
-      if (node.key === custom.dataset.id) {
-        const calc = custom.querySelector('textarea').value;
-        const type = custom.querySelector('.bo-step3 select').value;
-        const title = custom.querySelector('.bo-step1 input').value;
-        const sources = Array.from(custom.querySelectorAll('.bo-checkboxes input:checked')).map(v => v.dataset.source);
-        if (!calc || !sources.length || !title || !type) {
-          isValid = false;
-        }
+      const node = ft.getNodeByKey(custom.dataset.id);
+      const calc = custom.querySelector('textarea').value;
+      const type = custom.querySelector('.bo-step3 select').value;
+      const title = custom.querySelector('.bo-step1 input').value;
+      const sources = Array.from(custom.querySelectorAll('.bo-checkboxes input:checked')).map(v => v.dataset.source);
+      if (!calc || !sources.length || !title || !type) {
+        isValid = false;
+        node.addClass('bo-edit-item-error');
+      }
+      else {
+        node.removeClass('bo-edit-item-error');
       }
     }
 
     if (isValid) {
-      node.removeClass('bo-edit-item-error');
       this.errorHandler({
         error: false
       });
     }
     else {
-      node.addClass('bo-edit-item-error');
       this.errorHandler({
         error: true,
         message: 'Please fix all errors before submitting changes'
@@ -317,11 +318,7 @@ export default class Selector {
       checkbox: false,
       clickFolderMode: 3,
       collapse: (event, data) => {
-        this.checkValidCustomNode(this, data.node);
-      },
-      expand: (event, data) => {
-        // console.log(event, data);
-        // this.nodeGenerateChildren(data.node);
+        this.checkValidCustomNode(this);
       },
       modifyChild: (event, node) => {
         if (event.type === 'modifyChild') {
@@ -374,6 +371,11 @@ export default class Selector {
                 if (n.title === node.title) nodeToRemove = n;
               });
               nodeToRemove.remove();
+
+              const $destT = $('#tree2').fancytree('getTree');
+              $destT.visit(node => {
+                this.checkValidCustomNode(this);
+              });
 
             }
           );
@@ -567,11 +569,12 @@ export default class Selector {
     const node = $destT.getNodeByKey(id);
 
     // If is a custom column loop all previously new custom columns, check for errors and delete new flag
+    // NOTE: shit, new custom starts with an error
     $destT.visit(n => {
       if (n.key !== node.key) {
         if (n.data.new && n.data.custom) {
           delete n.data.new;
-          context.checkValidCustomNode(context, n);
+          context.checkValidCustomNode(context);
         }
       }
     });

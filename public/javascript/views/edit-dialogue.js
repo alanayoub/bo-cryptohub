@@ -38,6 +38,7 @@ export default class EditDialogue {
     this.modal = new tingle.modal(options);
 
     this.modal.addFooterBtn('Cancel', 'BO-btn bo-btn-secondary', () => {
+      this.setErrorState({error: false});
       this.modal.close();
     });
 

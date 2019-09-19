@@ -650,7 +650,7 @@ pug_html = pug_html + "\u003Cdiv class=\"bo-checkboxes\"\u003E";
       for (var pug_index0 = 0, $$l = $$obj.length; pug_index0 < $$l; pug_index0++) {
         var column = $$obj[pug_index0];
 ;pug_debug_line = 19;
-if (!(column.custom)) {
+if (!(column.data.custom)) {
 ;pug_debug_line = 20;
 pug_html = pug_html + "\u003Clabel" + (pug.attr("for", rand + column.key, true, false)) + "\u003E";
 ;pug_debug_line = 21;
@@ -665,7 +665,7 @@ pug_html = pug_html + (pug.escape(null == (pug_interp = column.title) ? "" : pug
       $$l++;
       var column = $$obj[pug_index0];
 ;pug_debug_line = 19;
-if (!(column.custom)) {
+if (!(column.data.custom)) {
 ;pug_debug_line = 20;
 pug_html = pug_html + "\u003Clabel" + (pug.attr("for", rand + column.key, true, false)) + "\u003E";
 ;pug_debug_line = 21;

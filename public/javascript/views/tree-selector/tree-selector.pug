@@ -16,7 +16,7 @@ span(data-id=id class='bo-custom')
         div(class='bo-overselect')
       div(class='bo-checkboxes')
         each column in columns
-          unless column.custom
+          unless column.data.custom
             label(for=rand + column.key)
               input(type='checkbox' id=rand + column.key data-source=column.key checked=(column.selected===true ? "checked" : undefined))
               | #{column.title}

@@ -217,7 +217,7 @@ export default class Selector {
           node.data.calc = calc;
           node.data.sources = sources;
           node.data.headerName = title;
-          node.type = type;
+          node.data.type = type;
         }
       }
     }
@@ -236,7 +236,7 @@ export default class Selector {
           if (v.data.custom) {
             obj.calc = v.data.calc;
             obj.sources = v.data.sources;
-            obj.type = v.type;
+            obj.type = v.data.type;
             obj.headerName = v.data.headerName;
           }
         }
@@ -485,10 +485,12 @@ export default class Selector {
                   destNode.appendSibling({
                     key,
                     title,
-                    headerName,
                     children: [hideChild],
                     extraClasses: 'bo-edit-item-show',
-                    folder: true
+                    folder: true,
+                    data: {
+                      headerName
+                    }
                   });
                 }
               }
@@ -503,10 +505,12 @@ export default class Selector {
                 destNode.appendSibling({
                   key,
                   title,
-                  headerName,
                   children: [hideChild],
                   extraClasses: 'bo-edit-item-show',
-                  folder: true
+                  folder: true,
+                  data: {
+                    headerName
+                  }
                 });
               }
             }
@@ -645,7 +649,7 @@ export default class Selector {
         // add node
         if (!destSelections.includes(title)) {
           const columns = context.$destinationTree.fancytree('getTree').toDict();
-          const newItem = context.nodeGenerate({key, title, headerName}, columns);
+          const newItem = context.nodeGenerate({key, title, data: {headerName}}, columns);
           $destT.rootNode.addNode(newItem);
         }
       }
@@ -747,22 +751,22 @@ export default class Selector {
    *
    *
    */
-  nodeGenerate(d, columns) {
+  nodeGenerate(node, columns) {
 
-    const hide = !!d.hide;
-    d.extraClasses = `${hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`;
-    d.folder = true;
+    const hide = !!node.data.hide;
+    node.extraClasses = `${hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`;
+    node.folder = true;
 
-    const hideChild = Selector.createOptionsChild(d);
-    d.children = [hideChild];
+    const hideChild = Selector.createOptionsChild(node);
+    node.children = [hideChild];
 
-    const isCustom = /^c-\d{1,4}$/.test(d.key);
+    const isCustom = /^c-\d{1,4}$/.test(node.key);
     if (isCustom) {
-      const customChild = this.createCustomChild(d, columns);
-      d.children.push(customChild);
+      const customChild = this.createCustomChild(node, columns);
+      node.children.push(customChild);
     }
 
-    return d;
+    return node;
 
   }
 
@@ -845,10 +849,12 @@ export default class Selector {
     const newNode = {
       key: `c-${customColumnCount}`,
       title: `custom: ${headerName}`,
-      new: true,
-      headerName,
-      custom: true,
-      sources: []
+      data: {
+        new: true,
+        headerName,
+        custom: true,
+        sources: []
+      }
     };
     const newItem = this.nodeGenerate(newNode, columns);
     const node = this.$destinationTree.fancytree('getTree').rootNode.addNode(newItem);
@@ -866,21 +872,20 @@ export default class Selector {
 
     columns = JSON.parse(JSON.stringify(columns));
     columns.forEach(val => {
-      if (val.sources) {
-        val.custom = true;
+      if (val.data.sources) {
+        val.data.custom = true;
       }
-      if (node.sources.includes(val.key)) {
-        const idx = node.sources.indexOf(val.key);
+      if (node.data.sources.includes(val.key)) {
+        const idx = node.data.sources.indexOf(val.key);
         titles[idx] = val.title;
         val.selected = true;
       }
     });
 
     const id = node.key;
-    const calc = node.calc;
-    const type = node.type;
-    const sources = node.sources;
-    const headerName = node.headerName;
+    const calc = node.data.calc;
+    const type = node.data.type;
+    const sources = node.data.sources;
     const title = node.title.split(this.delimiter)[1];
     const rand = Math.ceil(Math.random() * 100000);
     const html = initPug['tree-selector']({
@@ -892,13 +897,12 @@ export default class Selector {
       titles,
       sources,
       columns,
-      headerName,
     });
 
     const child = {
       key: `hide-custom-${node.key}`,
-      title: html.replace('[CALC]', node.calc || '').replace('[ID]', node.key),
-      extraClasses: `bo-edit-item ${node.hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`
+      title: html.replace('[CALC]', node.data.calc || '').replace('[ID]', node.key),
+      extraClasses: `bo-edit-item ${node.data.hide ? ' bo-edit-item-hide' : 'bo-edit-item-show'}`
     };
 
     return child;
@@ -916,11 +920,11 @@ export default class Selector {
         <span class="bo-options" data-id="${node.key}">
           <h4>Options</h4>
           <label class="bo-hide">
-            <input type="checkbox"${node.hide ? ' checked' : ''}>Hide
+            <input type="checkbox"${node.data.hide ? ' checked' : ''}>Hide
           </label>
         </span>
       `,
-      extraClasses: `bo-edit-item bo-edit-item-${node.hide ? 'hide': 'show'}`
+      extraClasses: `bo-edit-item bo-edit-item-${node.data.hide ? 'hide': 'show'}`
     };
     return hideChild;
   }

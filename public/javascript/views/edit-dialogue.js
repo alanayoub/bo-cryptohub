@@ -161,8 +161,18 @@ export default class EditDialogue {
       const title = `${group}: ${headerName}`;
       const custom = /^c-\d{1,2}/.test(key);
       if (!frozenFields.includes(key)) {
-        const item = {key, title, calc, type, sources, headerName, custom};
-        if (hide) item.hide = hide;
+        const item = {
+          key,
+          title,
+          data: {
+            calc,
+            type,
+            custom,
+            sources,
+            headerName
+          }
+        };
+        if (hide) item.data.hide = hide;
         destination.push(item);
       }
     }

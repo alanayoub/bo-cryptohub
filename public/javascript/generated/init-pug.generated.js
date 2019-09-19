@@ -739,7 +739,7 @@ pug_html = pug_html + "\u003Coption" + (" value=\"currency\""+pug.attr("selected
 ;pug_debug_line = 33;
 pug_html = pug_html + "Currency\u003C\u002Foption\u003E";
 ;pug_debug_line = 34;
-pug_html = pug_html + "\u003Coption" + (" value=\"percentage\""+pug.attr("selected", type=='percentage', true, false)) + "\u003E";
+pug_html = pug_html + "\u003Coption" + (" value=\"percent\""+pug.attr("selected", type=='percent', true, false)) + "\u003E";
 ;pug_debug_line = 34;
 pug_html = pug_html + "Percentage\u003C\u002Foption\u003E";
 ;pug_debug_line = 35;

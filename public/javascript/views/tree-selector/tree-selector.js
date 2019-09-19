@@ -808,13 +808,42 @@ export default class Selector {
       return result;
     }
 
+    /**
+     *
+     * Get Custom column id number
+     *
+     */
+    const getIdx = function () {
+
+      const customCols = columns.filter(v => /^c-\d{1,2}/.test(v.key));
+      const nums = customCols.filter(v => v.key.split('-')[1]);
+
+      // Find the first number that isnt used
+      let i = 1;
+      let result = null;
+      while (!result && i < 100) {
+        if (!nums.includes(i)) {
+          result = i;
+        }
+        i++;
+      }
+
+      // This should only ever happen if someone is being a twat
+      if (!result) {
+        result = +new Date();
+      }
+
+      return result;
+    }
+
     const columns = this.$destinationTree.fancytree('getTree').toDict();
     const prefix = 'New custom column';
     const nameIdx = getNameIdx(prefix);
     const headerName = `${prefix} ${nameIdx}`;
-    const customColumnCount = columns.filter(v => /^c-\d{1,2}/.test(v.key)).length;
+
+    const customColumnCount = getIdx();
     const newNode = {
-      key: `c-${customColumnCount + 1}`,
+      key: `c-${customColumnCount}`,
       title: `custom: ${headerName}`,
       new: true,
       headerName,

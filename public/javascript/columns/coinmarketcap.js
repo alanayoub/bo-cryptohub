@@ -47,6 +47,9 @@ export default {
       'cryptohubDefaults',
       'cryptohubNumeric',
     ],
+    valueFormatter(params) {
+      return gnp(params, 'value.value') || ch.emptyCellValue;
+    }
   },
 
   marketcapUSDCMC: {

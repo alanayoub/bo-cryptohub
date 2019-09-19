@@ -36,9 +36,14 @@ export default async function generateAgOptions() {
   function onGridReady(params) {
 
     // default sort order
+    const validColumns = [
+      ...Object.keys(colLib),
+      ...state.columns.filter(v => /^c-\d{1,2}$/.test(v.id)).map(v => v.id)
+    ];
+    const sortId = validColumns.includes(state.sort.column) ? state.sort.column : validColumns[0];
     params.api.setSortModel([
       {
-        colId: colLib[state.sort.column].colId,
+        colId: sortId,
         sort: state.sort.direction
       }
     ]);

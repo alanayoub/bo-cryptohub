@@ -686,7 +686,7 @@ const columnDependencies = {
   // CoinMarketCap
   //
   rankCMC: [
-    'cmc-listings-rank'
+    'cmc-listings-cmc_rank'
   ],
   marketcapUSDCMC: [
     'cmc-listings-quote_USD_market_cap'

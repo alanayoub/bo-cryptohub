@@ -1,6 +1,7 @@
 import logger from '../../logger';
 import { PerDayModel, PerSecondModel } from '../schema';
 import { fieldTypeMap, columnDependencies } from '../../settings';
+import { defaultSortField, defaultSortOrder } from '../../settings-platform';
 
 const idsList = Object.keys(fieldTypeMap);
 
@@ -146,9 +147,15 @@ export default async function getRows(columns, sort, limit, fields) {
 
   if (!fieldSet) throw new Error(`Invalid fieldSet ${fieldSet}`);
 
-  if (sort) {
+  if (sort && columnDependencies[sort.column]) {
     sortField = columnDependencies[sort.column][0];
     sortDirection = sort.direction === 'desc' ? -1 : 1;
+  }
+  // TODO: make this as a platform option
+  // default sort
+  else {
+    sortField = defaultSortField;
+    sortDirection = defaultSortOrder;
   }
 
   let startTime;

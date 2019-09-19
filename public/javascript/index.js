@@ -116,27 +116,6 @@ function dataEmitHandler(data) {
           }
         }
 
-        // for (const [idx, source] of Object.entries(sources)) {
-
-        //   const field = colLib[source].field;
-        //   const sourceCode = `s${+idx}`;
-
-        //   // Before looping over this calculate as much of the data
-        //   for (const item of Object.values(newSocketData)) {
-        //     const calcResults = {};
-        //     if (!item[field]) continue;
-
-        //     for (const f of ['value', 'lastValue']) {
-        //       const value = item[field][f];
-        //       calcResults[f] = evil(calc.replace(sourceCode, value));
-        //     }
-        //     calcResults.timestamp = calcResults.lastChecked = +new Date();
-
-        //     item[column.id] = calcResults;
-        //   }
-
-        // }
-
       }
 
     }

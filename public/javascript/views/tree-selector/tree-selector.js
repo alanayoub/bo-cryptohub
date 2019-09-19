@@ -243,7 +243,9 @@ export default class Selector {
         output.push(obj);
       });
     }
+
     return output;
+
   }
 
   /**
@@ -594,7 +596,6 @@ export default class Selector {
     }
 
     if (isCustomSources) {
-      console.log('custom sources');
       const checked = checkboxes.querySelectorAll('input:checked');
       const arr = Array.from(checked);
       let html = '';
@@ -624,7 +625,6 @@ export default class Selector {
         node.removeClass('bo-edit-item-hide');
         node.addClass('bo-edit-item-show');
       }
-      console.log('hide');
     }
 
   }
@@ -638,13 +638,14 @@ export default class Selector {
   checkboxHandler(event) {
 
     function updateLeafNode(context, node, clickedNode) {
+      const headerName = node.title;
       const title = `${node.parent.title}: ${node.title}`;
       const key = node.key;
       if (node.isSelected()) {
         // add node
         if (!destSelections.includes(title)) {
           const columns = context.$destinationTree.fancytree('getTree').toDict();
-          const newItem = context.nodeGenerate({key, title}, columns);
+          const newItem = context.nodeGenerate({key, title, headerName}, columns);
           $destT.rootNode.addNode(newItem);
         }
       }
@@ -835,7 +836,7 @@ export default class Selector {
       return result;
     }
 
-    const columns = this.$destinationTree.fancytree('getTree').toDict();
+    const columns = this.$destinationTree.fancytree('getTree').toDict() || [];
     const prefix = 'New custom column';
     const nameIdx = getNameIdx(prefix);
     const headerName = `${prefix} ${nameIdx}`;

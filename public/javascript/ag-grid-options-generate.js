@@ -65,7 +65,7 @@ export default async function generateAgOptions() {
   // if there is use that and backfill with the default config
   // dont forget to make it very secure!!!
   //
-  const columnDefs = generateColumnDefs(state);
+  const columnDefs = generateColumnDefs(state, true);
 
   const options = window.bo.agOptions = {
     ...agGridOptionsBase,

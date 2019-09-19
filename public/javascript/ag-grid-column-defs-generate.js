@@ -19,8 +19,11 @@ const customDefaults = {
  * Each column in the grid is defined using a column definition.
  * Columns are positioned in the grid according to the order the ColDef's are specified in the grid options
  *
+ * @param {Object} state
+ * @param {Boolean} agSafe - Filter out non standar ag-grid properties
+ *
  */
-export default function generateColumnDefs(state) {
+export default function generateColumnDefs(state, agSafe) {
 
   let column;
   const output = [];
@@ -100,6 +103,13 @@ export default function generateColumnDefs(state) {
       output.push(col);
     }
 
+  }
+
+  if (agSafe) {
+    output.map(col => {
+      delete col.calc;
+      delete col.sources;
+    });
   }
 
   return output;

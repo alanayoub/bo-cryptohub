@@ -511,7 +511,6 @@ export default class Selector {
 
           }
 
-          node.setExpanded();
           this.dropHandler();
 
         },
@@ -816,7 +815,7 @@ export default class Selector {
     const getIdx = function () {
 
       const customCols = columns.filter(v => /^c-\d{1,2}/.test(v.key));
-      const nums = customCols.filter(v => v.key.split('-')[1]);
+      const nums = customCols.map(v => +v.key.split('-')[1]);
 
       // Find the first number that isnt used
       let i = 1;

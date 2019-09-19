@@ -97,7 +97,7 @@ function dataEmitHandler(data) {
                 //
                 // Sort out isNaN bit for other types
                 //
-                if (item[field] && !isNaN(item[field][f]) && item[field][f] !== null) {
+                if (item[field] && item[field].hasOwnProperty(f)) {
                   arr[i] = item[field][f];
                 }
                 else {
@@ -106,6 +106,11 @@ function dataEmitHandler(data) {
               }
             }
             if (!skip) {
+              arr = arr.map(v => {
+                if (v === null) return 'null';
+                else if (v === undefined) return 'undefined';
+                else return v;
+              });
               calcResults[f] = evil(arr.join(''));
             }
           }

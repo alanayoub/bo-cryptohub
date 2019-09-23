@@ -113,7 +113,7 @@ export default class Selector {
         for (item of list) {
           const checked = item.classList.contains('fa-check-square');
           if (checked !== args[1]) {
-            matches.push(item.parentElement.textContent);
+            matches.push(item.parentElement.querySelector('.fancytree-title').textContent);
           }
         }
         item.dispatchEvent(new CustomEvent('matches', {
@@ -682,7 +682,7 @@ export default class Selector {
       }
       else {
         const parentClicked = (clickedNode.children || []).map(v => v.title).includes(node.title);
-        const isTargetFolder = node.title === event.target.closest('.fancytree-folder').textContent;
+        const isTargetFolder = node.title === event.target.closest('.fancytree-folder').querySelector('.fancytree-title').textContent;
         if (parentClicked || isTargetFolder) {
           // uncheck all children
           for (const childNode of node.children) {
@@ -705,7 +705,9 @@ export default class Selector {
     let targetIsCheckbox;
     let targetIsFolder;
     if (target) {
-      clickedNode = $sourceT.toDict().filter(v => v.title === target.parentElement.textContent)[0];
+      clickedNode = $sourceT.toDict().filter(v => {
+        return v.title === target.parentElement.querySelector('.fancytree-title').textContent;
+      })[0];
       targetIsCheckbox = $(target).hasClass('fancytree-checkbox');
       targetIsFolder = !!target.closest('.fancytree-folder');
     }

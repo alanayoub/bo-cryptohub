@@ -256,10 +256,10 @@ export default class Selector {
   getSourceOptions() {
     const options = {
       keyboard: false,
-      extensions: ['dnd5', 'glyph', 'filter'],
+      extensions: ['dnd5', 'glyph', 'filter', 'childcounter'],
       treeId: '1',
       nodata: 'No data',
-      icon: false,
+      icon: true,
       checkbox: true,
       //
       // TODO: Add information icon
@@ -271,6 +271,15 @@ export default class Selector {
       //    return "foo-icon-class";
       //  }
       clickFolderMode: 3,
+      childcounter: {
+        deep: true,
+        hideZeros: true,
+        hideExpanded: false
+      },
+      loadChildren(event, data) {
+        // update node and parent counters after lazy loading
+        data.node.updateCounters();
+      },
       filter: {         // override default settings
         autoExpand: true,
         leavesOnly: true,

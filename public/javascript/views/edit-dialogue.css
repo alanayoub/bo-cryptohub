@@ -1,3 +1,44 @@
+/**
+ *
+ * Override fancytree styles
+ * NOTE: Keep dumb selectors or they wont be spesific enough to override
+ *
+ */
+.ui-fancytree {
+  ul[role=group] {
+    .fancytree-icon {
+      display: none;
+    }
+    .fancytree-expander {
+      display: none;
+    }
+  }
+  .fancytree-icon {
+    &:before {
+      display: none;
+    }
+  }
+  span.fancytree-childcounter,
+  .fancytree-ext-filter span.fancytree-childcounter {
+    color: #4CAF50;
+    background: #fff;
+    border: 1px solid #fff;
+    position: absolute;
+    top: -1px;
+    right: 3px;
+    min-width: 10px;
+    vertical-align: baseline;
+    border-radius: 51px;
+    padding: 2px;
+    text-align: center;
+    font-size: 10px;
+    height: 18px;
+    width: 18px;
+    line-height: 14px;
+    font-family: monospace;
+  }
+}
+
 .BO-multiselect {
 
   width: 200px;
@@ -298,8 +339,8 @@
               position: relative;
               background-color: #fff;
               border-bottom: 1px solid #eee;
-              &:hover {
-                background-color: #73965d55;
+              > span:hover, li:hover {
+                background-color: #d0dcca;
                 .fa-caret-down,
                 .fa-caret-right {
                   background-color: #ffffff55;
@@ -340,7 +381,7 @@
               li {
                 position: relative;
                 display: block;
-                padding: 0 5px 0 43px;
+                padding: 0 5px 0 77px;
                 margin-bottom: -2px;
                 cursor: default;
                 border-top: 1px solid #eee;
@@ -357,7 +398,6 @@
             line-height: 26px;
             cursor: default;
           }
-
         }
 
         #tree2 {
@@ -434,7 +474,7 @@
               /* } */
               &::before {
                 position: absolute;
-                background: #73965d55;
+                background: #d0dcca;
                 padding: 5px 8px 5px 5px;
                 left: 0;
                 top: 0;
@@ -529,7 +569,7 @@
               cursor: default;
               margin-top: 0;
               &:hover {
-                background-color: #73965d55;
+                background-color: #d0dcca;
                 .fancytree-title::before {
                   color: #73965d;
                 }

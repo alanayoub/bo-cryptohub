@@ -118,10 +118,6 @@ function getFieldSet(columns, columnDependencies) {
     }
   }
 
-  // Required
-  fieldSet.add('cc-total-vol-full-Id');
-  fieldSet.add('cc-total-vol-full-CHANGEPCTDAY');
-
   return fieldSet;
 
 }
@@ -144,6 +140,10 @@ export default async function getRows(columns, sort, limit, fields) {
   let sortField;
   let sortDirection;
   const fieldSet = fields ? new Set(fields) : getFieldSet(columns, columnDependencies);
+
+  // Required
+  fieldSet.add('cc-total-vol-full-Id');
+  fieldSet.add('cc-total-vol-full-CHANGEPCTDAY');
 
   if (!fieldSet) throw new Error(`Invalid fieldSet ${fieldSet}`);
 

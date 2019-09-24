@@ -1,37 +1,42 @@
 const mongoose = require('mongoose');
 
-const uri = 'mongodb://localhost:27017';
-const database = 'binaryoverdose';
-
 const db = mongoose.connection;
+const port = '23001';
+const host = 'localhost';
+const user = 'binaryoverdoseCode';
+const pass = 'jO3yjOjOjuniOurshabadOO';
+const database = 'binaryoverdose';
+const replicaSet = 'rs01';
+const authSource = 'admin';
+const uri = `mongodb://${user}:${pass}@${host}:${port}/${database}?replicaSet=${replicaSet}&authSource=${authSource}`;
 
 import { columnDependencies } from '../settings';
 import { getIds } from './query';
 
 // When successfully connected
-mongoose.connection.on('connected', () => {
-  console.log(`Mongoose default connection open to ${uri}`);
+db.on('connected', () => {
+  console.log(`Mongoose default connection open to ${database}`);
 });
 
 // If the connection throws an error
-mongoose.connection.on('error', error => {
+db.on('error', error => {
   console.log(`Mongoose default connection error: ${error}`);
 });
 
 // When the connection is disconnected
-mongoose.connection.on('disconnected', () => {
+db.on('disconnected', () => {
   console.log('Mongoose default connection disconnected');
 });
 
 // If the Node process ends, close the Mongoose connection
 process.on('SIGINT', () => {
-  mongoose.connection.close(() => {
+  db.close(() => {
     console.log('Mongoose default connection disconnected through app termination');
     process.exit(0);
   });
 });
 
-mongoose.connect(`${uri}/${database}?replicaSet=rs01`, {
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useCreateIndex: true
   // poolSize: 200,
@@ -128,9 +133,9 @@ async function doEmit(changes) {
 //
 // Streams
 //
-mongoose.connection.once('open', () => {
+db.once('open', () => {
 
-  const tsCollection = mongoose.connection.collection('tsseconds');
+  const tsCollection = db.collection('tsseconds');
   const changeStream = tsCollection.watch({fullDocument: 'updateLookup'});
 
   changeStream.on('change', change => {

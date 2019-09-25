@@ -45,7 +45,7 @@ const logger = require('./logger');
 try {
 
   process.on('warning', error => {
-    logger.warning(`index.js:\n${error.stack}`);
+    logger.warn(`index.js:\n${error.stack}`);
   });
 
   startServer({

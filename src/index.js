@@ -77,10 +77,14 @@ try {
     for (const [id, val] of Object.entries(data)) {
       name = gnp(val, 'cc-total-vol-full-FullName.value');
       symbol = gnp(val, 'cc-coinlist-Symbol.value');
-      if (name && symbol) {
+      if (id && name) {
         mapIdName[id] = name;
+      }
+      if (id && symbol) {
         mapSymbolId[symbol] = id;
         mapIdSymbol[id] = symbol;
+      }
+      if (name && symbol) {
         mapCcNameSymbol[name] = symbol;
       }
     }

@@ -1,6 +1,6 @@
 import logger from '../../logger';
 import { getMaps } from '../../db/query';
-import { perSecondSave } from '../../db/save';
+import { mapSave, perSecondSave } from '../../db/save';
 
 /**
  *
@@ -45,16 +45,23 @@ import { perSecondSave } from '../../db/save';
 export default async function formatterCryptocompareSectionCoinlist(data, timestamp) {
 
   const maps = await getMaps(['projectMapIdSymbol']);
-  const idSymbolMap = maps[0].map;
   const prefix = 'cc-coinlist-';
   const objAllCoins = data.Data;
   const result = {};
+  const mapSymbolId = {};
+  const mapIdSymbol = {};
+  for (const [id, obj] of Object.entries(data.Data)) {
+    mapIdSymbol[id] = obj['Symbol'];
+    mapSymbolId[obj['Symbol']] = id;
+  }
+  mapSave('projectMapSymbolId', JSON.stringify(mapSymbolId));
+  mapSave('projectMapIdSymbol', JSON.stringify(mapIdSymbol));
   let currentCoinOut, currentCoinIn, key, val, id;
-  for (id of Object.keys(idSymbolMap)) {
+  for (id of Object.keys(mapIdSymbol)) {
     currentCoinOut = {};
-    currentCoinIn = objAllCoins[idSymbolMap[id]];
+    currentCoinIn = objAllCoins[mapIdSymbol[id]];
     if (currentCoinIn === undefined) {
-      logger.error(`coinListWatcher.handler(): ${idSymbolMap[id]} is not in objAllCoins`);
+      logger.error(`coinListWatcher.handler(): ${mapIdSymbol[id]} is not in objAllCoins`);
       continue;
     }
     for ([key, val] of Object.entries(currentCoinIn)) {

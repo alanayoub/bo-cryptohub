@@ -69,8 +69,6 @@ try {
   // generate some stuff
   getRows(null, false, false, ['cc-total-vol-full-FullName', 'cc-coinlist-Symbol']).then(data => {
     let mapIdName = {};
-    let mapSymbolId = {};
-    let mapIdSymbol = {};
     let mapCcNameSymbol = {};
     let name;
     let symbol;
@@ -80,17 +78,11 @@ try {
       if (id && name) {
         mapIdName[id] = name;
       }
-      if (id && symbol) {
-        mapSymbolId[symbol] = id;
-        mapIdSymbol[id] = symbol;
-      }
       if (name && symbol) {
         mapCcNameSymbol[name] = symbol;
       }
     }
     mapSave('projectMapIdName', JSON.stringify(mapIdName));
-    mapSave('projectMapSymbolId', JSON.stringify(mapSymbolId));
-    mapSave('projectMapIdSymbol', JSON.stringify(mapIdSymbol));
     mapSave('projectCcMapNameSymbol', JSON.stringify(mapCcNameSymbol));
   });
 

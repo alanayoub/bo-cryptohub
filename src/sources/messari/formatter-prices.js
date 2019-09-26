@@ -139,6 +139,9 @@ export default async function formatterPrices(data, timestamp) {
 
       const maps = await getMaps(['projectMapSymbolId']);
       const symbolIdMap = maps[0].map;
+
+      if (!item.symbol) continue;
+
       const symbol = item.symbol.toUpperCase();
       const id = symbolIdMap[symbol]; // TODO: need proper mapping for ids
 

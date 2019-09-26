@@ -11,8 +11,11 @@ const CopyWebpackPlugin                = require('copy-webpack-plugin');
 const MiniCssExtractPlugin             = require('mini-css-extract-plugin');
 
 const PreBuild                         = require('./webpack-plugin-pre-build.js');
+const PostBuild                        = require('./webpack-plugin-post-build.js');
 
 const { nodePugCompileTemplates: pug } = require('bo-utils');
+
+const critical                         = require('critical');
 
 module.exports = {
 
@@ -95,6 +98,17 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash:8].css',
       chunkFilename: '[name].[chunkhash:8].chunk.css'
+    }),
+    new PostBuild(() => {
+      // console.log('Running "critical", generating new HTML');
+      // critical.generate({
+      //   inline: true,
+      //   base: path.join(__dirname, './dist/public/'),
+      //   src: './index.html',
+      //   target: './index-critical.html',
+      //   width: 1300,
+      //   height: 900
+      // });
     })
   ],
 

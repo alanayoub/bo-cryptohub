@@ -100,15 +100,17 @@ module.exports = {
       chunkFilename: '[name].[chunkhash:8].chunk.css'
     }),
     new PostBuild(() => {
-      // console.log('Running "critical", generating new HTML');
-      // critical.generate({
-      //   inline: true,
-      //   base: path.join(__dirname, './dist/public/'),
-      //   src: './index.html',
-      //   target: './index-critical.html',
-      //   width: 1300,
-      //   height: 900
-      // });
+      console.log('Running "critical", generating new HTML');
+      critical.generate({
+        inline: true,
+        base: 'dist/public/',
+        src: 'index.html',
+        dest: 'index-critical.html',
+        width: 1300,
+        height: 900,
+        minify: true
+
+      });
     })
   ],
 

@@ -70,7 +70,7 @@ module.exports = {
       ]
       for (let c of copyConf) {
         fs.copyFile(c.source, c.destination, error => {
-          if (error) throw err;
+          if (error) throw error;
           console.log(`${c.source} copied to ${c.destination}`);
         });
       }
@@ -105,11 +105,10 @@ module.exports = {
         inline: true,
         base: 'dist/public/',
         src: 'index.html',
-        dest: 'index-critical.html',
+        dest: 'index.html',
         width: 1300,
         height: 900,
         minify: true
-
       });
     })
   ],

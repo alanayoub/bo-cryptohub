@@ -54,7 +54,7 @@ try {
     server: {
       pub: join(__dirname, '../dist/public'),
       port: 3001,
-      index: join(__dirname, '../dist/index.critical.html')
+      index: join(__dirname, '../dist/public/index.html')
     },
     events: {
       data: {

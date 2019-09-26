@@ -1,7 +1,3 @@
-// Node
-const crypto   = require('crypto');
-
-// Cryptohub
 const logger   = require('../../logger');
 const settings = require('../../settings');
 
@@ -30,7 +26,8 @@ export default async function getJobsCryptocompareSectionTotalVolFull(queue) {
       queue.push({
         uri: uri`${data}`,
         key: key`${data}`,
-        cacheForDays: 0});
+        cacheForDays: 0
+      });
       jobs++;
       page++;
     }

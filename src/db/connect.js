@@ -37,10 +37,10 @@ process.on('SIGINT', () => {
 });
 
 mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useCreateIndex: true
-  // poolSize: 200,
-  // auto_reconnect: true,
+  poolSize: 10,
+  useCreateIndex: true,
+  auto_reconnect: true,
+  useNewUrlParser: true
   // socketTimeoutMS: 0,
   // connectTimeoutMS: 0,
 });

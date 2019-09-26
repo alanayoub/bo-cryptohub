@@ -97,8 +97,14 @@ export default async function formatter(data, timestamp) {
         else if (map._id === 'projectCcMapNameSymbol') ccNameSymbol = map.map;
       }
 
+      // Make lowercase versions so we can match better
+      // const ccNameSymbolLower = {};
+      // for (const [key, val] of Object.entries(ccNameSymbol)) {
+      //   ccNameSymbolLower[key.toLowerCase()] = val.toLowerCase();
+      // }
+
       const sync = val => {
-        return val.replace('-', '').replace(' ', '').toLowerCase();
+        return val.replace('-', '').replace(' ', '');
       }
 
       const cmcData = Object.values(data);

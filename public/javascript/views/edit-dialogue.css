@@ -133,8 +133,6 @@
 
 /* Tingle puts this at root */
 .tingle-modal-box {
-  min-width: 1366px;
-  min-height: 768px;
   height: 90%;
   width: 90%;
   .tingle-modal-box__content {

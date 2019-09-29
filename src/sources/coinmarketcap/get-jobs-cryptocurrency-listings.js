@@ -18,7 +18,7 @@ export default async function getJobsCryptocurrencyListings(queue) {
     let page = 1;
     let jobs = 0;
     const limit = 1000;
-    const maxPages = 3;
+    const maxPages = 4;
     const groupKey = tagGroup`${{}}`;
 
     while (page < maxPages) {

@@ -23,6 +23,8 @@ export default async function perDay(data, timestamp = +new Date()) {
       const dd = t.getDate() - 1; // First day is 1
       const mm = t.getMonth();    // First month is 0
       const year = ''+t.getFullYear();
+      const unixTime = +t;
+      const newData = data[id] && data[id][field];
 
       updateOperations.push({
         updateOne: {
@@ -32,8 +34,10 @@ export default async function perDay(data, timestamp = +new Date()) {
               id,
               field,
               year,
+              lastChecked: unixTime,
               [`samples.${mm}.${dd}`]: value
-            }
+            },
+            $push: {'realtime': {$each: [[unixTime, newData]], $slice: -2}}
           },
           upsert: true
         }

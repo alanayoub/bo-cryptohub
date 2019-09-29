@@ -16,6 +16,7 @@ export default {
     getRows(columns, sort, settings.maxRowsTemplatedIn).then(firstX => {
       const firstXStr = JSON.stringify({data: firstX, type: 'dbDiff'});
       socket.emit('data', firstXStr);
+
       getRows(columns, sort).then(results => {
         const resultsStr = JSON.stringify({data: results, type: 'dbDiff'});
         socket.emit('data', resultsStr);

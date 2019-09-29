@@ -1,4 +1,4 @@
-import { PerSecondModel } from '../schema';
+import { PerDayModel } from '../schema';
 
 /**
  *
@@ -14,7 +14,7 @@ export default async function getCurrencies() {
   }
   const projection = {_id: 0};
 
-  const data = await PerSecondModel.find(query, projection).lean();
+  const data = await PerDayModel.find(query, projection).lean();
 
   let id;
   let field;
@@ -23,7 +23,7 @@ export default async function getCurrencies() {
     id = item.id;
     field = item.field;
     if (!output[id]) output[id] = {};
-    output[id][field] = item.samples[1][1];
+    output[id][field] = item.realtime[1][1];
   }
 
   return output;

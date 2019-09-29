@@ -234,23 +234,26 @@ h2 {
  *
  */
 
-.ch-col-name {
+.ch-col-name {}
 
-}
-
+/**
+ * Generate base64 pixel (http://png-pixel.com/)
+ */
 .ch-col-name .ch-icons {
   width: 22px;
   height: 22px;
-  margin: 1px;
   margin: 1px 5px 1px 2px;
+  display: inline-block;
   vertical-align: bottom;
+  background-size: contain;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN89x8AAuEB74Y0o2cAAAAASUVORK5CYII=);
 }
 
 .ch-col-name strong {
   font-weight: bold;
 }
 
-.ch-col-name span {
+.ch-col-name .ch-symbol {
   color: #999;
 }
 

@@ -1,4 +1,4 @@
-import { PerDayModel, PerSecondModel } from '../schema';
+import { PerDayModel } from '../schema';
 import { fieldTypeMap } from '../../settings'
 
 const idsList = Object.keys(fieldTypeMap);
@@ -26,7 +26,7 @@ export default async function bulkFindPerSecond(data) {
     }
   }
 
-  const results = await PerSecondModel.find({$or});
+  const results = await PerDayModel.find({$or});
 
   // Merge fields by id
   const output = {};

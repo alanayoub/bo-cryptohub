@@ -1,4 +1,4 @@
-import { PerSecondModel } from '../schema';
+import { PerDayModel } from '../schema';
 
 /**
  *
@@ -12,12 +12,14 @@ import { PerSecondModel } from '../schema';
 export default async function getMessariSymbols() {
 
   const query = {field: 'm-markets-base'};
-  const data = await PerSecondModel.find(query).lean();
+  const data = await PerDayModel.find(query).lean();
   const symbols = new Set();
 
   for (const obj of Object.values(data)) {
-    const value = obj.samples.length === 2 ? obj.samples[1][1] : obj.samples[1];
-    symbols.add(value);
+    if (obj.realtime) {
+      const value = obj.realtime.length === 2 ? obj.realtime[1][1] : obj.realtime[1];
+      symbols.add(value);
+    }
   }
 
   const output = Array.from(symbols);

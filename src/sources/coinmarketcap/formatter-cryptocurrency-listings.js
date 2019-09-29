@@ -130,7 +130,10 @@ export default async function formatter(data, timestamp) {
     const prefix = 'cmc-listings-';
     for (const val of Object.values(data)) {
       const id = mapCmcIdCcId[val.id];
-      if (id === undefined) continue;
+      if (id === undefined) {
+        console.log(`cant find id for ${val.id}`);
+        continue;
+      };
       result[id] = {
         [`${prefix}circulating_supply`]: val.circulating_supply,
         [`${prefix}cmc_rank`]: val.cmc_rank,

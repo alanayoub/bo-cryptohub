@@ -1,4 +1,4 @@
-import { PerSecondModel } from '../schema';
+import { PerDayModel } from '../schema';
 
 /**
  *
@@ -18,7 +18,7 @@ export default async function getIds(ids) {
   };
   const projection = {_id: 0};
 
-  let results = await PerSecondModel.find(query, projection).lean();
+  let results = await PerDayModel.find(query, projection).lean();
 
   if (!Array.isArray(results)) results = [results];
 

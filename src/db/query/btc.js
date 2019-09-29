@@ -1,4 +1,4 @@
-import { PerSecondModel } from '../schema';
+import { PerDayModel } from '../schema';
 
 /**
  *
@@ -16,7 +16,7 @@ export default async function getBTC() {
     field: 'cc-total-vol-full-PRICE'
   };
   const projection = {_id: 0};
-  const results = await PerSecondModel
+  const results = await PerDayModel
     .find(query, projection)
     .lean();
 

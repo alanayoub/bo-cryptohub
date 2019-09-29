@@ -94,14 +94,16 @@ async function doEmit(changes) {
         field = change.field;
         if (fields.includes(field)) {
           if (!data[id]) data[id] = {};
-          if (change.samples.length === 1) {
-            change.samples = [change.samples[0], change.samples[0]];
-          }
-          data[id][field] = {
-            lastChecked: change.lastChecked,
-            lastValue: change.samples[0][1],
-            timestamp: change.samples[1][0],
-            value: change.samples[1][1]
+          if (change.realtime) {
+            if (change.realtime.length === 1) {
+              change.realtime = [change.realtime[0], change.realtime[0]];
+            }
+            data[id][field] = {
+              lastChecked: change.lastChecked,
+              lastValue: change.realtime[0][1],
+              timestamp: change.realtime[1][0],
+              value: change.realtime[1][1]
+            }
           }
         }
       }
@@ -112,8 +114,12 @@ async function doEmit(changes) {
       //   - have no Id field
       //
       for (const [key, item] of Object.entries(data)) {
-        if (!item['cc-total-vol-full-Id']) delete data[key];       // Required field(s)
-        else if (Object.keys(item).length === 1) delete data[key]; // if there are only 3 fields they have to be Ids only
+        if (!item['cc-total-vol-full-Id'] || item['cc-total-vol-full-Id'].value === null) { // Required field(s)
+          delete data[key];
+        }
+        else if (Object.keys(item).length === 1) { // if there are only 3 fields they have to be Ids only
+          delete data[key];
+        }
       }
 
       //
@@ -135,7 +141,7 @@ async function doEmit(changes) {
 //
 db.once('open', () => {
 
-  const tsCollection = db.collection('tsseconds');
+  const tsCollection = db.collection('tsdays');
   const changeStream = tsCollection.watch({fullDocument: 'updateLookup'});
 
   changeStream.on('change', change => {

@@ -8,7 +8,7 @@ const { scrapeDir } = settings;
 const config = {
   cacheFor: settings.cacheForCoinmarketcap,
   bootstrap: cache => {return {}},
-  rateLimitDelayMs: 1000 * 60 * 30
+  rateLimitDelayMs: 1000 * 60 * 1
 };
 
 let cryptocurrencyListings;

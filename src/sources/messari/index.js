@@ -18,6 +18,11 @@ const config = {
   rateLimitDelayMs: rateLimit
 };
 
+//
+// NOTE:
+// Not currently being used because thought it only returned 20 results.
+// But you can use page and limit to get other results
+//
 let assets;
 {
   const uri = 'https://data.messari.io/api/v1/assets?with-metrics';
@@ -25,7 +30,7 @@ let assets;
   assets = {
     event: 'data',
     name: 'messari-assets',
-    interval: 1000 * 30,
+    interval: 1000 * 60 * 2,
     watchDirs: [`${scrapeDir}/messari-assets/**/*`, 'all'],
     async getJobs(queue) {
       queue.push({

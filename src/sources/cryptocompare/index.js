@@ -42,7 +42,7 @@ let coinList;
   coinList = {
     event: 'data',
     name: 'coinList',
-    interval: 1000 * 60,
+    interval: 1000 * 60 * 60 * 24,
     //
     // TODO: can we remove this and just search for the key?
     //
@@ -64,12 +64,12 @@ let coinList;
 //
 let exchangesList;
 {
-  const key = `${scrapeDir}/cryptocompare-exchanges-list/data.json`;
   const uri = 'https://min-api.cryptocompare.com/data/v2/all/exchanges';
+  const key = `${scrapeDir}/cryptocompare-exchanges-list/data.json`;
   exchangesList = {
     event: 'data,store',
     name: 'exchanges-list',
-    interval: 1000 * 60 * 60,
+    interval: 1000 * 60 * 60 * 24,
     // TODO: rename this fucking bit, this is where the watcher will look for files to load
     // so if we are saving them in different places they will never be added!
     watchDirs: [key, 'all'],
@@ -106,12 +106,12 @@ let topTotalVolume;
 //
 let exchangesGeneral;
 {
-  const key = `${scrapeDir}/cryptocompare-exchanges-general/data.json`;
   const uri = `https://min-api.cryptocompare.com/data/exchanges/general?api_key=${cryptocompareApiKey}`;
+  const key = `${scrapeDir}/cryptocompare-exchanges-general/data.json`;
   exchangesGeneral = {
     event: 'data,store',
     name: 'exchanges-general',
-    interval: 1000 * 60 * 60,
+    interval: 1000 * 60 * 60 * 24,
     watchDirs: [key, 'all'],
     getJobs(queue) {
       queue.push({uri, key, cacheForDays: 0});

@@ -72,7 +72,7 @@ const custom = {
       logger.warn('sources/binaryoverdose/index.js: Couldnt get \'btc\', bailing out');
       return;
     }
-    const btcPrice = btc.samples[1][1];
+    const btcPrice = btc.realtime[1][1];
 
     //
     // 2.1. Get all proxy fields

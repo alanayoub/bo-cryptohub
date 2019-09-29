@@ -95,6 +95,8 @@ const options = {
   }
 }
 
+console.log('should not load');
+debugger;
 const PerSecond = new Schema(options, {
   collection: 'tsseconds',
   writeConcern: {

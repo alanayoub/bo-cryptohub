@@ -1,5 +1,5 @@
 import logger from '../../logger';
-import { PerDayModel, PerSecondModel } from '../schema';
+import { PerDayModel } from '../schema';
 import { fieldTypeMap, columnDependencies } from '../../settings';
 import { defaultSortField, defaultSortOrder } from '../../settings-platform';
 
@@ -11,9 +11,9 @@ const idsList = Object.keys(fieldTypeMap);
  */
 async function getIds(sortField, sortDirection, limit) {
 
-  const data = await PerSecondModel
+  const data = await PerDayModel
     .find({field: sortField})
-    .sort({'samples.1.1': sortDirection})
+    .sort({'realtime.1.1': sortDirection})
     .limit(limit)
     .lean();
 
@@ -43,8 +43,8 @@ async function getRecords(fieldSet, sortField = false, sortDirection = false, li
         id: 1,
         field: 1,
         lastChecked: 1,
-        l: {$arrayElemAt: ['$samples', 0]},
-        s: {$arrayElemAt: ['$samples', 1]}
+        l: {$arrayElemAt: ['$realtime', 0]},
+        s: {$arrayElemAt: ['$realtime', 1]}
       }
     },
     {
@@ -73,7 +73,7 @@ async function getRecords(fieldSet, sortField = false, sortDirection = false, li
     },
     {
       $match: {
-        'data.cc-total-vol-full-Id': {$exists: true}
+        'data.cc-total-vol-full-Id.value': {$exists: true, $ne: null}
       }
     }
   ];
@@ -87,10 +87,16 @@ async function getRecords(fieldSet, sortField = false, sortDirection = false, li
     aggregate.push({$limit: limit});
   }
 
-  let dbData = await PerSecondModel.aggregate(aggregate);
+  let dbData = await PerDayModel.aggregate(aggregate);
 
   let result;
   let results = {};
+  for (var [key,val] of Object.entries(dbData)) {
+    if (val.data['cc-total-vol-full-Id'].value === null) {
+      console.log(val);
+      debugger;
+    }
+  }
   for (result of dbData) {
     results[result._id] = result.data
   }

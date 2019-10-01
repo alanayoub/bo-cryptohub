@@ -10,7 +10,7 @@ import { getMessariSymbols } from '../../db/query';
 const { scrapeDir } = settings;
 
 // Messari api rate limit unknow at the moment
-const rateLimit = 1000 * 10;
+const rateLimit = 1000 * 60 * 2;
 
 const config = {
   cacheFor: settings.cacheForMessari,
@@ -25,19 +25,37 @@ const config = {
 //
 let assets;
 {
-  const uri = 'https://data.messari.io/api/v1/assets?with-metrics';
-  const key = `${scrapeDir}/messari-assets-with-metric/data.json`;
+  const uri = (str, ob) => `https://data.messari.io/api/v1/assets?page=${ob.page}&limit=${ob.limit}`;
+  const key = (str, ob) => `${scrapeDir}/messari-assets/page-${ob.page}.json`;
+  const tagGroup = (str, ob) => `${scrapeDir}/messari-assets/data.json`;
   assets = {
     event: 'data',
     name: 'messari-assets',
     interval: 1000 * 60 * 2,
     watchDirs: [`${scrapeDir}/messari-assets/**/*`, 'all'],
     async getJobs(queue) {
-      queue.push({
-        uri, key,
-        cacheForDays: settings.cacheForMessari
-      });
-      logger.info('getJobs messari assets: 1 asset jobs created');
+
+      let page = 1;
+      let jobs = 0;
+      const limit = 100;
+      const maxPages = 7;
+      const groupKey = tagGroup`${{}}`;
+
+      while (page < maxPages) {
+        const data = {
+          limit, page
+        };
+        queue.push({
+          uri: uri`${data}`,
+          key: key`${data}`,
+          cacheForDays: 0
+        });
+        jobs++;
+        page++;
+      }
+
+      logger.info(`getJobs messari assets(): ${jobs} asset jobs created`);
+
     },
     formatter: formatterAssets
   };

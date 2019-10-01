@@ -1,7 +1,7 @@
 // Cryptohub
 import logger from '../../logger';
 import { mapSave, perSecondSave } from '../../db/save';
-import { getMaps } from '../../db/query';
+import { getMaps, getBidMap } from '../../db/query';
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 function dataIsValid(data) {
@@ -81,47 +81,65 @@ export default async function formatter(data, timestamp) {
       mapSave('cmcMapIdSymbol', JSON.stringify(cmcIdSymbol));
     }
 
+
     //
     // NOTE: just for testing. We need a static mapping unfortunately
     // Or at least a static backfill
     //
     const mapCmcIdCcId = {};
     {
-      const maps = await getMaps(['projectMapSymbolId', 'projectMapCoinList', 'projectCcMapNameSymbol']);
-      let symbolIdMap;
-      // let coinList;
-      let ccNameSymbol;
-      for (const map of maps) {
-        if (map._id === 'projectMapSymbolId') symbolIdMap = map.map;
-        // else if (map._id === 'projectMapCoinList') coinList = map.map;
-        else if (map._id === 'projectCcMapNameSymbol') ccNameSymbol = map.map;
-      }
-
-      // Make lowercase versions so we can match better
-      // const ccNameSymbolLower = {};
-      // for (const [key, val] of Object.entries(ccNameSymbol)) {
-      //   ccNameSymbolLower[key.toLowerCase()] = val.toLowerCase();
-      // }
 
       const sync = val => {
-        return val.replace('-', '').replace(' ', '');
+        return String(val).replace(/-/g, '').replace(/\s/g, '').toLowerCase();
       }
 
-      const cmcData = Object.values(data);
-      for (const val of cmcData) {
-        const cmcname = sync(val.name);
-        const cmcsymbol = sync(val.symbol);
-        if (ccNameSymbol[cmcname] && val.id) {
-          const symbol = ccNameSymbol[cmcname];
-          const id = val.id;
-          mapCmcIdCcId[id] = symbolIdMap[symbol];
+      const maps = await getMaps([
+        'projectMapSymbolId',
+        'projectMapNameId'
+      ]);
+
+      let ccSI = {};
+      let ccNI = {};
+      for (const map of maps) {
+        if (map._id === 'projectMapSymbolId') {
+          for (const [k, v] of Object.entries(map.map)) {
+            ccSI[sync(k)] = sync(v);
+          };
         }
-        else {
-          //console.log('map manually ', sync(cmcname));
+        else if (map._id === 'projectMapNameId') {
+          for (const [k, v] of Object.entries(map.map)) {
+            ccNI[sync(k)] = sync(v);
+          };
         }
       }
+
+      //
+      // Make lowercase versions so we can match better
+      //
+      let cmcSI = {};
+      let cmcNI = {};
+      let cmcNS = {};
+      {
+        for (const [key, val] of Object.entries(data)) {
+          cmcSI[sync(val.symbol)] = sync(val.id);
+          cmcNI[sync(val.name)] = sync(val.id);
+          cmcNS[sync(val.name)] = sync(val.symbol);
+        }
+      }
+
+      for (const [cmcName, cmcId] of Object.entries(cmcNI)) {
+        if (ccNI[cmcName]) {
+          mapCmcIdCcId[cmcId] = ccNI[cmcName]; // match
+        }
+        else if (ccSI[cmcNS[cmcName]]) {
+          mapCmcIdCcId[cmcId] = ccSI[cmcNS[cmcName]]; // match
+        }
+      }
+
       mapSave('cmcCcMapIdSymbol', JSON.stringify(mapCmcIdCcId));
     }
+
+    const bidMap = await getBidMap('cmc', data);
 
     //
     //
@@ -131,7 +149,7 @@ export default async function formatter(data, timestamp) {
     for (const val of Object.values(data)) {
       const id = mapCmcIdCcId[val.id];
       if (id === undefined) {
-        console.log(`cant find id for ${val.id}`);
+        console.log(`cant find id for ${val.name}: ${val.symbol}`);
         continue;
       };
       result[id] = {

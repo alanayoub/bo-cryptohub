@@ -1,5 +1,6 @@
 import logger from '../../logger';
 import { perSecondSave } from '../../db/save';
+import { getBidMap } from '../../db/query';
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 /**
@@ -69,12 +70,12 @@ import { objectGetNestedProperty as gnp } from 'bo-utils';
  * ----------------------------------------------
  * PRICE -> cc-total-vol-full-ImageUrl
  *
- * @param {Array} price is an array of the responses of batched cryptocompare api price data
+ * @param {Array} data is an array of the responses of batched cryptocompare api price data
  * @param {String} timestamp
  * @returns {Object}
  *
  */
-export default async function totalVolFull(price, timestamp) {
+export default async function totalVolFull(data, timestamp) {
   try {
 
     const prefix = 'cc-total-vol-full-';
@@ -88,11 +89,13 @@ export default async function totalVolFull(price, timestamp) {
     let RAW;
     let coinInfo;
 
-    for ([idx, dataItem] of Object.entries(price.Data)) {
+    const bidMap = await getBidMap('cc', data);
 
-      if (price.Data && price.Data[idx]) {
-        RAW = price.Data[idx].RAW && price.Data[idx].RAW.USD;
-        coinInfo = price.Data[idx].CoinInfo;
+    for ([idx, dataItem] of Object.entries(data.Data)) {
+
+      if (data.Data && data.Data[idx]) {
+        RAW = data.Data[idx].RAW && data.Data[idx].RAW.USD;
+        coinInfo = data.Data[idx].CoinInfo;
       }
 
       if (coinInfo) {

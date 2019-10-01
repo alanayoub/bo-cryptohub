@@ -8,7 +8,7 @@ const { scrapeDir } = settings;
 const config = {
   cacheFor: settings.cacheForCoinmarketcap,
   bootstrap: cache => {return {}},
-  rateLimitDelayMs: 1000 * 60 * 1
+  rateLimitDelayMs: 1000 * 60 * 30
 };
 
 let cryptocurrencyListings;
@@ -16,7 +16,7 @@ let cryptocurrencyListings;
   cryptocurrencyListings = {
     event: 'data',
     name: 'cmc-listings',
-    interval: 1000 * 60 * 1,
+    interval: 1000 * 60 * 30,
     watchDirs: [`${scrapeDir}/coinmarketcap-cryptocurrency-listings/**/*`, 'all'],
     getJobs: getJobsCryptocurrencyListings,
     formatter: formatterCryptocurrencyListings

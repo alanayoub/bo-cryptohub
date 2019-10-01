@@ -48,13 +48,16 @@ export default async function formatterCryptocompareSectionCoinlist(data, timest
   const prefix = 'cc-coinlist-';
   const objAllCoins = data.Data;
   const result = {};
+  const mapNameId = {};
   const mapSymbolId = {};
   const mapIdSymbol = {};
   let currentCoinOut, currentCoinIn, symbol, id, key, val;
   for ([symbol, val] of Object.entries(data.Data)) {
+    mapNameId[val['CoinName']] = val['Id'];
     mapSymbolId[symbol] = val['Id'];
     mapIdSymbol[val['Id']] = symbol;
   }
+  mapSave('projectMapNameId', JSON.stringify(mapNameId));
   mapSave('projectMapSymbolId', JSON.stringify(mapSymbolId));
   mapSave('projectMapIdSymbol', JSON.stringify(mapIdSymbol));
   for (id of Object.keys(mapIdSymbol)) {

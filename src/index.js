@@ -105,33 +105,35 @@ try {
 
   const datatable = new DataTable(options);
 
-  datatable.newSource('binaryoverdose', binaryoverdose.config).then(() => {
-    datatable.sources.binaryoverdose.add(binaryoverdose.custom);
-  });
+  // datatable.newSource('binaryoverdose', binaryoverdose.config).then(() => {
+  //   datatable.sources.binaryoverdose.add(binaryoverdose.custom);
+  // });
 
-  datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
-    datatable.sources.cryptocompare.add(cryptocompare.coinList);
-    datatable.sources.cryptocompare.add(cryptocompare.social);
-    datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
-    datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
-    datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
-  });
+  // datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
+  //   datatable.sources.cryptocompare.add(cryptocompare.coinList);
+  //   datatable.sources.cryptocompare.add(cryptocompare.social);
+  //   datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
+  //   datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
+  //   datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
+  // });
 
   datatable.newSource('messari', messari.config).then(() => {
-    // TODO: Assets only returns 20 results for some reason
-    // datatable.sources.messari.add(messari.assets);
-    datatable.sources.messari.add(messari.markets);
-    datatable.sources.messari.add(messari.metrics);
-    datatable.sources.messari.add(messari.prices);
+    datatable.sources.messari.add(messari.assets);
+    //
+    // NOTE: There doesn't seem to be a need for the below api requests. Investigate
+    //
+    // datatable.sources.messari.add(messari.markets);
+    // datatable.sources.messari.add(messari.metrics);
+    // datatable.sources.messari.add(messari.prices);
   });
 
-  datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
-    datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
-  });
+  // datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
+  //   datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
+  // });
 
-  datatable.newSource('xe', xe.config).then(() => {
-    datatable.sources.xe.add(xe.currency);
-  });
+  // datatable.newSource('xe', xe.config).then(() => {
+  //   datatable.sources.xe.add(xe.currency);
+  // });
 
 }
 

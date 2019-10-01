@@ -16,7 +16,7 @@ export default {
   //
   sectorsMessari: {
     colId: 'sectorsMessari',
-    field: 'm-metrics-misc_data_sectors',
+    field: 'm-assets-metrics-misc_data_sectors',
     headerName: 'Sectors',
     headerClass: 'CH-col',
     headerTooltip: 'Sectors',
@@ -38,7 +38,7 @@ export default {
   //
   athUSDMessari: {
     colId: 'athUSDMessari',
-    field: 'm-prices-athUsd',
+    field: 'm-assets-metrics-all_time_high_price',
     headerName: 'ATH $',
     headerClass: 'CH-col',
     headerTooltip: 'All Time High (USD)\n\nData Source: OnChainFX',
@@ -59,7 +59,7 @@ export default {
   //
   athPercentDownUSDMessari: {
     colId: 'athPercentDownUSDMessari',
-    field: 'm-prices-percentageDownFromAth',
+    field: 'm-assets-metrics-all_time_high_percent_down',
     headerName: 'ATH % Down',
     headerClass: 'CH-col',
     headerTooltip: '% Down from All Time High (USD)\n\nData Source: OnChainFX',
@@ -85,7 +85,7 @@ export default {
   //
   cycleLowUSDMessari: {
     colId: 'cycleLowUSDMessari',
-    field: 'm-prices-cycleLowUsd',
+    field: 'm-assets-metrics-cycle_low_price',
     headerName: 'Cycle Low $',
     headerClass: 'CH-col',
     headerTooltip: 'The lowest trading price (in USD) of the asset since its All-Time-High\n\nData Source: OnChainFX',
@@ -106,7 +106,7 @@ export default {
   //
   percentChange24hUSDMessari: {
     colId: 'percentChange24hUSDMessari',
-    field: 'm-prices-percentageChange24HrUsd',
+    field: 'm-assets-metrics-market_data_percent_change_usd_last_24_hours',
     headerName: 'Δ 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Messari',
@@ -124,7 +124,7 @@ export default {
   //
   percentChange24hBTCMessari: {
     colId: 'percentChange24hBTCMessari',
-    field: 'm-prices-percentageChange24HrBtc',
+    field: 'm-assets-metrics-market_data_percent_change_btc_last_24_hours',
     headerName: 'Δ 24h ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against BTC\n\nData Source: Messari',
@@ -142,7 +142,7 @@ export default {
   //
   percentChange7dUSDMessari: {
     colId: 'percentChange7dUSDMessari',
-    field: 'm-prices-percentageChange7dUsd',
+    field: 'm-assets-metrics-roi_data_percent_change_last_1_week',
     headerName: '7D Δ $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 7 days against USD\n\nData Source: Messari',
@@ -160,7 +160,7 @@ export default {
   //
   percentChange7dBTCMessari: {
     colId: 'percentChange7dBTCMessari',
-    field: 'm-prices-percentageChange7dBtc',
+    field: 'm-assets-metrics-roi_data_percent_change_btc_last_1_week',
     headerName: '7D Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 7 days against BTC\n\nData Source: Messari',
@@ -178,7 +178,7 @@ export default {
   //
   percentChange1mUSDMessari: {
     colId: 'percentChange1mUSDMessari',
-    field: 'm-metrics-roi_data_percent_change_last_1_month',
+    field: 'm-assets-metrics-roi_data_percent_change_last_1_month',
     headerName: '1M Δ $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 1 month against USD\n\nData Source: Messari',
@@ -196,7 +196,7 @@ export default {
   //
   percentChange1mBTCMessari: {
     colId: 'percentChange1mBTCMessari',
-    field: 'm-metrics-roi_data_percent_change_btc_last_1_month',
+    field: 'm-assets-metrics-roi_data_percent_change_btc_last_1_month',
     headerName: '1M Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 1 month against BTC\n\nData Source: Messari',
@@ -214,7 +214,7 @@ export default {
   //
   percentChange3mUSDMessari: {
     colId: 'percentChange3mUSDMessari',
-    field: 'm-prices-percentageChange90dUsd',
+    field: 'm-assets-metrics-roi_data_percent_change_last_3_months',
     headerName: '3M Δ $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 3 months against USD\n\nData Source: Messari',
@@ -232,7 +232,7 @@ export default {
   //
   percentChange3mBTCMessari: {
     colId: 'percentChange3mBTCMessari',
-    field: 'm-prices-percentageChange90dBtc',
+    field: 'm-assets-metrics-roi_data_percent_change_btc_last_3_months',
     headerName: '3M Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 3 months against BTC\n\nData Source: Messari',
@@ -250,7 +250,7 @@ export default {
   //
   percentChange1yUSDMessari: {
     colId: 'percentChange1yUSDMessari',
-    field: 'm-prices-percentageChange1yrUsd',
+    field: 'm-assets-metrics-roi_data_percent_change_last_1_year',
     headerName: '1Y Δ $',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 1 year against BTC\n\nData Source: Messari',
@@ -268,7 +268,7 @@ export default {
   //
   percentChange1yBTCMessari: {
     colId: 'percentChange1yBTCMessari',
-    field: 'm-prices-percentageChange1yrBtc',
+    field: 'm-assets-metrics-roi_data_percent_change_btc_last_1_year',
     headerName: '1Y Δ ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Percent change over the last 1 year against BTC\n\nData Source: Messari',
@@ -286,7 +286,7 @@ export default {
   //
   priceUSDMessari: {
     colId: 'priceUSDMessari',
-    field: 'm-prices-priceUsd',
+    field: 'm-assets-metrics-market_data_price_usd',
     headerName: 'Price $',
     headerClass: 'CH-col',
     headerTooltip: 'Price in USD\n\nData Source: Messari',
@@ -310,7 +310,7 @@ export default {
   //
   priceBTCMessari: {
     colId: 'priceBTCMessari',
-    field: 'm-prices-priceBtc',
+    field: 'm-assets-metrics-market_data_price_btc',
     headerName: 'Price ฿',
     headerClass: 'CH-col',
     headerTooltip: 'Price in BTC\n\nData Source: Messari',
@@ -338,7 +338,7 @@ export default {
   //
   volume24hUSDMessari: {
     colId: 'volume24hUSDMessari',
-    field: 'm-prices-vol24HrUsd',
+    field: 'm-assets-metrics-market_data_volume_last_24_hours',
     headerName: 'Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Messari',
@@ -359,7 +359,7 @@ export default {
   //
   realVolume24hUSDMessari: {
     colId: 'realVolume24hUSDMessari',
-    field: 'm-prices-realVol24HrUsd',
+    field: 'm-assets-metrics-market_data_real_volume_last_24_hours',
     headerName: 'Real Volume 24h $',
     headerClass: 'CH-col',
     headerTooltip: 'Real Volume according to Messari. 24 hours displayed in USD\n\nData Source: Messari',
@@ -380,7 +380,7 @@ export default {
   //
   volume24hUSDOverstatementMultipleMessari: {
     colId: 'volume24hUSDOverstatementMultipleMessari',
-    field: 'm-prices-volOverstatementMultiple',
+    field: 'm-assets-metrics-market_data_volume_last_24_hours_overstatement_multiple',
     headerName: 'Volume 24h $ Overstatement Multiple',
     headerClass: 'CH-col',
     headerTooltip: 'Volume according to Messari. 24 hours displayed in USD\n\nData Source: Messari',
@@ -398,7 +398,7 @@ export default {
 
   marketcapUSDMessari: {
     colId: 'marketcapUSDMessari',
-    field: 'm-prices-currentMarketcap',
+    field: 'm-assets-metrics-marketcap_current_marketcap_usd',
     headerName: 'Market Cap $',
     headerClass: 'CH-col',
     headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Messari',
@@ -416,7 +416,7 @@ export default {
 
   marketcapUSD2050Messari: {
     colId: 'marketcapUSD2050Messari',
-    field: 'm-prices-y2050Marketcap',
+    field: 'm-assets-metrics-marketcap_y_2050_marketcap_usd',
     headerName: 'Market Cap $ (Y2050)',
     headerClass: 'CH-col',
     headerTooltip: 'This is the fully diluted (Y2050) Marketcap, it takes into account known future dilution up to Jan 1, 2050.\n\nData Source: Messari',
@@ -437,7 +437,7 @@ export default {
   //
   nvtMessari: {
     colId: 'nvtMessari',
-    field: 'm-prices-nvt24hr',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_nvt',
     headerName: 'NVT',
     headerClass: 'CH-col',
     headerTooltip: 'NVT Ratio (Network Value to Transactions Ratio) is the ratio of the Market Cap divided by the volume transmitted by the blockchain. Simplistically it could be seen as analogus to the PE Ratio used in equity markets. When an assets NVT is high, it indicates that its network valuation is outstripping the value being transmitted through its blockchain.  \n\nData Source: Messari',
@@ -455,7 +455,7 @@ export default {
   //
   adjustedNvtMessari: {
     colId: 'adjustedNvtMessari',
-    field: 'm-prices-adjustedNvt24hr',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_adjusted_nvt',
     headerName: 'NVT (Adjusted)',
     headerClass: 'CH-col',
     headerTooltip: 'Same as NVT but uses the adjusted transaction volume figures calculated by Coinmetrics.io\n\nData Source: Messari',

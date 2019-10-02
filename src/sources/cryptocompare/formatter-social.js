@@ -1,4 +1,5 @@
 import logger from '../../logger';
+import { getBid } from '../../db/query';
 import { perSecondSave } from '../../db/save';
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
@@ -92,11 +93,20 @@ import { objectGetNestedProperty as gnp } from 'bo-utils';
 export default async function social(social, timestamp, originUrl) {
   try {
 
+    // TODO: Return a better error.
+    const errorReturn = {data: {}, timestamp};
+
     if (!social.Data) {
-      return {data: {}, timestamp};
+      return errorReturn;
     }
 
     const id = originUrl.split('/').reverse()[1];
+    const bid = await getBid('cc', id);
+    if (!bid) {
+      logger.error(`Cryptocompare Formatter Social: Couldn't get bid for cc id ${id}`);
+      return errorReturn;
+    }
+
     const data = {};
     const prefix = 'cc-social-';
 
@@ -108,7 +118,7 @@ export default async function social(social, timestamp, originUrl) {
     const facebook = d.Facebook;
     const codeRepository = d.CodeRepository;
 
-    data[id] = {
+    data[bid] = {
       [`${prefix}General_Name`]: general.Name,
       [`${prefix}General_CoinName`]: general.CoinName,
       [`${prefix}General_Type`]: general.Type,

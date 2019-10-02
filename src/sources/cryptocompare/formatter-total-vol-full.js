@@ -89,7 +89,20 @@ export default async function totalVolFull(data, timestamp) {
     let RAW;
     let coinInfo;
 
-    const bidMap = await getBidMap('cc', data);
+    // Remap data as coinmarket cap apis provide data in different formats.
+    // We remap so our bidMap function accepts data in a unified format for
+    // all coinmarketcap datasets
+    const remappedData = [];
+    for (const value of data.Data) {
+      if (value.CoinInfo) {
+        remappedData.push({
+          Id: value.CoinInfo.Id,
+          Name: value.CoinInfo.FullName,
+          Symbol: value.CoinInfo.Name
+        });
+      }
+    }
+    const bidMap = await getBidMap('cc', remappedData);
 
     for ([idx, dataItem] of Object.entries(data.Data)) {
 
@@ -99,7 +112,7 @@ export default async function totalVolFull(data, timestamp) {
       }
 
       if (coinInfo) {
-        id = coinInfo.Id;
+        id = bidMap[coinInfo.Id];
 
         result[id] = {};
 

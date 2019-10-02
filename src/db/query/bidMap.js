@@ -7,7 +7,7 @@ import { BidModel } from '../schema';
  *
  */
 function generateId() {
-  return Math.random().toString(36).substr(2, 9);
+  return Math.random().toString(36).substr(2, 9).padStart(9, '0');
 }
 
 /**
@@ -47,12 +47,12 @@ async function createNewIdMapping(source, data) {
       symbol = normalize(data.symbol);
       break;
     case 'cc':
-      if (!data.CoinInfo || !data.CoinInfo.Id || !data.CoinInfo.FullName || !data.CoinInfo.Name) {
+      if (!data.Id || !data.Name || !data.Symbol) {
         return false;
       }
-      id = normalize(data.CoinInfo.Id);
-      name = normalize(data.CoinInfo.FullName);
-      symbol = normalize(data.CoinInfo.Name); // yea I know
+      id = normalize(data.Id);
+      name = normalize(data.Name);
+      symbol = normalize(data.Symbol);
       break;
     case 'm':
       if (!data.id || !data.name || !data.symbol) {
@@ -142,46 +142,6 @@ async function createNewIdMapping(source, data) {
 
 /**
  *
- * Get Bid
- *
- * @param {String} source
- * @param {String} id
- * @returns {String} returns an existing bid
- *
- */
-async function getBid(source, id) {
-  const query = {
-    [`${source}id`]: String(id).toLowerCase()
-  };
-  const record = await BidModel.findOne(query).lean();
-  if (record) {
-    return record.bid;
-  }
-  else {
-    return false;
-  }
-}
-
-// getBidRecord(name, symbol); // returns data to enable creation of a bid
-//   returns all items with either the same name or same symbol... needs to be normalized!
-async function getBidRecord(name, symbol) {
-  const bidData = {
-    bid: '001',
-    cmcid: '1182',
-    cmcname: 'bitcoin',
-    cmcsymbol: 'btc',
-    ccid: '1182',
-    ccname: 'bitcoin',
-    ccsymbol: 'btc',
-    mid: '1182',
-    mname: 'bitcoin',
-    msymbol: 'btc',
-  };
-  return false;
-}
-
-/**
- *
  * GET BID MAP
  * Get the persisted bid to source mappings
  *
@@ -203,37 +163,6 @@ async function getBidMap(source, ids) {
   });
   return map;
 }
-
-//
-// Bid collection schema
-//
-// {
-//   bid: '001',
-//   cmcid: '1182',
-//   cmcname: 'bitcoin',
-//   cmcsymbol: 'btc',
-//   ccid: '1182',
-//   ccname: 'bitcoin',
-//   ccsymbol: 'btc',
-//   mid: '1182',
-//   mname: 'bitcoin',
-//   msymbol: 'btc',
-// }
-//
-// eg0. find bid where cmcid === '1182'
-// eg1. for cmc name, symbol find matching ccname, ccsymbol, mname, msymbol
-// eg2. for cc name, symbol find matching cmcname, cmcsymbol, mname, msymbol
-//
-// pseudo query:
-//   db.bid.find({
-//     $or: [
-//       {ccname: 'bitcoin'},
-//       {mname: 'bitcoin'},
-//       {ccsymbol: 'btc'},
-//       {msymbol: 'btc'},
-//     ]
-//   })
-//
 
 /**
  *
@@ -276,15 +205,15 @@ export default async function bidMap(source, data) {
 
     case 'cc':
 
-      const ccIds = data.Data.map(v => v.CoinInfo.Id);
+      const ccIds = data.map(v => v.Id);
       bidMap = await getBidMap('cc', ccIds);
 
-      for (const val of data.Data) {
-        let bid = bidMap[val.CoinInfo.Id];
+      for (const val of data) {
+        let bid = bidMap[val.Id];
         if (!bid) {
           bid = await createNewIdMapping('cc', val);
           if (bid) {
-            bidMap[val.CoinInfo.Id] = bid;
+            bidMap[val.Id] = bid;
           }
           else {
             logger.info(`bidMap: Can't map ${name}: ${symbol} from ${source} data`);

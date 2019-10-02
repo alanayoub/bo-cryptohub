@@ -1,5 +1,6 @@
 import logger from '../../logger';
 import { getMaps } from '../../db/query';
+import { getBidMap } from '../../db/query';
 import { mapSave, perSecondSave } from '../../db/save';
 
 /**
@@ -44,36 +45,36 @@ import { mapSave, perSecondSave } from '../../db/save';
  */
 export default async function formatterCryptocompareSectionCoinlist(data, timestamp) {
 
-  const maps = await getMaps(['projectMapIdSymbol']);
   const prefix = 'cc-coinlist-';
-  const objAllCoins = data.Data;
-  const result = {};
-  const mapNameId = {};
-  const mapSymbolId = {};
-  const mapIdSymbol = {};
-  let currentCoinOut, currentCoinIn, symbol, id, key, val;
-  for ([symbol, val] of Object.entries(data.Data)) {
-    mapNameId[val['CoinName']] = val['Id'];
-    mapSymbolId[symbol] = val['Id'];
-    mapIdSymbol[val['Id']] = symbol;
+
+  const arrayData = [];
+  for (const value of Object.values(data.Data)) {
+    arrayData.push(value);
   }
-  mapSave('projectMapNameId', JSON.stringify(mapNameId));
-  mapSave('projectMapSymbolId', JSON.stringify(mapSymbolId));
-  mapSave('projectMapIdSymbol', JSON.stringify(mapIdSymbol));
-  for (id of Object.keys(mapIdSymbol)) {
-    currentCoinOut = {};
-    currentCoinIn = objAllCoins[mapIdSymbol[id]];
-    if (currentCoinIn === undefined) {
-      logger.error(`coinListWatcher.handler(): ${mapIdSymbol[id]} is not in objAllCoins`);
-      continue;
+
+  const result = {};
+
+  {
+    //
+    // Get rid of this
+    //
+    const mapSymbolId = {};
+    let currentCoinOut, currentCoinIn, symbol, id, key, val;
+    for ([symbol, val] of Object.entries(data.Data)) {
+      mapSymbolId[symbol] = val['Id'];
     }
-    for ([key, val] of Object.entries(currentCoinIn)) {
-      if (key === 'SortOrder') {
-        val = +val; // Make SortOrder numeric
-      }
-      currentCoinOut[`${prefix}${key}`] = val;
+    mapSave('projectMapSymbolId', JSON.stringify(mapSymbolId));
+  }
+
+  let bid;
+  const bidMap = await getBidMap('cc', arrayData);
+
+  for (const value of arrayData) {
+    bid = bidMap[value.Id];
+    result[bid] = {};
+    for (const [field, prop] of Object.entries(value)) {
+      result[bid][`${prefix}${field}`] = prop;
     }
-    result[id] = currentCoinOut;
   }
 
   await perSecondSave(result, timestamp);

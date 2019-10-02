@@ -105,17 +105,17 @@ try {
 
   const datatable = new DataTable(options);
 
-  // datatable.newSource('binaryoverdose', binaryoverdose.config).then(() => {
-  //   datatable.sources.binaryoverdose.add(binaryoverdose.custom);
-  // });
+  datatable.newSource('binaryoverdose', binaryoverdose.config).then(() => {
+    datatable.sources.binaryoverdose.add(binaryoverdose.custom);
+  });
 
-  // datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
-  //   datatable.sources.cryptocompare.add(cryptocompare.coinList);
-  //   datatable.sources.cryptocompare.add(cryptocompare.social);
-  //   datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
-  //   datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
-  //   datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
-  // });
+  datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
+    datatable.sources.cryptocompare.add(cryptocompare.coinList);
+    datatable.sources.cryptocompare.add(cryptocompare.social);
+    datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
+    datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
+    datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
+  });
 
   datatable.newSource('messari', messari.config).then(() => {
     datatable.sources.messari.add(messari.assets);
@@ -127,13 +127,13 @@ try {
     // datatable.sources.messari.add(messari.prices);
   });
 
-  // datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
-  //   datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
-  // });
+  datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
+    datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
+  });
 
-  // datatable.newSource('xe', xe.config).then(() => {
-  //   datatable.sources.xe.add(xe.currency);
-  // });
+  datatable.newSource('xe', xe.config).then(() => {
+    datatable.sources.xe.add(xe.currency);
+  });
 
 }
 

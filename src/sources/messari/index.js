@@ -31,7 +31,7 @@ let assets;
   assets = {
     event: 'data',
     name: 'messari-assets',
-    interval: 1000 * 60 * 2,
+    interval: 1000 * 60 * 10,
     watchDirs: [`${scrapeDir}/messari-assets/**/*`, 'all'],
     async getJobs(queue) {
 

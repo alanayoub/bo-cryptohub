@@ -1,3 +1,4 @@
+import getBid from './bid';
 import getBtc from './btc';
 import getIds from './ids';
 import getMaps from './maps';
@@ -9,6 +10,7 @@ import getMessariSymbols from './messari-symbols';
 import getCryptocompareIds from './cryptocompare-ids';
 
 export {
+  getBid,
   getBtc,
   getIds,
   getMaps,

@@ -83,9 +83,9 @@ const custom = {
       'cc-total-vol-full-TOTALVOLUME24HTO',
       'cmc-listings-quote_USD_price',
       'cmc-listings-quote_USD_volume_24h',
-      'm-metrics-market_data_price_usd',
-      'm-metrics-market_data_price_btc',
-      'm-metrics-market_data_volume_last_24_hours'
+      'm-assets-metrics-market_data_price_usd',
+      'm-assets-metrics-market_data_price_btc',
+      'm-assets-metrics-market_data_volume_last_24_hours'
     ];
 
     //
@@ -197,26 +197,26 @@ const custom = {
       //   cryptohub-m-price-history-USD
       //   cryptohub-m-price-history-BTC
       //
-      if (item['m-metrics-market_data_volume_last_24_hours']) {
+      if (item['m-assets-metrics-market_data_volume_last_24_hours']) {
 
-        if (item['m-metrics-market_data_price_usd']) {
+        if (item['m-assets-metrics-market_data_price_usd']) {
 
           // cmc USD 7 day trend
           fields = {
-            price: 'm-metrics-market_data_price_usd',
-            volume: 'm-metrics-market_data_volume_last_24_hours',
+            price: 'm-assets-metrics-market_data_price_usd',
+            volume: 'm-assets-metrics-market_data_volume_last_24_hours',
             timeseries: 'cryptohub-m-price-history-USD'
           }
           ref['cryptohub-m-price-history-USD'] = getNewTimeseriesData(fields, item);
 
         }
 
-        if (item['m-metrics-market_data_price_btc']) {
+        if (item['m-assets-metrics-market_data_price_btc']) {
 
           // cmc BTC 7 day trend
           fields = {
-            price: 'm-metrics-market_data_price_btc',
-            volume: 'm-metrics-market_data_volume_last_24_hours',
+            price: 'm-assets-metrics-market_data_price_btc',
+            volume: 'm-assets-metrics-market_data_volume_last_24_hours',
             timeseries: 'cryptohub-m-price-history-BTC'
           }
           ref['cryptohub-m-price-history-BTC'] = getNewTimeseriesData(fields, item);

@@ -1,7 +1,7 @@
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 import logger from '../../logger';
-import { getBidMap, getMaps } from '../../db/query';
+import { getBidMap } from '../../db/query';
 import { perSecondSave } from '../../db/save';
 
 /**
@@ -225,23 +225,17 @@ export default async function formatterMessariAssets(data, timestamp) {
   try {
 
     if (!Array.isArray(data.data)) return;
-    console.log('assets', data);
 
-    const maps = await getMaps(['projectMapSymbolId']);
-    const symbolIdMap = maps[0].map;
     const prefix = 'm-assets-';
     let id;
     let item;
-    let prop;
-    let symbol;
     let result = {};
 
     const bidMap = await getBidMap('m', data);
 
     for (item of data.data) {
 
-      symbol = item.symbol.toUpperCase();
-      id = symbolIdMap[symbol]; // TODO: need proper mapping for ids
+      id = bidMap[String(item.id).toLowerCase()];
       if (id === undefined) continue;
 
       result[id] = {

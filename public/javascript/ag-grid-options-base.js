@@ -292,7 +292,7 @@ export default {
   rowSelection: 'multiple',
 
   getRowNodeId: data => {
-    return data['cc-total-vol-full-Id'].value;
+    return data.id;
   },
 
   // defaultColDef: contains column properties all columns will inherit.

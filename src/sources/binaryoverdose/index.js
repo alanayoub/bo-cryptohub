@@ -79,13 +79,20 @@ const custom = {
     //
     const proxyFields = [
       'cc-total-vol-full-Id',
-      'cc-total-vol-full-PRICE',
       'cc-total-vol-full-TOTALVOLUME24HTO',
-      'cmc-listings-quote_USD_price',
       'cmc-listings-quote_USD_volume_24h',
       'm-assets-metrics-market_data_price_usd',
       'm-assets-metrics-market_data_price_btc',
-      'm-assets-metrics-market_data_volume_last_24_hours'
+      'm-assets-metrics-market_data_volume_last_24_hours',
+      'cc-total-vol-full-FullName',
+      'cc-total-vol-full-PRICE',
+      'cmc-listings-name',
+      'cc-coinlist-Symbol',
+      'cmc-listings-symbol',
+      'm-assets-symbol',
+      'cmc-listings-quote_USD_price',
+      'm-assets-metrics-market_data_price_usd',
+      'm-assets-name'
     ];
 
     //
@@ -100,7 +107,10 @@ const custom = {
       'cryptohub-cmc-price-history-BTC',
       'cryptohub-m-price-history-USD',
       'cryptohub-m-price-history-BTC',
-      'cryptohub-cc-circulating-percent-total'
+      'cryptohub-cc-circulating-percent-total',
+      'cryptohub-name',
+      'cryptohub-symbol',
+      'cryptohub-price-usd'
     ];
     const data = await getRows(null, false, false, [...proxyFields, ...newFields]);
     if (!data) {
@@ -118,11 +128,36 @@ const custom = {
     let fields;
     for ([key, item] of Object.entries(data)) {
 
-      if (isNaN(key)) continue;
-
       ref = {
         'cc-total-vol-full-Id': gnp(item, 'cc-total-vol-full-Id.value') // Required by getRows
       };
+
+      //
+      // Create:
+      //   cryptohub-name
+      //   cryptohub-symbol
+      //   cryptohub-price-usd
+      //
+      {
+        const ccName = gnp(item, 'cc-total-vol-full-FullName.value');
+        const cmcName = gnp(item, 'cmc-listings-name.value');
+        const mName = gnp(item, 'm-assets-name.value');
+        if (ccName || cmcName || mName) {
+          ref['cryptohub-name'] = ccName || cmcName || mName;
+        }
+        const ccSymbol = gnp(item, 'cc-coinlist-Symbol.value');
+        const cmcSymbol = gnp(item, 'cmc-listings-symbol.value');
+        const mSymbol = gnp(item, 'm-assets-symbol.value');
+        if (ccSymbol || cmcSymbol || mSymbol) {
+          ref['cryptohub-symbol'] = ccSymbol || cmcSymbol || mSymbol;
+        }
+        const ccPrice = gnp(item, 'cc-total-vol-full-PRICE.value');
+        const cmcPrice = gnp(item, 'cmc-listings-quote_USD_price.value');
+        const mPrice = gnp(item, 'm-assets-metrics-market_data_price_usd.value');
+        if (ccPrice || cmcPrice || mPrice) {
+          ref['cryptohub-price-usd'] = ccPrice || cmcPrice || mPrice;
+        }
+      }
 
       //
       // Create:

@@ -10,6 +10,7 @@ const replicaSet = 'rs01';
 const authSource = 'admin';
 const uri = `mongodb://${user}:${pass}@${host}:${port}/${database}?replicaSet=${replicaSet}&authSource=${authSource}`;
 
+import { objectGetNestedProperty as gnp } from 'bo-utils';
 import { columnDependencies } from '../settings';
 import { getIds } from './query';
 
@@ -108,16 +109,15 @@ async function doEmit(changes) {
         }
       }
 
-      //
       // Remove updates that:
       //   - are only Id fields
       //   - have no Id field
       //
       for (const [key, item] of Object.entries(data)) {
-        if (!item['cc-total-vol-full-Id'] || item['cc-total-vol-full-Id'].value === null) { // Required field(s)
-          delete data[key];
-        }
-        else if (Object.keys(item).length === 1) { // if there are only 3 fields they have to be Ids only
+        // Required fields
+        const name = gnp(item, 'cryptohub-name.value');
+        const symbol = gnp(item, 'cryptohub-symbol.value');
+        if (!name || !symbol) {
           delete data[key];
         }
       }

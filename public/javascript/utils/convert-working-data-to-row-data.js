@@ -42,7 +42,7 @@ export default function convertWorkingDataToRowData(data) {
   //
   const arrayData = [];
   for (let [id, obj] of Object.entries(data)) {
-    obj.id = obj.Id;
+    obj.id = id;
     arrayData.push(obj);
   }
   data = arrayData;

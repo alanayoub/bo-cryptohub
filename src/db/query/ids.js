@@ -12,7 +12,6 @@ export default async function getIds(ids) {
 
   if (!Array.isArray(ids)) ids = [ids];
 
-  ids.push('cc-total-vol-full-Id');
   const query = {
     id: {$in: ids}
   };

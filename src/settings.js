@@ -55,6 +55,9 @@ const fieldTypeMap = {
   //
   // Custom
   //
+  'cryptohub-name': 'String|Number|Boolean|Null|Undefined|Array',
+  'cryptohub-symbol': 'String|Number|Boolean|Null|Undefined|Array',
+  'cryptohub-price-usd': 'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-price-history': 'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-exchanges': 'String|Number|Boolean|Null|Undefined',
   'cryptohub-exchange-locations': 'String|Number|Boolean|Null|Undefined|Array',
@@ -579,7 +582,8 @@ const columnDependencies = {
   //
   rowIndex: [
     'rowIndex',
-    'cc-total-vol-full-Id',
+    'cryptohub-name',
+    'cryptohub-symbol',
     'cc-total-vol-full-CHANGEPCTDAY'
   ],
   sparklineUSD: [

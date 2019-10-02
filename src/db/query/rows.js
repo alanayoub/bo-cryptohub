@@ -29,8 +29,6 @@ const idsList = Object.keys(fieldTypeMap);
  */
 async function getRecords(fieldSet, sortField = false, sortDirection = false, limit = false) {
 
-  // const requiredFields = ['cc-total-vol-full-Id'];
-
   const aggregate = [
     {
       $match: {
@@ -73,7 +71,10 @@ async function getRecords(fieldSet, sortField = false, sortDirection = false, li
     },
     {
       $match: {
-        'data.cc-total-vol-full-Id.value': {$exists: true, $ne: null}
+        $and: [
+          {'data.cryptohub-name.value': {$exists: true, $ne: null}},
+          {'data.cryptohub-symbol.value': {$exists: true, $ne: null}}
+        ]
       }
     }
   ];
@@ -91,12 +92,12 @@ async function getRecords(fieldSet, sortField = false, sortDirection = false, li
 
   let result;
   let results = {};
-  for (var [key,val] of Object.entries(dbData)) {
-    if (val.data['cc-total-vol-full-Id'].value === null) {
-      console.log(val);
-      debugger;
-    }
-  }
+  // for (var [key,val] of Object.entries(dbData)) {
+  //   if (val.data['cc-total-vol-full-Id'].value === null) {
+  //     console.log(val);
+  //     debugger;
+  //   }
+  // }
   for (result of dbData) {
     results[result._id] = result.data
   }
@@ -146,10 +147,6 @@ export default async function getRows(columns, sort, limit, fields) {
   let sortField;
   let sortDirection;
   const fieldSet = fields ? new Set(fields) : getFieldSet(columns, columnDependencies);
-
-  // Required
-  fieldSet.add('cc-total-vol-full-Id');
-  fieldSet.add('cc-total-vol-full-CHANGEPCTDAY');
 
   if (!fieldSet) throw new Error(`Invalid fieldSet ${fieldSet}`);
 

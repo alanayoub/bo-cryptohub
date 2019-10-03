@@ -48,11 +48,11 @@ export default async function createNewIdMapping(source, data) {
       symbol = normalize(data.symbol);
       break;
     case 'cc':
-      if (!data.Id || !data.Name || !data.Symbol) {
+      if (!data.Id || !data.CoinName || !data.Symbol) {
         return false;
       }
       id = data.Id;
-      name = normalize(data.Name);
+      name = normalize(data.CoinName);
       symbol = normalize(data.Symbol);
       break;
     case 'm':

@@ -1,3 +1,4 @@
+import logger from '../../logger';
 import { getBidMap } from '../query';
 import { bidSave as createNewIdMapping } from '../save';
 

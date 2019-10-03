@@ -1,4 +1,4 @@
-// Libs
+import logger from '../../logger';
 import { Schema } from 'mongoose';
 
 const validator = {

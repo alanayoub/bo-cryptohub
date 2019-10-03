@@ -1,7 +1,8 @@
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
-import { getBtc, getRows }                from '../../db/query';
-import { perSecondSave }                  from '../../db/save';
+import logger from '../../logger';
+import { getBtc, getRows } from '../../db/query';
+import { perSecondSave } from '../../db/save';
 
 const config = {
   cacheFor: 0,

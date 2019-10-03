@@ -1,6 +1,6 @@
 import logger from '../../logger';
 import { perSecondSave } from '../../db/save';
-import { getAndUpdateBidMap } from '../../db/query';
+import { getBidMap } from '../../db/query';
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 /**
@@ -92,17 +92,14 @@ export default async function totalVolFull(data, timestamp) {
     // Remap data as coinmarket cap apis provide data in different formats.
     // We remap so our bidMap function accepts data in a unified format for
     // all coinmarketcap datasets
-    const remappedData = [];
+    const ids = [];
     for (const value of data.Data) {
       if (value.CoinInfo) {
-        remappedData.push({
-          Id: value.CoinInfo.Id,
-          Name: value.CoinInfo.FullName,
-          Symbol: value.CoinInfo.Name
-        });
+        ids.push(value.CoinInfo.Id);
       }
     }
-    const bidMap = await getAndUpdateBidMap('cc', remappedData);
+
+    const bidMap = await getBidMap({source: 'cc', ids});
 
     for ([idx, dataItem] of Object.entries(data.Data)) {
 

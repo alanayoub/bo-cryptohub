@@ -1,6 +1,6 @@
 import logger from '../../logger';
-import { getMaps } from '../../db/query';
-import { getBidMap } from '../../db/query';
+import { PerDayModel } from '../../db/schema';
+import { getMaps, getAndUpdateBidMap } from '../../db/query';
 import { mapSave, perSecondSave } from '../../db/save';
 
 /**
@@ -67,13 +67,43 @@ export default async function formatterCryptocompareSectionCoinlist(data, timest
   }
 
   let bid;
-  const bidMap = await getBidMap('cc', arrayData);
+  const bidMap = await getAndUpdateBidMap('cc', arrayData);
 
   for (const value of arrayData) {
     bid = bidMap[value.Id];
-    result[bid] = {};
-    for (const [field, prop] of Object.entries(value)) {
-      result[bid][`${prefix}${field}`] = prop;
+    result[bid] = {
+      [`${prefix}Algorithm`]: value.Algorithm,
+      [`${prefix}BlockNumber`]: value.BlockNumber,
+      [`${prefix}BlockReward`]: value.BlockReward,
+      [`${prefix}BlockTime`]: value.BlockTime,
+      [`${prefix}CoinName`]: value.CoinName,
+      [`${prefix}FullName`]: value.FullName,
+      [`${prefix}FullyPremined`]: value.FullyPremined,
+      [`${prefix}Id`]: value.Id,
+      [`${prefix}ImageUrl`]: value.ImageUrl,
+      [`${prefix}IsTrading`]: value.IsTrading,
+      [`${prefix}Name`]: value.Name,
+      [`${prefix}NetHashesPerSecond`]: value.NetHashesPerSecond,
+      [`${prefix}PreMinedValue`]: value.PreMinedValue,
+      [`${prefix}ProofType`]: value.ProofType,
+      [`${prefix}SmartContractAddress`]: value.SmartContractAddress,
+      [`${prefix}SortOrder`]: value.SortOrder,
+      // [`${prefix}Sponsored`]: value.Sponsored,
+      [`${prefix}Symbol`]: value.Symbol,
+      [`${prefix}TotalCoinSupply`]: value.TotalCoinSupply,
+      [`${prefix}TotalCoinsFreeFloat`]: value.TotalCoinsFreeFloat,
+      [`${prefix}TotalCoinsMined`]: value.TotalCoinsMined,
+      [`${prefix}Url`]: value.Url
+    };
+    // Add built on if available
+    let builtOn;
+    {
+      const builtOnBid = bidMap[value.BuiltOn];
+      builtOn = await PerDayModel.findOne({field: 'cryptohub-name', id: builtOnBid}).lean();
+      builtOn = builtOn && builtOn.realtime && builtOn.realtime[1] && builtOn.realtime[1][1];
+    }
+    if (builtOn) {
+      result[bid][`${prefix}BuiltOn`] = builtOn;
     }
   }
 

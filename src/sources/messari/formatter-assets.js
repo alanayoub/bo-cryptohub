@@ -1,7 +1,7 @@
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 import logger from '../../logger';
-import { getBidMap } from '../../db/query';
+import { getAndUpdateBidMap } from '../../db/query';
 import { perSecondSave } from '../../db/save';
 
 /**
@@ -231,7 +231,7 @@ export default async function formatterMessariAssets(data, timestamp) {
     let item;
     let result = {};
 
-    const bidMap = await getBidMap('m', data);
+    const bidMap = await getAndUpdateBidMap('m', data);
 
     for (item of data.data) {
 

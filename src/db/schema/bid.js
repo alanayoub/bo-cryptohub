@@ -11,7 +11,6 @@ const options = {
   },
   cmcid: {
     type: String,
-    lowercase: true,
     maxlength: 10
   },
   cmcname: {
@@ -26,7 +25,6 @@ const options = {
   },
   ccid: {
     type: String,
-    lowercase: true,
     maxlength: 10
   },
   ccname: {
@@ -41,8 +39,7 @@ const options = {
   },
   mid: {
     type: String,
-    lowercase: true,
-    maxlength: 32
+    maxlength: 36
   },
   mname: {
     type: String,

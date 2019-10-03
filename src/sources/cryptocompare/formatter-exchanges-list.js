@@ -2,7 +2,16 @@ import { objectGetNestedProperty as getNestedProp } from 'bo-utils';
 
 import logger from '../../logger';
 import { perSecondSave, exchangeSave } from '../../db/save';
-import { getMaps, getExchanges, getCurrencies } from '../../db/query';
+import { getBidMap, getMaps, getExchanges, getCurrencies, getBidMatch } from '../../db/query';
+
+/**
+ *
+ * NORMALIZE
+ *
+ */
+const normalize = val => {
+  return String(val).replace(/-/g, '').replace(/\s/g, '').toLowerCase();
+}
 
 /**
  *
@@ -10,6 +19,7 @@ import { getMaps, getExchanges, getCurrencies } from '../../db/query';
  *
  */
 function addSymbol(symbols, symbol) {
+  symbol = normalize(symbol);
   if (!symbols[symbol]) {
     symbols[symbol] = {
       pairs: new Set(),
@@ -57,6 +67,7 @@ function addExchange(exchanges, name, id) {
  *
  */
 function addExchangeToSymbol(symbols, symbol, id, type) {
+  symbol = normalize(symbol);
   if (!symbol || !id || !type) return;
   if (type === 'fiat')               symbols[symbol].exchangeListFiatOnly.add(id);
   else if (type === 'Decentralized') symbols[symbol].exchangeListDex.add(id);
@@ -70,6 +81,7 @@ function addExchangeToSymbol(symbols, symbol, id, type) {
  *
  */
 function addPairsToSymbol(symbols, symbol, pair) {
+  symbol = normalize(symbol);
   if (symbols[symbol]) symbols[symbol].pairs.add(pair);
   else {
     //logger.info(`addPairsToSymbol(): can't add pair ${pair} to symbol ${symbol}`);
@@ -245,13 +257,15 @@ export default async function formatterExchangesList(response, timestamp) {
     //
 
     let obj;
-    const currencyCodes = Object.keys(dbCurrencies) || [];
+    const currencyCodes = (Object.keys(dbCurrencies) || []).map(normalize);
 
     // Symbols
     for (obj of Object.values(symbols)) {
       obj.numberOfPairs = obj.pairs.size;
       for (pair of obj.pairs.values()) {
         [symbol1, symbol2] = pair.split(',');
+        symbol1 = normalize(symbol1);
+        symbol2 = normalize(symbol2);
 
         // add to fiatCurrencies or cryptoCurrencies
         if (currencyCodes.includes(symbol1)) obj.fiatCurrencies.add(symbol1);
@@ -271,6 +285,8 @@ export default async function formatterExchangesList(response, timestamp) {
       for (pair of obj.pairs.values()) {
 
         [symbol1, symbol2] = pair.split(',');
+        symbol1 = normalize(symbol1);
+        symbol2 = normalize(symbol2);
 
         if (currencyCodes.includes(symbol1) || currencyCodes.includes(symbol2)) {
           obj.numberOfFiatPairs++;
@@ -343,8 +359,12 @@ export default async function formatterExchangesList(response, timestamp) {
     //   }
     // }
     //
+
     const resultData = {};
-    for (const [symbol, id] of Object.entries(dbSymbolId.map)) {
+    const symbolsArray = Object.keys(symbols).map(normalize);
+    const bidMap = await getBidMap({source: 'cc', symbols: symbolsArray});
+
+    for (const [symbol, id] of Object.entries(bidMap)) {
       if (symbols[symbol]) {
         resultData[id] = {
 

@@ -2,6 +2,7 @@
 
 // Binary Overdose Projects
 import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp }       from '../libs/bo-utils-client';
 import { partialApplication }                   from '../libs/bo-utils-client';
 
 // ag-grid cell Renderer Classes
@@ -118,12 +119,9 @@ export default {
         return ch.emptyCellValue;
       }
 
-      let dex = params.data['cryptohub-exchangesListDex'];
-      let both = params.data['cryptohub-exchangesListAcceptsBoth'];
-      let crypto = params.data['cryptohub-exchangesListCryptoOnly'];
-      dex = dex ? dex.value : [];
-      both = both ? both.value : [];
-      crypto = crypto ? crypto.value : [];
+      const dex = gnp(params, 'data.cryptohub-exchangesListDex.value') || [];
+      const both = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
+      const crypto = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
 
       const exchangeIds = [
         ...dex, ...both, ...crypto
@@ -160,12 +158,9 @@ export default {
 
       if (isEmptyObject(ch.exchanges)) return ch.emptyCellValue;
 
-      let dex = params.data['cryptohub-exchangesListDex'];
-      let both = params.data['cryptohub-exchangesListAcceptsBoth'];
-      let crypto = params.data['cryptohub-exchangesListCryptoOnly'];
-      dex = dex ? dex.value : [];
-      both = both ? both.value : [];
-      crypto = crypto ? crypto.value : [];
+      const dex = gnp(params, 'data.cryptohub-exchangesListDex.value') || [];
+      const both = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
+      const crypto = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
 
       const exchangeIds = [
         ...dex, ...both, ...crypto

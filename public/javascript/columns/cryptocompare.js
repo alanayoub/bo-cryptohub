@@ -264,12 +264,7 @@ export default {
       'cryptohubText',
     ],
     cellRenderer(params) {
-      const value = params.value && params.value.value;
-      let output = ch.emptyCellValue;
-      if (value && ch.projectMapIdName) {
-        output = ch.projectMapIdName[value] || output;
-      }
-      return output;
+      return params.value && params.value.value || ch.emptyCellValue;
     },
   },
 

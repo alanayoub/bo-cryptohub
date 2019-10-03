@@ -1,6 +1,6 @@
 import logger from '../../logger';
 import { perSecondSave } from '../../db/save';
-import { getBidMap } from '../../db/query';
+import { getAndUpdateBidMap } from '../../db/query';
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 /**
@@ -102,7 +102,7 @@ export default async function totalVolFull(data, timestamp) {
         });
       }
     }
-    const bidMap = await getBidMap('cc', remappedData);
+    const bidMap = await getAndUpdateBidMap('cc', remappedData);
 
     for ([idx, dataItem] of Object.entries(data.Data)) {
 

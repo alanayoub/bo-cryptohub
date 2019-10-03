@@ -67,7 +67,7 @@ try {
   });
 
   // generate some stuff
-  getRows(null, false, false, ['cc-total-vol-full-FullName', 'cc-coinlist-Symbol']).then(data => {
+  getRows(null, false, false, ['cryptohub-name', 'cryptohub-symbol']).then(data => {
     let mapIdName = {};
     let mapCcNameSymbol = {};
     let name;

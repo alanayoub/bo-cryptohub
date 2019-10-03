@@ -1,7 +1,7 @@
 // Cryptohub
 import logger from '../../logger';
 import { perSecondSave } from '../../db/save';
-import { getBidMap } from '../../db/query';
+import { getAndUpdateBidMap } from '../../db/query';
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 function dataIsValid(data) {
@@ -138,7 +138,7 @@ export default async function formatter(data, timestamp) {
     //  mapSave('cmcCcMapIdSymbol', JSON.stringify(mapCmcIdCcId));
     //}
 
-    const bidMap = await getBidMap('cmc', data);
+    const bidMap = await getAndUpdateBidMap('cmc', data);
 
     const result = {};
     const prefix = 'cmc-listings-';

@@ -3,11 +3,14 @@ import getBtc from './btc';
 import getIds from './ids';
 import getMaps from './maps';
 import getRows from './rows';
-import getBidMap from './bidMap';
+import getBidMap from './getBidMap';
+import getBidMatch from './bidMatch';
 import getExchanges from './exchanges';
 import getCurrencies from './currencies';
 import getMessariSymbols from './messari-symbols';
 import getCryptocompareIds from './cryptocompare-ids';
+
+import getAndUpdateBidMap from './getAndUpdateBidMap';
 
 export {
   getBid,
@@ -16,8 +19,11 @@ export {
   getMaps,
   getRows,
   getBidMap,
+  getBidMatch,
   getExchanges,
   getCurrencies,
   getMessariSymbols,
   getCryptocompareIds,
+
+  getAndUpdateBidMap,
 }

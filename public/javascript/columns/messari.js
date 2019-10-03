@@ -28,8 +28,13 @@ export default {
     ],
     valueFormatter(params) {
       const value = gnp(params, 'value.value');
-      if (!Array.isArray(value) || !value.length) return ch.emptyCellValue;
-      else return value.join(', ');
+      if (value) {
+        const parsed = JSON.parse(value);
+        if (Array.isArray(parsed) && parsed.length) {
+          return parsed.join(', ');
+        }
+      }
+      return ch.emptyCellValue;
     }
   },
 

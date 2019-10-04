@@ -113,7 +113,7 @@ const custom = {
       'cryptohub-symbol',
       'cryptohub-price-usd'
     ];
-    const data = await getRows(null, false, false, [...proxyFields, ...newFields]);
+    const data = await getRows(null, false, false, [...proxyFields, ...newFields], false);
     if (!data) {
       logger.warn('sources/binaryoverdose/index.js: Couldnt get rows, bailing out');
       return;

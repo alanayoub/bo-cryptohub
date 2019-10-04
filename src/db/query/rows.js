@@ -27,7 +27,7 @@ const idsList = Object.keys(fieldTypeMap);
  *
  *
  */
-async function getRecords(fieldSet, sortField = false, sortDirection = false, limit = false) {
+async function getRecords(fieldSet, sortField = false, sortDirection = false, limit = false, display = true) {
 
   const aggregate = [
     {
@@ -69,15 +69,18 @@ async function getRecords(fieldSet, sortField = false, sortDirection = false, li
         }
       }
     },
-    {
+  ];
+
+  if (display) {
+    aggregate.push({
       $match: {
         $and: [
           {'data.cryptohub-name.value': {$exists: true, $ne: null}},
           {'data.cryptohub-symbol.value': {$exists: true, $ne: null}}
         ]
       }
-    }
-  ];
+    });
+  }
 
   if (sortField) {
     sortDirection = (sortDirection === 1 || sortDirection === -1) && -1;
@@ -140,7 +143,7 @@ function getFieldSet(columns, columnDependencies) {
  * TODO: Remove column / fields hack and implement correctly
  *
  */
-export default async function getRows(columns, sort, limit, fields) {
+export default async function getRows(columns, sort, limit, fields, display = true) {
 
   let data;
   let output;
@@ -165,14 +168,14 @@ export default async function getRows(columns, sort, limit, fields) {
   if (!isNaN(limit)) {
 
     startTime = +new Date();
-    output = await getRecords(fieldSet, sortField, sortDirection, limit);
+    output = await getRecords(fieldSet, sortField, sortDirection, limit, display);
     logger.info(`db queryTime-rows first x: ${+new Date() - startTime}`);
 
   }
   else {
 
     startTime = +new Date();
-    output = await getRecords(fieldSet, sortField, sortDirection);
+    output = await getRecords(fieldSet, sortField, sortDirection, false, display);
     logger.info(`db queryTime-rows: ${+new Date() - startTime}`);
 
   }

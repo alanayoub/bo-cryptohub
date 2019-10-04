@@ -69,7 +69,12 @@ window.bo.inst.state.init().then(state => {
 
     if (!grid) throw new Error('Cant find grid');
 
-    bo.inst.socket.on('data', dataEmitHandler);
+    bo.inst.socket.on('rows-full', data => {
+      dataEmitHandler('rows-full', data);
+    });
+    bo.inst.socket.on('rows-update', data => {
+      dataEmitHandler('rows-update', data);
+    });
     bo.inst.socket.on('store', storeEmitHandler);
 
     window.bo.func.updated('now');

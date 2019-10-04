@@ -12,11 +12,19 @@ const colLib = flatten(columnLibrary);
  * @param {Object} data * @return void
  *
  */
-export default function dataEmitHandler(data) {
+export default function dataEmitHandler(event, data) {
 
   window.bo.func.updated('now');
 
-  const newSocketData = JSON.parse(data).data;
+  let newSocketData = JSON.parse(data).data;
+  const arrayData = [];
+  for (let [id, obj] of Object.entries(newSocketData)) {
+    obj.id = id;
+    arrayData.push(obj);
+  }
+
+  newSocketData = arrayData;
+  // data = arrayData;
 
   bo.inst.state.get().then(v => {
 
@@ -24,6 +32,7 @@ export default function dataEmitHandler(data) {
       return new Function('return ' + fn)();
     }
 
+    // Updates new socket data with custom changes
     for (const column of v.columns) {
 
       const id = column.id;
@@ -60,7 +69,7 @@ export default function dataEmitHandler(data) {
         });
         // ["cmc-listings-quote_USD_market_cap", "cc-social-CodeRepository_Points"]
 
-        for (const item of Object.values(newSocketData)) {
+        for (const item of newSocketData) {
 
           const calcResults = {};
           const arr = calcArr.slice();
@@ -100,24 +109,16 @@ export default function dataEmitHandler(data) {
 
     }
 
-    if (!window.refs.workingData) {
-      // init workingData
-      window.refs.workingData = newSocketData;
+    if (event === 'rows-full') {
+      window.refs.rowData = newSocketData;
+      window.bo.agOptions.api.setRowData(window.refs.rowData);
     }
-    else {
-      // merge new data with workingData
-      for (const [id, val] of Object.entries(newSocketData)) {
-        if (!window.refs.workingData[id]) {
-          window.refs.workingData[id] = val;
-        }
-        else {
-          Object.assign(window.refs.workingData[id], val);
-        }
-      }
+    else if (event === 'rows-update') {
+      window.bo.agOptions.api.batchUpdateRowData({update: newSocketData}, () => {
+        // console.log('updates happened');
+      });
     }
 
-    window.refs.rowData = convertWorkingDataToRowData(window.refs.workingData);
-    window.bo.agOptions.api.setRowData(window.refs.rowData);
     window.bo.inst.toolbarView.update(window.refs.rowData);
 
   });

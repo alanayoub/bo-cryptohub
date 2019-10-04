@@ -48,18 +48,16 @@ export default class Toolbar {
       else nc++;
     }
 
-    const total = up + dn + nc;
-    const placeholder = '-';
+    // Not including items with no change as that would include items with very sparse datasets that update very irregularly
+    const total = up + dn;
+    const placeholder = '--';
     let upPer = Math.floor(up / (total / 100));
     let dnPer = Math.floor(dn / (total / 100));
-    let ncPer = Math.floor(nc / (total / 100));
     upPer = isNaN(upPer) ? placeholder : upPer;
     dnPer = isNaN(upPer) ? placeholder : dnPer;
-    ncPer = isNaN(upPer) ? placeholder : ncPer;
     model.upPer = `${upPer}%`;
     model.dnPer = `${dnPer}%`;
-    model.ncPer = `${ncPer}%`;
-    model.total = `${total}`;
+    model.total = `${data.length}`;
 
     this.gui.innerHTML = initPug['toolbar'](model);
 

@@ -127,7 +127,7 @@ async function doEmit(changes) {
       //
       if (Object.keys(data).length) {
         const output = JSON.stringify({data, type: 'dbDiff'});
-        socket.emit('data', output);
+        socket.emit('rows-update', output);
       }
 
     }

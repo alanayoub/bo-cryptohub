@@ -21,16 +21,8 @@
     color: #b70808;
   }
 
-  .ch-nc {
-    color: #000;
-    .ch-symbol {
-      padding: 0 0 0 4px;
-    }
-  }
-
   .ch-up,
-  .ch-dn,
-  .ch-nc {
+  .ch-dn {
     padding: 4px;
     margin-right: 0;
   }

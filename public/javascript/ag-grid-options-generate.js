@@ -52,11 +52,8 @@ export default async function generateAgOptions() {
     params.api.setFilterModel(filterModel);
 
     window.bo.func.updated('now');
-    window.refs.workingData = null;
     window.refs.rowData = null;
     if (window.refs.rowData) params.api.setRowData(window.refs.rowData);
-
-    window.bo.inst.toolbarView.update(window.refs.workingData);
 
   };
 

@@ -57,6 +57,7 @@ const fieldTypeMap = {
   //
   'cryptohub-name': 'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-symbol': 'String|Number|Boolean|Null|Undefined|Array',
+  'cryptohub-coin-image-url': 'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-price-usd': 'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-price-history': 'String|Number|Boolean|Null|Undefined|Array',
   'cryptohub-exchanges': 'String|Number|Boolean|Null|Undefined',
@@ -632,7 +633,7 @@ const columnDependencies = {
   nameCC: [
     'cc-total-vol-full-FullName',
     'cc-coinlist-Symbol',
-    'cc-total-vol-full-ImageUrl'
+    'cryptohub-coin-image-url',
   ],
   priceUSDCC: [
     'cc-total-vol-full-PRICE'

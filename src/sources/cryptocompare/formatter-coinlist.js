@@ -95,7 +95,11 @@ export default async function formatterCryptocompareSectionCoinlist(data, timest
       [`${prefix}TotalCoinsMined`]: value.TotalCoinsMined,
       [`${prefix}Url`]: value.Url
     };
+
+    //
+    // TODO: move to binaryoverdose
     // Add built on if available
+    //
     let builtOn;
     {
       const builtOnBid = bidMap[value.BuiltOn];
@@ -105,6 +109,7 @@ export default async function formatterCryptocompareSectionCoinlist(data, timest
     if (builtOn) {
       result[bid][`${prefix}BuiltOn`] = builtOn;
     }
+
   }
 
   await perSecondSave(result, timestamp);

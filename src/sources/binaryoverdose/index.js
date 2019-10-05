@@ -4,6 +4,8 @@ import logger from '../../logger';
 import { getBtc, getRows } from '../../db/query';
 import { perSecondSave } from '../../db/save';
 
+import saveRemoteImage from '../../utils/save-remote-image.js';
+
 const config = {
   cacheFor: 0,
   bootstrap: cache => {return {}},
@@ -93,7 +95,8 @@ const custom = {
       'm-assets-symbol',
       'cmc-listings-quote_USD_price',
       'm-assets-metrics-market_data_price_usd',
-      'm-assets-name'
+      'm-assets-name',
+      'cc-coinlist-ImageUrl'
     ];
 
     //
@@ -111,7 +114,8 @@ const custom = {
       'cryptohub-cc-circulating-percent-total',
       'cryptohub-name',
       'cryptohub-symbol',
-      'cryptohub-price-usd'
+      'cryptohub-price-usd',
+      'cryptohub-coin-image-url'
     ];
     const data = await getRows(null, false, false, [...proxyFields, ...newFields], false);
     if (!data) {
@@ -127,11 +131,76 @@ const custom = {
     let key;
     let item;
     let fields;
+
+    // TODO: move
+    const fs = require('fs-extra');
+    const sharp = require('sharp');
+    const { to } = require('await-to-js');
+    const { join } = require('path');
+    const url = require('url');
     for ([key, item] of Object.entries(data)) {
 
       ref = {
         'cc-total-vol-full-Id': gnp(item, 'cc-total-vol-full-Id.value') // Required by getRows
       };
+
+      //
+      // Create:
+      // cryptohub-coin-image-url
+      //
+      {
+        let remotePath;
+        let publicPath;
+        let localDirOriginal;
+        let localPathOriginal;
+        let localDirGenerated;
+        let localPathGenerated;
+        {
+          const remoteImageUrl = gnp(item, 'cc-coinlist-ImageUrl.value');
+          if (!remoteImageUrl) continue;
+          remotePath = url.resolve('https://www.cryptocompare.com/', remoteImageUrl);
+          const remoteFileName = remotePath.replace(/.*\/(.*)$/, '$1');
+          const name = remoteFileName.split('.')[0];
+          const localFileName = `${name}.webp`;
+          const publicDir = join(__dirname, '../../../dist/public/images/');
+          const downloadDir = join(__dirname, '../../../graphics/cryptocompare/');
+          publicPath = join('/images/generated/', key, localFileName);
+          localDirOriginal = join(downloadDir, key);
+          localPathOriginal = join(downloadDir, key, remoteFileName);
+          localDirGenerated = join(publicDir, '/generated/', key);
+          localPathGenerated = join(publicDir, '/generated/', key, localFileName);
+        }
+
+        const fileExists = await fs.pathExists(localPathGenerated);
+        if (!fileExists) {
+
+          // Download original file
+          await fs.ensureDir(localDirOriginal);
+          const downloaded = await saveRemoteImage(remotePath, localPathOriginal);
+
+          // If successfull download then resize image
+          if (!downloaded.error) {
+
+            await fs.ensureDir(localDirGenerated);
+            const [error, resp] = await to(sharp(localPathOriginal)
+              .resize(24)
+              .webp({
+                quality: 90
+              })
+              .toFile(localPathGenerated));
+
+            if (error) {
+              logger.error(`sources/binaryoverdose/index.js: failed to create webp image for ${ccImageUrl}`);
+              continue;
+            }
+
+          }
+
+        }
+
+        ref['cryptohub-coin-image-url'] = publicPath;
+
+      }
 
       //
       // Create:

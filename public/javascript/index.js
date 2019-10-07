@@ -57,7 +57,7 @@ window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);
 window.bo.inst.state.init().then(state => {
 
-  const columns = state.columns.filter(v => !/^c-\d{1,4}$/.test(v.id)).map(v => v.id);
+  const columns = state.columns.filter(v => !/^c-\d{1,4}$/.test(v.id)).map(v => v.id).join(',');
   const sort = state.sort;
   const emitData = JSON.stringify({columns, sort});
   window.bo.inst.socket = io({query: {cols: emitData} });

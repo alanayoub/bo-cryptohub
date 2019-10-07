@@ -82,7 +82,7 @@ async function doEmit(changes) {
       // Get socket and required fields
       socket = sockets[socketId];
       const cols = JSON.parse(socket.handshake.query.cols);
-      const columns = cols.columns;
+      const columns = cols.columns.split(',');
       fields = [];
       columns.forEach(v => {
         fields = fields.concat(v, columnDependencies[v]);

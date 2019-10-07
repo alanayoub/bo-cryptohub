@@ -62,6 +62,7 @@ export default async function startServer(config) {
 
       socket.on('cols', async data => {
 
+        socket.handshake.query.cols = data;
         const cols = JSON.parse(data);
         const sort = cols.sort;
         const columns = cols.columns.split(',');

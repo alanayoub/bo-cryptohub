@@ -11,7 +11,7 @@ export default {
 
     const cols = JSON.parse(socket.handshake.query.cols);
     const sort = cols.sort;
-    const columns = cols.columns;
+    const columns = cols.columns.split(',');
     getRows(columns, sort).then(results => {
       const resultsStr = JSON.stringify({data: results, type: 'dbDiff'});
       socket.emit('rows-full', resultsStr);

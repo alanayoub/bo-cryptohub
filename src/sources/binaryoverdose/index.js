@@ -162,6 +162,7 @@ const custom = {
           const remoteFileName = remotePath.replace(/.*\/(.*)$/, '$1');
           const name = remoteFileName.split('.')[0];
           const localFileName = `${name}.webp`;
+          // NOTE: This is not the same folder on the server
           const publicDir = join(__dirname, '../../../dist/public/images/');
           const downloadDir = join(__dirname, '../../../graphics/cryptocompare/');
           publicPath = join('/images/generated/', key, localFileName);
@@ -229,6 +230,13 @@ const custom = {
         }
       }
 
+      const ccName = ref['cryptohub-name'];
+      const ccSymbol = ref['cryptohub-symbol'];
+      let isBitcoin = false;
+      if (ccName === 'Bitcoin' && ccSymbol === 'BTC') {
+        isBitcoin = true;
+      }
+
       //
       // Create:
       //   cc-total-vol-full-PRICE-cryptohub-BTC
@@ -238,7 +246,15 @@ const custom = {
       if (item['cc-total-vol-full-PRICE']) {
 
         // BTC copy of cc PRICE
-        ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = Math.ceil(1 / (btcPrice / gnp(item, 'cc-total-vol-full-PRICE.value')) * 100000000); // sats
+        if (isBitcoin) {
+          // Skipping calculation for Bitcoin
+          // Its easiery to fix the sats value for BTC as if the Bitcoin price has changed inbetween the two DB calls
+          // above then we would have 2 different Bitcoin prices and our calculation would be incorrect
+          ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = 100000000;
+        }
+        else {
+          ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = Math.ceil(1 / (btcPrice / gnp(item, 'cc-total-vol-full-PRICE.value')) * 100000000); // sats
+        }
         // ref['cc-total-vol-full-PRICE-cryptohub-BTC'] = 1 / (btcPrice / item['cc-total-vol-full-PRICE']);
 
         if (item['cc-total-vol-full-TOTALVOLUME24HTO']) {

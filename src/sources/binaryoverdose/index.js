@@ -9,7 +9,7 @@ import saveRemoteImage from '../../utils/save-remote-image.js';
 const config = {
   cacheFor: 0,
   bootstrap: cache => {return {}},
-  rateLimitDelayMs: 1000 * 10 * 60 * 24
+  rateLimitDelayMs: 1000 * 60 * 5
 };
 
 /**

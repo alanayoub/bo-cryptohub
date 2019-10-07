@@ -807,6 +807,8 @@ const columnDependencies = {
  */
 const settings = {
 
+  isProd,
+
   coinmarketcapApiKey,
   cryptocompareApiKey,
 

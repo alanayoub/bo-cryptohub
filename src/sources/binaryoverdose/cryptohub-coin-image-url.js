@@ -5,6 +5,7 @@ import { to } from 'await-to-js';
 import { join } from 'path';
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
+import logger from '../../logger';
 import settings from '../../settings';
 import saveRemoteImage from '../../utils/save-remote-image.js';
 

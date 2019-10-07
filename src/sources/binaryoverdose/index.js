@@ -139,7 +139,7 @@ const custom = {
 
       const remoteImageUrl = gnp(item, 'cc-coinlist-ImageUrl.value');
       if (remoteImageUrl) {
-        const url = cryptohubCoinImageUrl(remoteImageUrl, key);
+        const url = await cryptohubCoinImageUrl(remoteImageUrl, key);
         if (url) {
           ref['cryptohub-coin-image-url'] = url;
         }

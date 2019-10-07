@@ -23,8 +23,11 @@ import DataTable                          from 'bo-datatable';
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 
 // CryptoHub
+import logger                             from './logger';
 import settings                           from './settings';
 import startServer                        from './server';
+import getRows                            from './db/query/rows';
+import { mapSave }                        from './db/save';
 
 // Sources
 import binaryoverdose                     from './sources/binaryoverdose';
@@ -36,11 +39,6 @@ import xe                                 from './sources/xe';
 // Outputs
 import data                               from './outputs/data';
 import store                              from './outputs/store';
-
-import { mapSave }                        from './db/save';
-import getRows                            from './db/query/rows';
-
-const logger = require('./logger');
 
 try {
 

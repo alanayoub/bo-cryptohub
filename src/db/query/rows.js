@@ -7,24 +7,7 @@ const idsList = Object.keys(fieldTypeMap);
 
 /**
  *
- * NOTE: Not being used. Double check and delete
- *
- */
-// async function getIds(sortField, sortDirection, limit) {
-
-//   const data = await PerDayModel
-//     .find({field: sortField})
-//     .sort({'realtime.1.1': sortDirection})
-//     .limit(limit)
-//     .lean();
-
-//   const ids = data.map(v => v.id);
-//   return ids;
-
-// }
-
-/**
- *
+ * Get Records
  *
  */
 async function getRecords(fieldSet, sortField = false, sortDirection = false, limit = false, display = true) {

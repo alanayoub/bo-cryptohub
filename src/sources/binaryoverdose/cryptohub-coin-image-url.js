@@ -78,7 +78,7 @@ export default async function cryptohubCoinImageUrl(remoteImageUrl, bid) {
         .toFile(localPathGenerated));
 
       if (error) {
-        logger.error(`cryptohub-coin-image-url.js: failed to create webp image for ${ccImageUrl}`);
+        logger.error(`cryptohub-coin-image-url.js: failed to create webp image for ${remoteImageUrl}`);
         return
       }
 

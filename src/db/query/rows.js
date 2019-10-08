@@ -148,11 +148,11 @@ export default async function getRows(columns, sort, limit, fields, display = tr
   }
 
   let startTime;
-  if (!isNaN(limit)) {
+  if (typeof limit === 'number') {
 
     startTime = +new Date();
     output = await getRecords(fieldSet, sortField, sortDirection, limit, display);
-    logger.info(`db queryTime-rows first x: ${+new Date() - startTime}`);
+    logger.info(`db queryTime-rows first ${limit}: ${+new Date() - startTime}`);
 
   }
   else {

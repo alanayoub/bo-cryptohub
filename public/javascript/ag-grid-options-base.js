@@ -150,7 +150,6 @@ export default {
           const $cell = obj[row];
           window.bo.clas.CellInteractions.close({$cell, row, field});
         }
-
       }
     }
   },
@@ -166,6 +165,9 @@ export default {
    */
   onVirtualRowRemoved(params) {
     if (params.type === 'virtualRowRemoved') {
+
+      window.bo.inst.cellInteractions.mouseOut(params);
+
       const removedRowIndex = params.rowIndex;
       const openCells = window.bo.opts.openCells;
       for (let [column, valueArray] of Object.entries(openCells)) {

@@ -1,7 +1,6 @@
 'use strict'
 
 // Binary Overdose Projects
-import { getRandomInt }                   from '../libs/bo-utils-client';
 import { partialApplication }             from '../libs/bo-utils-client';
 import { htmlToggleClass }                from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
@@ -85,45 +84,33 @@ export default class CellInteractions {
   static open(params) {
 
     const $cell = params.event.srcElement.closest('.ag-cell');
-    const field = params.colDef.field;
+    const colId = params.colDef.colId;
     const tippy = $cell._tippy;
+    const currencyColumns = [
+      'priceUSDCC',
+      'priceBTCCC',
+      'priceUSDMessari',
+      'priceBTCMessari'
+    ];
     if (!tippy) return;
 
-    switch (field) {
-
-      case 'cc-total-vol-full-PRICE':
-        $cell.dataset.chOpen = true;
-        tippy.set({
-          hideOnClick: 'false',
-        });
-        cellOnClickTradingview(params);
-        $cell.$popDivTippy = $cell._tippy;
-        window.bo.func.openCells.addOpen(params);
-        break;
-
-      case 'cryptohub-price-btc':
-        $cell.dataset.chOpen = true;
-        tippy.set({
-          hideOnClick: 'false',
-        });
-        cellOnClickTradingview(params);
-        $cell.$popDivTippy = $cell._tippy;
-        window.bo.func.openCells.addOpen(params);
-        break;
-
-      case 'cryptohub-numberOfExchanges':
-        $cell.dataset.chOpen = true;
-        tippy.set({
-          hideOnClick: 'false',
-        });
-        cellOnClickExchanges(params);
-        $cell.$popDivTippy = $cell._tippy;
-        window.bo.func.openCells.addOpen(params);
-        break;
-
-      default:
-        // do nothing
-
+    if (currencyColumns.includes(colId)) {
+      $cell.dataset.chOpen = true;
+      tippy.set({
+        hideOnClick: 'false',
+      });
+      cellOnClickTradingview(params);
+      $cell.$popDivTippy = $cell._tippy;
+      window.bo.func.openCells.addOpen(params);
+    }
+    else if (colId === 'numberOfExchanges') {
+      $cell.dataset.chOpen = true;
+      tippy.set({
+        hideOnClick: 'false',
+      });
+      cellOnClickExchanges(params);
+      $cell.$popDivTippy = $cell._tippy;
+      window.bo.func.openCells.addOpen(params);
     }
 
   }
@@ -207,8 +194,9 @@ export default class CellInteractions {
    */
   mouseOut(params) {
 
-    const typeArr = gnp(params, 'colDef.type') || [];
-    if (!typeArr.includes('cryptohubHover')) {
+    if (!params.event) {
+      const $tippy = document.querySelectorAll(`.ch-tippy-cell-hover-${params.data.id}`)[0];
+      if ($tippy) $tippy.remove();
       return;
     }
 
@@ -242,7 +230,7 @@ export default class CellInteractions {
 
     if (toIsCell && !toIsOpen) {
 
-      const id = getRandomInt();
+      const id = params.data.id;
       const $cell = params.event.srcElement.closest('.ag-cell');
       const content = initPug['ch-tippy-cell-hover']({id});
 

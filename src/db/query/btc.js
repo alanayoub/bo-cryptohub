@@ -17,7 +17,7 @@ export default async function getBTC() {
     ccname: 'bitcoin',
     ccsymbol: 'btc'
   }
-  const btc = await BidModel.findOne(query).lean();
+  const btc = await BidModel.findOne(bidQuery).lean();
   const bid = btc.bid;
 
   // Get Bitcoin price

@@ -104,7 +104,6 @@ export default class State {
 
   }
 
-
   /**
    *
    * TODO: Sanitise
@@ -193,11 +192,17 @@ export default class State {
   async getFilterModel() {
 
     const state = await this.get();
+
+    if (!state) {
+      return null;
+    }
+
     let model = state.columns
-      .reduce((a, v) => {
-        if (v.filter) a[v.id] = v.filter;
-        return a;
-      }, {});
+        .reduce((a, v) => {
+          if (v.filter) a[v.id] = v.filter;
+          return a;
+        }, {});
+
     model = isEmptyObject(model) ? null : model;
 
     return model;

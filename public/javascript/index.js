@@ -86,6 +86,9 @@ window.bo.inst.state.init().then(state => {
       if (event.state) {
         bo.inst.state.update(event.state);
       }
+      else {
+        bo.inst.state.set(defaultConfig);
+      }
     }
 
   });

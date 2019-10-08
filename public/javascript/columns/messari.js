@@ -328,12 +328,9 @@ export default {
     ],
     cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
+      inputCurrency: 'BTC',
       currency: 'SAT',
       symbolTo: 'BTC'
-    },
-    valueFormatter(params) {
-      if (params.value) params.value.value *= 100000000;
-      return params;
     },
     onCellClicked,
   },

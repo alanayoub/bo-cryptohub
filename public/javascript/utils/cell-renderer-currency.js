@@ -28,30 +28,29 @@ export default function cellRendererCurrency(refs, params) {
   let result = ch.emptyCellValue;
   if (!params.value || !params.value.value) return result;
 
+  let newValue = gnp(params, 'value.value');
+  let oldValue = gnp(params, `value.lastValue`);
+
+  if (!isNumber(oldValue) || !isNumber(newValue)) {
+    return result;
+  }
+
   const { colDef, data } = params;
   const html = document.createElement('div');
 
-  const newValue = gnp(params, 'value.value');
-  const oldValue = gnp(params, `value.lastValue`);
-  // const oldValue = gnp(params, `data.${params.colDef.field}.lastValue`);
+  if (params.inputCurrency === 'BTC' && params.currency === 'SAT') {
+    newValue *= 100000000;
+    oldValue *= 100000000;
+  }
 
   // format number
-  let newVal;
-  let oldVal;
   const digits = newValue >= 1 ? 2 : 6;
-  if (isNumber(newValue)) newVal = formatNumberAsCurrency(newValue, params.currency);
-  if (isNumber(oldValue)) oldVal = formatNumberAsCurrency(oldValue, params.currency);
+  const newVal = formatNumberAsCurrency(newValue, params.currency);
+  const oldVal = formatNumberAsCurrency(oldValue, params.currency);
 
-  if (isNumber(newValue) && !isNumber(oldValue)) {
-    result = newVal;
-  }
-  else {
-
-    let { start, end } = diffNumericStrings(oldVal, newVal);
-    const cssClass = getCssClass(oldVal, newVal);
-    result = `<span>${start}</span><span class="${cssClass}">${end}</span>`;
-
-  }
+  let { start, end } = diffNumericStrings(oldVal, newVal);
+  const cssClass = getCssClass(oldVal, newVal);
+  result = `<span>${start}</span><span class="${cssClass}">${end}</span>`;
 
   html.innerHTML = result;
 

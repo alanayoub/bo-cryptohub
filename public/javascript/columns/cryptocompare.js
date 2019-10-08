@@ -100,6 +100,7 @@ export default {
     ],
     cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
+      inputCurrency: 'SAT',
       currency: 'SAT',
       symbolTo: 'BTC'
     },

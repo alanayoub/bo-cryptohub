@@ -901,6 +901,102 @@ const columnDependencies = {
   ],
   tokenSaleROISinceSaleETHMessari: [
     'm-assets-metrics-token_sale_stats_roi_since_sale_eth_percent',
+  ],
+  generalNameCC: [
+    'cc-social-General_Name',
+  ],
+  generalCoinNameCC: [
+    'cc-social-General_CoinName',
+  ],
+  generalTypeCC: [
+    'cc-social-General_Type',
+  ],
+  cryptocompareFollowersCC: [
+    'cc-social-CryptoCompare_Followers',
+  ],
+  cryptocomparePostsCC: [
+    'cc-social-CryptoCompare_Posts',
+  ],
+  cryptocomparePointsCC: [
+    'cc-social-CryptoCompare_Points',
+  ],
+  cryptocompareCommentsCC: [
+    'cc-social-CryptoCompare_Comments',
+  ],
+  twitterAccountCreationCC: [
+    'cc-social-Twitter_account_creation',
+  ],
+  twitterFollowersCC: [
+    'cc-social-Twitter_followers',
+  ],
+  twitterStatusesCC: [
+    'cc-social-Twitter_statuses',
+  ],
+  twitterLinkCC: [
+    'cc-social-Twitter_link',
+  ],
+  twitterListsCC: [
+    'cc-social-Twitter_lists',
+  ],
+  twitterFavouritesCC: [
+    'cc-social-Twitter_favourites',
+  ],
+  twitterFollowingCC: [
+    'cc-social-Twitter_following',
+  ],
+  twitterNameCC: [
+    'cc-social-Twitter_name',
+  ],
+  twitterPointsCC: [
+    'cc-social-Twitter_Points',
+  ],
+  redditPostsPerHourCC: [
+    'cc-social-Reddit_posts_per_hour',
+  ],
+  redditCommentsPerHourCC: [
+    'cc-social-Reddit_comments_per_hour',
+  ],
+  redditCommentsPerDayCC: [
+    'cc-social-Reddit_comments_per_day',
+  ],
+  redditActiveUsersCC: [
+    'cc-social-Reddit_active_users',
+  ],
+  redditLinkCC: [
+    'cc-social-Reddit_link',
+  ],
+  redditCommunityCreationCC: [
+    'cc-social-Reddit_community_creation',
+  ],
+  redditPostsPerDayCC: [
+    'cc-social-Reddit_posts_per_day',
+  ],
+  redditNameCC: [
+    'cc-social-Reddit_name',
+  ],
+  redditSubscribersCC: [
+    'cc-social-token_sale_stats_roi_since_sale_eth_percent',
+  ],
+  redditPointsCC: [
+    'cc-social-Reddit_Points',
+  ],
+  facebookTalkingAboutCC: [
+    'cc-social-Facebook_talking_about',
+  ],
+  facebookIsClosedCC: [
+    'cc-social-Facebook_is_closed',
+  ],
+  facebookLikesCC: [
+    'cc-social-Facebook_likes',
+  ],
+  facebookNameCC: [
+    'cc-social-Facebook_name',
+  ],
+  facebookLinkCC: [
+    'cc-social-Facebook_link',
+  ],
+  facebookPointsCC: [
+    'cc-social-Facebook_Points',
   ]
 }
 

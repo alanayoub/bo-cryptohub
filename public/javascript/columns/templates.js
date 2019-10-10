@@ -108,11 +108,29 @@ const text = {
   },
 };
 
+const url = {
+  colId: null,
+  field: null,
+  headerName: null,
+  headerTooltip: null,
+  headerClass: 'CH-col',
+  lockPinned: true,
+  width: 120,
+  type: [
+    'cryptohubDefaults',
+    'cryptohubText',
+  ],
+  cellRenderer(params) {
+    return params.value && params.value.value || ch.emptyCellValue;
+  },
+};
+
 export {
   array,
   currency,
   date,
   number,
   percent,
-  text
+  text,
+  url
 }

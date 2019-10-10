@@ -8,6 +8,8 @@ import cellRendererCurrency from '../utils/cell-renderer-currency.js';
 
 import onCellClicked from '../utils/on-cell-clicked.js';
 
+import { number, currency, percent, date } from './templates';
+
 export default {
 
   //
@@ -437,37 +439,474 @@ export default {
   //
   // NVT
   //
-  nvtMessari: {
+  nvtMessari: Object.assign({}, number, {
     colId: 'nvtMessari',
     field: 'm-assets-metrics-blockchain_stats_24_hours_nvt',
     headerName: 'NVT',
-    headerClass: 'CH-col',
     headerTooltip: 'NVT Ratio (Network Value to Transactions Ratio) is the ratio of the Market Cap divided by the volume transmitted by the blockchain. Simplistically it could be seen as analogus to the PE Ratio used in equity markets. When an assets NVT is high, it indicates that its network valuation is outstripping the value being transmitted through its blockchain.  \n\nData Source: Messari',
-    lockPinned: true,
     width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: cellRendererNumber,
-  },
+  }),
 
   //
   // Adjusted NVT
   //
-  adjustedNvtMessari: {
+  adjustedNvtMessari: Object.assign({}, number, {
     colId: 'adjustedNvtMessari',
     field: 'm-assets-metrics-blockchain_stats_24_hours_adjusted_nvt',
     headerName: 'NVT (Adjusted)',
-    headerClass: 'CH-col',
     headerTooltip: 'Same as NVT but uses the adjusted transaction volume figures calculated by Coinmetrics.io\n\nData Source: Messari',
-    lockPinned: true,
     width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: cellRendererNumber,
-  },
+  }),
+
+  //
+  // Sharp Ratio Last 30 Days
+  //
+  sharpRatioLast30DaysMessari: Object.assign({}, number, {
+    colId: 'sharpRatioLast30DaysMessari',
+    field: 'm-assets-metrics-risk_metrics_sharpe_ratios_last_30_days',
+    headerName: 'Sharp Ratio 30D',
+    headerTooltip: 'Sharp Ratio Last 30 Days',
+    width: 120,
+  }),
+
+  //
+  // Sharp Ratio Last 90 Days
+  //
+  sharpRatioLast90DaysMessari: Object.assign({}, number, {
+    colId: 'sharpRatioLast90DaysMessari',
+    field: 'm-assets-metrics-risk_metrics_sharpe_ratios_last_90_days',
+    headerName: 'Sharp Ratio 90D',
+    headerTooltip: 'Sharp Ratio Last 90 Days',
+    width: 120,
+  }),
+
+  //
+  // Sharp Ratio Last 1 Year
+  //
+  sharpRatioLast1YearMessari: Object.assign({}, number, {
+    colId: 'sharpRatioLast1YearMessari',
+    field: 'm-assets-metrics-risk_metrics_sharpe_ratios_last_1_year',
+    headerName: 'Sharp Ratio 1Y',
+    headerTooltip: 'Sharp Ratio Last 1 Year',
+    width: 120,
+  }),
+
+  //
+  // Sharp Ratio Last 3 Year
+  //
+  sharpRatioLast3YearsMessari: Object.assign({}, number, {
+    colId: 'sharpRatioLast3YearsMessari',
+    field: 'm-assets-metrics-risk_metrics_sharpe_ratios_last_3_years',
+    headerName: 'Sharp Ratio 3Y',
+    headerTooltip: 'Sharp Ratio Last 3 Years',
+    width: 120,
+  }),
+
+  //
+  // Volatility Last 30 Days
+  //
+  volatilityLast30DaysMessari: Object.assign({}, number, {
+    colId: 'volatilityLast30DaysMessari',
+    field: 'm-assets-metrics-risk_metrics_volatility_stats_volatility_last_30_days',
+    headerName: 'Volatility 30D',
+    headerTooltip: 'Volatility Last 30 Days',
+    width: 120,
+  }),
+
+  //
+  // Volatility Last 90 Days
+  //
+  volatilityLast90DaysMessari: Object.assign({}, number, {
+    colId: 'volatilityLast90DaysMessari',
+    field: 'm-assets-metrics-risk_metrics_volatility_stats_volatility_last_90_days',
+    headerName: 'Volatility 90D',
+    headerTooltip: 'Volatility Last 90 Days',
+    width: 120,
+  }),
+
+  //
+  // Volatility Last 1 Year
+  //
+  volatilityLast1YearMessari: Object.assign({}, number, {
+    colId: 'volatilityLast1YearMessari',
+    field: 'm-assets-metrics-risk_metrics_volatility_stats_volatility_last_1_year',
+    headerName: 'Volatility 1Y',
+    headerTooltip: 'Volatility Last 1 Year',
+    width: 120,
+  }),
+
+  //
+  // Volatility Last 3 Years
+  //
+  volatilityLast3YearsMessari: Object.assign({}, number, {
+    colId: 'volatilityLast3YearsMessari',
+    field: 'm-assets-metrics-risk_metrics_volatility_stats_volatility_last_3_years',
+    headerName: 'Volatility 3Y',
+    headerTooltip: 'Volatility Last 3 Years',
+    width: 120,
+  }),
+
+  //
+  // Developer Activity Stars
+  //
+  developerActivityStarsMessari: Object.assign({}, number, {
+    colId: 'developerActivityStarsMessari',
+    field: 'm-assets-metrics-developer_activity_stars',
+    headerName: 'Stars (Dev)',
+    headerTooltip: 'Developer Activity Stars',
+    width: 120,
+  }),
+
+  //
+  // Developer Activity Watchers
+  //
+  developerActivityWatchersMessari: Object.assign({}, number, {
+    colId: 'developerActivityWatchersMessari',
+    field: 'm-assets-metrics-developer_activity_watchers',
+    headerName: 'Watchers (Dev)',
+    headerTooltip: 'Developer Activity Watchers',
+    width: 120,
+  }),
+
+  //
+  // Developer Activity Commits Last 3 Months
+  //
+  developerActivityCommitsLast3MonthsMessari: Object.assign({}, number, {
+    colId: 'developerActivityCommitsLast3MonthsMessari',
+    field: 'm-assets-metrics-developer_activity_commits_last_3_months',
+    headerName: 'Commits 3M',
+    headerTooltip: 'Developer Activity Commits Last 3 Months',
+    width: 120,
+  }),
+
+  //
+  // Developer Activity CommitsLast1Year
+  //
+  developerActivityCommitsLast1YearMessari: Object.assign({}, number, {
+    colId: 'developerActivityCommitsLast1YearMessari',
+    field: 'm-assets-metrics-developer_activity_commits_last_1_year',
+    headerName: 'Commits 1Y',
+    headerTooltip: 'Developer Activity Commits Last 1 Year',
+    width: 120,
+  }),
+
+  //
+  // Developer Activity Lines Added Last 3 Months
+  //
+  developerActivityLinesAddedLast3MonthsMessari: Object.assign({}, number, {
+    colId: 'developerActivityLinesAddedLast3MonthsMessari',
+    field: 'm-assets-metrics-developer_activity_lines_added_last_3_months',
+    headerName: 'LOC Added 3M',
+    headerTooltip: 'Developer Activity Lines Of Code Added Last 3 Months',
+    width: 120,
+  }),
+
+  //
+  // Developer Activity Lines Added Last 1 Year
+  //
+  developerActivityLinesAddedLast1YearMessari: Object.assign({}, number, {
+    colId: 'developerActivityLinesAddedLast1YearMessari',
+    field: 'm-assets-metrics-developer_activity_lines_added_last_1_year',
+    headerName: 'LOC Added 1Y',
+    headerTooltip: 'Developer Activity Lines Of Code Added Last 1 Year',
+    width: 120,
+  }),
+
+  //
+  // Developer Activity Lines Deleted Last 3 Months
+  //
+  developerActivityLinesDeletedLast3MonthsMessari: Object.assign({}, number, {
+    colId: 'developerActivityLinesDeletedLast3MonthsMessari',
+    field: 'm-assets-metrics-developer_activity_lines_deleted_last_3_months',
+    headerName: 'LOC Deleted 3M',
+    headerTooltip: 'Developer Activity Lines Of Code Deleted Last 3 Months',
+    width: 120,
+  }),
+
+  //
+  // Developer Activity Lines Deleted Last 1 Year
+  //
+  developerActivityLinesDeletedLast1YearMessari: Object.assign({}, number, {
+    colId: 'developerActivityLinesDeletedLast1YearMessari',
+    field: 'm-assets-metrics-developer_activity_lines_deleted_last_1_year',
+    headerName: 'LOC Deleted 1Y',
+    headerTooltip: 'Developer Activity Lines Of Code Deleted Last 1 Year',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Transaction Volume
+  //
+  blockchainStats24HoursTransactionVolumeMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursTransactionVolumeMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_transaction_volume',
+    headerName: 'Tx Vol',
+    headerTooltip: 'Blockchain 24 Hour Transaction Volume',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Adjusted Transaction Volume
+  //
+  blockchainStats24HoursAdjustedTransactionVolumeMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursAdjustedTransactionVolumeMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_adjusted_transaction_volume',
+    headerName: 'Tx Vol Adj',
+    headerTooltip: 'Blockchain 24 Hour Adjusted Transaction Volume',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Sum Of Fees
+  //
+  blockchainStats24HoursSumOfFeesMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursSumOfFeesMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_sum_of_fees',
+    headerName: 'Sum Of Fees',
+    headerTooltip: 'Blockchain 24 Hour Sum Of Fees',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Median Transaction Value
+  //
+  blockchainStats24HoursMedianTxValueMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursMedianTxValueMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_median_tx_value',
+    headerName: 'Median Tx Vol',
+    headerTooltip: 'Blockchain 24 Hour Median Transaction Value',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Median Transaction Fee
+  //
+  blockchainStats24HoursMedianTxFeeMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursMedianTxFeeMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_median_tx_fee',
+    headerName: 'Median Tx Fee',
+    headerTooltip: 'Blockchain 24 Hour Median Transaction Fee',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Transaction Volume
+  //
+  blockchainStats24HoursCountOfActiveAddressesMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursCountOfActiveAddressesMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_count_of_active_addresses',
+    headerName: 'Active Addressese',
+    headerTooltip: 'Blockchain 24 Hour Count Of Active Addressese',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Transaction Volume
+  //
+  blockchainStats24HoursCountOfTxMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursCountOfTxMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_count_of_tx',
+    headerName: '# of Tx',
+    headerTooltip: 'Blockchain 24 Hour Count of Transactions',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Count of Payments
+  //
+  blockchainStats24HoursCountOfPaymentsMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursCountOfPaymentsMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_count_of_payments',
+    headerName: 'Count Of Payments',
+    headerTooltip: 'Blockchain 24 Hour Count Of Payments',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour New Issuance
+  //
+  blockchainStats24HoursNewIssuanceMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursNewIssuanceMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_new_issuance',
+    headerName: 'New Issuance',
+    headerTooltip: 'Blockchain 24 Hour New Issuance',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Average Difficulty
+  //
+  blockchainStats24HoursAverageDifficultyMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursAverageDifficultyMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_average_difficulty',
+    headerName: 'Average Difficulty',
+    headerTooltip: 'Blockchain 24 Hour Average Difficulty',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Kilobytes Added
+  //
+  blockchainStats24HoursKilobytesAddedMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursKilobytesAddedMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_kilobytes_added',
+    headerName: 'kb added',
+    headerTooltip: 'Blockchain 24 Hour kilobytes added',
+    width: 120,
+  }),
+
+  //
+  // Blockchain Stats 24 Hour Count of Blocks Added
+  //
+  blockchainStats24HoursCountOfBlocksAddedMessari: Object.assign({}, number, {
+    colId: 'blockchainStats24HoursCountOfBlocksAddedMessari',
+    field: 'm-assets-metrics-blockchain_stats_24_hours_count_of_blocks_added',
+    headerName: 'Count Of Blocks Added',
+    headerTooltip: 'Blockchain 24 Hour Count Of Blocks Added',
+    width: 120,
+  }),
+
+  //
+  // Supply Y2050
+  //
+  supplyY2050Messari: Object.assign({}, number, {
+    colId: 'supplyY2050Messari',
+    field: 'm-assets-metrics-supply_y_2050',
+    headerName: 'Supply Y2050',
+    headerTooltip: 'Supply Y2050',
+    width: 120,
+  }),
+
+  //
+  // Supply Y Plus 10
+  //
+  supplyYPlus10Messari: Object.assign({}, number, {
+    colId: 'supplyYPlus10Messari',
+    field: 'm-assets-metrics-supply_y_plus10',
+    headerName: 'Supply Y Plus 10',
+    headerTooltip: 'Supply Y Plus 10',
+    width: 120,
+  }),
+
+  //
+  // Supply Liquid
+  //
+  supplyLiquidMessari: Object.assign({}, number, {
+    colId: 'supplyLiquidMessari',
+    field: 'm-assets-metrics-supply_liquid',
+    headerName: 'Liquid Supply',
+    headerTooltip: 'Supply Liquid',
+    width: 120,
+  }),
+
+  //
+  // Supply Circulating
+  //
+  supplyCirculatingMessari: Object.assign({}, number, {
+    colId: 'supplyCirculatingMessari',
+    field: 'm-assets-metrics-supply_circulating',
+    headerName: 'Circulating Supply',
+    headerTooltip: 'Circulating Supply',
+    width: 120,
+  }),
+
+  //
+  // Supply Y2050 Issued Percent
+  //
+  supplyY2050IssuedPercentMessari: Object.assign({}, percent, {
+    colId: 'supplyY2050IssuedPercentMessari',
+    field: 'm-assets-metrics-supply_y_2050_issued_percent',
+    headerName: 'Supply Y2050 %',
+    headerTooltip: 'Supply Y2050 Issued Percent',
+    width: 120,
+  }),
+
+  //
+  // Supply Annual Inflation Percent
+  //
+  supplyAnnualInflationPercentMessari: Object.assign({}, percent, {
+    colId: 'supplyAnnualInflationPercentMessari',
+    field: 'm-assets-metrics-supply_annual_inflation_percent',
+    headerName: 'Supply Annual Inflation %',
+    headerTooltip: 'Supply Annual Inflation Percent',
+    width: 120,
+  }),
+
+  //
+  // Supply Plus 10 Issued Percent
+  //
+  supplyYPlus10IssuedPercentMessari: Object.assign({}, percent, {
+    colId: 'supplyYPlus10IssuedPercentMessari',
+    field: 'm-assets-metrics-supply_y_plus10_issued_percent',
+    headerName: 'Supply Plus 10 %',
+    headerTooltip: 'Supply Plus 10 Issued Percent',
+    width: 120,
+  }),
+
+  //
+  // Token Sale Proceeds USD
+  //
+  tokenSaleProceedsUSDMessari: Object.assign({}, currency, {
+    colId: 'tokenSaleProceedsUSDMessari',
+    field: 'm-assets-metrics-token_sale_stats_sale_proceeds_usd',
+    headerName: 'Token Sale USD',
+    headerTooltip: 'Token Sale Proceeds USD',
+    width: 120,
+  }),
+
+  //
+  // Token Sale Start Date
+  //
+  tokenSaleStartDateMessari: Object.assign({}, date, {
+    colId: 'tokenSaleStartDateMessari',
+    field: 'm-assets-metrics-token_sale_stats_sale_start_date',
+    headerName: 'Token Sale Start Date',
+    headerTooltip: 'Token Sale Start Date',
+    width: 120,
+  }),
+
+  //
+  // Token Sale End Date
+  //
+  tokenSaleEndDateMessari: Object.assign({}, date, {
+    colId: 'tokenSaleEndDateMessari',
+    field: 'm-assets-metrics-token_sale_stats_sale_end_date',
+    headerName: 'Token Sale End Date',
+    headerTooltip: 'Token Sale end Date',
+    width: 120,
+  }),
+
+  //
+  // Token Sale ROI Since Sale USD
+  //
+  tokenSaleROISinceSaleUSDMessari: Object.assign({}, percent, {
+    colId: 'tokenSaleROISinceSaleUSDMessari',
+    field: 'm-assets-metrics-token_sale_stats_roi_since_sale_usd_percent',
+    headerName: 'Token Sale ROI USD',
+    headerTooltip: 'Token Sale ROI Since Sale USD',
+    width: 120,
+  }),
+
+  //
+  // Token Sale ROI Since Sale BTC
+  //
+  tokenSaleROISinceSaleBTCMessari: Object.assign({}, percent, {
+    colId: 'tokenSaleROISinceSaleBTCMessari',
+    field: 'm-assets-metrics-token_sale_stats_roi_since_sale_btc_percent',
+    headerName: 'Token Sale ROI BTC',
+    headerTooltip: 'Token Sale ROI Since Sale BTC',
+    width: 120,
+  }),
+
+  //
+  // Token Sale Proceeds USD
+  //
+  tokenSaleROISinceSaleETHMessari: Object.assign({}, percent, {
+    colId: 'tokenSaleROISinceSaleETHMessari',
+    field: 'm-assets-metrics-token_sale_stats_roi_since_sale_eth_percent',
+    headerName: 'Token Sale ROI ETH',
+    headerTooltip: 'Token Sale ROI Since Sale ETH',
+    width: 120,
+  }),
 
 }

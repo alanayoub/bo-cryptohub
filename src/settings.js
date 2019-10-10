@@ -778,6 +778,129 @@ const columnDependencies = {
   ],
   adjustedNvtMessari: [
     'm-assets-metrics-blockchain_stats_24_hours_adjusted_nvt',
+  ],
+  sharpRatioLast30DaysMessari: [
+    'm-assets-metrics-risk_metrics_sharpe_ratios_last_30_days',
+  ],
+  sharpRatioLast90DaysMessari: [
+    'm-assets-metrics-risk_metrics_sharpe_ratios_last_90_days',
+  ],
+  sharpRatioLast1YearMessari: [
+    'm-assets-metrics-risk_metrics_sharpe_ratios_last_1_year',
+  ],
+  sharpRatioLast3YearsMessari: [
+    'm-assets-metrics-risk_metrics_sharpe_ratios_last_3_years',
+  ],
+  volatilityLast30DaysMessari: [
+    'm-assets-metrics-risk_metrics_volatility_stats_volatility_last_30_days',
+  ],
+  volatilityLast90DaysMessari: [
+    'm-assets-metrics-risk_metrics_volatility_stats_volatility_last_90_days',
+  ],
+  volatilityLast1YearMessari: [
+    'm-assets-metrics-risk_metrics_volatility_stats_volatility_last_1_year',
+  ],
+  volatilityLast3YearsMessari: [
+    'm-assets-metrics-risk_metrics_volatility_stats_volatility_last_3_years',
+  ],
+  developerActivityStarsMessari: [
+    'm-assets-metrics-developer_activity_stars',
+  ],
+  developerActivityWatchersMessari: [
+    'm-assets-metrics-developer_activity_watchers',
+  ],
+  developerActivityCommitsLast3MonthsMessari: [
+    'm-assets-metrics-developer_activity_commits_last_3_months',
+  ],
+  developerActivityCommitsLast1YearMessari: [
+    'm-assets-metrics-developer_activity_commits_last_1_year',
+  ],
+  developerActivityLinesAddedLast3MonthsMessari: [
+    'm-assets-metrics-developer_activity_lines_added_last_3_months',
+  ],
+  developerActivityLinesAddedLast1YearMessari: [
+    'm-assets-metrics-developer_activity_lines_added_last_1_year',
+  ],
+  developerActivityLinesDeletedLast3MonthsMessari: [
+    'm-assets-metrics-developer_activity_lines_deleted_last_3_months',
+  ],
+  developerActivityLinesDeletedLast1YearMessari: [
+    'm-assets-metrics-developer_activity_lines_deleted_last_1_year',
+  ],
+  blockchainStats24HoursTransactionVolumeMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_transaction_volume',
+  ],
+  blockchainStats24HoursAdjustedTransactionVolumeMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_adjusted_transaction_volume',
+  ],
+  blockchainStats24HoursSumOfFeesMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_sum_of_fees',
+  ],
+  blockchainStats24HoursMedianTxValueMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_median_tx_value',
+  ],
+  blockchainStats24HoursMedianTxFeeMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_median_tx_fee',
+  ],
+  blockchainStats24HoursCountOfActiveAddressesMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_count_of_active_addresses',
+  ],
+  blockchainStats24HoursCountOfTxMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_count_of_tx',
+  ],
+  blockchainStats24HoursCountOfPaymentsMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_count_of_payments',
+  ],
+  blockchainStats24HoursNewIssuanceMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_new_issuance',
+  ],
+  blockchainStats24HoursAverageDifficultyMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_average_difficulty',
+  ],
+  blockchainStats24HoursKilobytesAddedMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_kilobytes_added',
+  ],
+  blockchainStats24HoursCountOfBlocksAddedMessari: [
+    'm-assets-metrics-blockchain_stats_24_hours_count_of_blocks_added',
+  ],
+  supplyY2050Messari: [
+    'm-assets-metrics-supply_y_2050',
+  ],
+  supplyYPlus10Messari: [
+    'm-assets-metrics-supply_y_plus10',
+  ],
+  supplyLiquidMessari: [
+    'm-assets-metrics-supply_liquid',
+  ],
+  supplyCirculatingMessari: [
+    'm-assets-metrics-supply_circulating',
+  ],
+  supplyY2050IssuedPercentMessari: [
+    'm-assets-metrics-supply_y_2050_issued_percent',
+  ],
+  supplyAnnualInflationPercentMessari: [
+    'm-assets-metrics-supply_annual_inflation_percent',
+  ],
+  supplyYPlus10IssuedPercentMessari: [
+    'm-assets-metrics-supply_y_plus10_issued_percent',
+  ],
+  tokenSaleProceedsUSDMessari: [
+    'm-assets-metrics-token_sale_stats_sale_proceeds_usd',
+  ],
+  tokenSaleStartDateMessari: [
+    'm-assets-metrics-token_sale_stats_sale_start_date',
+  ],
+  tokenSaleEndDateMessari: [
+    'm-assets-metrics-token_sale_stats_sale_end_date',
+  ],
+  tokenSaleROISinceSaleUSDMessari: [
+    'm-assets-metrics-token_sale_stats_roi_since_sale_usd_percent',
+  ],
+  tokenSaleROISinceSaleBTCMessari: [
+    'm-assets-metrics-token_sale_stats_roi_since_sale_btc_percent',
+  ],
+  tokenSaleROISinceSaleETHMessari: [
+    'm-assets-metrics-token_sale_stats_roi_since_sale_eth_percent',
   ]
 }
 

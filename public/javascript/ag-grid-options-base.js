@@ -64,6 +64,28 @@ export default {
       tooltip: cellTooltip,
     },
 
+    cryptohubDate: {
+
+      // Filter
+      filter: filterNumber,
+      suppressMenu: true,
+
+      // Floating filter
+      floatingFilterComponent: filterFloatingNumber,
+      floatingFilterComponentParams: {
+        suppressMenu: true,
+        suppressFilterButton: true
+      },
+
+      // Sort
+      comparator: sortNumbers,
+      sortingOrder: ['asc','desc'],
+
+      // Style
+      cellClass: 'cryptohub-align-right',
+
+    },
+
     cryptohubNumeric: {
 
       // Filter

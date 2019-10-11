@@ -744,16 +744,16 @@ export default class Selector {
       });
     }
     else {
+      const folderNodes = new Set();
       $sourceT.visit(node => {
-        const folderNodes = new Set();
         if (!node.folder) {
           updateLeafNode(this, node, clickedNode);
           folderNodes.add(node.parent);
         }
-        for (const folderNode of folderNodes.values()) {
-          Selector.setFolderCheckbox(folderNode);
-        };
       });
+      for (const folderNode of folderNodes.values()) {
+        Selector.setFolderCheckbox(folderNode);
+      };
     }
 
   }

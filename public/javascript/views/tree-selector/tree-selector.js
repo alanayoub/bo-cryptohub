@@ -224,8 +224,8 @@ export default class Selector {
 
     // Generate columns
     const output = [];
-    let frozen = this.frozen;
-    let active = this.$destinationTree.fancytree('getTree').toDict();
+    let frozen = this.frozen || [];
+    let active = this.$destinationTree.fancytree('getTree').toDict() || [];
     for (const type of [frozen, active]) {
       type.forEach(v => {
         const obj = {

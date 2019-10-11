@@ -208,6 +208,39 @@ const fieldTypeMap = {
   'cc-social-CodeRepository_Points': 'String|Number|Boolean|Null|Undefined',
   // 'cc-social-CodeRepository_List': 'String|Number|Boolean|Null|Undefined', // Array
 
+  'cc-snapshot-General_TotalCoinSupply': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-General_DifficultyAdjustment': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-General_BlockRewardReduction': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-General_StartDate': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-General_WebsiteUrl': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-General_Description': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-General_Features': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-General_Technology': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_Status': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_Description': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_TokenType': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_WebsiteLink': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_PublicPortfolioUrl': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_FundingTarget': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_FundingCap': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_ICOTokenSupply': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_TokenSupplyPostICO': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_TokenPercentageForInvestors': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_TokenReserveSplit': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_Date': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_EndDate': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_FundsRaisedList': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_FundsRaisedUSD': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_StartPrice': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_StartPriceCurrency': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_PaymentMethod': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_Jurisdiction': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_LegalAdvisers': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_LegalForm': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_SecurityAuditCompany': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_BlogLink': 'String|Number|Boolean|Null|Undefined|Array',
+  'cc-snapshot-ICO_WhitePaperLink': 'String|Number|Boolean|Null|Undefined|Array',
+
   'cmc-listings-id': 'String|Number|Boolean|Null|Undefined|Array', // :'Number',       // : 1,
   'cmc-listings-name': 'String|Number|Boolean|Null|Undefined|Array', // :'String',       // : "Bitcoin",
   'cmc-listings-symbol': 'String|Number|Boolean|Null|Undefined|Array', // :'String',       // : "BTC",
@@ -585,7 +618,8 @@ const columnDependencies = {
     'rowIndex',
     'cryptohub-name',
     'cryptohub-symbol',
-    'cc-total-vol-full-CHANGEPCTDAY'
+    'cc-total-vol-full-CHANGEPCTDAY',
+    'cc-total-vol-full-TOTALVOLUME24HTO'
   ],
   sparklineUSD: [
     'cryptohub-cc-price-history-USD'
@@ -665,13 +699,48 @@ const columnDependencies = {
   builtOnCC: [
     'cc-coinlist-BuiltOn'
   ],
+  blockNumberCC: [
+    'cc-coinlist-BlockNumber',
+  ],
+  blockRewardCC: [
+    'cc-coinlist-BlockReward',
+  ],
+  blockTimeCC: [
+    'cc-coinlist-BlockTime',
+  ],
+  contentCreatedOnCC: [
+    'cc-coinlist-ContentCreatedOn',
+  ],
+  fullyPreminedCC: [
+    'cc-coinlist-FullyPremined',
+  ],
+  isTradingCC: [
+    'cc-coinlist-IsTrading',
+  ],
+  preminedValueCC: [
+    'cc-coinlist-PreMinedValue',
+  ],
+  smartContractAddressesCC: [
+    'cc-coinlist-SmartContractAddress',
+  ],
+  sortOrderCC: [
+    'cc-coinlist-SortOrder',
+  ],
+  totalCoinSupplyCC: [
+    'cc-coinlist-TotalCoinSupply',
+  ],
+  totalCoinsFreeFloatCC: [
+    'cc-coinlist-TotalCoinsFreeFloat',
+  ],
+  totalCoinsMinedCC: [
+    'cc-coinlist-TotalCoinsMined',
+  ],
   codeRepoPointsCC: [
     'cc-social-CodeRepository_Points',
   ],
   generalPointsCC: [
     'cc-social-General_Points',
   ],
-
 
   //
   // CoinMarketCap
@@ -997,6 +1066,102 @@ const columnDependencies = {
   ],
   facebookPointsCC: [
     'cc-social-Facebook_Points',
+  ],
+  totalCoinSupplyCC: [
+    'cc-snapshot-General_TotalCoinSupply',
+  ],
+  adjustmentDifficultyCC: [
+    'cc-snapshot-General_DifficultyAdjustment',
+  ],
+  blockRewardReductionCC: [
+    'cc-snapshot-General_BlockRewardReduction',
+  ],
+  startDateCC: [
+    'cc-snapshot-General_StartDate',
+  ],
+  websiteUrlCC: [
+    'cc-snapshot-General_WebsiteUrl',
+  ],
+  generalDescriptionCC: [
+    'cc-snapshot-General_Description',
+  ],
+  generalFeaturesCC: [
+    'cc-snapshot-General_Features',
+  ],
+  generalTechnologyCC: [
+    'cc-snapshot-General_Technology',
+  ],
+  icoStatusCC: [
+    'cc-snapshot-ICO_Status',
+  ],
+  icoDescriptionCC: [
+    'cc-snapshot-ICO_Description',
+  ],
+  icoTokenTypeCC: [
+    'cc-snapshot-ICO_TokenType',
+  ],
+  icoWebsiteUrlCC: [
+    'cc-snapshot-ICO_WebsiteLink',
+  ],
+  icoPublicPortfolioUrlCC: [
+    'cc-snapshot-ICO_PublicPortfolioUrl',
+  ],
+  icoFundingTargetCC: [
+    'cc-snapshot-ICO_FundingTarget',
+  ],
+  icoFundingCapCC: [
+    'cc-snapshot-ICO_FundingCap',
+  ],
+  icoIcoTokenSupplyCC: [
+    'cc-snapshot-ICO_ICOTokenSupply',
+  ],
+  icoTokenSupplyPostIcoCC: [
+    'cc-snapshot-ICO_TokenSupplyPostICO',
+  ],
+  icoTokenPercentageForInvestorsCC: [
+    'cc-snapshot-ICO_TokenPercentageForInvestors',
+  ],
+  icoTokenReserveSplitCC: [
+    'cc-snapshot-ICO_TokenReserveSplit',
+  ],
+  icoStartDateCC: [
+    'cc-snapshot-ICO_Date',
+  ],
+  icoEndDateCC: [
+    'cc-snapshot-ICO_EndDate',
+  ],
+  icoFundsRaisedListCC: [
+    'cc-snapshot-ICO_FundsRaisedList',
+  ],
+  icoFundsRaisedUsdCC: [
+    'cc-snapshot-ICO_FundsRaisedUSD',
+  ],
+  icoStartPriceCC: [
+    'cc-snapshot-ICO_StartPrice',
+  ],
+  icoStartPriceCurrencyCC: [
+    'cc-snapshot-ICO_StartPriceCurrency',
+  ],
+  icoPaymentMethodCC: [
+    'cc-snapshot-ICO_PaymentMethod',
+  ],
+  icoJurisdictionCC: [
+    'cc-snapshot-ICO_Jurisdiction',
+  ],
+  icoLegalAdvisersCC: [
+    'cc-snapshot-ICO_LegalAdvisers',
+  ],
+  icoLegalFormCC: [
+    'cc-snapshot-ICO_LegalForm',
+  ],
+  icoSecurityAuditCompanyCC: [
+    'cc-snapshot-ICO_SecurityAuditCompany',
+  ],
+  icoBlogUrlCC: [
+    'cc-snapshot-ICO_BlogLink',
+  ],
+  icoWhitepaperUrlCC: [
+    'cc-snapshot-ICO_WhitePaperLink',
   ]
 }
 

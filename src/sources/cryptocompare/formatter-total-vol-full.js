@@ -79,8 +79,8 @@ export default async function totalVolFull(data, timestamp) {
   try {
 
     const prefix = 'cc-total-vol-full-';
+    const result = {};
 
-    let result = {};
     let id;
     let key;
     let val;

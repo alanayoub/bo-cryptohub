@@ -10,7 +10,7 @@ const idsList = Object.keys(fieldTypeMap);
  * Get Records
  *
  */
-async function getRecords(fieldSet, sortField = false, sortDirection = false, limit = false, display = true) {
+async function getRecords(fieldSet, sortField = 'cc-total-vol-full-TOTALVOLUME24HTO', sortDirection = false, limit = false, display = true) {
 
   const aggregate = [
     {
@@ -78,12 +78,6 @@ async function getRecords(fieldSet, sortField = false, sortDirection = false, li
 
   let result;
   let results = {};
-  // for (var [key,val] of Object.entries(dbData)) {
-  //   if (val.data['cc-total-vol-full-Id'].value === null) {
-  //     console.log(val);
-  //     debugger;
-  //   }
-  // }
   for (result of dbData) {
     results[result._id] = result.data
   }

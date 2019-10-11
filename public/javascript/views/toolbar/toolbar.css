@@ -1,11 +1,14 @@
 .CH-toolbar {
 
-  top: 32px;
-  line-height: 12px;
+  top: 25px;
   color: #ccc;
   position: absolute;
   left: 189px;
   cursor: default;
+  background: #355e21;
+  height: 25px;
+  line-height: 23px;
+  z-index: 1;
 
   .ch-data {
     background: #fff;

@@ -121,7 +121,9 @@ const url = {
     'cryptohubText',
   ],
   cellRenderer(params) {
-    return params.value && params.value.value || ch.emptyCellValue;
+    const value = params.value && params.value.value;
+    const url = value ? `<a href="${value}" target="_blank">${value}</a>` : ch.emptyCellValue;
+    return url;
   },
 };
 

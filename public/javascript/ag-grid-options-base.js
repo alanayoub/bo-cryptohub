@@ -22,6 +22,7 @@ import filterNumber                       from './utils/filter-number.js';
 import filterFloatingNumber               from './utils/filter-floating-number.js';
 
 // ag-grid filter comparators
+import sortText                           from './utils/sort-text.js';
 import sortNumbers                        from './utils/sort-numbers.js';
 
 //
@@ -79,7 +80,7 @@ export default {
 
       // Sort
       comparator: sortNumbers,
-      sortingOrder: ['asc','desc'],
+      sortingOrder: ['desc', 'asc'],
 
       // Style
       cellClass: 'cryptohub-align-right',
@@ -101,7 +102,7 @@ export default {
 
       // Sort
       comparator: sortNumbers,
-      sortingOrder: ['asc','desc'],
+      sortingOrder: ['desc', 'asc'],
 
       // Style
       cellClass: 'cryptohub-align-right',
@@ -136,6 +137,10 @@ export default {
         suppressMenu: true,
         suppressFilterButton: true
       },
+
+      // Sort
+      comparator: sortText,
+      sortingOrder: ['asc', 'desc'],
 
     },
 

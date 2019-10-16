@@ -5,7 +5,7 @@ import { partialApplication } from '../libs/bo-utils-client';
 import cellRendererNumber from '../utils/cell-renderer-number.js';
 import cellRendererCurrency from '../utils/cell-renderer-currency.js';
 import onCellClicked from '../utils/on-cell-clicked.js';
-import { number, currency, percent, date, text, html } from './templates';
+import { number, currency, percent, date, text, html, bool } from './templates';
 
 export default {
 
@@ -1236,10 +1236,10 @@ export default {
   //
   // Is Treasury Decentralized
   //
-  isTreasuryDecentralizedMessari: Object.assign({}, text, {
+  isTreasuryDecentralizedMessari: Object.assign({}, bool, {
     colId: 'isTreasuryDecentralizedMessari',
     field: 'm-assets-profile-token_details_is_treasury_decentralized',
-    headerName: 'Decentralized',
+    headerName: 'Decentralized Treasury',
     headerTooltip: 'Is Treasury Decentralized',
     width: 120,
   }),
@@ -1324,7 +1324,7 @@ export default {
   //
   // Is Victim of 51% Attack
   //
-  isVictimOf51PercentAttackMessari: Object.assign({}, text, {
+  isVictimOf51PercentAttackMessari: Object.assign({}, bool, {
     colId: 'isVictimOf51PercentAttackMessari',
     field: 'm-assets-profile-token_details_is_victim_of_51_percent_attack',
     headerName: '51% Attacked',

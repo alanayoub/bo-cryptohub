@@ -171,9 +171,37 @@ import { perSecondSave } from '../../db/save';
  *       token_details: {
  *         usage: "Payments",
  *         type: "Native",
- *         sales_rounds: null
+ *         sales_rounds: null,
+ *         block_reward: null,
+ *         targeted_block_time_in_sec: 6,
+ *         on_chain_governance_structure: "No On-Chain Governance",
+ *         is_treasury_decentralized: false,
+ *         launch_style: "Centralized Distribution",
+ *         initial_supply: 100000000000,
+ *         percentage_allocated_to_investors_from_initial_supply: 2,
+ *         percentage_allocated_to_premined_or_airdrops_from_initial_supply: 52,
+ *         percentage_allocated_to_organizations_or_founders_supply: 46,
+ *         mining_algorithm: "n/a",
+ *         next_halving_date: null,
+ *         genesis_block_date: "2015-09-30",
+ *         is_victim_of_51_percent_attack: false,
+ *         emission_type_general: "Inflationary",
+ *         emission_type_precise: "Fixed Inflation rate",
+ *         is_capped_supply: false,
+ *         max_supply: null
  *       },
- *       organizations: null,
+ *       organizations: [
+ *         {
+ *           name: "Stellar Development Foundation ",
+ *           founded_date: "2014-07-30",
+ *           governance: null,
+ *           legal_structure: "Other",
+ *           jurisdiction: "San Francisco, California ",
+ *           org_charter: null,
+ *           description: "Stellar Development Foundation is a nonprofit organization taht designs and develops an online financial platform. Its platform enables money to move directly between people, companies, and financial institutions; and native digital currency will be widely distributed through localized educational programs.",
+ *           people_count_estimate: "50"
+ *         }
+ *       ],
  *       people: {
  *         founding_team: null,
  *         contributors: [
@@ -188,17 +216,29 @@ import { perSecondSave } from '../../db/save';
  *             linkedin: "https://www.linkedin.com/in/gielvanschijndel/"
  *           }
  *         ],
- *         investors: null,
- *         advisors: null
+ *         investors: [],
+ *         advisors: []
  *       },
  *       relevant_resources: [
  *         {
  *           name: "Whitepaper",
- *           url: "https://nakamotoinstitute.org/bitcoin/"
+ *           url: "https://www.stellar.org/papers/stellar-consensus-protocol.pdf"
+ *         },
+ *         {
+ *           name: "Website",
+ *           url: "https://www.stellar.org/"
  *         },
  *         {
  *           name: "Github",
- *           url: "https://github.com/bitcoin/bitcoin"
+ *           url: "https://github.com/stellar"
+ *         },
+ *         {
+ *           name: "Twitter",
+ *           url: "https://twitter.com/stellarorg?lang=en"
+ *         },
+ *         {
+ *           name: "Medium",
+ *           url: "https://medium.com/@StellarOrg"
  *         }
  *       ],
  *       consensus_algorithm: "PoW"
@@ -368,13 +408,30 @@ export default async function formatterMessariAssets(data, timestamp) {
         // [`${prefix}profile-technology`]                                              : gnp(item, 'profile.technology'),
         [`${prefix}profile-token_distribution_sale_start`]: gnp(item, 'profile.token_distribution.sale_start'),
         [`${prefix}profile-token_distribution_sale_end`]: gnp(item, 'profile.token_distribution.sale_end'),
-        // [`${prefix}profile-token_distribution_initial_distribution`]                 : gnp(item, 'profile.token_distribution.initial_distribution'),
+        [`${prefix}profile-token_distribution_initial_distribution`]: gnp(item, 'profile.token_distribution.initial_distribution'),
         [`${prefix}profile-token_distribution_current_supply`]: gnp(item, 'profile.token_distribution.current_supply'),
         [`${prefix}profile-token_distribution_max_supply`]: gnp(item, 'profile.token_distribution.max_supply'),
-        [`${prefix}profile-token_distribution_description`]: gnp(item, 'profile.token_distribution.description'),
+        // [`${prefix}profile-token_distribution_description`]: gnp(item, 'profile.token_distribution.description'),
         [`${prefix}profile-token_details_usage`]: gnp(item, 'profile.token_details.usage'),
         [`${prefix}profile-token_details_type`]: gnp(item, 'profile.token_details.type'),
         [`${prefix}profile-token_details_sales_rounds`]: gnp(item, 'profile.token_details.sales_rounds'),
+
+        [`${prefix}profile-token_details_block_reward`]: gnp(item, 'profile.token_details.block_reward'),
+        [`${prefix}profile-token_details_targeted_block_time_in_sec`]: gnp(item, 'profile.token_details.targeted_block_time_in_sec'),
+        [`${prefix}profile-token_details_on_chain_governance_structure`]: gnp(item, 'profile.token_details.on_chain_governance_structure'),
+        [`${prefix}profile-token_details_is_treasury_decentralized`]: gnp(item, 'profile.token_details.is_treasury_decentralized'),
+        [`${prefix}profile-token_details_launch_style`]: gnp(item, 'profile.token_details.launch_style'),
+        [`${prefix}profile-token_details_initial_supply`]: gnp(item, 'profile.token_details.initial_supply'),
+        [`${prefix}profile-token_details_percentage_allocated_to_investors_from_initial_supply`]: gnp(item, 'profile.token_details.percentage_allocated_to_investors_from_initial_supply'),
+        [`${prefix}profile-token_details_percentage_allocated_to_premined_or_airdrops_from_initial_supply`]: gnp(item, 'profile.token_details.percentage_allocated_to_premined_or_airdrops_from_initial_supply'),
+        [`${prefix}profile-token_details_percentage_allocated_to_organizations_or_founders_supply`]: gnp(item, 'profile.token_details.percentage_allocated_to_organizations_or_founders_supply'),
+        [`${prefix}profile-token_details_next_halving_date`]: gnp(item, 'profile.token_details.next_halving_date'),
+        [`${prefix}profile-token_details_genesis_block_date`]: gnp(item, 'profile.token_details.genesis_block_date'),
+        [`${prefix}profile-token_details_is_victim_of_51_percent_attack`]: gnp(item, 'profile.token_details.is_victim_of_51_percent_attack'),
+        [`${prefix}profile-token_details_emission_type_general`]: gnp(item, 'profile.token_details.emission_type_general'),
+        [`${prefix}profile-token_details_emission_type_precise`]: gnp(item, 'profile.token_details.emission_type_precise'),
+        [`${prefix}profile-token_details_is_capped_supply`]: gnp(item, 'profile.token_details.is_capped_supply'),
+        [`${prefix}profile-token_details_max_supply`]: gnp(item, 'profile.token_details.max_supply'),
         //
         // NOTE: Big Objects
         //

@@ -2,13 +2,10 @@
 
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 import { partialApplication } from '../libs/bo-utils-client';
-
 import cellRendererNumber from '../utils/cell-renderer-number.js';
 import cellRendererCurrency from '../utils/cell-renderer-currency.js';
-
 import onCellClicked from '../utils/on-cell-clicked.js';
-
-import { number, currency, percent, date } from './templates';
+import { number, currency, percent, date, text, html } from './templates';
 
 export default {
 
@@ -445,6 +442,11 @@ export default {
     headerName: 'NVT',
     headerTooltip: 'NVT Ratio (Network Value to Transactions Ratio) is the ratio of the Market Cap divided by the volume transmitted by the blockchain. Simplistically it could be seen as analogus to the PE Ratio used in equity markets. When an assets NVT is high, it indicates that its network valuation is outstripping the value being transmitted through its blockchain.  \n\nData Source: Messari',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -456,6 +458,11 @@ export default {
     headerName: 'NVT (Adjusted)',
     headerTooltip: 'Same as NVT but uses the adjusted transaction volume figures calculated by Coinmetrics.io\n\nData Source: Messari',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -467,6 +474,11 @@ export default {
     headerName: 'Sharp Ratio 30D',
     headerTooltip: 'Sharp Ratio Last 30 Days',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -478,6 +490,11 @@ export default {
     headerName: 'Sharp Ratio 90D',
     headerTooltip: 'Sharp Ratio Last 90 Days',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -489,6 +506,11 @@ export default {
     headerName: 'Sharp Ratio 1Y',
     headerTooltip: 'Sharp Ratio Last 1 Year',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -500,6 +522,11 @@ export default {
     headerName: 'Sharp Ratio 3Y',
     headerTooltip: 'Sharp Ratio Last 3 Years',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -511,6 +538,11 @@ export default {
     headerName: 'Volatility 30D',
     headerTooltip: 'Volatility Last 30 Days',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -522,6 +554,11 @@ export default {
     headerName: 'Volatility 90D',
     headerTooltip: 'Volatility Last 90 Days',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -533,6 +570,11 @@ export default {
     headerName: 'Volatility 1Y',
     headerTooltip: 'Volatility Last 1 Year',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -544,6 +586,11 @@ export default {
     headerName: 'Volatility 3Y',
     headerTooltip: 'Volatility Last 3 Years',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -643,6 +690,11 @@ export default {
     headerName: 'Tx Vol',
     headerTooltip: 'Blockchain 24 Hour Transaction Volume',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -654,6 +706,11 @@ export default {
     headerName: 'Tx Vol Adj',
     headerTooltip: 'Blockchain 24 Hour Adjusted Transaction Volume',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -665,6 +722,11 @@ export default {
     headerName: 'Sum Of Fees',
     headerTooltip: 'Blockchain 24 Hour Sum Of Fees',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -676,6 +738,11 @@ export default {
     headerName: 'Median Tx Vol',
     headerTooltip: 'Blockchain 24 Hour Median Transaction Value',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -687,6 +754,11 @@ export default {
     headerName: 'Median Tx Fee',
     headerTooltip: 'Blockchain 24 Hour Median Transaction Fee',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        decimals: 2
+      }
+    },
   }),
 
   //
@@ -731,6 +803,11 @@ export default {
     headerName: 'New Issuance',
     headerTooltip: 'Blockchain 24 Hour New Issuance',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -741,7 +818,12 @@ export default {
     field: 'm-assets-metrics-blockchain_stats_24_hours_average_difficulty',
     headerName: 'Average Difficulty',
     headerTooltip: 'Blockchain 24 Hour Average Difficulty',
-    width: 120,
+    width: 140,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -753,6 +835,11 @@ export default {
     headerName: 'kb added',
     headerTooltip: 'Blockchain 24 Hour kilobytes added',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -761,7 +848,7 @@ export default {
   blockchainStats24HoursCountOfBlocksAddedMessari: Object.assign({}, number, {
     colId: 'blockchainStats24HoursCountOfBlocksAddedMessari',
     field: 'm-assets-metrics-blockchain_stats_24_hours_count_of_blocks_added',
-    headerName: 'Count Of Blocks Added',
+    headerName: 'Blocks Added 24H',
     headerTooltip: 'Blockchain 24 Hour Count Of Blocks Added',
     width: 120,
   }),
@@ -775,6 +862,11 @@ export default {
     headerName: 'Supply Y2050',
     headerTooltip: 'Supply Y2050',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -786,6 +878,11 @@ export default {
     headerName: 'Supply Y Plus 10',
     headerTooltip: 'Supply Y Plus 10',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -797,6 +894,11 @@ export default {
     headerName: 'Liquid Supply',
     headerTooltip: 'Supply Liquid',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -808,6 +910,11 @@ export default {
     headerName: 'Circulating Supply',
     headerTooltip: 'Circulating Supply',
     width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -906,6 +1013,421 @@ export default {
     field: 'm-assets-metrics-token_sale_stats_roi_since_sale_eth_percent',
     headerName: 'Token Sale ROI ETH',
     headerTooltip: 'Token Sale ROI Since Sale ETH',
+    width: 120,
+  }),
+
+  //
+  // Staking Yield Percent
+  //
+  stakingYieldPercentMessari: Object.assign({}, percent, {
+    colId: 'stakingYieldPercentMessari',
+    field: 'm-assets-metrics-staking_stats_staking_yield_percent',
+    headerName: 'Staking Yield %',
+    headerTooltip: 'Staking Yield Percent',
+    width: 120,
+  }),
+
+  //
+  // Staking Type
+  //
+  stakingTypeMessari: Object.assign({}, text, {
+    colId: 'stakingTypeMessari',
+    field: 'm-assets-metrics-staking_stats_staking_type',
+    headerName: 'Staking Type',
+    headerTooltip: 'Staking Type',
+    width: 120,
+  }),
+
+  //
+  // Staking Minimum
+  //
+  stakingMinimumMessari: Object.assign({}, number, {
+    colId: 'stakingMinimumMessari',
+    field: 'm-assets-metrics-staking_stats_staking_minimum',
+    headerName: 'Staking Minimum',
+    headerTooltip: 'Staking Minimum',
+    width: 120,
+  }),
+
+  //
+  // Tokens Staked
+  //
+  tokensStakedMessari: Object.assign({}, number, {
+    colId: 'tokensStakedMessari',
+    field: 'm-assets-metrics-staking_stats_tokens_staked',
+    headerName: 'Tokens Staked',
+    headerTooltip: 'Tokens Staked',
+    width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
+  }),
+
+  //
+  // Tokens Staked Percentage
+  //
+  tokensStakedPercentMessari: Object.assign({}, percent, {
+    colId: 'tokensStakedPercentMessari',
+    field: 'm-assets-metrics-staking_stats_tokens_staked_percent',
+    headerName: 'Tokens Staked %',
+    headerTooltip: 'Tokens Staked Percentage',
+    width: 120,
+  }),
+
+  //
+  // Real Staking Yield Percent
+  //
+  realStakingYieldPercentMessari: Object.assign({}, percent, {
+    colId: 'realStakingYieldPercentMessari',
+    field: 'm-assets-metrics-staking_stats_real_staking_yield_percent',
+    headerName: 'Real Staking Yield %',
+    headerTooltip: 'Real Staking Yield Percent',
+    width: 120,
+  }),
+
+  //
+  // Algorithm
+  //
+  algorithmMessari: Object.assign({}, text, {
+    colId: 'algorithmMessari',
+    field: 'm-assets-metrics-mining_stats_mining_algo',
+    headerName: 'Algorithm',
+    headerTooltip: 'Mining Algorithm',
+    width: 120,
+  }),
+
+  //
+  // Network Hash Rate
+  //
+  networkHashRateMessari: Object.assign({}, number, {
+    colId: 'networkHashRateMessari',
+    field: 'm-assets-metrics-mining_stats_network_hash_rate',
+    headerName: 'Hash Rate',
+    headerTooltip: 'Network Hash Rate',
+    width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
+  }),
+
+  //
+  // Nicehash Percent
+  //
+  nicehashPercentMessari: Object.assign({}, percent, {
+    colId: 'nicehashPercentMessari',
+    field: 'm-assets-metrics-mining_stats_available_on_nicehash_percent',
+    headerName: 'Nicehash Percent',
+    headerTooltip: 'Nicehash Percent',
+    width: 120,
+  }),
+
+  //
+  // Mining 1 Hour attack cost
+  //
+  mining1HourAttackCostMessari: Object.assign({}, currency, {
+    colId: 'mining1HourAttackCostMessari',
+    field: 'm-assets-metrics-mining_stats_1_hour_attack_cost',
+    headerName: '1H attack cost',
+    headerTooltip: 'Mining 1 hour attack cost',
+    width: 120,
+  }),
+
+  //
+  // Mining 24 Hour attack cost
+  //
+  mining24HourAttackCostMessari: Object.assign({}, currency, {
+    colId: 'mining24HourAttackCostMessari',
+    field: 'm-assets-metrics-mining_stats_24_hours_attack_cost',
+    headerName: '24H attack cost',
+    headerTooltip: 'Mining 24 hours attack cost',
+    width: 120,
+  }),
+
+  //
+  // Mining attack appeal
+  //
+  miningAttackAppealMessari: Object.assign({}, number, {
+    colId: 'miningAttackAppealMessari',
+    field: 'm-assets-metrics-mining_stats_attack_appeal',
+    headerName: 'Attack Appeal',
+    headerTooltip: `
+      This is the ratio of the current marketcap to the daily cost of attack.
+
+      In theory, it's more appealing to attack coins with higher-marketcaps per unit of cost an attacker might expend. This ratio captures that relationship. Higher numbers suggest attacks may be more appealing than for coins with lower Attack Appeal numbers.
+      Datasources: Nicehash, Messari`,
+    width: 120,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
+  }),
+
+  //
+  // Token Usage
+  //
+  tokenUsageMessari: Object.assign({}, text, {
+    colId: 'tokenUsageMessari',
+    field: 'm-assets-profile-token_details_usage',
+    headerName: 'Token Usage',
+    headerTooltip: 'Token Usage',
+    width: 120,
+  }),
+
+  //
+  // Token Type
+  //
+  tokenTypeMessari: Object.assign({}, text, {
+    colId: 'tokenTypeMessari',
+    field: 'm-assets-profile-token_details_type',
+    headerName: 'Token Type',
+    headerTooltip: 'Token Type',
+    width: 120,
+  }),
+
+  //
+  // Sales Rounds
+  //
+  salesRoundsMessari: Object.assign({}, number, {
+    colId: 'salesRoundsMessari',
+    field: 'm-assets-profile-token_details_sales_rounds',
+    headerName: 'Sales Rounds',
+    headerTooltip: 'Sales Rounds',
+    width: 120,
+  }),
+
+  //
+  // Block Reward
+  //
+  blockRewardMessari: Object.assign({}, number, {
+    colId: 'blockRewardMessari',
+    field: 'm-assets-profile-token_details_block_reward',
+    headerName: 'Block Reward',
+    headerTooltip: 'Block Reward',
+    width: 120,
+  }),
+
+  //
+  // Block Time in Seconds
+  //
+  blockTimeInSecondsMessari: Object.assign({}, number, {
+    colId: 'blockTimeInSecondsMessari',
+    field: 'm-assets-profile-token_details_targeted_block_time_in_sec',
+    headerName: 'Block Time Seconds',
+    headerTooltip: 'Block Time in Seconds',
+    width: 120,
+  }),
+
+  //
+  // On Chain Governance Structure
+  //
+  onChainGovernanceStructureMessari: Object.assign({}, text, {
+    colId: 'onChainGovernanceStructureMessari',
+    field: 'm-assets-profile-token_details_on_chain_governance_structure',
+    headerName: 'Governance',
+    headerTooltip: 'On Chain Governance Structure',
+    width: 120,
+  }),
+
+  //
+  // Is Treasury Decentralized
+  //
+  isTreasuryDecentralizedMessari: Object.assign({}, text, {
+    colId: 'isTreasuryDecentralizedMessari',
+    field: 'm-assets-profile-token_details_is_treasury_decentralized',
+    headerName: 'Decentralized',
+    headerTooltip: 'Is Treasury Decentralized',
+    width: 120,
+  }),
+
+  //
+  // Token Laung Style
+  //
+  tokenLaunchStyleMessari: Object.assign({}, text, {
+    colId: 'tokenLaunchStyleMessari',
+    field: 'm-assets-profile-token_details_launch_style',
+    headerName: 'Token Style',
+    headerTooltip: 'Token Launch Style',
+    width: 120,
+  }),
+
+  //
+  // Initial Supply
+  //
+  initialSupplyMessari: Object.assign({}, number, {
+    colId: 'initialSupplyMessari',
+    field: 'm-assets-profile-token_details_initial_supply',
+    headerName: 'Initial Supply',
+    headerTooltip: 'Initial Supply',
+    width: 120,
+  }),
+
+  //
+  // Percentage allocated to investors from initial supply
+  //
+  percentageAllocatedToInvestorsFromInitialSupplyMessari: Object.assign({}, percent, {
+    colId: 'percentageAllocatedToInvestorsFromInitialSupplyMessari',
+    field: 'm-assets-profile-token_details_percentage_allocated_to_investors_from_initial_supply',
+    headerName: '% allocated to investors',
+    headerTooltip: 'Percentage allocated to investors from initial supply',
+    width: 120,
+  }),
+
+  //
+  // Percentage allocated to premined or airdrops from initial supply
+  //
+  percentageAllocatedToPreminedOrAirdropsFromInitialSupplyMessari: Object.assign({}, percent, {
+    colId: 'percentageAllocatedToPreminedOrAirdropsFromInitialSupplyMessari',
+    field: 'm-assets-profile-token_details_percentage_allocated_to_premined_or_airdrops_from_initial_supply',
+    headerName: 'Premine/Airdrop %',
+    headerTooltip: 'Percentage allocated to premine or airdrops from initial supply',
+    width: 120,
+  }),
+
+  //
+  // Usage
+  //
+  percentageAllocatedToOrgsOrFoundersSupplyMessari: Object.assign({}, percent, {
+    colId: 'percentageAllocatedToOrgsOrFoundersSupplyMessari',
+    field: 'm-assets-profile-token_details_percentage_allocated_to_organizations_or_founders_supply',
+    headerName: '% Allocated Founders',
+    headerTooltip: 'Percentage allocated to organizations or founders',
+    width: 120,
+  }),
+
+  //
+  // Next Halving Date
+  //
+  nextHalvingDateMessari: Object.assign({}, date, {
+    colId: 'nextHalvingDateMessari',
+    field: 'm-assets-profile-token_details_next_halving_date',
+    headerName: 'Halving Date',
+    headerTooltip: 'Next Halving Date',
+    width: 120,
+  }),
+
+  //
+  // Genisis Block Date Messari
+  //
+  genesisBlockDateMessari: Object.assign({}, date, {
+    colId: 'genesisBlockDateMessari',
+    field: 'm-assets-profile-token_details_genesis_block_date',
+    headerName: 'Genisis Block Date',
+    headerTooltip: 'Genisis Block Date',
+    width: 120,
+  }),
+
+  //
+  // Is Victim of 51% Attack
+  //
+  isVictimOf51PercentAttackMessari: Object.assign({}, text, {
+    colId: 'isVictimOf51PercentAttackMessari',
+    field: 'm-assets-profile-token_details_is_victim_of_51_percent_attack',
+    headerName: '51% Attacked',
+    headerTooltip: 'Is Victim of 51% Attack',
+    width: 120,
+  }),
+
+  //
+  // Token Emission Type General
+  //
+  tokenEmissionTypeGeneralMessari: Object.assign({}, text, {
+    colId: 'tokenEmissionTypeGeneralMessari',
+    field: 'm-assets-profile-token_details_emission_type_general',
+    headerName: 'Token Emission Type General',
+    headerTooltip: 'Token Emission Type General',
+    width: 120,
+  }),
+
+  //
+  // Token Emission Type Precise
+  //
+  tokenEmissionTypePreciseMessari: Object.assign({}, text, {
+    colId: 'tokenEmissionTypePreciseMessari',
+    field: 'm-assets-profile-token_details_emission_type_precise',
+    headerName: 'Emission Type Precise',
+    headerTooltip: 'Token Emission Type Precise',
+    width: 120,
+  }),
+
+  //
+  // Is Capped Supply
+  //
+  isCappedSupplyMessari: Object.assign({}, text, {
+    colId: 'isCappedSupplyMessari',
+    field: 'm-assets-profile-token_details_is_capped_supply',
+    headerName: 'Is Capped Supply',
+    headerTooltip: 'Is Capped Supply',
+    width: 120,
+  }),
+
+  ////
+  //// Max Supply
+  ////
+  //maxSupplyMessari: Object.assign({}, number, {
+  //  colId: 'maxSupplyMessari',
+  //  field: 'm-assets-profile-token_details_max_supply',
+  //  headerName: 'Max Supply',
+  //  headerTooltip: 'Max Supply',
+  //  width: 120,
+  //}),
+
+  //
+  // Token Distribution Sale Start
+  //
+  tokenDistributionSaleStartMessari: Object.assign({}, date, {
+    colId: 'tokenDistributionSaleStartMessari',
+    field: 'm-assets-profile-token_distribution_sale_start`',
+    headerName: 'Sale Start',
+    headerTooltip: 'Token Distribution Sale Start',
+    width: 120,
+  }),
+
+  //
+  // Token Distribution Sale End
+  //
+  tokenDistributionSaleEndMessari: Object.assign({}, date, {
+    colId: 'tokenDistributionSaleEndMessari',
+    field: 'm-assets-profile-token_distribution_sale_end`',
+    headerName: 'Sale End',
+    headerTooltip: 'Token Distribution Sale End',
+    width: 120,
+  }),
+
+  //
+  // Initial Token Distribution
+  //
+  tokenDistributionInitialDistributionMessari: Object.assign({}, date, {
+    colId: 'tokenDistributionInitialDistributionMessari',
+    field: 'm-assets-profile-token_distribution_initial_distribution',
+    headerName: 'Initial Distribution',
+    headerTooltip: 'Initial Token Distribution',
+    width: 120,
+  }),
+
+  //
+  // Current Supply
+  //
+  currentSupplyMessari: Object.assign({}, number, {
+    colId: 'currentSupplyMessari',
+    field: 'm-assets-profile-token_distribution_current_supply',
+    headerName: 'Current Supply',
+    headerTooltip: 'Current Supply',
+    width: 120,
+  }),
+
+  //
+  // Current Supply
+  //
+  maxSupplyMessari: Object.assign({}, number, {
+    colId: 'maxSupplyMessari',
+    field: 'm-assets-profile-token_distribution_max_supply',
+    headerName: 'Max Supply',
+    headerTooltip: 'Max Supply',
     width: 120,
   }),
 

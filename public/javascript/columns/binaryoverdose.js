@@ -42,6 +42,12 @@ export default {
     type: [
       'cryptohubNumeric',
     ],
+    dependencies: [
+      'cryptohub-name',
+      'cryptohub-symbol',
+      'cc-total-vol-full-CHANGEPCTDAY',
+      'cc-total-vol-full-TOTALVOLUME24HTO'
+    ]
   },
 
   //
@@ -135,7 +141,12 @@ export default {
     },
     valueFormatter(params) {
       return params.value;
-    }
+    },
+    dependencies: [
+      'cryptohub-exchangesListDex',
+      'cryptohub-exchangesListCryptoOnly',
+      'cryptohub-exchangesListAcceptsBoth'
+    ]
   },
 
   //
@@ -174,7 +185,12 @@ export default {
     },
     valueFormatter(params) {
       return params.value;
-    }
+    },
+    dependencies: [
+      'cryptohub-exchangesListDex',
+      'cryptohub-exchangesListCryptoOnly',
+      'cryptohub-exchangesListAcceptsBoth'
+    ]
   },
 
   //
@@ -199,6 +215,13 @@ export default {
     },
     cellRenderer: cellRendererExchanges,
     onCellClicked,
+    dependencies: [
+      'cryptohub-numberOfExchanges',
+      'cryptohub-exchangesListDex',
+      'cryptohub-exchangesListCryptoOnly',
+      'cryptohub-exchangesListAcceptsBoth',
+      'cryptohub-numberOfPairs'
+    ]
   },
 
   //

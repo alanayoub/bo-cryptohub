@@ -452,6 +452,13 @@ h2 {
   color: #fff;
 }
 
+.CH-cell-html {
+  > span {
+    position: absolute;
+    top: 2px;
+  }
+}
+
 /**
  *
  * Cell Hover

@@ -7,6 +7,9 @@ const path               = require('path');
 const CopyPlugin         = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const nodeExternals      = require('webpack-node-externals');
+const PreBuild           = require('./webpack-plugin-pre-build.js');
+
+const generateColumnDependencies = require('./src/utils/generateColumnDependencies.js');
 
 module.exports = {
 
@@ -24,5 +27,17 @@ module.exports = {
     __dirname: false,
     __filename: false,
   },
+
+  plugins: [
+    new PreBuild(() => {
+
+      generateColumnDependencies(result => {
+        if (!result) {
+          console.log('Error generating column dependencies');
+        }
+      });
+
+    })
+  ],
 
 };

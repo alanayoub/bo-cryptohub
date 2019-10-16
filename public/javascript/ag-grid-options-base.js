@@ -225,7 +225,7 @@ export default {
     const sortModel = params.api.getSortModel()[0];
     if (!sortModel) return;
     const { colId:column, sort:direction } = sortModel;
-    bo.inst.state.set('sort', {column, direction});
+    window.bo.inst.state.set('sort', {column, direction});
   },
 
   /**
@@ -255,7 +255,7 @@ export default {
    */
   onDragStopped(params) {
 
-    bo.inst.state.get().then(state => {
+    window.bo.inst.state.get().then(state => {
 
       const columns = [];
 
@@ -282,7 +282,7 @@ export default {
         }
       }
 
-      bo.inst.state.set('columns', columns);
+      window.bo.inst.state.set('columns', columns);
 
     })
 

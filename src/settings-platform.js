@@ -4,7 +4,8 @@
  *
  */
 const settings = {
-  defaultSortField: 'cmc-listings-quote_USD_market_cap',
+
+  defaultSortField: 'cc-total-vol-full-TOTALVOLUME24HTO',
   defaultSortOrder: -1,
 
   // TODO: IMPLEMENT PER USER OPTIONS

@@ -131,6 +131,24 @@ const url = {
   },
 };
 
+const html = {
+  colId: null,
+  field: null,
+  headerName: null,
+  headerTooltip: null,
+  headerClass: 'CH-col CH-col-html',
+  cellClass: 'CH-cell-html',
+  lockPinned: true,
+  width: 120,
+  type: [
+    'cryptohubDefaults',
+    'cryptohubText',
+  ],
+  cellRenderer(params) {
+    return params.value && params.value.value || ch.emptyCellValue;
+  },
+};
+
 export {
   array,
   currency,
@@ -138,5 +156,6 @@ export {
   number,
   percent,
   text,
+  html,
   url
 }

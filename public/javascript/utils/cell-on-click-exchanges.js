@@ -42,7 +42,7 @@ export default function cellOnClickExchanges(params) {
 
     const fiatIds   = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
     const cryptoIds = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
-    const exchanges = gnp(window.ch, 'exchanges');
+    const exchanges = gnp(ch, 'exchanges');
 
     //
     // Step 1: Create the below data structure

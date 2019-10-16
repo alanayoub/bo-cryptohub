@@ -13,7 +13,7 @@ import onCellClicked          from '../utils/on-cell-clicked.js';
 // ag-grid filter comparators
 import sortNumbers            from '../utils/sort-numbers.js';
 
-import { number, currency, percent, date, text, url } from './templates';
+import { number, currency, percent, date, text, html, url } from './templates';
 
 export default {
 
@@ -58,6 +58,10 @@ export default {
       'cryptohubText',
     ],
     cellRenderer: cellRendererName,
+    dependencies: [
+      'cc-coinlist-Symbol',
+      'cryptohub-coin-image-url',
+    ]
   },
 
   //
@@ -175,20 +179,17 @@ export default {
   //
   // Circulating Supply
   //
-  circulatingSupplyCC: {
+  circulatingSupplyCC: Object.assign({}, number, {
     colId: 'circulatingSupplyCC',
     field: 'cc-total-vol-full-SUPPLY',
     headerName: 'Circulating Supply',
-    headerClass: 'CH-col',
     headerTooltip: 'Circulating supply\n\nData Source: Cryptocompare',
-    lockPinned: true,
-    width: 150,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: cellRendererNumber,
-  },
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
+  }),
 
   //
   // Proof type
@@ -233,22 +234,18 @@ export default {
   //
   // Hashes per second
   //
-  hashesPerSecondCC: {
+  hashesPerSecondCC: Object.assign({}, number, {
     colId: 'hashesPerSecondCC',
     field: 'cc-total-vol-full-NetHashesPerSecond',
     headerName: 'Hashes per/s',
-    headerClass: 'CH-col',
     headerTooltip: 'Net Hashes per/s\n\nData Source: Cryptocompare',
-    lockPinned: true,
     width: 180,
-    columnGroupShow: 'both',
-    comparator: sortNumbers,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: cellRendererNumber,
-  },
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
+  }),
 
   // 'cc-coinlist-Algorithm'
   // 'cc-coinlist-CoinName'
@@ -290,6 +287,11 @@ export default {
     field: 'cc-coinlist-BlockReward',
     headerName: 'Block Reward',
     headerTooltip: 'Block Reward',
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -370,6 +372,11 @@ export default {
     field: 'cc-coinlist-TotalCoinSupply',
     headerName: 'Total Coin Supply',
     headerTooltip: 'Total Coin Supply',
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
@@ -390,43 +397,32 @@ export default {
     field: 'cc-coinlist-TotalCoinsMined',
     headerName: 'Total Coins Mined',
     headerTooltip: 'Total Coins Mined',
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   }),
 
   //
   // Code repo points
   //
-  codeRepoPointsCC: {
+  codeRepoPointsCC: Object.assign({}, number, {
     colId: 'codeRepoPointsCC',
     field: 'cc-social-CodeRepository_Points',
     headerName: 'Code Repo Points',
-    headerClass: 'CH-col',
     headerTooltip: 'Code Repository Points\n\nData Source: Cryptocompare',
-    lockPinned: true,
-    width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: cellRendererNumber,
-  },
+  }),
 
   //
   // General points
   //
-  generalPointsCC: {
+  generalPointsCC: Object.assign({}, number, {
     colId: 'generalPointsCC',
     field: 'cc-social-General_Points',
     headerName: 'General Points',
-    headerClass: 'CH-col',
     headerTooltip: 'General Points\n\nData Source: Cryptocompare',
-    lockPinned: true,
-    width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: cellRendererNumber,
-  },
+  }),
 
   ////
   //// General Name
@@ -804,7 +800,7 @@ export default {
   //
   // Description
   //
-  generalDescriptionCC: Object.assign({}, text, {
+  generalDescriptionCC: Object.assign({}, html, {
     colId: 'generalDescriptionCC',
     field: 'cc-snapshot-General_Description',
     headerName: 'Description',
@@ -814,7 +810,7 @@ export default {
   //
   // Features
   //
-  generalFeaturesCC: Object.assign({}, text, {
+  generalFeaturesCC: Object.assign({}, html, {
     colId: 'generalFeaturesCC',
     field: 'cc-snapshot-General_Features',
     headerName: 'Features',
@@ -824,7 +820,7 @@ export default {
   //
   // Technology
   //
-  generalTechnologyCC: Object.assign({}, text, {
+  generalTechnologyCC: Object.assign({}, html, {
     colId: 'generalTechnologyCC',
     field: 'cc-snapshot-General_Technology',
     headerName: 'Technology',
@@ -844,7 +840,7 @@ export default {
   //
   // ICO Description
   //
-  icoDescriptionCC: Object.assign({}, text, {
+  icoDescriptionCC: Object.assign({}, html, {
     colId: 'icoDescriptionCC',
     field: 'cc-snapshot-ICO_Description',
     headerName: 'ICO Description',

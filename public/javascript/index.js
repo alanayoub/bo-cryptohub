@@ -69,13 +69,13 @@ window.bo.inst.state.init().then(state => {
 
     if (!grid) throw new Error('Cant find grid');
 
-    bo.inst.socket.on('rows-full', data => {
+    window.bo.inst.socket.on('rows-full', data => {
       dataEmitHandler('rows-full', data);
     });
-    bo.inst.socket.on('rows-update', data => {
+    window.bo.inst.socket.on('rows-update', data => {
       dataEmitHandler('rows-update', data);
     });
-    bo.inst.socket.on('store', storeEmitHandler);
+    window.bo.inst.socket.on('store', storeEmitHandler);
 
     window.bo.func.updated('now');
     window.bo.inst.toolbarView = new ToolbarView('.CH-hook-toolbar');
@@ -84,7 +84,7 @@ window.bo.inst.state.init().then(state => {
 
     window.onpopstate = event => {
       if (event.state) {
-        bo.inst.state.update(event.state);
+        window.bo.inst.state.update(event.state);
       }
       else {
         window.history.back();

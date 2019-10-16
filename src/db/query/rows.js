@@ -10,7 +10,11 @@ const idsList = Object.keys(fieldTypeMap);
  * Get Records
  *
  */
-async function getRecords(fieldSet, sortField = 'cc-total-vol-full-TOTALVOLUME24HTO', sortDirection = false, limit = false, display = true) {
+async function getRecords(fieldSet, sortField = 'cc-total-vol-full-TOTALVOLUME24HTO', sortDirection = -1, limit = false, display = true) {
+
+  if (!fieldSet.has(sortField)) {
+    sortField = 'cc-total-vol-full-TOTALVOLUME24HTO';
+  }
 
   const aggregate = [
     {
@@ -74,7 +78,7 @@ async function getRecords(fieldSet, sortField = 'cc-total-vol-full-TOTALVOLUME24
     aggregate.push({$limit: limit});
   }
 
-  let dbData = await PerDayModel.aggregate(aggregate);
+  let dbData = await PerDayModel.aggregate(aggregate).allowDiskUse(true);
 
   let result;
   let results = {};

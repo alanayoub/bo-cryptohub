@@ -4,6 +4,7 @@ import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 import { partialApplication } from '../libs/bo-utils-client';
 import cellRendererNumber from '../utils/cell-renderer-number.js';
 import cellRendererCurrency from '../utils/cell-renderer-currency.js';
+import { number, currency, percent, date, text } from './templates';
 
 export default {
 
@@ -101,6 +102,11 @@ export default {
       'cryptohubNumeric',
     ],
     cellRenderer: cellRendererNumber,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   },
 
   maxSupplyCMC: {
@@ -116,6 +122,11 @@ export default {
       'cryptohubNumeric',
     ],
     cellRenderer: cellRendererNumber,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   },
 
   totalSupplyCMC: {
@@ -131,6 +142,11 @@ export default {
       'cryptohubNumeric',
     ],
     cellRenderer: cellRendererNumber,
+    cellRendererParams: {
+      bo: {
+        floor: true
+      }
+    },
   },
 
   percentChange24HourCMC: {
@@ -163,22 +179,13 @@ export default {
     ],
   },
 
-  numberOfMarketPairsCMC: {
+  numberOfMarketPairsCMC: Object.assign({}, number, {
     colId: 'numberOfMarketPairsCMC',
     field: 'cmc-listings-num_market_pairs',
     headerName: '# Market Pairs',
-    headerClass: 'CH-col',
     headerTooltip: 'Number of market pairs\n\nData Source: CoinMarketCap',
-    lockPinned: true,
     width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    valueFormatter(params) {
-      return gnp(params, 'value.value') || ch.emptyCellValue;
-    }
-  },
+  }),
 
   tagsCMC: {
     colId: 'tagsCMC',

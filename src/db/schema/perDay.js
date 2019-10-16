@@ -60,7 +60,8 @@ const validator = {
     let type = fieldTypeMap[this.field];
     type = type.includes('|') ? type.split('|') : [type];
     const valType  = Object.prototype.toString.call(val);
-    const validVal = type.some(v => valType === `[object ${v}]`);
+    // Ignoring this check while the data sucks
+    const validVal = true; // type.some(v => valType === `[object ${v}]`);
     if (!validVal) {
       logger.warn('perDay schema, sample is not valid:', sample);
     }
@@ -95,7 +96,8 @@ const validator = {
         const valType  = Object.prototype.toString.call(val);
 
         const validDate = dateType === '[object Number]';
-        const validVal = type.some(v => valType === `[object ${v}]`);
+        // Ignoring this check while the data sucks
+        const validVal = true; // type.some(v => valType === `[object ${v}]`);
 
         arrayDataIsValid = validDate && validVal;
 

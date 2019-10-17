@@ -43,7 +43,7 @@ function getNewTimeseriesData(fields, item, limit = 7, period = 1000 * 60 * 60 *
         volume,
         timestamp
       });
-      if (timeseries.length > limit) {
+      if (timeseries.length > limit + 1) {
         timeseries.shift();
       }
     }

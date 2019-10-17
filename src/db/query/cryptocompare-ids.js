@@ -1,4 +1,4 @@
-import { PerDayModel } from '../schema';
+import { BidModel } from '../schema';
 
 /**
  *
@@ -9,19 +9,13 @@ import { PerDayModel } from '../schema';
  */
 export default async function getCryptocompareIds() {
 
-  const query = {field: 'cc-coinlist-Id'};
-  const data = await PerDayModel.find(query).lean();
-  const ids = new Set();
-
-  for (const obj of Object.values(data)) {
-    if (obj.realtime) {
-      const value = obj.realtime.length === 2 ? obj.realtime[1][1] : obj.realtime[1];
-      ids.add(value);
-    }
-  }
-
-  const output = Array.from(ids);
-
+  const query = {ccid: {$exists: true}};
+  const arr = await BidModel.find(query).lean();
+  const set = new Set();
+  arr.forEach(v => {
+    set.add(v.ccid);
+  });
+  const output = Array.from(set);
   return output;
 
 }

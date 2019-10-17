@@ -471,8 +471,8 @@ export default {
   sharpRatioLast30DaysMessari: Object.assign({}, number, {
     colId: 'sharpRatioLast30DaysMessari',
     field: 'm-assets-metrics-risk_metrics_sharpe_ratios_last_30_days',
-    headerName: 'Sharp Ratio 30D',
-    headerTooltip: 'Sharp Ratio Last 30 Days',
+    headerName: 'Sharpe Ratio 30D',
+    headerTooltip: 'Sharpe Ratio Last 30 Days',
     width: 120,
     cellRendererParams: {
       bo: {
@@ -487,8 +487,8 @@ export default {
   sharpRatioLast90DaysMessari: Object.assign({}, number, {
     colId: 'sharpRatioLast90DaysMessari',
     field: 'm-assets-metrics-risk_metrics_sharpe_ratios_last_90_days',
-    headerName: 'Sharp Ratio 90D',
-    headerTooltip: 'Sharp Ratio Last 90 Days',
+    headerName: 'Sharpe Ratio 90D',
+    headerTooltip: 'Sharpe Ratio Last 90 Days',
     width: 120,
     cellRendererParams: {
       bo: {
@@ -503,8 +503,8 @@ export default {
   sharpRatioLast1YearMessari: Object.assign({}, number, {
     colId: 'sharpRatioLast1YearMessari',
     field: 'm-assets-metrics-risk_metrics_sharpe_ratios_last_1_year',
-    headerName: 'Sharp Ratio 1Y',
-    headerTooltip: 'Sharp Ratio Last 1 Year',
+    headerName: 'Sharpe Ratio 1Y',
+    headerTooltip: 'Sharpe Ratio Last 1 Year',
     width: 120,
     cellRendererParams: {
       bo: {
@@ -519,8 +519,8 @@ export default {
   sharpRatioLast3YearsMessari: Object.assign({}, number, {
     colId: 'sharpRatioLast3YearsMessari',
     field: 'm-assets-metrics-risk_metrics_sharpe_ratios_last_3_years',
-    headerName: 'Sharp Ratio 3Y',
-    headerTooltip: 'Sharp Ratio Last 3 Years',
+    headerName: 'Sharpe Ratio 3Y',
+    headerTooltip: 'Sharpe Ratio Last 3 Years',
     width: 120,
     cellRendererParams: {
       bo: {

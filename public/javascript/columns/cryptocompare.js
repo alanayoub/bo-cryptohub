@@ -747,16 +747,6 @@ export default {
     headerTooltip: 'Facebook Points',
   }),
 
-  ////
-  //// Total Coin Supply
-  ////
-  //totalCoinSupplyCC: Object.assign({}, number, {
-  //  colId: 'totalCoinSupplyCC',
-  //  field: 'cc-snapshot-General_TotalCoinSupply',
-  //  headerName: 'Total Coin Supply',
-  //  headerTooltip: 'Total Coin Supply',
-  //}),
-
   //
   // Adjustment Difficulty
   //

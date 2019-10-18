@@ -159,16 +159,23 @@ const bool = {
   width: 120,
   type: [
     'cryptohubDefaults',
-    'cryptohubText',
+    'cryptohubBool',
   ],
   cellRenderer(params) {
-    const value = params.value && params.value.value;
+    let value = params.value && params.value.value;
     if (value === null || value === void 0) {
       return ch.emptyCellValue;
     }
-    else {
-      return !!value;
+    else if (typeof value === 'boolean') {
+      value = ''+value;
     }
+    else if (value === 0) {
+      value = 'false';
+    }
+    else if (value === 1) {
+      value = 'true';
+    }
+    return value;
   },
 };
 

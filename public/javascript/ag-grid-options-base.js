@@ -17,6 +17,7 @@ import valueFormatterPercentChange        from './utils/value-formatter-percent-
 import CompoundCellRenderer               from './utils/class-compound-cell-renderer.js';
 
 // ag-grid custom filters
+import filterBool                         from './utils/filter-bool.js';
 import filterText                         from './utils/filter-text.js';
 import filterNumber                       from './utils/filter-number.js';
 import filterFloatingNumber               from './utils/filter-floating-number.js';
@@ -129,6 +130,25 @@ export default {
 
       // Filter
       filter: filterText,
+      suppressMenu: true,
+
+      // Floating filter
+      floatingFilterComponent: filterFloatingNumber,
+      floatingFilterComponentParams: {
+        suppressMenu: true,
+        suppressFilterButton: true
+      },
+
+      // Sort
+      comparator: sortText,
+      sortingOrder: ['asc', 'desc'],
+
+    },
+
+    cryptohubBool: {
+
+      // Filter
+      filter: filterBool,
       suppressMenu: true,
 
       // Floating filter

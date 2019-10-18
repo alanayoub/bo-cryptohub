@@ -1053,7 +1053,7 @@ export default {
   icoWhitepaperUrlCC: Object.assign({}, url, {
     colId: 'icoWhitepaperUrlCC',
     field: 'cc-snapshot-ICO_WhitePaperLink',
-    headerName: 'ICO Whitepaper URL',
+    headerName: 'Whitepaper URL',
     headerTooltip: 'ICO Whitepaper URL',
   }),
 

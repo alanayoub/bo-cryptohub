@@ -13,6 +13,7 @@ const uri = `mongodb://${user}:${pass}@${host}:${port}/${database}?replicaSet=${
 import { objectGetNestedProperty as gnp } from 'bo-utils';
 import { columnDependencies } from '../settings';
 import { getIds } from './query';
+import DbQueue from './queue.js';
 
 // When successfully connected
 db.on('connected', () => {
@@ -155,3 +156,7 @@ db.once('open', () => {
     }
   });
 });
+
+const tsDaysDbQueue = new DbQueue();
+module.exports.db = db;
+module.exports.tsDaysDbQueue = tsDaysDbQueue;

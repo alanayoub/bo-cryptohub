@@ -76,6 +76,12 @@ window.bo.inst.state.init().then(state => {
       dataEmitHandler('rows-update', data);
     });
     window.bo.inst.socket.on('store', storeEmitHandler);
+    // window.bo.inst.socket.on('connect', () => {
+    //   console.log('socket connected');
+    // });
+    // window.bo.inst.socket.on('disconnect', () => {
+    //   console.log('socket disconnected');
+    // });
 
     window.bo.func.updated('now');
     window.bo.inst.toolbarView = new ToolbarView('.CH-hook-toolbar');

@@ -1,10 +1,5 @@
 'use strict';
 
-// Binary Overdose Projects
-import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
-import { objectGetNestedProperty as gnp }       from '../libs/bo-utils-client';
-import { partialApplication }                   from '../libs/bo-utils-client';
-
 // ag-grid cell Renderer Classes
 import CellRendererSparkline                    from '../utils/class-cell-renderer-sparkline.js';
 
@@ -12,6 +7,8 @@ import CellRendererSparkline                    from '../utils/class-cell-render
 import cellRendererNumber                       from '../utils/cell-renderer-number.js';
 import cellRendererCurrency                     from '../utils/cell-renderer-currency.js';
 import cellRendererExchanges                    from '../utils/cell-renderer-exchanges.js';
+import cellRendererNumberOfExchanges            from '../utils/cell-renderer-number-of-exchanges.js';
+import cellRendererExchangeLocations            from '../utils/cell-renderer-exchange-locations.js';
 
 import onCellClicked                            from '../utils/on-cell-clicked.js';
 
@@ -107,7 +104,7 @@ export default {
   //
   exchanges: {
     colId: 'exchanges',
-    field: 'cryptohub-exchanges',
+    field: 'stub-exchanges',
     headerName: 'Exchanges',
     headerClass: 'CH-col',
     headerTooltip: 'List of Exchanges\n\nData Source: BinaryOverdose / Cryptocompare',
@@ -118,30 +115,7 @@ export default {
       'cryptohubDefaults',
       'cryptohubText'
     ],
-    valueGetter(params) {
-
-      let output;
-      if (isEmptyObject(ch.exchanges)) {
-        return ch.emptyCellValue;
-      }
-
-      const dex = gnp(params, 'data.cryptohub-exchangesListDex.value') || [];
-      const both = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
-      const crypto = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
-
-      const exchangeIds = [
-        ...dex, ...both, ...crypto
-      ];
-
-      output = new Set();
-      for (const id of exchangeIds) output.add(ch.exchanges[id]['cc-Name']);
-
-      return Array.from(output).join(', ') || ch.emptyCellValue;
-
-    },
-    valueFormatter(params) {
-      return params.value;
-    },
+    cellRenderer: cellRendererExchanges,
     dependencies: [
       'cryptohub-exchangesListDex',
       'cryptohub-exchangesListCryptoOnly',
@@ -154,7 +128,7 @@ export default {
   //
   exchangeLocations: {
     colId: 'exchangeLocations',
-    field: 'cryptohub-exchange-locations',
+    field: 'stub-exchange-locations',
     headerName: 'Exchange Locations',
     headerClass: 'CH-col',
     headerTooltip: 'Geographic Locations of Exchanges\n\nData Source: BinaryOverdose / Cryptocompare',
@@ -165,27 +139,7 @@ export default {
       'cryptohubDefaults',
       'cryptohubText'
     ],
-    valueGetter(params) {
-
-      if (isEmptyObject(ch.exchanges)) return ch.emptyCellValue;
-
-      const dex = gnp(params, 'data.cryptohub-exchangesListDex.value') || [];
-      const both = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
-      const crypto = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
-
-      const exchangeIds = [
-        ...dex, ...both, ...crypto
-      ];
-
-      const output = new Set();
-      for (const id of exchangeIds) output.add(ch.exchanges[id]['cc-Country']);
-
-      return Array.from(output).join(', ') || ch.emptyCellValue;
-
-    },
-    valueFormatter(params) {
-      return params.value;
-    },
+    cellRenderer: cellRendererExchangeLocations,
     dependencies: [
       'cryptohub-exchangesListDex',
       'cryptohub-exchangesListCryptoOnly',
@@ -213,7 +167,7 @@ export default {
     cellStyle: {
       padding: 0
     },
-    cellRenderer: cellRendererExchanges,
+    cellRenderer: cellRendererNumberOfExchanges,
     onCellClicked,
     dependencies: [
       'cryptohub-numberOfExchanges',

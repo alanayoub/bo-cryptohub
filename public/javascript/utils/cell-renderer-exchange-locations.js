@@ -5,18 +5,15 @@ import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
 
 /**
  *
- * Cell Renderer Exchanges
+ * Cell Renderer Exchange Locations
  *
  * @param {Object} params
  * @return {HTMLElement}
  *
  */
-export default function cellRendererExchanges(params) {
+export default function cellRendererExchangeLocations(params) {
 
-  let output;
-  if (isEmptyObject(ch.exchanges)) {
-    return ch.emptyCellValue;
-  }
+  if (isEmptyObject(ch.exchanges)) return ch.emptyCellValue;
 
   const dex = gnp(params, 'data.cryptohub-exchangesListDex.value') || [];
   const both = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
@@ -26,8 +23,8 @@ export default function cellRendererExchanges(params) {
     ...dex, ...both, ...crypto
   ];
 
-  output = new Set();
-  for (const id of exchangeIds) output.add(ch.exchanges[id]['cc-Name']);
+  const output = new Set();
+  for (const id of exchangeIds) output.add(ch.exchanges[id]['cc-Country']);
 
   return Array.from(output).join(', ') || ch.emptyCellValue;
 

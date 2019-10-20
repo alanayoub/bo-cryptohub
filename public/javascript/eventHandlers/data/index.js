@@ -109,6 +109,30 @@ export default function dataEmitHandler(event, data) {
 
     }
 
+    // Stub columns with no direct field data (only dependencies)
+    // We need to do this or ag-grid wont call the renderer in some insstances
+    {
+      const stubs = [];
+      for (const column of v.columns) {
+        const isStub = /^stub-/.test(colLib[column.id].field);
+        if (isStub) {
+          stubs.push(colLib[column.id].field);
+        }
+      }
+      const timestamp = +new Date();
+      const tmpValue = {
+        value: null,
+        lastValue: null,
+        timestamp,
+        lastChecked: timestamp
+      };
+      for (const item of newSocketData) {
+        for (const stub of stubs) {
+          item[stub] = tmpValue;
+        }
+      }
+    }
+
     if (event === 'rows-full') {
       window.refs.rowData = newSocketData;
       window.bo.agOptions.api.setRowData(window.refs.rowData);

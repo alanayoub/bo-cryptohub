@@ -10,7 +10,8 @@
 //
 
 // Database connect
-import './db/connect';
+// import './db/connect';
+import { db } from './db/connect';
 
 // Libs
 import '@babel/polyfill';
@@ -40,6 +41,8 @@ import xe                                 from './sources/xe';
 import data                               from './outputs/data';
 import store                              from './outputs/store';
 
+let initialised = false;
+
 try {
 
   process.on('warning', error => {
@@ -64,75 +67,84 @@ try {
     }
   });
 
-  // generate some stuff
-  getRows(null, false, false, ['cryptohub-name', 'cryptohub-symbol']).then(data => {
-    let mapIdName = {};
-    let mapCcNameSymbol = {};
-    let name;
-    let symbol;
-    for (const [id, val] of Object.entries(data)) {
-      name = gnp(val, 'cc-total-vol-full-FullName.value');
-      symbol = gnp(val, 'cc-coinlist-Symbol.value');
-      if (id && name) {
-        mapIdName[id] = name;
+  db.on('connected', () => {
+
+    if (initialised) return;
+    console.log(`INITIALISING`);
+    initialised = true;
+
+    // generate some stuff
+    getRows(null, false, false, ['cryptohub-name', 'cryptohub-symbol']).then(data => {
+      let mapIdName = {};
+      let mapCcNameSymbol = {};
+      let name;
+      let symbol;
+      for (const [id, val] of Object.entries(data)) {
+        name = gnp(val, 'cc-total-vol-full-FullName.value');
+        symbol = gnp(val, 'cc-coinlist-Symbol.value');
+        if (id && name) {
+          mapIdName[id] = name;
+        }
+        if (name && symbol) {
+          mapCcNameSymbol[name] = symbol;
+        }
       }
-      if (name && symbol) {
-        mapCcNameSymbol[name] = symbol;
+      mapSave('projectMapIdName', JSON.stringify(mapIdName));
+      mapSave('projectCcMapNameSymbol', JSON.stringify(mapCcNameSymbol));
+    });
+
+    const options = {
+
+      dbDir: settings.dbDir,
+      cacheDir: settings.cacheDir,
+      generatedDir: settings.generatedDir,
+
+      events: {
+        data: {
+          ...data
+        },
+        store: {
+          ...store
+        }
       }
-    }
-    mapSave('projectMapIdName', JSON.stringify(mapIdName));
-    mapSave('projectCcMapNameSymbol', JSON.stringify(mapCcNameSymbol));
+
+    };
+
+    const datatable = new DataTable(options);
+
+    datatable.newSource('binaryoverdose', binaryoverdose.config).then(() => {
+      datatable.sources.binaryoverdose.add(binaryoverdose.custom);
+    });
+
+    datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
+      datatable.sources.cryptocompare.add(cryptocompare.coinList);
+      datatable.sources.cryptocompare.add(cryptocompare.social);
+      datatable.sources.cryptocompare.add(cryptocompare.snapshot);
+      datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
+      datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
+      datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
+    });
+
+    datatable.newSource('messari', messari.config).then(() => {
+      datatable.sources.messari.add(messari.assets);
+      //
+      // NOTE: There doesn't seem to be a need for the below api requests. Investigate
+      //
+      // datatable.sources.messari.add(messari.markets);
+      // datatable.sources.messari.add(messari.metrics);
+      // datatable.sources.messari.add(messari.prices);
+    });
+
+     // datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
+     //   datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
+     // });
+
+     // datatable.newSource('xe', xe.config).then(() => {
+     //   datatable.sources.xe.add(xe.currency);
+     // });
+
   });
 
-  const options = {
-
-    dbDir: settings.dbDir,
-    cacheDir: settings.cacheDir,
-    generatedDir: settings.generatedDir,
-
-    events: {
-      data: {
-        ...data
-      },
-      store: {
-        ...store
-      }
-    }
-
-  };
-
-  const datatable = new DataTable(options);
-
-  datatable.newSource('binaryoverdose', binaryoverdose.config).then(() => {
-    datatable.sources.binaryoverdose.add(binaryoverdose.custom);
-  });
-
-  datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
-    datatable.sources.cryptocompare.add(cryptocompare.coinList);
-    datatable.sources.cryptocompare.add(cryptocompare.social);
-    datatable.sources.cryptocompare.add(cryptocompare.snapshot);
-    datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
-    datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
-    datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
-  });
-
-  datatable.newSource('messari', messari.config).then(() => {
-    datatable.sources.messari.add(messari.assets);
-    //
-    // NOTE: There doesn't seem to be a need for the below api requests. Investigate
-    //
-    // datatable.sources.messari.add(messari.markets);
-    // datatable.sources.messari.add(messari.metrics);
-    // datatable.sources.messari.add(messari.prices);
-  });
-
-   // datatable.newSource('coinmarketcap', coinmarketcap.config).then(() => {
-   //   datatable.sources.coinmarketcap.add(coinmarketcap.cryptocurrencyListings);
-   // });
-
-   datatable.newSource('xe', xe.config).then(() => {
-     datatable.sources.xe.add(xe.currency);
-   });
 
 }
 

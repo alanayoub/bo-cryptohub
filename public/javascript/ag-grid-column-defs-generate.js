@@ -109,6 +109,7 @@ export default function generateColumnDefs(state, agSafe) {
     output.map(col => {
       delete col.calc;
       delete col.sources;
+      delete col.dependencies;
     });
   }
 

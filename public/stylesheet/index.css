@@ -45,6 +45,29 @@ h2 {
   font-size: 40px;
 }
 
+a,
+.cryptohub-link {
+  color: #2f88c8;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover,
+.cryptohub-link:hover {
+  text-decoration: none;
+  color: #555;
+}
+
+a:active,
+.cryptohub-link:active {
+  color: black;
+}
+
+a:visited,
+.cryptohub-link:visited {
+  color: #94cbf2;
+}
+
 #ch-grid {
   position: fixed;
   top: 50px;
@@ -209,32 +232,6 @@ h2 {
 
 /**
  *
- * LINKS
- *
- */
-
-.cryptohub-link {
-  color: #0000EE;
-  font-family: helvetica;
-  text-decoration: none;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.cryptohub-link:hover {
-  text-decoration: underline;
-}
-
-.cryptohub-link:active {
-  color: #000;
-}
-
-.cryptohub-link:visited {
-  color: #555;
-}
-
-/**
- *
  * Cells
  *
  */
@@ -326,16 +323,6 @@ h2 {
 
 .ch-tippy-click header strong {
   font-weight: bold;
-}
-
-.ch-tippy-click a {
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-}
-
-.ch-tippy-click .ch-fiat {
-  color: #189f1a;
 }
 
 .ch-tippy-click .fas {

@@ -158,5 +158,4 @@ db.once('open', () => {
 });
 
 const tsDaysDbQueue = new DbQueue();
-module.exports.db = db;
-module.exports.tsDaysDbQueue = tsDaysDbQueue;
+export { db, tsDaysDbQueue };

@@ -10,20 +10,27 @@ export default class DbQueue {
     return this;
   }
 
-  async init() {
+  init() {
 
-    setInterval(async () => {
+    const context = this;
 
-      if (!this.queue.length) return;
-
+    if (!this.queue.length) {
+      const that = this;
+      setTimeout(function() {
+        context.init();
+      }, this.interval);
+    }
+    else {
       const time = +new Date();
       const dataItem = this.queue.shift();
-      const updated = await bulkUpdatePerDay(dataItem, time);
-
-      // logger.info(`dbQueue: item removed from queue & added to database. Queue length now: ${this.queue.length}`);
-      logger.info(`dbQueue save-perDay update time: ${+new Date() - time}`);
-
-    }, this.interval);
+      bulkUpdatePerDay(dataItem, time).then(updated => {
+        // logger.info(`dbQueue: item removed from queue & added to database. Queue length now: ${this.queue.length}`);
+        logger.info(`dbQueue save-perDay update time: ${+new Date() - time}`);
+        setTimeout(function () {
+          context.init()
+        }, this.interval);
+      });
+    }
 
   }
 

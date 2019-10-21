@@ -71,14 +71,23 @@ export default class State {
   /**
    *
    * If cols changed return new cols
+   * else if calc exists return cols
    *
    */
   static columnsChanged(oldCols, newCols) {
 
+    let output = false;
+
     const oldFields = oldCols.map(x => x.id).sort((a, b) => a.length - b.length);
     const newFields = newCols.map(x => x.id).sort((a, b) => a.length - b.length);
+    const calcIds = newCols.filter(v => v.calc).map(v => v.id);
+    const changed = JSON.stringify(oldFields) !== JSON.stringify(newFields);
 
-    return JSON.stringify(oldFields) !== JSON.stringify(newFields) ? newFields : false;
+    if (changed || calcIds.length) {
+      output = newFields;
+    }
+
+    return output;
 
   }
 
@@ -303,6 +312,19 @@ export default class State {
           .join();
         const emitData = JSON.stringify({columns, sort});
         bo.inst.socket.emit('cols', emitData);
+      }
+      else {
+        //
+        // Update custom calculations
+        // We currently dont know if they have changed because we cant store
+        // custom properties on the column definitions
+        //
+        // const calcIds = newState.columns.filter(v => v.calc).map(v => v.id);
+        // const params = {
+        //   force: true,
+        //   columns: calcIds
+        // };
+        // bo.agOptions.api.refreshCells(params);
       }
     }
 

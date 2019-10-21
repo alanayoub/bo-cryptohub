@@ -101,20 +101,18 @@ export default {
   window: {
     0: {
       columns: [
-        {id: 'rowIndex'},
-        {id: 'nameCC'},
-        {id: 'priceUSDCC'},
-        {id: 'priceBTCCC'},
-        {id: 'percentChange24hBTCMessari'},
-        {id: 'percentChange7dBTCMessari'},
-        {id: 'sparklineUSD'},
-        {id: 'volume24hUSDCC'},
-        {id: 'marketcapUSDCMC'},
-        {id: 'circulatingSupplyCMC'},
-        {id: 'sectorsMessari'},
-        {id: 'cycleLowUSDMessari'},
-        {id: 'athUSDMessari'},
-        {id: 'athPercentDownUSDMessari'},
+        {id: 'rowIndex', width: 40},
+        {id: 'nameCC', width: 236},
+        {id: 'priceUSDCC', width: 100},
+        {id: 'priceBTCCC', width: 120},
+        {id: 'percentChange7dBTCMessari', width: 80},
+        {id: 'percentChange1mBTCMessari', width: 80},
+        {id: 'marketcapUSDCC', width: 150},
+        {id: 'volume24hUSDCC', width: 150},
+        {id: 'numberOfExchanges', width: 117},
+        {id: 'nvtMessari', width: 95},
+        {id: 'sharpRatioLast30DaysMessari', width: 126},
+        {id: 'sectorsMessari', width: 250}
       ],
       sort: {
         column: 'volume24hUSDCC',

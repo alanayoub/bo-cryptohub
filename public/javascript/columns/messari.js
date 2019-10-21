@@ -30,7 +30,7 @@ export default {
       if (value) {
         const parsed = JSON.parse(value);
         if (Array.isArray(parsed) && parsed.length) {
-          return parsed.join(', ');
+          return parsed.join(', ').replace(/_/g, ' ');
         }
       }
       return ch.emptyCellValue;

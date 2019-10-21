@@ -293,7 +293,7 @@ export default class State {
     const columnsUpdated = JSON.stringify(agState.columns) !== JSON.stringify(newState.columns);
 
     // Update AG Grid columnDefs
-    if (columnsUpdated || sortUpdated) {
+    if (columnsUpdated) {
       bo.agOptions.api.columnController.setColumnDefs(columnDefs);
     }
 

@@ -13,13 +13,21 @@ const tagGroup = (str, ob) => `${settings.scrapeDir}/cryptocompare-totalvolfull-
 export default async function getJobsCryptocompareSectionTotalVolFull(queue) {
   try {
 
-    let page = 0;
+    let page = 6;
     let jobs = 0;
     const limit = 100;
     const maxPages = 20;
     const groupKey = tagGroup`${{}}`;
 
     while (page < maxPages) {
+
+      // We want the first 5 pages to update more often so we
+      // add first 5 pages for every other page (6 - 20)
+      for (let i = 0; i < 6; i++) {
+        const d = {limit, page: i};
+        queue.push({ uri: uri`${d}`, key: key`${d}`, cacheForDays: 0 });
+      }
+
       const data = {
         limit, page
       };
@@ -28,8 +36,10 @@ export default async function getJobsCryptocompareSectionTotalVolFull(queue) {
         key: key`${data}`,
         cacheForDays: 0
       });
+
       jobs++;
       page++;
+
     }
 
     logger.info(`getJobs Cryptocompare TotalVolFull: ${jobs} price jobs created`);

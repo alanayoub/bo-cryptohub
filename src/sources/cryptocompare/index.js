@@ -92,7 +92,7 @@ let topTotalVolume;
   topTotalVolume = {
     event: 'data',
     name: 'totalVolFull',
-    interval: 1000 * 30,
+    interval: 1000 * 25,
     watchDirs: [key`${{}}`, 'all'],
     getJobs: getJobsTotalVolFull,
     handler(oldData, newData) {

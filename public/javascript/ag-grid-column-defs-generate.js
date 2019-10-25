@@ -74,6 +74,20 @@ export default function generateColumnDefs(state, agSafe) {
         else if (column.type === 'number') {
           col.type.push('cryptohubNumeric');
           col.cellRenderer = cellRendererNumber;
+          col.cellRendererParams = {
+            bo: {
+              floor: true
+            }
+          };
+        }
+        else if (column.type === 'float') {
+          col.type.push('cryptohubNumeric');
+          col.cellRenderer = cellRendererNumber;
+          col.cellRendererParams = {
+            bo: {
+              floor: false
+            }
+          };
         }
         else if (column.type === 'percent') {
           col.type.push('cryptohubNumeric');

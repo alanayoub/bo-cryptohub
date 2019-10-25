@@ -23,7 +23,7 @@ export default function updateCustomColumnData({state, data}) {
       let idx;
       let lastType = null;
       const calcArr = [];
-      calc.split('').forEach(val => {
+      calc.replace(/\s|\n/g,'').split('').forEach(val => {
         const type = val === 'c' || !isNaN(val)
           ? 'column'
           : 'operator'

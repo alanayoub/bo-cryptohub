@@ -18,6 +18,8 @@ import initPug       from '../generated/init-pug.generated.js';
 // Styles
 import style         from './edit-dialogue.css';
 
+import isValidCustomCalculation from '../utils/is-valid-custom-calculation.js';
+
 export default class EditDialogue {
 
   constructor(parentSelector, selector) {
@@ -43,8 +45,7 @@ export default class EditDialogue {
     });
 
     this.modal.addFooterBtn('OK', 'BO-btn bo-btn-primary', async () => {
-      await this.okButtonHandler();
-      this.modal.close();
+      this.okButtonHandler();
     });
 
     delegate(parentSelector, selector, 'click', event => {
@@ -82,6 +83,7 @@ export default class EditDialogue {
     const state = await bo.inst.state.get();
     const selectorData = this.selector.get();
     const stateCols = state.columns;
+    let isValid = true;
 
     if (!selectorData.error) {
       const list = selectorData.map(v => v.id);
@@ -90,7 +92,13 @@ export default class EditDialogue {
         if (idx > -1) {
           const stateItem = stateCols.filter(v => v.id === selectorData[idx].id)[0];
           const obj = {...stateItem, ...selectorData[idx]};
-          columns.push(obj);
+          if (obj.calc && !isValidCustomCalculation(obj.calc)) {
+            isValid = false;
+            console.log(`invalid custom calculation ${obj.calc}`);
+          }
+          else {
+            columns.push(obj);
+          }
         }
         else {
           columns.push({
@@ -98,12 +106,15 @@ export default class EditDialogue {
           });
         }
       }
-      bo.inst.state.set('columns', columns);
+      if (isValid) {
+        bo.inst.state.set('columns', columns);
+        this.modal.close();
+      }
     }
     else {
-      return selectorData;
+      console.log('error', selectorData);
+      // return selectorData;
     }
-
   }
 
   /**

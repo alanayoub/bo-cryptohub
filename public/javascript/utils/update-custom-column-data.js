@@ -68,8 +68,7 @@ export default function updateCustomColumnData({state, data}) {
           }
           if (!skip) {
             arr = arr.map(v => {
-              if (v === null) return 'null';
-              else if (v === undefined) return 'undefined';
+              if (v === undefined || v === null || v === '-') return 'undefined';
               else return v;
             });
             calcResults[f] = evil(arr.join(''));

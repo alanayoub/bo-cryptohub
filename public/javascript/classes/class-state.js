@@ -186,6 +186,9 @@ export default class State {
       const obj = {window: {0: newState}};
       const query = await State.urlEncode(obj);
       history.pushState(obj, '/// Binary Overdose', `#${query}`);
+      gtag('config', 'UA-640029-16', {
+        'page_path': location.pathname + location.search  + location.hash
+      });
       await this.update(newState);
     }
 

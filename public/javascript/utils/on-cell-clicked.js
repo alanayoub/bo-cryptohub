@@ -13,6 +13,7 @@ export default function onCellClicked(params) {
   const open = $cell.dataset.chOpen === 'true';
   if (open) {
     CellInteractions.close({params});
+    window.bo.inst.cellInteractions.mouseOver(params);
   }
   else {
     CellInteractions.open(params);

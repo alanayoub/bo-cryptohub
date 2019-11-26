@@ -3,6 +3,8 @@
 // Binary Overdose Projects
 import { objectFlattenObject as flatten } from './libs/bo-utils-client';
 
+import CellInteractions                   from './classes/class-cell-interactions.js';
+
 // ag-grid config
 import columnLibrary                      from './columns/';
 

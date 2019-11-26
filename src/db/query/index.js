@@ -4,6 +4,7 @@ import getIds from './ids';
 import getMaps from './maps';
 import getRows from './rows';
 import getBidMap from './getBidMap';
+import getWallets from './wallets';
 import getBidMatch from './bidMatch';
 import getExchanges from './exchanges';
 import getCurrencies from './currencies';
@@ -19,6 +20,7 @@ export {
   getMaps,
   getRows,
   getBidMap,
+  getWallets,
   getBidMatch,
   getExchanges,
   getCurrencies,

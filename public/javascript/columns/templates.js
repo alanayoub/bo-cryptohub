@@ -1,8 +1,10 @@
 import { partialApplication } from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
-import cellRendererNumber from '../utils/cell-renderer-number.js';
+import cellRendererUrl from '../utils/cell-renderer-url.js';
 import cellRendererDate from '../utils/cell-renderer-date.js';
+import cellRendererNumber from '../utils/cell-renderer-number.js';
 import cellRendererCurrency from '../utils/cell-renderer-currency.js';
+import onCellClicked from '../utils/on-cell-clicked.js';
 
 const array = {
   colId: null,
@@ -14,18 +16,23 @@ const array = {
   width: 120,
   type: [
     'cryptohubDefaults',
-    'cryptohubText'
+    'cryptohubText',
+    'cryptohubHover'
   ],
   valueFormatter(params) {
     const value = gnp(params, 'value.value');
     if (value) {
       const parsed = JSON.parse(value);
       if (Array.isArray(parsed) && parsed.length) {
-        return parsed.join(', ');
+        return parsed.join(', ').replace(/_/g, ' ');
       }
     }
     return ch.emptyCellValue;
-  }
+  },
+  cellRendererParams: {
+    popdiv: 'html',
+  },
+  onCellClicked,
 };
 
 const currency = {
@@ -39,11 +46,14 @@ const currency = {
   type: [
     'cryptohubDefaults',
     'cryptohubNumeric',
+    'cryptohubHover'
   ],
   cellRenderer: partialApplication(cellRendererCurrency, window.refs),
   cellRendererParams: {
+    popdiv: 'html',
     currency: 'USD',
   },
+  onCellClicked,
 };
 
 const date = {
@@ -57,8 +67,13 @@ const date = {
   type: [
     'cryptohubDefaults',
     'cryptohubDate',
+    'cryptohubHover'
   ],
   cellRenderer: cellRendererDate,
+  cellRendererParams: {
+    popdiv: 'html',
+  },
+  onCellClicked,
 };
 
 const number = {
@@ -72,8 +87,13 @@ const number = {
   type: [
     'cryptohubDefaults',
     'cryptohubNumeric',
+    'cryptohubHover'
   ],
   cellRenderer: cellRendererNumber,
+  cellRendererParams: {
+    popdiv: 'html',
+  },
+  onCellClicked,
 };
 
 const percent = {
@@ -87,8 +107,13 @@ const percent = {
   type: [
     'cryptohubDefaults',
     'cryptohubNumeric',
-    'cryptohubPercent'
+    'cryptohubPercent',
+    'cryptohubHover'
   ],
+  cellRendererParams: {
+    popdiv: 'html',
+  },
+  onCellClicked,
 };
 
 const text = {
@@ -102,10 +127,23 @@ const text = {
   type: [
     'cryptohubDefaults',
     'cryptohubText',
+    'cryptohubHover'
   ],
   cellRenderer(params) {
-    return params.value && params.value.value || ch.emptyCellValue;
+    const text = gnp(params, 'value.value');
+    let output = ch.emptyCellValue;
+    if (text) {
+      output = text;
+      if (output.length > 100) {
+        output = output.substring(0, 100) + '...';
+      }
+    }
+    return output;
   },
+  cellRendererParams: {
+    popdiv: 'html',
+  },
+  onCellClicked,
 };
 
 const url = {
@@ -119,16 +157,13 @@ const url = {
   type: [
     'cryptohubDefaults',
     'cryptohubText',
+    'cryptohubHover'
   ],
-  cellRenderer(params) {
-    const junk = ['-', 'N/A'];
-    let value = params.value && params.value.value;
-    if (junk.includes(value)) {
-      value = null;
-    }
-    const url = value && value !== '-' ? `<a href="${value}" target="_blank">${value}</a>` : ch.emptyCellValue;
-    return url;
+  cellRenderer: cellRendererUrl,
+  cellRendererParams: {
+    popdiv: 'html',
   },
+  onCellClicked,
 };
 
 const html = {
@@ -143,10 +178,28 @@ const html = {
   type: [
     'cryptohubDefaults',
     'cryptohubText',
+    'cryptohubHover'
   ],
   cellRenderer(params) {
-    return params.value && params.value.value || ch.emptyCellValue;
+    let output;
+    const html = gnp(params, 'value.value');
+    if (html) {
+      const tmp = document.createElement('DIV');
+      tmp.innerHTML = html;
+      output = tmp.textContent || tmp.innerText || '';
+      if (output.length > 100) {
+        output = output.substring(0, 100) + '...';
+      }
+    }
+    else {
+      output = ch.emptyCellValue;
+    }
+    return output;
   },
+  cellRendererParams: {
+    popdiv: 'html',
+  },
+  onCellClicked,
 };
 
 const bool = {
@@ -160,6 +213,7 @@ const bool = {
   type: [
     'cryptohubDefaults',
     'cryptohubBool',
+    'cryptohubHover'
   ],
   cellRenderer(params) {
     let value = params.value && params.value.value;
@@ -177,6 +231,10 @@ const bool = {
     }
     return value;
   },
+  cellRendererParams: {
+    popdiv: 'html',
+  },
+  onCellClicked,
 };
 
 export {

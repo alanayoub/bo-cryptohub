@@ -201,7 +201,6 @@ export default async function formatterExchangesList(response, timestamp) {
     for ([exchangeName, data] of Object.entries(response.Data)) {
       exchangeId = mapNameId[exchangeName];
       centralizationType = getNestedProp(dbExchanges, `${exchangeId}.cc-CentralizationType`);
-      if (!data.isActive) continue;
       if (!exchanges[exchangeId]) addExchange(exchanges, exchangeName, exchangeId);
       data = data.pairs;
 

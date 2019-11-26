@@ -49,6 +49,9 @@ function storeEmitHandler(data) {
   else if (type === 'exchanges') {
     window.ch.exchanges = newSocketData;
   }
+  else if (type === 'wallets') {
+    window.ch.wallets = newSocketData;
+  }
   if (!window.initStore) window.initStore = window.ch;
 
 }

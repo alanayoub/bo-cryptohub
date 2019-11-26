@@ -1,0 +1,11 @@
+.ch-tippy-click-grid-exchanges {
+  section {
+    position: absolute;
+    top: 80px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0!important;
+    z-index: 1;
+  }
+}

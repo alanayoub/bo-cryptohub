@@ -9,8 +9,10 @@ import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 import popDiv                             from '../utils/popdiv.js';
 import initPug                            from '../generated/init-pug.generated.js';
 
-import cellOnClickTradingview             from '../utils/cell-on-click-tradingview.js';
-import cellOnClickExchanges               from '../utils/cell-on-click-exchanges.js';
+import cellOnClickTradingview             from '../views/popdiv-tradingview/';
+import cellOnClickExchanges               from '../views/popdiv-exchanges/';
+import cellOnClickWallets                 from '../views/popdiv-wallets/';
+import cellOnClickHtml                    from '../views/popdiv-html/';
 
 export default class CellInteractions {
 
@@ -84,31 +86,30 @@ export default class CellInteractions {
   static open(params) {
 
     const $cell = params.event.srcElement.closest('.ag-cell');
-    const colId = params.colDef.colId;
     const tippy = $cell._tippy;
-    const currencyColumns = [
-      'priceUSDCC',
-      'priceBTCCC',
-      'priceUSDMessari',
-      'priceBTCMessari'
-    ];
     if (!tippy) return;
 
-    if (currencyColumns.includes(colId)) {
+    const popdivType = gnp(params, 'colDef.cellRendererParams.popdiv');
+
+    if (popdivType) {
       $cell.dataset.chOpen = true;
       tippy.set({
         hideOnClick: 'false',
       });
-      cellOnClickTradingview(params);
-      $cell.$popDivTippy = $cell._tippy;
-      window.bo.func.openCells.addOpen(params);
-    }
-    else if (colId === 'numberOfExchanges') {
-      $cell.dataset.chOpen = true;
-      tippy.set({
-        hideOnClick: 'false',
-      });
-      cellOnClickExchanges(params);
+      switch (popdivType) {
+        case 'tradingview':
+          cellOnClickTradingview(params);
+          break;
+        case 'exchanges':
+          cellOnClickExchanges(params);
+          break;
+        case 'wallets':
+          cellOnClickWallets(params);
+          break;
+        case 'html':
+          cellOnClickHtml(params);
+          break;
+      }
       $cell.$popDivTippy = $cell._tippy;
       window.bo.func.openCells.addOpen(params);
     }

@@ -45,7 +45,6 @@ export default async function startServer(config) {
     });
 
     app.get('/', (req, res) => {
-      console.log('file:', config.server.index);
       res.sendFile(config.server.index);
     });
 

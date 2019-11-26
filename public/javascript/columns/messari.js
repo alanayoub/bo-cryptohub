@@ -5,7 +5,7 @@ import { partialApplication } from '../libs/bo-utils-client';
 import cellRendererNumber from '../utils/cell-renderer-number.js';
 import cellRendererCurrency from '../utils/cell-renderer-currency.js';
 import onCellClicked from '../utils/on-cell-clicked.js';
-import { number, currency, percent, date, text, html, bool } from './templates';
+import { number, currency, percent, array, date, text, html, bool } from './templates';
 
 export default {
 
@@ -13,68 +13,39 @@ export default {
   // Sector
   // A list of the assets sectors
   //
-  sectorsMessari: {
+  sectorsMessari: Object.assign({}, array, {
     colId: 'sectorsMessari',
     field: 'm-assets-metrics-misc_data_sectors',
     headerName: 'Sectors',
-    headerClass: 'CH-col',
     headerTooltip: 'Sectors',
-    lockPinned: true,
     width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubText'
-    ],
-    valueFormatter(params) {
-      const value = gnp(params, 'value.value');
-      if (value) {
-        const parsed = JSON.parse(value);
-        if (Array.isArray(parsed) && parsed.length) {
-          return parsed.join(', ').replace(/_/g, ' ');
-        }
-      }
-      return ch.emptyCellValue;
-    }
-  },
+  }),
 
   //
   // All Time High (USD)
   //
-  athUSDMessari: {
+  athUSDMessari: Object.assign({}, currency, {
     colId: 'athUSDMessari',
     field: 'm-assets-metrics-all_time_high_price',
     headerName: 'ATH $',
-    headerClass: 'CH-col',
     headerTooltip: 'All Time High (USD)\n\nData Source: OnChainFX',
-    lockPinned: true,
-    width: 100,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'USD',
-    },
-  },
+  }),
 
   //
   // All Time High Percent Down
   //
-  athPercentDownUSDMessari: {
+  athPercentDownUSDMessari: Object.assign({}, percent, {
     colId: 'athPercentDownUSDMessari',
     field: 'm-assets-metrics-all_time_high_percent_down',
     headerName: 'ATH % Down',
-    headerClass: 'CH-col',
     headerTooltip: '% Down from All Time High (USD)\n\nData Source: OnChainFX',
-    lockPinned: true,
-    width: 100,
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercentNoFormat'
+      'cryptohubPercentNoFormat',
+      'cryptohubHover',
     ],
-  },
+  }),
 
   //
   // Cycle low (USD)
@@ -87,41 +58,28 @@ export default {
   // For some assets, the Cycle Low quoted may refer to the lowest daily average since the ATH,
   // or a price-sample on the day the Cycle Low occured.
   //
-  cycleLowUSDMessari: {
+  cycleLowUSDMessari: Object.assign({}, currency, {
     colId: 'cycleLowUSDMessari',
     field: 'm-assets-metrics-cycle_low_price',
     headerName: 'Cycle Low $',
-    headerClass: 'CH-col',
     headerTooltip: 'The lowest trading price (in USD) of the asset since its All-Time-High\n\nData Source: OnChainFX',
-    lockPinned: true,
-    width: 100,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'USD',
-    },
-  },
+  }),
 
   //
   // 24 Hour Percent Change (USD)
   //
-  percentChange24hUSDMessari: {
+  percentChange24hUSDMessari: Object.assign({}, percent, {
     colId: 'percentChange24hUSDMessari',
     field: 'm-assets-metrics-market_data_percent_change_usd_last_24_hours',
     headerName: 'Δ 24h $',
-    headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Messari',
-    lockPinned: true,
     width: 80,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-      'cryptohubPercent'
-    ],
-  },
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'USD',
+      interval: 'D'
+    },
+  }),
 
   //
   // 24 Hour Percent Change (BTC)
@@ -137,8 +95,15 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
+      'cryptohubPercent',
+      'cryptohubHover'
     ],
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'BTC',
+      interval: 'D'
+    },
+    onCellClicked,
   },
 
   //
@@ -155,8 +120,15 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
+      'cryptohubPercent',
+      'cryptohubHover'
     ],
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'USD',
+      interval: 'W'
+    },
+    onCellClicked,
   },
 
   //
@@ -173,8 +145,15 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
+      'cryptohubPercent',
+      'cryptohubHover'
     ],
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'BTC',
+      interval: 'W'
+    },
+    onCellClicked,
   },
 
   //
@@ -191,8 +170,15 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
+      'cryptohubPercent',
+      'cryptohubHover'
     ],
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'USD',
+      interval: 'M'
+    },
+    onCellClicked,
   },
 
   //
@@ -209,8 +195,15 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
+      'cryptohubPercent',
+      'cryptohubHover'
     ],
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'BTC',
+      interval: 'M'
+    },
+    onCellClicked,
   },
 
   //
@@ -227,8 +220,15 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
+      'cryptohubPercent',
+      'cryptohubHover'
     ],
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'USD',
+      interval: 'M'
+    },
+    onCellClicked,
   },
 
   //
@@ -245,8 +245,15 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
+      'cryptohubPercent',
+      'cryptohubHover'
     ],
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'BTC',
+      interval: 'M'
+    },
+    onCellClicked,
   },
 
   //
@@ -263,8 +270,15 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
+      'cryptohubPercent',
+      'cryptohubHover'
     ],
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'USD',
+      interval: 'M'
+    },
+    onCellClicked,
   },
 
   //
@@ -281,8 +295,15 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
-      'cryptohubPercent'
+      'cryptohubPercent',
+      'cryptohubHover'
     ],
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'BTC',
+      interval: 'M'
+    },
+    onCellClicked,
   },
 
   //
@@ -303,8 +324,10 @@ export default {
     ],
     cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
+      popdiv: 'tradingview',
       currency: 'USD',
-      symbolTo: 'USD'
+      symbolTo: 'USD',
+      interval: 'D'
     },
     onCellClicked,
   },
@@ -327,9 +350,11 @@ export default {
     ],
     cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
+      popdiv: 'tradingview',
       inputCurrency: 'BTC',
       currency: 'SAT',
-      symbolTo: 'BTC'
+      symbolTo: 'BTC',
+      interval: 'D'
     },
     onCellClicked,
   },
@@ -337,101 +362,63 @@ export default {
   //
   // Volume
   //
-  volume24hUSDMessari: {
+  volume24hUSDMessari: Object.assign({}, currency, {
     colId: 'volume24hUSDMessari',
     field: 'm-assets-metrics-market_data_volume_last_24_hours',
     headerName: 'Volume 24h $',
-    headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Messari',
-    lockPinned: true,
     width: 150,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'USD',
-    },
-  },
+  }),
 
   //
   // Real Volume
   //
-  realVolume24hUSDMessari: {
+  realVolume24hUSDMessari: Object.assign({}, currency, {
     colId: 'realVolume24hUSDMessari',
     field: 'm-assets-metrics-market_data_real_volume_last_24_hours',
     headerName: 'Real Volume 24h $',
-    headerClass: 'CH-col',
     headerTooltip: 'Real Volume according to Messari. 24 hours displayed in USD\n\nData Source: Messari',
-    lockPinned: true,
     width: 150,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'USD',
-    },
-  },
+  }),
 
   //
   // Volume Overstatement Multiple
   //
-  volume24hUSDOverstatementMultipleMessari: {
+  volume24hUSDOverstatementMultipleMessari: Object.assign({}, currency, {
     colId: 'volume24hUSDOverstatementMultipleMessari',
     field: 'm-assets-metrics-market_data_volume_last_24_hours_overstatement_multiple',
     headerName: 'Volume 24h $ Overstatement Multiple',
-    headerClass: 'CH-col',
     headerTooltip: 'Volume according to Messari. 24 hours displayed in USD\n\nData Source: Messari',
-    lockPinned: true,
     width: 150,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'USD',
-    },
-  },
+  }),
 
-  marketcapUSDMessari: {
+  marketcapUSDMessari: Object.assign({}, currency, {
     colId: 'marketcapUSDMessari',
     field: 'm-assets-metrics-marketcap_current_marketcap_usd',
     headerName: 'Market Cap $',
-    headerClass: 'CH-col',
     headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Messari',
-    lockPinned: true,
     width: 150,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
+      exchange: 'CRYPTOCAP',
       currency: 'USD',
+      popdiv: 'tradingview',
+      interval: 'D'
     },
-  },
+  }),
 
-  marketcapUSD2050Messari: {
+  marketcapUSD2050Messari: Object.assign({}, currency, {
     colId: 'marketcapUSD2050Messari',
     field: 'm-assets-metrics-marketcap_y_2050_marketcap_usd',
     headerName: 'Market Cap $ (Y2050)',
-    headerClass: 'CH-col',
     headerTooltip: 'This is the fully diluted (Y2050) Marketcap, it takes into account known future dilution up to Jan 1, 2050.\n\nData Source: Messari',
-    lockPinned: true,
     width: 150,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
+      exchange: 'CRYPTOCAP',
       currency: 'USD',
+      popdiv: 'tradingview',
+      interval: 'D'
     },
-  },
+  }),
 
   //
   // NVT
@@ -443,6 +430,7 @@ export default {
     headerTooltip: 'NVT Ratio (Network Value to Transactions Ratio) is the ratio of the Market Cap divided by the volume transmitted by the blockchain. Simplistically it could be seen as analogus to the PE Ratio used in equity markets. When an assets NVT is high, it indicates that its network valuation is outstripping the value being transmitted through its blockchain.  \n\nData Source: Messari',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -459,6 +447,7 @@ export default {
     headerTooltip: 'Same as NVT but uses the adjusted transaction volume figures calculated by Coinmetrics.io\n\nData Source: Messari',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -475,6 +464,7 @@ export default {
     headerTooltip: 'Sharpe Ratio Last 30 Days',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -491,6 +481,7 @@ export default {
     headerTooltip: 'Sharpe Ratio Last 90 Days',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -507,6 +498,7 @@ export default {
     headerTooltip: 'Sharpe Ratio Last 1 Year',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -523,6 +515,7 @@ export default {
     headerTooltip: 'Sharpe Ratio Last 3 Years',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -539,6 +532,7 @@ export default {
     headerTooltip: 'Volatility Last 30 Days',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -555,6 +549,7 @@ export default {
     headerTooltip: 'Volatility Last 90 Days',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -571,6 +566,7 @@ export default {
     headerTooltip: 'Volatility Last 1 Year',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -587,6 +583,7 @@ export default {
     headerTooltip: 'Volatility Last 3 Years',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -691,6 +688,7 @@ export default {
     headerTooltip: 'Blockchain 24 Hour Transaction Volume',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -707,6 +705,7 @@ export default {
     headerTooltip: 'Blockchain 24 Hour Adjusted Transaction Volume',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -723,6 +722,7 @@ export default {
     headerTooltip: 'Blockchain 24 Hour Sum Of Fees',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -739,6 +739,7 @@ export default {
     headerTooltip: 'Blockchain 24 Hour Median Transaction Value',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -755,6 +756,7 @@ export default {
     headerTooltip: 'Blockchain 24 Hour Median Transaction Fee',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         decimals: 2
       }
@@ -804,6 +806,7 @@ export default {
     headerTooltip: 'Blockchain 24 Hour New Issuance',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -820,6 +823,7 @@ export default {
     headerTooltip: 'Blockchain 24 Hour Average Difficulty',
     width: 140,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -836,6 +840,7 @@ export default {
     headerTooltip: 'Blockchain 24 Hour kilobytes added',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -863,6 +868,7 @@ export default {
     headerTooltip: 'Supply Y2050',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -879,6 +885,7 @@ export default {
     headerTooltip: 'Supply Y Plus 10',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -895,6 +902,7 @@ export default {
     headerTooltip: 'Supply Liquid',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -911,6 +919,7 @@ export default {
     headerTooltip: 'Circulating Supply',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -1059,6 +1068,7 @@ export default {
     headerTooltip: 'Tokens Staked',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -1108,6 +1118,7 @@ export default {
     headerTooltip: 'Network Hash Rate',
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -1161,6 +1172,7 @@ export default {
       Datasources: Nicehash, Messari`,
     width: 120,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }

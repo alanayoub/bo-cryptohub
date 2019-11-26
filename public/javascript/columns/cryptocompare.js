@@ -67,114 +67,83 @@ export default {
   //
   // USD Price
   //
-  priceUSDCC: {
+  priceUSDCC: Object.assign({}, currency, {
     colId: 'priceUSDCC',
     field: 'cc-total-vol-full-PRICE',
     headerName: 'Price $',
-    headerClass: 'CH-col',
     headerTooltip: 'Price in USD\n\nData Source: Cryptocompare',
-    lockPinned: true,
-    width: 100,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-      'cryptohubHover'
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
+      popdiv: 'tradingview',
       currency: 'USD',
-      symbolTo: 'USD'
+      symbolTo: 'USD',
+      interval: 'D'
     },
-    onCellClicked,
-  },
+  }),
 
   //
   // BTC Price
   //
-  priceBTCCC: {
+  priceBTCCC: Object.assign({}, currency, {
     colId: 'priceBTCCC',
     field: 'cc-total-vol-full-PRICE-cryptohub-BTC',
     headerName: 'Price ฿',
-    headerClass: 'CH-col',
     headerTooltip: 'Price in BTC\n\nData Source: Cryptocompare',
-    lockPinned: true,
     width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-      'cryptohubHover'
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
+      popdiv: 'tradingview',
       inputCurrency: 'SAT',
       currency: 'SAT',
-      symbolTo: 'BTC'
+      symbolTo: 'BTC',
+      interval: 'D'
     },
-    onCellClicked,
-  },
+  }),
 
   //
   // 24 Hour Percent Change (USD)
   // NOTE: We want percent change against BTC too!
   //
-  percentChange24hUSDCC: {
+  percentChange24hUSDCC: Object.assign({}, percent, {
     colId: 'percentChange24hUSDCC',
     field: 'cc-total-vol-full-CHANGEPCTDAY',
     headerName: 'Change 24h $',
-    headerClass: 'CH-col',
     headerTooltip: 'Percent change over 24 hours against USD\n\nData Source: Cryptocompare',
-    lockPinned: true,
-    width: 100,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-      'cryptohubPercent'
-    ],
-  },
+    width: 120,
+    cellRendererParams: {
+      popdiv: 'tradingview',
+      symbolTo: 'USD',
+      interval: 'D'
+    },
+  }),
 
   //
   // Volume
   //
   // The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD
   //
-  volume24hUSDCC: {
+  volume24hUSDCC: Object.assign({}, currency, {
     colId: 'volume24hUSDCC',
     field: 'cc-total-vol-full-TOTALVOLUME24HTO',
     headerName: 'Volume 24h $',
-    headerClass: 'CH-col',
     headerTooltip: 'The amount the coin has been traded in 24 hours against ALL its trading pairs displayed in USD\n\nData Source: Cryptocompare',
-    lockPinned: true,
     width: 150,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
-    cellRendererParams: {
-      currency: 'USD',
-    },
-  },
+  }),
 
   //
   // Marketcap
   //
-  marketcapUSDCC: {
+  marketcapUSDCC: Object.assign({}, currency, {
     colId: 'marketcapUSDCC',
     field: 'cc-total-vol-full-MKTCAP',
     headerName: 'Market Cap $',
-    headerClass: 'CH-col',
     headerTooltip: 'The price in USD multiplied by the number of coins or tokens\n\nData Source: Cryptocompare',
-    lockPinned: true,
     width: 150,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubNumeric',
-    ],
-    cellRenderer: partialApplication(cellRendererCurrency, window.refs),
     cellRendererParams: {
+      exchange: 'CRYPTOCAP',
       currency: 'USD',
+      popdiv: 'tradingview',
+      interval: 'D'
     },
-  },
+  }),
 
   //
   // Circulating Supply
@@ -185,51 +154,34 @@ export default {
     headerName: 'Circulating Supply',
     headerTooltip: 'Circulating supply\n\nData Source: Cryptocompare',
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
-      }
+      },
     },
   }),
 
   //
   // Proof type
   //
-  proofTypeCC: {
+  proofTypeCC: Object.assign({}, text, {
     colId: 'proofTypeCC',
     field: 'cc-total-vol-full-ProofType',
     headerName: 'Proof',
-    headerClass: 'CH-col',
     headerTooltip: 'Proof Type\n\nData Source: Cryptocompare',
-    lockPinned: true,
     width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubText',
-    ],
-    cellRenderer(params) {
-      return params.value && params.value.value || ch.emptyCellValue;
-    },
-  },
+  }),
 
   //
   // Algo
   //
-  algoCC: {
+  algoCC: Object.assign({}, text, {
     colId: 'algoCC',
     field: 'cc-total-vol-full-Algorithm',
     headerName: 'Algorithm',
-    headerClass: 'CH-col',
     headerTooltip: 'Algorithm\n\nData Source: Cryptocompare',
-    lockPinned: true,
     width: 120,
-    type: [
-      'cryptohubDefaults',
-      'cryptohubText',
-    ],
-    cellRenderer(params) {
-      return params.value && params.value.value || ch.emptyCellValue;
-    },
-  },
+  }),
 
   //
   // Hashes per second
@@ -241,6 +193,7 @@ export default {
     headerTooltip: 'Net Hashes per/s\n\nData Source: Cryptocompare',
     width: 180,
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -288,6 +241,7 @@ export default {
     headerName: 'Block Reward',
     headerTooltip: 'Block Reward',
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -373,6 +327,7 @@ export default {
     headerName: 'Total Coin Supply',
     headerTooltip: 'Total Coin Supply',
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -398,6 +353,7 @@ export default {
     headerName: 'Total Coins Mined',
     headerTooltip: 'Total Coins Mined',
     cellRendererParams: {
+      popdiv: 'html',
       bo: {
         floor: true
       }
@@ -795,6 +751,7 @@ export default {
     field: 'cc-snapshot-General_Description',
     headerName: 'Description',
     headerTooltip: 'Description',
+    onCellClicked,
   }),
 
   //

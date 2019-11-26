@@ -29,6 +29,7 @@ export default function storeOnHandleData(options, data, cache, oldData = {}) {
     ...idName && {'exchange-map-idName': idName}
   }
 
+  debugger;
   cache.set(fileName, JSON.stringify(output));
 
 }

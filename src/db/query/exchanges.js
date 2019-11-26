@@ -13,16 +13,16 @@ export default async function getExchanges() {
 
   const regex = '^'+[
     'exchange',
-    'cryptohub-pairs',
-    'cryptohub-cryptoCurrencies',
-    'cryptohub-fiatCurrencies',
-    'cryptohub-numberOfCryptoCurrencies',
-    'cryptohub-numberOfCryptoPairs',
-    'cryptohub-numberOfCurrencies',
-    'cryptohub-numberOfFiatCurrencies',
-    'cryptohub-numberOfFiatPairs',
-    'cryptohub-numberOfPairs',
-    'cryptohub-points'
+    // 'cryptohub-pairs',
+    // 'cryptohub-cryptoCurrencies',
+    // 'cryptohub-fiatCurrencies',
+    // 'cryptohub-numberOfCryptoCurrencies',
+    // 'cryptohub-numberOfCryptoPairs',
+    // 'cryptohub-numberOfCurrencies',
+    // 'cryptohub-numberOfFiatCurrencies',
+    // 'cryptohub-numberOfFiatPairs',
+    // 'cryptohub-numberOfPairs',
+    // 'cryptohub-points'
   ].join('|^');
 
   const query = {

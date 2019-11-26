@@ -4,6 +4,7 @@ import formatterSnapshot         from './formatter-snapshot.js';
 import formatterBootstrap        from './formatter-bootstrap.js';
 import formatterTotalVolFull     from './formatter-total-vol-full.js';
 import formatterExchangesList    from './formatter-exchanges-list.js';
+import formatterWalletsGeneral   from './formatter-wallets-general.js';
 import formatterExchangesGeneral from './formatter-exchanges-general.js';
 
 import getJobsSocial             from './get-jobs-social.js';
@@ -124,6 +125,26 @@ let exchangesGeneral;
 };
 
 //
+// WALLETS GENERAL
+//
+let walletsGeneral;
+{
+  const uri = `https://min-api.cryptocompare.com/data/wallets/general?api_key=${cryptocompareApiKey}`;
+  const key = `${scrapeDir}/cryptocompare-wallets-general/data.json`;
+  walletsGeneral = {
+    event: 'data,store',
+    name: 'wallets-general',
+    interval: 1000 * 60 * 60 * 24,
+    watchDirs: [key, 'all'],
+    getJobs(queue) {
+      queue.push({uri, key, cacheForDays: 0});
+      logger.info('getJobs Cryptocompare walletGeneral: 1 walletGeneral job created');
+    },
+    formatter: formatterWalletsGeneral
+  };
+};
+
+//
 // SOCIAL
 //
 let social;
@@ -162,5 +183,6 @@ export default {
   coinList,
   exchangesList,
   topTotalVolume,
+  walletsGeneral,
   exchangesGeneral
 }

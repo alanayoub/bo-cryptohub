@@ -6,11 +6,14 @@ import CellRendererSparkline                    from '../utils/class-cell-render
 // ag-grid cell Renderers
 import cellRendererNumber                       from '../utils/cell-renderer-number.js';
 import cellRendererCurrency                     from '../utils/cell-renderer-currency.js';
+import cellRendererWallets                      from '../utils/cell-renderer-wallets.js';
 import cellRendererExchanges                    from '../utils/cell-renderer-exchanges.js';
 import cellRendererNumberOfExchanges            from '../utils/cell-renderer-number-of-exchanges.js';
 import cellRendererExchangeLocations            from '../utils/cell-renderer-exchange-locations.js';
 
 import onCellClicked                            from '../utils/on-cell-clicked.js';
+
+import { number, currency, percent, date, text, html, bool } from './templates';
 
 export default {
 
@@ -99,6 +102,163 @@ export default {
     }
   },
 
+  // 'cryptohub-wallets': Array.from(symbols[sym].wallets),
+  // 'cryptohub-wallets-supportedValidationTypes': Array.from(symbols[sym].supportedValidationTypes),
+  // 'cryptohub-wallets-numberOfWallets': Array.from(symbols[sym].wallets).length,
+  // // 'cryptohub-wallets-cards': Array.from(symbols[sym].cards),
+
+  //
+  // Wallets
+  //
+  wallets: Object.assign({}, text, {
+    colId: 'wallets',
+    field: 'cryptohub-wallets',
+    headerName: 'Wallets',
+    headerTooltip: 'List of Supported Wallets',
+    width: 200,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText',
+      'cryptohubHover'
+    ],
+    cellRenderer: cellRendererWallets,
+    cellRendererParams: {
+      popdiv: 'wallets',
+    },
+    onCellClicked,
+  }),
+
+  //
+  // Number of Wallets
+  //
+  numberOfWallets: Object.assign({}, number, {
+    colId: 'numberOfWallets',
+    field: 'cryptohub-wallets-numberOfWallets',
+    headerName: 'Number of Wallets',
+    headerTooltip: 'Number of Wallets',
+    type: [
+      'cryptohubDefaults',
+      'cryptohubNumeric',
+      'cryptohubHover'
+    ],
+    cellRendererParams: {
+      popdiv: 'wallets',
+    },
+    onCellClicked,
+  }),
+
+  //
+  // Wallets Supported Validation Types
+  //
+  walletsSupportedValidationTypes: Object.assign({}, text, {
+    colId: 'walletsSupportedValidationTypes',
+    field: 'cryptohub-wallets-supportedValidationTypes',
+    headerName: 'Wallet Validation Types',
+    headerTooltip: 'Wallet Validation Types',
+    width: 200,
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText',
+      'cryptohubHover'
+    ],
+    cellRenderer: function (params) {
+      let value = params.value && params.value.value;
+      return value ? value.join(', ') : ch.emptyCellValue;
+    },
+    cellRendererParams: {
+      popdiv: 'wallets',
+    },
+    onCellClicked,
+  }),
+
+  //
+  // Wallets Has Attached Card
+  //
+  // NOTE: NO DATA
+  //
+  // walletsHasAttachedCard: Object.assign({}, bool, {
+  //   colId: 'walletsHasAttachedCard',
+  //   field: 'cryptohub-wallets-hasAttachedCard',
+  //   headerName: 'Wallet Has Attached Card',
+  //   headerTooltip: 'Wallet Has Attached Card',
+  // }),
+
+  //
+  // Wallets Max Anonymity
+  //
+  walletsMaxAnonymity: Object.assign({}, text, {
+    colId: 'walletsMaxAnonymity',
+    field: 'cryptohub-wallets-maxWalletAnonymity',
+    headerName: 'Wallet Max Anonymity',
+    headerTooltip: 'Wallet Max Anonymity',
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText',
+      'cryptohubHover'
+    ],
+    cellRendererParams: {
+      popdiv: 'wallets',
+    },
+    onCellClicked,
+  }),
+
+  //
+  // Wallets Max Easy Of Use
+  //
+  walletsMaxEasyOfUse: Object.assign({}, text, {
+    colId: 'walletsMaxEasyOfUse',
+    field: 'cryptohub-wallets-maxWalletEaseOfUse',
+    headerName: 'Wallet Max Easy Of Use',
+    headerTooltip: 'Wallet Wallet Max Easy Of Use',
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText',
+      'cryptohubHover'
+    ],
+    cellRendererParams: {
+      popdiv: 'wallets',
+    },
+    onCellClicked,
+  }),
+
+  //
+  // Wallets Max Security
+  //
+  walletsMaxSecurity: Object.assign({}, text, {
+    colId: 'walletsMaxSecurity',
+    field: 'cryptohub-wallets-maxWalletSecurity',
+    headerName: 'Wallet Max Security',
+    headerTooltip: 'Wallet Max Security',
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText',
+      'cryptohubHover'
+    ],
+    cellRendererParams: {
+      popdiv: 'wallets',
+    },
+    onCellClicked,
+  }),
+
+  //
+  // Wallets Max Rating
+  //
+  walletsMaxRating: Object.assign({}, number, {
+    colId: 'walletsMaxRating',
+    field: 'cryptohub-wallets-maxWalletRating',
+    headerName: 'Wallet Max Rating',
+    headerTooltip: 'Wallet Max Rating',
+    type: [
+      'cryptohubDefaults',
+      'cryptohubText',
+      'cryptohubHover'
+    ],
+    cellRendererParams: {
+      popdiv: 'wallets',
+    },
+    onCellClicked,
+  }),
+
   //
   // Exchanges
   //
@@ -113,13 +273,20 @@ export default {
     columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
-      'cryptohubText'
+      'cryptohubText',
+      'cryptohubHover'
     ],
     cellRenderer: cellRendererExchanges,
+    cellRendererParams: {
+      popdiv: 'exchanges',
+    },
+    onCellClicked,
     dependencies: [
+      'cryptohub-numberOfExchanges',
       'cryptohub-exchangesListDex',
       'cryptohub-exchangesListCryptoOnly',
-      'cryptohub-exchangesListAcceptsBoth'
+      'cryptohub-exchangesListAcceptsBoth',
+      'cryptohub-numberOfPairs'
     ]
   },
 
@@ -137,9 +304,14 @@ export default {
     columnGroupShow: 'closed',
     type: [
       'cryptohubDefaults',
-      'cryptohubText'
+      'cryptohubText',
+      'cryptohubHover'
     ],
     cellRenderer: cellRendererExchangeLocations,
+    cellRendererParams: {
+      popdiv: 'exchanges',
+    },
+    onCellClicked,
     dependencies: [
       'cryptohub-exchangesListDex',
       'cryptohub-exchangesListCryptoOnly',
@@ -164,10 +336,10 @@ export default {
       'cryptohubNumeric',
       'cryptohubHover'
     ],
-    cellStyle: {
-      padding: 0
-    },
     cellRenderer: cellRendererNumberOfExchanges,
+    cellRendererParams: {
+      popdiv: 'exchanges',
+    },
     onCellClicked,
     dependencies: [
       'cryptohub-numberOfExchanges',
@@ -193,8 +365,13 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
+      'cryptohubHover'
     ],
     cellRenderer: cellRendererNumber,
+    cellRendererParams: {
+      popdiv: 'exchanges',
+    },
+    onCellClicked,
   },
 
   //
@@ -212,8 +389,13 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
+      'cryptohubHover'
     ],
     cellRenderer: cellRendererNumber,
+    cellRendererParams: {
+      popdiv: 'exchanges',
+    },
+    onCellClicked,
   },
 
   ////
@@ -252,8 +434,13 @@ export default {
     type: [
       'cryptohubDefaults',
       'cryptohubNumeric',
+      'cryptohubHover'
     ],
     cellRenderer: cellRendererNumber,
+    cellRendererParams: {
+      popdiv: 'exchanges',
+    },
+    onCellClicked,
   },
 
 }

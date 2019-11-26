@@ -1,5 +1,4 @@
 import { objectFlattenObject as flatten } from '../../libs/bo-utils-client';
-import convertWorkingDataToRowData from '../../utils/convert-working-data-to-row-data.js';
 import updateCustomColumnData from '../../utils/update-custom-column-data.js';
 import columnLibrary from '../../columns';
 

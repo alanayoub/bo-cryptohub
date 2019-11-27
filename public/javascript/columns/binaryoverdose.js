@@ -141,6 +141,9 @@ export default {
       'cryptohubNumeric',
       'cryptohubHover'
     ],
+    dependencies: [
+      'cryptohub-wallets',
+    ],
     cellRendererParams: {
       popdiv: 'wallets',
     },
@@ -160,6 +163,9 @@ export default {
       'cryptohubDefaults',
       'cryptohubText',
       'cryptohubHover'
+    ],
+    dependencies: [
+      'cryptohub-wallets',
     ],
     cellRenderer: function (params) {
       let value = params.value && params.value.value;
@@ -196,6 +202,9 @@ export default {
       'cryptohubText',
       'cryptohubHover'
     ],
+    dependencies: [
+      'cryptohub-wallets',
+    ],
     cellRendererParams: {
       popdiv: 'wallets',
     },
@@ -214,6 +223,9 @@ export default {
       'cryptohubDefaults',
       'cryptohubText',
       'cryptohubHover'
+    ],
+    dependencies: [
+      'cryptohub-wallets',
     ],
     cellRendererParams: {
       popdiv: 'wallets',
@@ -234,6 +246,9 @@ export default {
       'cryptohubText',
       'cryptohubHover'
     ],
+    dependencies: [
+      'cryptohub-wallets',
+    ],
     cellRendererParams: {
       popdiv: 'wallets',
     },
@@ -252,6 +267,9 @@ export default {
       'cryptohubDefaults',
       'cryptohubText',
       'cryptohubHover'
+    ],
+    dependencies: [
+      'cryptohub-wallets',
     ],
     cellRendererParams: {
       popdiv: 'wallets',

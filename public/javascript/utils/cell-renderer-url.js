@@ -10,7 +10,7 @@ import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 export default function cellRendererUrl(params) {
 
   const junk = ['-', 'N/A', null, 0];
-  const value = gnp(params, 'value.value');
+  const value = gnp(params, 'value.value') || params.value;
 
   if (junk.includes(value)) {
     return ch.emptyCellValue;

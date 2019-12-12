@@ -56,8 +56,15 @@ function html(params, gridId) {
 function agGridOptions(params) {
 
   const rowData = [];
-  const ids = Object.keys(ch.exchanges) || [];
-  for (const id of ids) {
+
+  const dex = gnp(params, 'data.cryptohub-exchangesListDex.value') || [];
+  const both = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
+  const crypto = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
+  const exchangeIds = Array.from(new Set([
+    ...dex, ...both, ...crypto
+  ]));
+
+  for (const id of exchangeIds) {
     rowData.push(ch.exchanges[id]);
   }
 

@@ -144,7 +144,7 @@ export default function cellOnClickTradingview(params) {
 
   const id = `ch-tippy-${getRandomInt()}`;
   const cssId = `#${id}`;
-  const content = initPug['ch-tippy-click-tradingview']({id});
+  const content = initPug['ch-tippy-popdiv']({id});
   const $cell = params.event.target.closest('.ag-cell');
   popDiv($cell, content);
   htmlPollElement(cssId, 100, partialApplication(loadTradingview, params, id));

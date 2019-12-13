@@ -7,7 +7,7 @@ import cellRendererCurrency   from './utils/cell-renderer-currency.js';
 import columnLibrary from './columns';
 
 const customDefaults = {
-  cellClass: 'cryptohub-align-right',
+  cellClass: 'CH-align-right',
   headerClass: 'CH-col',
   width: 120,
 }

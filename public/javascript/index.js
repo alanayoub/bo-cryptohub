@@ -1,13 +1,13 @@
-// Libs
 import '@babel/polyfill';
 
-import globals from './globals.js';
-import defaultConfig from './default-config.js';
-import CellInteractions from './classes/class-cell-interactions.js';
 import State from './classes/class-state.js';
+import globals from './globals.js';
+import initPug from './generated/init-pug.generated.js';
 import ToolbarView from './views/toolbar/toolbar.js';
-import generateAgOptions from './ag-grid-options-generate.js';
+import defaultConfig from './default-config.js';
 import dataEmitHandler from './eventHandlers/data';
+import CellInteractions from './classes/class-cell-interactions.js';
+import generateAgOptions from './ag-grid-options-generate.js';
 
 import style from '../stylesheet/index.css';
 
@@ -55,6 +55,9 @@ function storeEmitHandler(data) {
   if (!window.initStore) window.initStore = window.ch;
 
 }
+
+const content = initPug['app-container']({});
+document.querySelector('.CH-app').innerHTML = content;
 
 window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);

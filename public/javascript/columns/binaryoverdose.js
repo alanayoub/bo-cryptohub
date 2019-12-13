@@ -35,7 +35,7 @@ export default {
     lockPosition: true,
     suppressMenu: true,
     suppressFilter: true,
-    cellClass: 'cryptohub-align-right',
+    cellClass: 'CH-align-right',
     cellRenderer(params) {
       return params.value + 1;
     },

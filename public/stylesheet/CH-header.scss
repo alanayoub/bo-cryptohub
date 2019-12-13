@@ -1,0 +1,23 @@
+.CH-header {
+  .ch-logo {
+    position: relative;
+    a {
+      cursor: pointer;
+    }
+    h1 {
+      color: #457b2a;
+    }
+    svg {
+      width: 170px;
+      position: absolute;
+      top: 7px;
+      left: 7px;
+    }
+  }
+  .ch-updated {
+    position: absolute;
+    top: 29px;
+    right: 5px;
+    color: #ffffffcc;
+  }
+}

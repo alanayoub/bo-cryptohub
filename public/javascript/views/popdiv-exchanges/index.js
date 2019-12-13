@@ -200,7 +200,7 @@ export default function cellOnClickExchanges(params) {
 
   // Create popdiv
   const $cell = params.event.target.closest('.ag-cell');
-  const contentPopdiv = initPug['ch-tippy-click-tradingview']({id});
+  const contentPopdiv = initPug['ch-tippy-popdiv']({id});
   popDiv($cell, contentPopdiv);
 
   // Populate html content

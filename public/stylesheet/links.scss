@@ -1,0 +1,16 @@
+a,
+.cryptohub-link {
+  color: #2f88c8;
+  text-decoration: underline;
+  cursor: pointer;
+  &:hover {
+    text-decoration: none;
+    color: #555;
+  }
+  &:active {
+    color: 000;
+  }
+  &:visited {
+    color: #94cbf2;
+  }
+}

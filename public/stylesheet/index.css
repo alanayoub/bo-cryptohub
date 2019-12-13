@@ -1,72 +1,11 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font: 13px Helvetica, Arial;
-  background: #355e21;
-}
-
-body:before {
-  content: 'loading';
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-
-@media (max-width:700px) {
-  #updated {
-    display: none
-  }
-}
-
-h1 {
-  color: rgb(51, 51, 51) ;
-  /* font-family: 'Major Mono Display', monospace; */
-  font-family: 'Alegreya Sans SC', sans-serif;
-  font-size: 40px;
-  font-weight: 500;
-  height: 46px;
-  letter-spacing: -1px;
-  line-height: 46.2px;
-  margin-bottom: 20px;
-  margin-left: 5px;
-  margin-right: 0;
-  margin-top: 0;
-  text-size-adjust: 100%;
-}
-
-h2 {
-  font-family: 'Alegreya Sans SC', sans-serif;
-/* font-family: 'Lato', sans-serif; */
-  font-size: 40px;
-}
-
-a,
-.cryptohub-link {
-  color: #2f88c8;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-a:hover,
-.cryptohub-link:hover {
-  text-decoration: none;
-  color: #555;
-}
-
-a:active,
-.cryptohub-link:active {
-  color: black;
-}
-
-a:visited,
-.cryptohub-link:visited {
-  color: #94cbf2;
-}
+@import 'reset';
+@import 'media';
+@import 'links';
+@import 'CH-header';
+@import 'CH-pos-abs-full';
+@import 'CH-tippy-popdiv';
+@import 'ag-grid/overide-filters';
+@import 'ag-grid/custom-globals';
 
 #ch-grid {
   position: fixed;
@@ -76,97 +15,6 @@ a:visited,
   right: 0;
 }
 
-.ch-logo {
-  width: 170px;
-  top: 9px;
-  position: absolute;
-  left: 9px;
-}
-
-.ch-abs-full {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.cryptohub-logo {
-  position: relative;
-}
-
-.cryptohub-logo a {
-  cursor: pointer;
-}
-
-.cryptohub-logo h1 {
-  color: #457b2a;
-}
-
-.cryptohub-tick {
-  display: block;
-  position: absolute;
-  width: 3px;
-  height: 36px;
-  background: #457b2a;
-  top: 6px;
-  left: 13px;
-}
-
-.cryptohub-tick-2 {
-  left: 19px;
-}
-
-#updated {
-  position: absolute;
-  top: 29px;
-  right: 5px;
-  color: #ffffffcc;
-}
-
-
-/*
- *
- * Mega menu placeholder
- *
- */
-.ch-megamenu {
-    position: absolute;
-    top: 28px;
-    left: 435px;
-    line-height: 23px;
-    padding: 0 5px;
-}
-
-.ch-megamenu a {
-    color: #fff !important;
-    text-decoration: none;
-}
-
-
-.cryptohub-analytics-priceGroup {}
-.cryptohub-analytics-supplyGroup {}
-.cryptohub-analytics-technicalGroup {}
-.cryptohub-analytics-fundamentalsGroup {}
-.cryptohub-analytics-linksGroup {}
-
-.cryptohub-align-right > span,
-.cryptohub-align-right > div {
-  flex: 1;
-  text-align: right;
-}
-
-.ch {
-  line-height: 20px;
-}
-
-.cryptohub-cell-worst {
-  background: rgba(216, 0, 0, 0.75)
-}
-
-.cryptohub-cell-bad {
-  background: rgba(216, 0, 0, 0.5)
-}
 
 .ch-cell-active {
   background: #48a5e7;
@@ -261,11 +109,11 @@ a:visited,
 
 /**
  *
- * ch-tippy-click-tradingview
+ * CH-tippy-popdiv
  * Tippy click triggered popdiv
  *
  */
-.ch-tippy-click-tradingview {
+.CH-tippy-popdiv {
   background: #fff;
   border: 1px solid #479cd7;
   padding: 0;
@@ -273,13 +121,10 @@ a:visited,
   height: 320px;
   min-width: 100px;
   min-height: 100px;
+  line-height: 20px;
   resize: both;
   position: relative;
   overflow: auto;
-}
-
-.ch-tippy-click-tradingview .ch-abs-full {
-  bottom: 10px;
 }
 
 /**

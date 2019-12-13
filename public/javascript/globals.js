@@ -94,5 +94,5 @@ window.bo.func.openCells.removeOpen = function({params, $cell, row, field}) {
 window.bo.func.updated = function (when) {
   if (when === 'now') window.timestamp = new Date();
   const time = timeAgo(window.timestamp);
-  document.querySelector('#updated').innerHTML = `Updated ${time} ago`;
+  document.querySelector('.CH-header .ch-updated').innerHTML = `Updated ${time} ago`;
 }

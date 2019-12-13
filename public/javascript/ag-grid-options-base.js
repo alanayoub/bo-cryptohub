@@ -64,29 +64,30 @@ export default {
     cryptohubDefaults: {
       // NOTE: the equals property is not shown in the standard list of ag-grid options
       // https://www.ag-grid.com/javascript-grid-change-detection/
+      editable: false,
       equals: shouldCellUpdate,
       tooltip: cellTooltip,
+      suppressMenu: true,
+      floatingFilterComponentParams: {
+        suppressMenu: true,
+        suppressFilterButton: true
+      },
     },
 
     cryptohubDate: {
 
       // Filter
       filter: filterNumber,
-      suppressMenu: true,
 
       // Floating filter
       floatingFilterComponent: filterFloatingNumber,
-      floatingFilterComponentParams: {
-        suppressMenu: true,
-        suppressFilterButton: true
-      },
 
       // Sort
       comparator: sortNumbers,
       sortingOrder: ['desc', 'asc'],
 
       // Style
-      cellClass: 'cryptohub-align-right',
+      cellClass: 'CH-align-right',
 
     },
 
@@ -94,21 +95,16 @@ export default {
 
       // Filter
       filter: filterNumber,
-      suppressMenu: true,
 
       // Floating filter
       floatingFilterComponent: filterFloatingNumber,
-      floatingFilterComponentParams: {
-        suppressMenu: true,
-        suppressFilterButton: true
-      },
 
       // Sort
       comparator: sortNumbers,
       sortingOrder: ['desc', 'asc'],
 
       // Style
-      cellClass: 'cryptohub-align-right',
+      cellClass: 'CH-align-right',
 
     },
 
@@ -132,14 +128,9 @@ export default {
 
       // Filter
       filter: filterText,
-      suppressMenu: true,
 
       // Floating filter
       floatingFilterComponent: filterFloatingNumber,
-      floatingFilterComponentParams: {
-        suppressMenu: true,
-        suppressFilterButton: true
-      },
 
       // Sort
       comparator: sortText,
@@ -151,14 +142,9 @@ export default {
 
       // Filter
       filter: filterBool,
-      suppressMenu: true,
 
       // Floating filter
       floatingFilterComponent: filterFloatingNumber,
-      floatingFilterComponentParams: {
-        suppressMenu: true,
-        suppressFilterButton: true
-      },
 
       // Sort
       comparator: sortText,
@@ -345,14 +331,5 @@ export default {
   getRowNodeId: data => {
     return data.id;
   },
-
-  // defaultColDef: contains column properties all columns will inherit.
-  defaultColDef: {
-    editable: false,
-    floatingFilterComponentParams: {
-      suppressMenu: true,
-      suppressFilterButton: true
-    },
-  }
 
 };

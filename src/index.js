@@ -10,7 +10,6 @@
 //
 
 // Database connect
-// import './db/connect';
 import { db } from './db/connect';
 
 // Libs

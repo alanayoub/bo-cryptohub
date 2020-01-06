@@ -1,0 +1,25 @@
+@import 'variables';
+@import 'reset';
+
+@import '~ag-grid/src/styles/ag-grid.scss';
+@import '~ag-grid/src/styles/ag-theme-balham.scss';
+
+@import 'media';
+@import 'links';
+@import 'CH-header';
+@import 'CH-pos-abs-full';
+@import 'CH-tippy-click';
+@import 'CH-tippy-popdiv';
+@import 'overide-tippy';
+@import 'ag-grid/overide-filters';
+@import 'ag-grid/overide-theme';
+@import 'ag-grid/custom-globals';
+@import 'ag-grid/custom-columns';
+
+#ch-grid {
+  position: fixed;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

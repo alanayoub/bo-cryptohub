@@ -1,4 +1,6 @@
 .CH-header {
+  background: $primary-color-1;
+  height: 50px;
   .ch-logo {
     position: relative;
     a {
@@ -6,18 +8,20 @@
     }
     h1 {
       color: #457b2a;
+      margin: 0;
+      padding: 0;
     }
     svg {
       width: 170px;
       position: absolute;
-      top: 7px;
+      top: 9px;
       left: 7px;
     }
   }
   .ch-updated {
     position: absolute;
-    top: 29px;
-    right: 5px;
+    top: 16px;
+    right: 10px;
     color: #ffffffcc;
   }
 }

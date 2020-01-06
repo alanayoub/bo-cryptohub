@@ -11,9 +11,9 @@
  */
 export default function getCellCssClassDiff(oldVal, newVal) {
   const cssClass = newVal < oldVal
-    ? 'cryptohub-text-default cryptohub-text-bad-fade'
+    ? 'CH-text-default CH-text-bad-fade'
     : newVal > oldVal
-      ? 'cryptohub-text-default cryptohub-text-good-fade'
-      : 'cryptohub-text-default';
+      ? 'CH-text-default CH-text-good-fade'
+      : 'CH-text-default';
   return cssClass;
 }

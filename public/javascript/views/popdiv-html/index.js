@@ -8,7 +8,7 @@ import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
 import popDiv  from '../../utils/popdiv.js';
 import initPug from '../../generated/init-pug.generated.js';
 
-import style from './index.css';
+import style from './index.scss';
 
 /**
  *

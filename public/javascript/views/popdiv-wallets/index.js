@@ -11,7 +11,7 @@ import popDiv  from '../../utils/popdiv.js';
 import initPug from '../../generated/init-pug.generated.js';
 import sortText from '../../utils/sort-text.js';
 
-import style from './index.css';
+import style from './index.scss';
 
 /**
  *
@@ -182,6 +182,6 @@ export default function popdivWallets(params) {
   // Load Grid
   const gridOptions = agGridOptions(params);
   const gridElement = document.querySelector(`#${gridId}`);
-  new agGrid.Grid(gridElement, gridOptions);
+  new window.Grid(gridElement, gridOptions);
 
 }

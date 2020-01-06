@@ -35,6 +35,7 @@ projects/*
 
 # Libs
 src/public/javascript/libs/*
+src/public/stylesheet/libs/*
 
 # Cache
 cache/*

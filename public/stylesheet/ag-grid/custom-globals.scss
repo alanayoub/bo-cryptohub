@@ -5,3 +5,24 @@
     text-align: right;
   }
 }
+
+.CH-text-default {
+  color: #000;
+  transition: color 2s ease-out;
+}
+
+.CH-text-bad {
+  color: #e00909;
+}
+
+.CH-text-good {
+  color: #019c0d;
+}
+
+.CH-text-good-fade {
+  color: #019c0d;
+}
+
+.CH-text-bad-fade {
+  color: #e00909;
+}

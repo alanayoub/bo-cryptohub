@@ -1,0 +1,53 @@
+.CH-col {
+  border-top: 2px solid #457b2a;
+  background: rgba(69, 123, 42, 0.5);
+  color: #fff;
+  font-weight: 500;
+}
+.CH-col-fiat {
+  border-top: 2px solid #457b2a;
+  background: rgba(69, 123, 42, 0.5);
+  color: #fff;
+}
+.CH-col-name {
+  .ch-icons {
+    width: 24px;
+    height: 24px;
+    margin: 1px 5px 1px 2px;
+    display: inline-block;
+    vertical-align: bottom;
+    background-size: contain;
+    // Generate base64 pixel (http://png-pixel.com/) incase image doesnt exist
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN89x8AAuEB74Y0o2cAAAAASUVORK5CYII=);
+  }
+  strong {
+    font-weight: bold;
+  }
+  .ch-symbol {
+    color: #999;
+  }
+}
+.CH-cell-html {
+  > span {
+    position: absolute;
+    top: 2px;
+  }
+}
+.CH-cell-hover {
+  border: 1px solid #48a5e7!important;
+}
+.CH-tippy-cell-hover {
+  width: 34px;
+  height: 34px;
+  background: #48a5e7;
+  color: #fff;
+  .ch-icon {
+    .fa-chevron-down {
+      width: 34px;
+      height: 34px;
+      line-height: 34px;
+      text-align: center;
+      font-size: 16px;
+    }
+  }
+}

@@ -14,7 +14,7 @@ var pug_has_own_property = Object.prototype.hasOwnProperty;
  * @api private
  */
 
-// exports.merge = pug_merge;
+exports.merge = pug_merge;
 function pug_merge(a, b) {
   if (arguments.length === 1) {
     var attrs = a[0];
@@ -59,7 +59,7 @@ function pug_merge(a, b) {
  * @param {?Array.<string>} escaping
  * @return {String}
  */
-// exports.classes = pug_classes;
+exports.classes = pug_classes;
 function pug_classes_array(val, escaping) {
   var classString = '', className, padding = '', escapeEnabled = Array.isArray(escaping);
   for (var i = 0; i < val.length; i++) {
@@ -98,7 +98,7 @@ function pug_classes(val, escaping) {
  * @return {String}
  */
 
-// exports.style = pug_style;
+exports.style = pug_style;
 function pug_style(val) {
   if (!val) return '';
   if (typeof val === 'object') {
@@ -124,7 +124,7 @@ function pug_style(val) {
  * @param {Boolean} terse
  * @return {String}
  */
-// exports.attr = pug_attr;
+exports.attr = pug_attr;
 function pug_attr(key, val, escaped, terse) {
   if (val === false || val == null || !val && (key === 'class' || key === 'style')) {
     return '';
@@ -132,7 +132,8 @@ function pug_attr(key, val, escaped, terse) {
   if (val === true) {
     return ' ' + (terse ? key : key + '="' + key + '"');
   }
-  if (typeof val.toJSON === 'function') {
+  var type = typeof val;
+  if ((type === 'object' || type === 'function') && typeof val.toJSON === 'function') {
     val = val.toJSON();
   }
   if (typeof val !== 'string') {
@@ -152,7 +153,7 @@ function pug_attr(key, val, escaped, terse) {
  * @param {Object} terse whether to use HTML5 terse boolean attributes
  * @return {String}
  */
-// exports.attrs = pug_attrs;
+exports.attrs = pug_attrs;
 function pug_attrs(obj, terse){
   var attrs = '';
 
@@ -184,7 +185,7 @@ function pug_attrs(obj, terse){
  */
 
 var pug_match_html = /["&<>]/;
-// exports.escape = pug_escape;
+exports.escape = pug_escape;
 function pug_escape(_html){
   var html = '' + _html;
   var regexResult = pug_match_html.exec(html);
@@ -219,7 +220,7 @@ function pug_escape(_html){
  * @api private
  */
 
-// exports.rethrow = pug_rethrow;
+exports.rethrow = pug_rethrow;
 function pug_rethrow(err, filename, lineno, str){
   if (!(err instanceof Error)) throw err;
   if ((typeof window != 'undefined' || !filename) && !str) {
@@ -251,13 +252,3 @@ function pug_rethrow(err, filename, lineno, str){
     + '\n' + context + '\n\n' + err.message;
   throw err;
 };
-
-const pug = {
-  rethrow: pug_rethrow,
-  escape: pug_escape,
-  attrs: pug_attrs,
-  attr: pug_attr,
-  style: pug_style,
-  classes: pug_classes,
-  merge: pug_merge
-}

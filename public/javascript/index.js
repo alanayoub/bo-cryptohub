@@ -1,4 +1,7 @@
 import '@babel/polyfill';
+import pug from 'pug-runtime';
+
+import { Grid } from 'ag-grid';
 
 import State from './classes/class-state.js';
 import globals from './globals.js';
@@ -9,7 +12,10 @@ import dataEmitHandler from './eventHandlers/data';
 import CellInteractions from './classes/class-cell-interactions.js';
 import generateAgOptions from './ag-grid-options-generate.js';
 
-import style from '../stylesheet/index.css';
+import style from '../stylesheet/index.scss';
+
+window.pug = pug;
+window.Grid = Grid;
 
 function flipMap(map) {
   const out = {};
@@ -71,7 +77,7 @@ window.bo.inst.state.init().then(state => {
   generateAgOptions().then(agOptions => {
 
     const gridElement = document.querySelector('#ch-grid');
-    const grid = new agGrid.Grid(gridElement, agOptions);
+    const grid = new Grid(gridElement, agOptions);
 
     if (!grid) throw new Error('Cant find grid');
 

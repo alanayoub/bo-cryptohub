@@ -19,7 +19,7 @@ export default function cellRendererName(params) {
   }
 
   const output = `
-    <div class="ch-col-name">
+    <div class="CH-col-name">
       <span class="ch-icons" style="${styles}"></span>
       <strong>${name}</strong><span class="ch-symbol"> (${symbol})</span>
     </div>

@@ -1,4 +1,15 @@
 .CH-tippy-popdiv {
+  background: #fff;
+  border: 1px solid #479cd7;
+  padding: 0;
+  width: 640px;
+  height: 320px;
+  min-width: 100px;
+  min-height: 100px;
+  line-height: 20px;
+  resize: both;
+  position: relative;
+  overflow: auto;
   .CH-pos-abs-full {
     bottom: 10px;
   }

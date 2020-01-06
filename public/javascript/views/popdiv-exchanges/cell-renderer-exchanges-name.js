@@ -22,7 +22,7 @@ export default function cellRendererExchangesName(params) {
   }
 
   const output = `
-    <div class="ch-col-name">
+    <div class="CH-col-name">
       <span class="ch-icons" style="${styles}"></span>
       <a href="${urlPath}" target="_blank">${name}</a>
     </div>

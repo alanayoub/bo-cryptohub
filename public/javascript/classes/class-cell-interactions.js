@@ -137,7 +137,7 @@ export default class CellInteractions {
       $cell.$popDivTippy.destroy();
     }
     if ($cell.$triggerTippy) {
-      $cell.$triggerTippy.reference.classList.remove('ch-cell-hover');
+      $cell.$triggerTippy.reference.classList.remove('CH-cell-hover');
       $cell.$triggerTippy.destroy();
     }
     window.bo.func.openCells.removeOpen({params, $cell, row, field});
@@ -151,7 +151,7 @@ export default class CellInteractions {
   setMouseOverState($cell, content) {
     popDiv($cell, content, this.tippyOptions);
     $cell.$triggerTippy = $cell._tippy;
-    $cell.classList.add('ch-cell-hover');
+    $cell.classList.add('CH-cell-hover');
     $cell.dataset.chHover = 'true';
   }
 
@@ -164,7 +164,7 @@ export default class CellInteractions {
     $cell.dataset.chHover = false;
     $cell.dataset.chOpen = false;
     if ($cell.$triggerTippy) {
-      $cell.$triggerTippy.reference.classList.remove('ch-cell-hover');
+      $cell.$triggerTippy.reference.classList.remove('CH-cell-hover');
       $cell.$triggerTippy.destroy();
     }
     if ($cell.$trigger) {
@@ -196,7 +196,7 @@ export default class CellInteractions {
   mouseOut(params) {
 
     if (!params.event) {
-      const $tippy = document.querySelectorAll(`.ch-tippy-cell-hover-${params.data.id}`)[0];
+      const $tippy = document.querySelectorAll(`.CH-tippy-cell-hover-${params.data.id}`)[0];
       if ($tippy) $tippy.remove();
       return;
     }
@@ -233,11 +233,11 @@ export default class CellInteractions {
 
       const id = params.data.id;
       const $cell = params.event.srcElement.closest('.ag-cell');
-      const content = initPug['ch-tippy-cell-hover']({id});
+      const content = initPug['tippy-cell-hover']({id});
 
       this.setMouseOverState($cell, content);
 
-      const $trigger = document.querySelector(`.ch-tippy-cell-hover-${id}`);
+      const $trigger = document.querySelector(`.CH-tippy-cell-hover-${id}`);
       if (!$trigger) {
         return;
       }

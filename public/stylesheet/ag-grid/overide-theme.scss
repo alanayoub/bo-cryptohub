@@ -1,0 +1,39 @@
+.ag-theme-balham {
+  .ag-header {
+    background: #a3b48f!important;
+  }
+  .ag-header-cell-label {
+    width: 100%!important;
+  }
+  .ag-header-icon.ag-header-cell-menu-button {
+    display: none;
+  }
+  .ag-row-selected {
+    border-bottom-color: #d9dcde!important;
+    background-color: transparent!important;
+  }
+  .ag-icon-desc,
+  .ag-icon-asc {
+    background-color: #bdc3c7!important;
+  }
+  .ag-icon-desc {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNy41IDExVjNtLTMgNS41bDMgMyAzLTMiIHN0cm9rZT0iIzdGOEM4RCIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==);
+  }
+  .ag-icon-asc {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNy41IDEyVjRtMyAyLjVsLTMtMy0zIDMiIHN0cm9rZT0iIzdGOEM4RCIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==);
+  }
+  .ag-cell-data-changed {
+    background-color: #fff600!important;
+  }
+  .ag-cell {
+    display: flex;
+    align-items: center;
+  }
+  .ag-cell[data-ch-open='true'] {
+    border: 1px solid #0091EA!important;
+    background-color: #0091EA33!important;
+  }
+  .ag-layout-normal .ag-body {
+    overflow: hidden;
+  }
+}

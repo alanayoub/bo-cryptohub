@@ -1,0 +1,21 @@
+.tippy-tooltip {
+  .CH-col {
+    border-top: 2px solid #479cd7;
+    background: #479cd780;
+    color: #fff;
+    font-weight: 500;
+  }
+}
+.ag-theme-balham {
+  .tippy-tooltip {
+    .ag-root {
+      border: none!important
+    }
+    .ag-header {
+      background: #bdc3c733!important;
+    }
+    .ag-header-cell-label {
+      width: 100%!important;
+    }
+  }
+}

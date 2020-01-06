@@ -116,8 +116,8 @@ export default {
 
     cryptohubPercent: {
       cellClassRules: {
-        'cryptohub-text-bad': x => x.value && x.value.value < 0,
-        'cryptohub-text-good': x => x.value && x.value.value > 0,
+        'CH-text-bad': x => x.value && x.value.value < 0,
+        'CH-text-good': x => x.value && x.value.value > 0,
       },
       valueFormatter: valueFormatterPercentChange,
       // TODO the compound renderer is not what I planned it to be, revisit

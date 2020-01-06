@@ -15,10 +15,10 @@ import delegate      from 'delegate';
 // Templates
 import initPug       from '../generated/init-pug.generated.js';
 
-// Styles
-import style         from './edit-dialogue.css';
-
 import isValidCustomCalculation from '../utils/is-valid-custom-calculation.js';
+
+// Styles
+import style         from './edit-dialogue.scss';
 
 export default class EditDialogue {
 

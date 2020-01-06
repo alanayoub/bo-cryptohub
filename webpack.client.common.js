@@ -2,7 +2,7 @@
 
 // Node
 const path                             = require('path');
-const fs                               = require('fs');
+const fs                               = require('fs-extra');
 
 // Libs
 const HtmlWebpackPlugin                = require('html-webpack-plugin');
@@ -66,11 +66,18 @@ module.exports = {
         {
           source: './node_modules/json-url/dist/browser/json-url-single.js',
           destination: path.resolve(__dirname, './public/javascript/libs/json-url-single.js')
-        }
+        },
+        {
+          source: './node_modules/pug-runtime/index.js',
+          destination: path.resolve(__dirname, './public/javascript/libs/pug-runtime.js')
+        },
       ]
+
       for (let c of copyConf) {
         fs.copyFile(c.source, c.destination, error => {
-          if (error) throw error;
+          if (error) {
+            throw error;
+          }
           console.log(`${c.source} copied to ${c.destination}`);
         });
       }

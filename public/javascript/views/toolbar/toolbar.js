@@ -4,7 +4,7 @@ import { objectIsObject as isObject } from '../../libs/bo-utils-client';
 import EditDialogueView               from '../edit-dialogue.js';
 import initPug                        from '../../generated/init-pug.generated.js';
 
-import style                          from './toolbar.css';
+import style                          from './toolbar.scss';
 
 export default class Toolbar {
 
@@ -35,12 +35,16 @@ export default class Toolbar {
     const model = {}
 
     let item;
+    let key;
     let val;
     let up = 0;
     let dn = 0;
     let nc = 0;
+    let count = 0;
+    const max = 1000;
     for (item of data) {
       if (!item['cc-total-vol-full-CHANGEPCTDAY']) continue;
+      if (++count === max) break;
       val = item['cc-total-vol-full-CHANGEPCTDAY'];
       if (val.value) val = val.value;
       if (val > 0) up++;

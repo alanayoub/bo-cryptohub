@@ -48,25 +48,26 @@ try {
     logger.warn(`index.js:\n${error.stack}`);
   });
 
-  startServer({
-    dbDir: settings.dbDir,
-    cacheDir: settings.cacheDir,
-    server: {
-      pub: join(__dirname, '../dist/public'),
-      port: 3001,
-      index: join(__dirname, '../dist/public/index.html')
-    },
-    events: {
-      data: {
-        ...data
-      },
-      store: {
-        ...store
-      }
-    }
-  });
-
   db.on('connected', () => {
+
+    startServer({
+      db,
+      dbDir: settings.dbDir,
+      cacheDir: settings.cacheDir,
+      server: {
+        pub: join(__dirname, '../dist/public'),
+        port: 3001,
+        index: join(__dirname, '../dist/public/index-generated.html')
+      },
+      events: {
+        data: {
+          ...data
+        },
+        store: {
+          ...store
+        }
+      }
+    });
 
     if (initialised) return;
     console.log(`INITIALISING`);

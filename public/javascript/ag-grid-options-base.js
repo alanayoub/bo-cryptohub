@@ -27,6 +27,7 @@ import filterFloatingNumber               from './utils/filter-floating-number.j
 // ag-grid filter comparators
 import sortText                           from './utils/sort-text.js';
 import sortNumbers                        from './utils/sort-numbers.js';
+import segment                            from './utils/segment.js';
 
 //
 // AG-GRID BASE OPTIONS
@@ -234,6 +235,7 @@ export default {
     if (!sortModel) return;
     const { colId:column, sort:direction } = sortModel;
     window.bo.inst.state.set('sort', {column, direction});
+    segment.columnSorted(sortModel);
   },
 
   /**
@@ -250,7 +252,9 @@ export default {
    *
    */
   onColumnResized(params) {
-    // console.log('onColumnResized', params);
+    if (params.finished) {
+      segment.columnWidthResized();
+    }
   },
 
   /**
@@ -292,7 +296,9 @@ export default {
 
       window.bo.inst.state.set('columns', columns);
 
-    })
+    });
+
+    segment.columnMoved();
 
   },
 

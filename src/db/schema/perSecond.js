@@ -95,13 +95,11 @@ const options = {
   }
 }
 
-console.log('should not load');
-debugger;
 const PerSecond = new Schema(options, {
   collection: 'tsseconds',
   writeConcern: {
     w: 1, // 'majority',
-    j: true,
+    j: true
     // wtimeout: 1000
   }
 });

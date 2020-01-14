@@ -15,6 +15,8 @@ import logger from '../../logger';
  *
  * ```
  *
+ * @param {Object} data
+ *
  */
 export default async function walletSave(data) {
 

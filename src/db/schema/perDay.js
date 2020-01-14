@@ -166,14 +166,14 @@ const options = {
     default: [[+new Date(), null], [+new Date(), null]],
     required: true,
     validate: [validator.realtime, 'realtime is not valid']
-  },
+  }
 }
 
 const PerDay = new Schema(options, {
   collection: 'tsdays',
   writeConcern: {
     w: 0,     // requests acknowledgment that the write operation has propagated to a specified number of mongod instances
-    j: false, // requests acknowledgment from MongoDB that the write operation has been written to the on-disk journal
+    j: false  // requests acknowledgment from MongoDB that the write operation has been written to the on-disk journal
     // wtimeout: 1000
   }
 });

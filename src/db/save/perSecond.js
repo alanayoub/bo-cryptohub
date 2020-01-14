@@ -6,7 +6,7 @@ function splitIntoGroups(data, maxFields = 5000) {
 
   const firstKey = Object.keys(data)[0];
   const numFields = Object.keys(data[firstKey]).length;
-  const numItems = Math.floor((maxFields / numFields));
+  const numItems = Math.floor(maxFields / numFields);
 
   let idx = 0;
   let count = 0;
@@ -42,6 +42,8 @@ function splitIntoGroups(data, maxFields = 5000) {
  * }
  *
  * ```
+ *
+ * @param {Object} data
  *
  */
 export default async function perSecond(data, timestamp = +new Date()) {

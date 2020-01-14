@@ -7,6 +7,7 @@ import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 
 // Cryptohub util functions
 import popDiv                             from '../utils/popdiv.js';
+import segment                            from '../utils/segment.js';
 import initPug                            from '../generated/init-pug.generated.js';
 
 import cellOnClickTradingview             from '../views/popdiv-tradingview/';
@@ -112,6 +113,13 @@ export default class CellInteractions {
       }
       $cell.$popDivTippy = $cell._tippy;
       window.bo.func.openCells.addOpen(params);
+      const data = {
+        popdivType,
+        name: params.data['cryptohub-name'],
+        rowId: params.id,
+        columnId: params.colDef.colId,
+      }
+      segment.cellSelected(data);
     }
 
   }
@@ -124,14 +132,13 @@ export default class CellInteractions {
    *
    */
   static close({params, $cell, row, field}) {
+    const popdivType = gnp(params, 'colDef.cellRendererParams.popdiv');
     if (!$cell) {
       $cell = params.event.srcElement.closest('.ag-cell');
     }
-
     if ($cell.dataset.chOpen === 'true') {
       CellInteractions.setMouseOutState($cell);
     }
-
     $cell.dataset.chOpen = false;
     if ($cell.$popDivTippy) {
       $cell.$popDivTippy.destroy();
@@ -141,6 +148,13 @@ export default class CellInteractions {
       $cell.$triggerTippy.destroy();
     }
     window.bo.func.openCells.removeOpen({params, $cell, row, field});
+    const data = {
+      popdivType,
+      name: params.data['cryptohub-name'],
+      rowId: params.id,
+      columnId: params.colDef.colId,
+    }
+    segment.cellSelected(data);
   }
 
   /**

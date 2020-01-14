@@ -2,6 +2,7 @@
 
 import initPug from '../../generated/init-pug.generated.js';
 import isValidCustomCalculation from '../../utils/is-valid-custom-calculation.js';
+import segment from '../../utils/segment.js';
 
 export default class Selector {
 
@@ -138,9 +139,11 @@ export default class Selector {
     const btnAddCustom = document.querySelector('.BO-edit-dialogue .bo-add-custom');
     btnClearSelections.onclick = () => {
       this.checkboxHandler(new CustomEvent('clear'));
+      segment.allSelectionsCleared();
     };
     btnAddCustom.onclick = () => {
       this.addCustom();
+      segment.addCustomColumnStarted();
     };
   }
 
@@ -779,6 +782,29 @@ export default class Selector {
       for (const folderNode of folderNodes.values()) {
         Selector.setFolderCheckbox(folderNode);
       };
+    }
+
+    // Segment Events
+    if (targetIsCheckbox) {
+      const label = target.parentElement.querySelector('.fancytree-title').textContent;
+      const state = target.classList.contains('fa-check-square') ? 'checked' : 'unchecked';
+      const group = !!targetIsFolder;
+      if (group) {
+        if (state === 'checked') {
+          segment.columnGroupSelected(label);
+        }
+        else {
+          segment.columnGroupDeselected(label);
+        }
+      }
+      else {
+        if (state === 'checked') {
+          segment.columnSelected(label);
+        }
+        else {
+          segment.columnDeselected(label);
+        }
+      }
     }
 
   }

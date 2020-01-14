@@ -100,7 +100,8 @@ module.exports = {
       }
     ]),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, './public/index.html')
+      template: path.resolve(__dirname, './src/index.html'),
+      filename: 'index-generated.html',
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash:8].css',
@@ -110,9 +111,9 @@ module.exports = {
       console.log('Running "critical", generating new HTML');
       critical.generate({
         inline: true,
-        base: 'dist/public/',
-        src: 'index.html',
-        dest: 'index.html',
+        base: 'src/',
+        src: 'index-generated.html',
+        dest: 'index-generated.html',
         width: 1300,
         height: 900,
         minify: true

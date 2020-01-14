@@ -18,7 +18,7 @@ export default async function getAndUpdateBidMap(source, data) {
 
   let bidMap;
 
-  switch(source) {
+  switch (source) {
 
     case 'cmc':
 
@@ -39,7 +39,6 @@ export default async function getAndUpdateBidMap(source, data) {
       }
 
       return bidMap;
-      break;
 
     case 'cc':
 
@@ -60,7 +59,6 @@ export default async function getAndUpdateBidMap(source, data) {
       }
 
       return bidMap;
-      break;
 
     case 'm':
 
@@ -81,7 +79,6 @@ export default async function getAndUpdateBidMap(source, data) {
       }
 
       return bidMap;
-      break;
   }
 
 }

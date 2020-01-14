@@ -42,7 +42,8 @@ mongoose.connect(uri, {
   poolSize: 10,
   useCreateIndex: true,
   auto_reconnect: true,
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useFindAndModify: false,
   // socketTimeoutMS: 0,
   // connectTimeoutMS: 0,
 });

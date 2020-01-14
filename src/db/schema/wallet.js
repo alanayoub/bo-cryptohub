@@ -113,7 +113,7 @@ const options = {
   // SortOrder:  "2"
   'cc-SortOrder': {
     type: Schema.Types.Mixed
-  },
+  }
 
   //
   // BINARYOVERDOSE

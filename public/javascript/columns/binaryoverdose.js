@@ -13,7 +13,7 @@ import cellRendererExchangeLocations            from '../utils/cell-renderer-exc
 
 import onCellClicked                            from '../utils/on-cell-clicked.js';
 
-import { number, currency, percent, date, text, html, bool } from './templates';
+import { number, currency, percent, array, date, text, html, bool } from './templates';
 
 export default {
 
@@ -280,25 +280,16 @@ export default {
   //
   // Exchanges
   //
-  exchanges: {
+  exchanges: Object.assign({}, array, {
     colId: 'exchanges',
     field: 'stub-exchanges',
     headerName: 'Exchanges',
-    headerClass: 'CH-col',
     headerTooltip: 'List of Exchanges\n\nData Source: BinaryOverdose / Cryptocompare',
-    lockPinned: true,
     width: 200,
-    columnGroupShow: 'closed',
-    type: [
-      'cryptohubDefaults',
-      'cryptohubText',
-      'cryptohubHover'
-    ],
     cellRenderer: cellRendererExchanges,
     cellRendererParams: {
       popdiv: 'exchanges',
     },
-    onCellClicked,
     dependencies: [
       'cryptohub-numberOfExchanges',
       'cryptohub-exchangesListDex',
@@ -306,7 +297,7 @@ export default {
       'cryptohub-exchangesListAcceptsBoth',
       'cryptohub-numberOfPairs'
     ]
-  },
+  }),
 
   //
   // Exchange Locations

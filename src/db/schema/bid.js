@@ -50,14 +50,14 @@ const options = {
     type: String,
     lowercase: true,
     maxlength: 20
-  },
+  }
 }
 
 const Bid = new Schema(options, {
   collection: 'bid',
   writeConcern: {
     w: 1,
-    j: true,
+    j: true
   }
 });
 Bid.set('versionKey', false);

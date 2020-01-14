@@ -14,6 +14,8 @@ import generateAgOptions from './ag-grid-options-generate.js';
 
 import style from '../stylesheet/index.scss';
 
+import segment from './utils/segment.js';
+
 window.pug = pug;
 window.Grid = Grid;
 
@@ -64,6 +66,10 @@ function storeEmitHandler(data) {
 
 const content = initPug['app-container']({});
 document.querySelector('.CH-app').innerHTML = content;
+
+$('body').on('click', '.ch-logo a', event => {
+  segment.homeLogoClicked();
+});
 
 window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);

@@ -38,7 +38,7 @@ export default async function createNewIdMapping(source, data) {
   let document;
 
   // Get data and return false if bad data
-  switch(source) {
+  switch (source) {
     case 'cmc':
       if (!data.id || !data.name || !data.symbol) {
         return false;
@@ -63,6 +63,8 @@ export default async function createNewIdMapping(source, data) {
       name = normalize(data.name);
       symbol = normalize(data.symbol);
       break;
+    default:
+      //
   }
 
   document = await getBidMatch({source, name, symbol, findOne: true});

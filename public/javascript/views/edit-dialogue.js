@@ -16,6 +16,7 @@ import delegate      from 'delegate';
 import initPug       from '../generated/init-pug.generated.js';
 
 import isValidCustomCalculation from '../utils/is-valid-custom-calculation.js';
+import segment       from '../utils/segment.js';
 
 // Styles
 import style         from './edit-dialogue.scss';
@@ -39,9 +40,13 @@ export default class EditDialogue {
 
     this.modal = new tingle.modal(options);
 
-    this.modal.addFooterBtn('Cancel', 'BO-btn bo-btn-secondary', () => {
+    this.modal.addFooterBtn('Cancel', 'BO-btn bo-btn-secondary', async () => {
       this.setErrorState({error: false});
       this.modal.close();
+      const state = await bo.inst.state.get();
+      const selectorData = this.selector.get();
+      const stateCols = state.columns;
+      segment.editAborted(stateCols, selectorData);
     });
 
     this.modal.addFooterBtn('OK', 'BO-btn bo-btn-primary', async () => {
@@ -50,6 +55,7 @@ export default class EditDialogue {
 
     delegate(parentSelector, selector, 'click', event => {
       this.open();
+      segment.editStarted();
     }, false);
 
   }
@@ -115,6 +121,9 @@ export default class EditDialogue {
       console.log('error', selectorData);
       // return selectorData;
     }
+
+    segment.editApplied(stateCols, selectorData);
+
   }
 
   /**

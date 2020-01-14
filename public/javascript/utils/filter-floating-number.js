@@ -1,5 +1,7 @@
 'use strict';
 
+import segment from './segment.js';
+
 function NumberFloatingFilter() {}
 
 NumberFloatingFilter.prototype.init = function (params) {
@@ -27,6 +29,7 @@ NumberFloatingFilter.prototype.init = function (params) {
   this.eFilterInput.addEventListener('blur', () => {
     const model = params.api.getFilterModel();
     bo.inst.state.set('filter', model);
+    segment.columnFiltered(model);
   });
 
   bo.inst.state.getFilterModel().then(model => {

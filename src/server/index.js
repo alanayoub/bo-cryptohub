@@ -84,6 +84,11 @@ export default async function startServer(config) {
       logger.info(`index.js: listening on *: ${config.server.port}`);
     });
 
+    app.get('/privacy', (req, res, next) => {
+      const privacy = join(__dirname, '../../dist/public/privacy.html');
+      res.sendFile(privacy);
+    });
+
     app.get('/', (req, res, next) => {
 
       const sId = req.session.id;
@@ -117,7 +122,6 @@ export default async function startServer(config) {
 
       res.sendFile(config.server.index);
 
-      // next();
     });
 
     let socket;

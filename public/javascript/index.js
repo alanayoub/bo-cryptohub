@@ -7,6 +7,7 @@ import State from './classes/class-state.js';
 import globals from './globals.js';
 import initPug from './generated/init-pug.generated.js';
 import ToolbarView from './views/toolbar/toolbar.js';
+import CookieBarView from './views/cookie-bar';
 import defaultConfig from './default-config.js';
 import dataEmitHandler from './eventHandlers/data';
 import CellInteractions from './classes/class-cell-interactions.js';
@@ -70,6 +71,8 @@ document.querySelector('.CH-app').innerHTML = content;
 $('body').on('click', '.ch-logo a', event => {
   segment.homeLogoClicked();
 });
+
+new CookieBarView();
 
 window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);

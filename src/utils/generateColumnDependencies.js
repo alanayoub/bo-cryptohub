@@ -2,9 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-const cryptohubDir = process.env.NODE_ENV === 'production'
-  ? '/home/ubuntu/live/vps/web/src/bo-cryptohub/'
-  : path.join(__dirname, '../../');
+const cryptohubDir = path.join(__dirname, '../../');
 
 module.exports = function(cb) {
 

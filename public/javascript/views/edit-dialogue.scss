@@ -131,43 +131,9 @@
    }
 }
 
-/* Tingle puts this at root */
-.tingle-modal-box {
-  height: 90%;
-  width: 90%;
-  .tingle-modal-box__content {
-    padding: 0!important;
-    height: calc(100% - 95px); /* footer is 95px */
-  }
-}
-
 .BO-edit-dialogue {
 
   counter-reset: columns;
-  height: 100%;
-
-  > header {
-    margin: 0 0 20px 0;
-    padding: 20px;
-    background: #73965d;
-    color: #fff;
-  }
-
-  header {
-    h2 {}
-    div {
-      font-size: 14px;
-    }
-  }
-
-  button {
-    margin: 5px 5px 0 0;
-    padding: 5px;
-  }
-
-  h4 {
-    margin: 0 0 20px 0;
-  }
 
   .bo-custom {
     display: block;
@@ -265,9 +231,6 @@
   }
 
   section {
-
-    padding: 20px;
-    height: calc(100% - 110px);
 
     table {
       width: 100%;

@@ -1,0 +1,23 @@
+@import './cookie-details.scss';
+#cookie-bar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #555;
+  color: #fff;
+  height: 30px;
+  padding: 8px;
+  a {
+    margin-left: 5px;
+    color: #fff;
+  }
+  .fa-window-close {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+  }
+}

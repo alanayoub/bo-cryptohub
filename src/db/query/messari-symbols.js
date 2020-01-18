@@ -11,7 +11,10 @@ import { PerDayModel } from '../schema';
  */
 export default async function getMessariSymbols() {
 
-  const query = {field: 'm-markets-base'};
+  const query = {
+    field: 'm-markets-base',
+    year: new Date().getFullYear() + '',
+  };
   const data = await PerDayModel.find(query).lean();
   const symbols = new Set();
 

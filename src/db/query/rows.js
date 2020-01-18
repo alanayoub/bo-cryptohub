@@ -19,6 +19,7 @@ async function getRecords(fieldSet, sortField = 'cc-total-vol-full-TOTALVOLUME24
   const aggregate = [
     {
       $match: {
+        year: new Date().getFullYear() + '',
         field: {
           $in: Array.from(fieldSet)
         }

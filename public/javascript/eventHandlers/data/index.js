@@ -61,14 +61,20 @@ export default function dataEmitHandler(event, data) {
 
     if (event === 'rows-full') {
       window.refs.rowData = newSocketData;
-      window.bo.agOptions.api.setRowData(window.refs.rowData);
     }
     else if (event === 'rows-update') {
-      window.bo.agOptions.api.batchUpdateRowData({update: newSocketData}, () => {
-        // console.log('updates happened');
-      });
+      for (const item of newSocketData) {
+        const idx = window.refs.rowData.findIndex(x => x.id === item.id);
+        if (idx > -1) {
+          window.refs.rowData[idx] = item;
+        }
+        else {
+          window.refs.rowData.push(item);
+        }
+      }
     }
 
+    window.bo.agOptions.api.setRowData(window.refs.rowData);
     window.bo.inst.toolbarView.update(window.refs.rowData);
 
   });

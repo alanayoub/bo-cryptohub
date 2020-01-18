@@ -119,7 +119,6 @@ export default class EditDialogue {
     }
     else {
       console.log('error', selectorData);
-      // return selectorData;
     }
 
     segment.editApplied(stateCols, selectorData);

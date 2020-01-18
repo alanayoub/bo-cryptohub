@@ -10,6 +10,7 @@ import { PerDayModel } from '../schema';
 export default async function getCurrencies() {
 
   const query = {
+    year: new Date().getFullYear() + '',
     field: {$regex: 'xe-'}
   }
   const projection = {_id: 0};

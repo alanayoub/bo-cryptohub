@@ -53,7 +53,7 @@ pug_html = pug_html + "\u003Cp\u003E";
 ;pug_debug_line = 13;
 pug_html = pug_html + "To learn more about how this website uses cookies or localStorage, please read our ";
 ;pug_debug_line = 13;
-pug_html = pug_html + "\u003Ca href=\"https:\u002F\u002Fbinaryoverdose.com\u002Fprivacy\" target=\"_blank\"\u003E";
+pug_html = pug_html + "\u003Ca href=\"https:\u002F\u002Fbinaryoverdose.com\u002Fprivacy.html\" target=\"_blank\"\u003E";
 ;pug_debug_line = 13;
 pug_html = pug_html + "PRIVACY POLICY\u003C\u002Fa\u003E";
 ;pug_debug_line = 13;

@@ -82,6 +82,7 @@ const number = {
   headerName: null,
   headerTooltip: null,
   headerClass: 'CH-col',
+  cellClass: 'CH-align-right',
   lockPinned: true,
   width: 120,
   type: [
@@ -237,8 +238,22 @@ const bool = {
   onCellClicked,
 };
 
+const custom = {
+  colId: null,
+  field: null,
+  headerName: null,
+  headerTooltip: null,
+  headerClass: 'CH-col',
+  lockPinned: true,
+  width: 120,
+  type: [
+    'cryptohubDefaults',
+  ],
+};
+
 export {
   array,
+  custom,
   currency,
   date,
   number,

@@ -13,6 +13,7 @@ export default async function getIds(ids) {
   if (!Array.isArray(ids)) ids = [ids];
 
   const query = {
+    year: new Date().getFullYear() + '',
     id: {$in: ids}
   };
   const projection = {_id: 0};

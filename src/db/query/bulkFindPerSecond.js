@@ -26,7 +26,11 @@ export default async function bulkFindPerSecond(data) {
     }
   }
 
-  const results = await PerDayModel.find({$or});
+  const query = {
+    $or,
+    year: new Date().getFullYear() + ''
+  }
+  const results = await PerDayModel.find(query);
 
   // Merge fields by id
   const output = {};

@@ -23,6 +23,7 @@ export default async function getBTC() {
   // Get Bitcoin price
   const query = {
     id: bid,
+    year: new Date().getFullYear() + '',
     field: 'cc-total-vol-full-PRICE'
   };
   const projection = {_id: 0};

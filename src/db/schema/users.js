@@ -31,13 +31,19 @@ const options = {
   },
   local: {
     username: String,
-    password: String
+    password: String,
+    salt: String
   },
   google: {
     id: String,
-    token: String,
-    email: String,
-    name: String
+    displayName: String,
+    emails: Array,
+    name: {
+      familyName: String,
+      givenName: String,
+    },
+    photos: Array,
+    local: String,
   }
 }
 

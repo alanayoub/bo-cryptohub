@@ -8,9 +8,21 @@ NumberFloatingFilter.prototype.init = function (params) {
 
   const colId = params.column.colId;
 
+  let placeholder = '';
+  const typeArray = params.column.colDef.type
+  if (typeArray.includes('cryptohubNumeric')) {
+    placeholder = 'e.g. <100'
+  }
+  else if (typeArray.includes('cryptohubText')) {
+    placeholder = 'search...'
+  }
+  else if (typeArray.includes('cryptohubBool')) {
+    placeholder = 'e.g. true'
+  }
+
   this.onFloatingFilterChanged = params.onFloatingFilterChanged;
   this.eGui = document.createElement('div');
-  this.eGui.innerHTML = `<input type="text" data-floatingFilter=${colId} />`;
+  this.eGui.innerHTML = `<input type="text" placeholder="${placeholder}" data-floatingFilter=${colId} />`;
   this.currentValue = null;
   this.eFilterInput = this.eGui.querySelector('input');
 

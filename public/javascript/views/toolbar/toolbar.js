@@ -2,23 +2,39 @@
 
 import { objectIsObject as isObject } from '../../libs/bo-utils-client';
 import EditDialogueView               from '../edit-dialogue.js';
+import LoginView                      from '../login';
 import initPug                        from '../../generated/init-pug.generated.js';
 
 import style                          from './toolbar.scss';
 
 export default class Toolbar {
 
-  constructor(selector) {
+  constructor(selector, gridColumns, config = {}) {
 
-    this.gui = document.querySelector(selector)
-    this.gui.innerHTML = initPug['toolbar']({
+    this.config = config;
+    this.gui = document.querySelector(selector);
+
+    const context = Object.assign({}, config, {
+      gridColumns,
       upPer: '  ',
       dnPer: '  ',
       ncPer: '  ',
       total: '   '
     });
 
-    window.bo.inst.editDialogue = new EditDialogueView(selector, '.ch-edit');
+    this.gui.innerHTML = initPug['toolbar'](context);
+
+    if (config.home) {
+      $(selector).on('click', '.ch-home', event => {
+        window.location = window.location.origin;
+      });
+    }
+    if (config.edit) {
+      window.bo.inst.editDialogue = new EditDialogueView(selector, '.ch-edit');
+    }
+    if (config.login) {
+      window.bo.inst.login = new LoginView(`${selector} .ch-login-container`);
+    }
 
   }
 
@@ -30,6 +46,7 @@ export default class Toolbar {
    */
   update(data) {
 
+    return true;
     if (!Array.isArray(data)) return false;
 
     const model = {}

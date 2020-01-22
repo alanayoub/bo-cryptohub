@@ -1,31 +1,58 @@
-div(class='ch-grid')
-  div(class='ch-item')
-    span(class='ch-edit')
-      i(class='fa fa-edit')
-      = ' Edit'
-  div(class='ch-item')
-    span(class='ch-social')
-      span(class='ch-social-twitter')
-        a(
-          href='https://twitter.com/BinaryOverdose?ref_src=twsrc%5Etfw'
-          class='twitter-follow-button'
-          data-show-screen-name='false'
-          data-show-count='false'
-          title='Follow @BinaryOverdose'
-          target='_blank'
-        )
-          i(class='fab fa-twitter')
-  div(class='ch-item')
-    span(class='ch-data')
-      span(class='ch-up')
-        span(class='ch-val') #{upPer}
-        span(class='ch-symbol')
-          = '▲'
-      span(class='ch-dn')
-        span(class='ch-val') #{dnPer}
-        span(class='ch-symbol')
-          = '▼'
-  div(class='ch-item')
-    span(class='ch-total')
-      span
-        span(class='ch-val') #{total} tokens
+div(class='ch-grid' style='grid-template-columns: ' + gridColumns)
+
+  if home
+    div(class='ch-item')
+      span(class='ch-home')
+        i(class='fa fa-home')
+        = ' Home'
+
+  if edit
+    div(class='ch-item')
+      span(class='ch-edit')
+        i(class='fa fa-edit')
+        = ' Edit Columns'
+
+  if twitter
+    div(class='ch-item')
+      span(class='ch-social')
+        span(class='ch-social-twitter')
+          a(
+            href='https://twitter.com/BinaryOverdose?ref_src=twsrc%5Etfw'
+            class='twitter-follow-button'
+            data-show-screen-name='false'
+            data-show-count='false'
+            title='Follow @BinaryOverdose'
+            target='_blank'
+          )
+            i(class='fab fa-twitter')
+
+  if live
+    div(class='ch-item')
+      div(class='ch-live') Live
+        span
+
+  if indicators
+    div(class='ch-item' style='display: none')
+      span(class='ch-data')
+        span(class='ch-up')
+          span(class='ch-val') #{upPer}
+          span(class='ch-symbol')
+            = '▲'
+        span(class='ch-dn')
+          span(class='ch-val') #{dnPer}
+          span(class='ch-symbol')
+            = '▼'
+
+  if tokens
+    div(class='ch-item' style='display: none')
+      span(class='ch-total')
+        span
+          span(class='ch-val') #{total} tokens
+
+  if updated
+    div(class='ch-item')
+      span(class="ch-updated")
+
+  if login
+    div(class='ch-item')
+      div(class="ch-login-container")

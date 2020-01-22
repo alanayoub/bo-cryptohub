@@ -19,13 +19,15 @@
 // }
 //
 
-import { timeAgo }                    from './libs/bo-utils-client';
+import { timeAgo }       from './libs/bo-utils-client';
+import rest              from './api/rest';
 
 // Cryptohub classes
-import CellInteractions               from './classes/class-cell-interactions.js';
-import State                          from './classes/class-state.js';
+import CellInteractions  from './classes/class-cell-interactions.js';
+import State             from './classes/class-state.js';
 
 window.bo = {
+  rest,
   clas: {},
   func: {
     openCells: {}
@@ -92,7 +94,9 @@ window.bo.func.openCells.removeOpen = function({params, $cell, row, field}) {
  *
  */
 window.bo.func.updated = function (when) {
+  const container = document.querySelector('.CH-header .ch-updated');
+  if (!container) return;
   if (when === 'now') window.timestamp = new Date();
   const time = timeAgo(window.timestamp);
-  document.querySelector('.CH-header .ch-updated').innerHTML = `Updated ${time} ago`;
+  container.innerHTML = `Updated ${time} ago`;
 }

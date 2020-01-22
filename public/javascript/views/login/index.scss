@@ -1,0 +1,66 @@
+.CH-login {
+  z-index: 1;
+  .ch-form-logout {
+    .ch-profile-image {
+      width: 32px;
+      height: 32px;
+      border-radius: 16px;
+      border: 2px solid #fff;
+      overflow: hidden;
+      margin: 9px;
+      img {
+        width: 32px;
+        height: 32px;
+      }
+    }
+    &:hover {
+      form {
+        display: block;
+      }
+    }
+    form {
+      display: none;
+      border: 1px solid transparent;
+      position: absolute;
+      top: -4px;
+      right: -12px;
+      input {
+        position: relative;
+        top: 46px;
+        right: 19px;
+        text-align: right;
+        background: #fff;
+        padding: 10px;
+        border-radius: 2px;
+        border: 5px solid transparent;
+        &:hover {
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .ch-form-login {
+    margin: 0 10px 0 0;
+    .ch-google-button {
+      width: 165px;
+      line-height: 24px;
+      padding: 2px;
+      background: #0085F7;
+      color: #fff;
+      border: none;
+      border-radius: 2px;
+      font-family: sans-serif;
+      cursor: pointer;
+      img {
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+        background: #fff;
+        padding: 2px;
+        border-radius: 2px;
+        float: left;
+      }
+    }
+  }
+}

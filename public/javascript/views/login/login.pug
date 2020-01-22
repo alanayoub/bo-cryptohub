@@ -1,0 +1,13 @@
+div(class="CH-login")
+  if user.displayName
+    div(class="ch-form-logout")
+      div(class="ch-profile-image")
+        img(src=user.photo.value)
+      form(action="logout" method="post")
+        input(type="submit" value="logout")
+  else
+    div(class="ch-form-login")
+      form(action="/auth/google" method="post")
+        button(type="submit" class="ch-google-button")
+          img(src="/images/google-logo.png")
+          span Sign in with Google

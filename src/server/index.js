@@ -1,25 +1,25 @@
-import { join }     from 'path';
-import uid          from 'uid-safe';
-import http         from 'http';
-import mkdirp       from 'mkdirp'
-import express      from 'express';
-import socketIO     from 'socket.io';
-import compression  from 'compression';
+import { join } from 'path';
+import uid from 'uid-safe';
+import http from 'http';
+import mkdirp from 'mkdirp'
+import express from 'express';
+import session from 'express-session';
+import passport from 'passport';
+import socketIO from 'socket.io';
+import compression from 'compression';
 import cookieParser from 'cookie-parser';
-
-import session           from 'express-session';
 import mongoStoreFactory from 'connect-mongo';
 
+import passprt from './passport.js';
+import routes from '../routes';
+import logger from '../logger';
+import settings from '../settings';
 import { getRows }  from '../db/query';
-import settings     from '../settings';
-
 import { UsersModel } from '../db/schema';
-const MongoStore = mongoStoreFactory(session);
 
 const app = express();
-app.use(compression());
-
 const server = http.Server(app);
+const MongoStore = mongoStoreFactory(session);
 const io = socketIO(server, {
 
   // what WebSocket server implementation to use.
@@ -32,13 +32,10 @@ const io = socketIO(server, {
 
 });
 
-const logger = require('../logger');
 global.io = io;
 
 export default async function startServer(config) {
 
-  app.use(cookieParser());
-  app.use(express.static(config.server.pub));
 
   const sess = {
     ttl: 60 * 30,
@@ -70,8 +67,15 @@ export default async function startServer(config) {
 
   app.set('view engine', 'html');
 
-  // persistence store of our session
+  app.use(compression());
+  app.use(cookieParser());
+  app.use(express.static(config.server.pub));
   app.use(session(sess));
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  passprt(passport);
+  routes(app);
 
   try {
 
@@ -108,7 +112,9 @@ export default async function startServer(config) {
             sessionId: sId
           });
         });
+
       } else {
+
         // upsert sessionId
         const query = {anonymousId: aId};
         const update = {lastIpAddress, sessionId: sId};

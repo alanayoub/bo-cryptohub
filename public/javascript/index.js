@@ -110,7 +110,20 @@ window.bo.inst.state.init().then(state => {
     // });
 
     window.bo.func.updated('now');
-    window.bo.inst.toolbarView = new ToolbarView('.CH-hook-toolbar');
+    window.bo.inst.toolbarView = new ToolbarView(
+      '.CH-hook-toolbar',
+      'min-content min-content min-content auto min-content',
+      {
+        home: true,
+        edit: true,
+        twitter: true,
+        // indicators: true,
+        // tokens: true,
+        // updated: true,
+        live: true,
+        login: true
+      }
+    );
 
     setInterval(window.bo.func.updated, 1000 * 1);
 

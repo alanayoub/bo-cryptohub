@@ -1,7 +1,9 @@
 import '@babel/polyfill';
 import pug from 'pug-runtime';
 
-import { Grid } from 'ag-grid';
+import { Grid } from '@ag-grid-community/core';
+import { ModuleRegistry } from '@ag-grid-community/all-modules';
+import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
 import State from './classes/class-state.js';
 import globals from './globals.js';
@@ -83,7 +85,7 @@ window.bo.inst.state.init().then(state => {
   generateAgOptions().then(agOptions => {
 
     const gridElement = document.querySelector('#ch-grid');
-    const grid = new Grid(gridElement, agOptions);
+    const grid = new Grid(gridElement, agOptions, {modules: AllCommunityModules});
 
     if (!grid) throw new Error('Cant find grid');
 
@@ -102,20 +104,15 @@ window.bo.inst.state.init().then(state => {
       dataEmitHandler('rows-update', data);
     });
     window.bo.inst.socket.on('store', storeEmitHandler);
-    // window.bo.inst.socket.on('connect', () => {
-    //   console.log('socket connected');
-    // });
-    // window.bo.inst.socket.on('disconnect', () => {
-    //   console.log('socket disconnected');
-    // });
 
     window.bo.func.updated('now');
     window.bo.inst.toolbarView = new ToolbarView(
       '.CH-hook-toolbar',
-      'min-content min-content min-content auto min-content',
+      'min-content min-content min-content min-content auto min-content',
       {
         home: true,
         edit: true,
+        blog: true,
         twitter: true,
         // indicators: true,
         // tokens: true,

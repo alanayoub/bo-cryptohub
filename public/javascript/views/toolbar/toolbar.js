@@ -24,11 +24,6 @@ export default class Toolbar {
 
     this.gui.innerHTML = initPug['toolbar'](context);
 
-    if (config.home) {
-      $(selector).on('click', '.ch-home', event => {
-        window.location = window.location.origin;
-      });
-    }
     if (config.edit) {
       window.bo.inst.editDialogue = new EditDialogueView(selector, '.ch-edit');
     }

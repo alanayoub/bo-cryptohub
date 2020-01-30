@@ -1,8 +1,8 @@
 @import 'variables';
 @import 'reset';
 
-@import '~ag-grid/src/styles/ag-grid.scss';
-@import '~ag-grid/src/styles/ag-theme-balham.scss';
+@import '~@ag-grid-community/core/dist/styles/ag-grid.scss';
+@import '~@ag-grid-community/core/dist/styles/ag-theme-balham/sass/ag-theme-balham.scss';
 
 @import 'media';
 @import 'links';
@@ -23,4 +23,12 @@
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.ch-fa-partial-checkbox {
+  &:before {
+    font-family: 'Font Awesome\ 5 Free';
+    font-weight: 900;
+    content: '\25A3';
+  }
 }

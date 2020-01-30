@@ -34,6 +34,7 @@ export default {
     suppressMenu: true,
     suppressFilter: true,
     cellClass: 'CH-align-right',
+    filter: false,
     cellRenderer(params) {
       return params.value + 1;
     },

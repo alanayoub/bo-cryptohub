@@ -5,6 +5,9 @@
  *
  */
 .ui-fancytree {
+  .fancytree-has-children .fancytree-icon {
+    top: 3px;
+  }
   ul[role=group] {
     .fancytree-icon {
       display: none;
@@ -24,8 +27,8 @@
     background: #fff;
     border: 1px solid #fff;
     position: absolute;
-    top: -1px;
-    right: 3px;
+    top: -4px;
+    right: -18px;
     min-width: 10px;
     vertical-align: baseline;
     border-radius: 51px;
@@ -185,7 +188,9 @@
         display: block;
       }
     }
-    .bo-step4 {}
+    .bo-step4 {
+      margin-bottom: 0;
+    }
   }
 
   .bo-options {
@@ -205,14 +210,23 @@
     }
 
     input {
-      width: 100%;
+      width: calc(100% - 160px);
       height: 30px;
     }
+
+    button {
+      padding: 6px;
+      position: relative;
+      top: -1px;
+      width: 75px;
+      margin: 0 0 0 5px;
+    }
+
 
     .fa-window-close {
       position: absolute;
       bottom: 18px;
-      right: 8px;
+      right: 168px;
       color: #eee;
       cursor: pointer;
     }
@@ -226,7 +240,9 @@
       }
     }
 
-    .bo-matches {}
+    .bo-matches {
+      margin: 5px;
+    }
 
   }
 
@@ -236,10 +252,11 @@
       width: 100%;
       height: 100%;
       header {
-        font-family: 'Alegreya Sans SC', sans-serif;
         margin: 0 0 10px 0;
         font-size: 20px;
         height: 30px;
+        font-weight: normal;
+        text-align: left;
       }
       th {
         align: center;
@@ -267,6 +284,7 @@
             border: none;
           }
           .fancytree-title {
+            border: none;
             cursor: default;
             &:focus {
               outline: none!important;
@@ -286,6 +304,33 @@
           bottom: 0;
           .fancytree-checkbox::before {
             background: #fff;
+          }
+          .fancytree-selected .fancytree-title {
+            font-weight: bold;
+            border: none;
+            background: none;
+          }
+          .fancytree-node {
+            &:hover {
+              .fancytree-title {
+                background: none;
+                border: none;
+                &:before {
+                  content: '\f0a9';
+                  display: block;
+                  position: absolute;
+                  right: 8px;
+                  width: 19px;
+                  height: 35px;
+                  font-family: 'Font Awesome\ 5 Free';
+                  font-weight: 900;
+                  font-size: 18px;
+                  color: #456c2d;
+                  top: 0;
+                  line-height: 36px;
+                }
+              }
+            }
           }
           ul.fancytree-container {
             position: absolute;
@@ -325,15 +370,20 @@
                 .fancytree-checkbox {
                   position: relative;
                   display: inline-block;
-                  padding: 15px 22px 15px 8px;
                   font-size: 16px;
                   line-height: 0;
-                  margin: 0;
+                  margin: 5px 0;
+                  top: 1px;
                 }
               }
             }
             .fancytree-folder {
               padding: 5px 0 5px 0;
+              cursor: default;
+            }
+            .fancytree-title {
+              margin-left: 22px;
+              line-height: 26px;
               cursor: default;
             }
             ul[role=group] {
@@ -342,7 +392,7 @@
               li {
                 position: relative;
                 display: block;
-                padding: 0 5px 0 77px;
+                padding: 0 5px 0 79px;
                 margin-bottom: -2px;
                 cursor: default;
                 border-top: 1px solid #eee;
@@ -353,11 +403,15 @@
                   padding: 5px 0 5px 0;
                 }
               }
+              .fancytree-title {
+                margin-left: 7px;
+              }
             }
           }
-          .fancytree-title {
-            line-height: 26px;
-            cursor: default;
+          .fancytree-expander {
+            position: relative;
+            margin: 5px 0 5px 5px;
+            top: 0;
           }
         }
 
@@ -400,29 +454,6 @@
               border-bottom: 1px solid #e03c3c!important;
             }
           }
-          ul[role=group] {
-            margin: 0 1px;
-            background: rgb(248, 248, 248);
-            border-bottom: 1px solid rgb(115, 150, 93);
-            box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px 0px inset;
-          }
-          li li {
-            /* .fancytree-title::before { */
-            /*   content: ''; */
-            /*   position: absolute; */
-            /*   background: #73965d22; */
-            /*   left: 1px; */
-            /*   top: 0; */
-            /*   bottom: -1px; */
-            /*   font-size: 20px; */
-            /*   line-height: 30px; */
-            /*   width: 10px; */
-            /* } */
-            .fancytree-expander {
-              padding-left: 0;
-              margin-left: -5px;
-            }
-          }
           > ul > li > {
             ul .bo-edit-item {
               input {
@@ -450,6 +481,11 @@
               }
             }
             .bo-edit-item-show {
+              &:hover {
+                .fancytree-title {
+                  background: inherit;
+                }
+              }
               .fancytree-title {
                 &::before {
                   counter-increment: columns;
@@ -462,7 +498,7 @@
                   top: 0;
                   bottom: 0;
                   font-size: 20px;
-                  line-height: 30px;
+                  line-height: 26px;
                   text-align: center;
                   width: 23px;
                 }
@@ -484,7 +520,7 @@
                   background: #555;
                   position: absolute;
                   right: 35px;
-                  top: 11px;
+                  top: 8px;
                   color: #fff;
                   text-align: center;
                   line-height: 19px;
@@ -508,7 +544,7 @@
                   background: #e03c3c!important;
                   position: absolute;
                   right: 35px;
-                  top: 11px;
+                  top: 8px;
                   color: #fff;
                   text-align: center;
                   line-height: 19px;
@@ -534,8 +570,11 @@
               margin-top: 0;
               &:hover {
                 background-color: #d0dcca;
-                .fancytree-title::before {
-                  color: #73965d;
+                .fancytree-title {
+                  &::before {
+                    background-color: inherit;
+                    color: #73965d;
+                  }
                 }
               }
             }
@@ -543,19 +582,41 @@
               color: #eee;
             }
           }
+          ul[role=group] {
+            margin: 0 1px;
+            background: rgb(248, 248, 248);
+            border-bottom: 1px solid rgb(115, 150, 93);
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 5px 0px inset;
+          }
+          li li {
+            .fancytree-expander {
+              padding-left: 0;
+              margin-left: -5px;
+            }
+            .fancytree-node {
+              &:hover {
+                .fancytree-title {
+                  background-color: inherit!important;
+                }
+              }
+            }
+            .fancytree-title {
+              margin: 20px;
+            }
+            + li {
+              .fancytree-title {
+                margin-top: 0;
+              }
+            }
+          }
           .fancytree-expander {
-            display: inline-block;
-            padding: 15px 15px 15px 46px;
-            margin: 0 0 0 5px;
-            cursor: pointer;
-            vertical-align: middle;
-            line-height: 0;
             position: relative;
-            top: 5px;
+            margin: 10px 0 9px 42px;
+            top: 0;
           }
 
           .fancytree-title {
-            padding: 12px 5px 12px 0;
+            padding: 10px 5px 10px 0;
             right: 0;
             left: 0;
             display: inline-block;
@@ -584,7 +645,7 @@
           .fa-window-close {
             position: absolute;
             right: 10px;
-            top: 12px;
+            top: 9px;
             cursor: pointer;
             font-size: 18px;
           }

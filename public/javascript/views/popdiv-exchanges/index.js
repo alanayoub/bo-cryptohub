@@ -1,15 +1,17 @@
 'use strict';
 
-// Binary Overdose Projects
-import { getRandomInt }                   from '../../libs/bo-utils-client';
-import { numberGroupDigits }              from '../../libs/bo-utils-client';
-import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
+import { Grid } from '@ag-grid-community/core';
+import { ModuleRegistry } from '@ag-grid-community/all-modules';
+import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
-// Cryptohub
 import cellRendererExchangesName from './cell-renderer-exchanges-name.js';
-import popDiv  from '../../utils/popdiv.js';
+
+import popDiv from '../../utils/popdiv.js';
 import initPug from '../../generated/init-pug.generated.js';
 import sortText from '../../utils/sort-text.js';
+import { getRandomInt } from '../../libs/bo-utils-client';
+import { numberGroupDigits } from '../../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
 
 import style from './index.scss';
 
@@ -155,7 +157,9 @@ function agGridOptions(params) {
   const options = {
     rowData: rowData,
     columnDefs: columnDefs,
-    rowHeight: 35,
+    rowHeight: 32,
+    headerHeight: 22,
+    floatingFiltersHeight: 26,
     enableFilter: true,
     enableSorting: true,
     floatingFilter: true,
@@ -175,6 +179,7 @@ function agGridOptions(params) {
     defaultColDef: {
       sortable: true,
       editable: false,
+      suppressMenu: true,
       floatingFilterComponentParams: {
         suppressMenu: true,
         suppressFilterButton: true
@@ -211,6 +216,6 @@ export default function cellOnClickExchanges(params) {
   // Load Grid
   const gridOptions = agGridOptions(params);
   const gridElement = document.querySelector(`#${gridId}`);
-  new window.Grid(gridElement, gridOptions);
+  new Grid(gridElement, gridOptions, {modules: AllCommunityModules});
 
 }

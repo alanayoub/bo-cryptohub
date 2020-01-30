@@ -8,9 +8,25 @@
       border: 2px solid #fff;
       overflow: hidden;
       margin: 9px;
+      background: #ddd;
       img {
         width: 32px;
         height: 32px;
+        position: relative;
+      }
+      &:before {
+          content: '\f007';
+          display: block;
+          width: 32px;
+          height: 32px;
+          position: absolute;
+          font-family: 'Font Awesome\ 5 Free';
+          font-weight: 900;
+          top: 14px;
+          right: 9px;
+          font-size: 20px;
+          line-height: 24px;
+          text-align: center;
       }
     }
     &:hover {

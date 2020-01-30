@@ -127,7 +127,7 @@ function agGridOptions(params) {
   const options = {
     rowData: rowData,
     columnDefs: columnDefs,
-    rowHeight: 35,
+    rowHeight: 28,
     enableFilter: true,
     enableSorting: true,
     floatingFilter: true,
@@ -147,6 +147,7 @@ function agGridOptions(params) {
     defaultColDef: {
       sortable: true,
       editable: false,
+      suppressMenu: true,
       floatingFilterComponentParams: {
         suppressMenu: true,
         suppressFilterButton: true

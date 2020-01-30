@@ -2,7 +2,7 @@ div(class='ch-grid' style='grid-template-columns: ' + gridColumns)
 
   if home
     div(class='ch-item')
-      span(class='ch-home')
+      a(class='ch-home' href=window.location.origin)
         i(class='fa fa-home')
         = ' Home'
 
@@ -11,6 +11,12 @@ div(class='ch-grid' style='grid-template-columns: ' + gridColumns)
       span(class='ch-edit')
         i(class='fa fa-edit')
         = ' Edit Columns'
+
+  if blog
+    div(class='ch-item')
+      a(class='ch-blog' href=window.location.origin + '/blog' target='_blank')
+        i(class='fa fa-blog')
+        = ' Blog'
 
   if twitter
     div(class='ch-item')

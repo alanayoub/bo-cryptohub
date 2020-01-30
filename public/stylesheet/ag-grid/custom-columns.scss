@@ -1,8 +1,7 @@
 .CH-col {
-  border-top: 2px solid #457b2a;
-  background: rgba(69, 123, 42, 0.5);
   color: #fff;
   font-weight: 500;
+  background: $main-header-background;
 }
 .CH-col-fiat {
   border-top: 2px solid #457b2a;
@@ -11,8 +10,8 @@
 }
 .CH-col-name {
   .ch-icons {
-    width: 24px;
-    height: 24px;
+    width: 19px;
+    height: 19px;
     margin: 1px 5px 1px 2px;
     display: inline-block;
     vertical-align: bottom;
@@ -34,18 +33,18 @@
   }
 }
 .CH-cell-hover {
-  border: 1px solid #48a5e7!important;
+  border: 1px solid $tippy-background!important;
 }
 .CH-tippy-cell-hover {
-  width: 34px;
-  height: 34px;
-  background: #48a5e7;
-  color: #fff;
+  width: 31px;
+  height: 31px;
+  background: $tippy-background;
+  color: $tippy-text-color;
   .ch-icon {
     .fa-chevron-down {
-      width: 34px;
-      height: 34px;
-      line-height: 34px;
+      width: 31px;
+      height: 31px;
+      line-height: 31px;
       text-align: center;
       font-size: 16px;
     }

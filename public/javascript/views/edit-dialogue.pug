@@ -9,12 +9,17 @@ div(class='BO-tingle BO-edit-dialogue')
     table
       tr
         th
-          header Available
+          header #{totalAvailable} Columns Available
           div(class='bo-search')
             i(class='fas fa-window-close')
-            input(type='text' placeholder='Search')
+            input(type='text' placeholder='e.g. market cap, exchange, proof...')
+            button(class='BO-btn bo-btn-secondary bo-add-matches bo-btn-disabled') Add
+              span(class='bo-matches') 0
+            button(class='BO-btn bo-btn-secondary bo-clear-matches bo-btn-disabled') Delete
+              span(class='bo-matches') 0
         th
-          header Displayed
+          header Displaying&nbsp;
+            span(class='bo-total-selected') #{totalSelected}
           div(class='bo-search bo-placeholder')
             input(type='text')
       tr
@@ -31,9 +36,6 @@ div(class='BO-tingle BO-edit-dialogue')
       tr
         td
           div(class='bo-footer')
-            button(class='BO-btn bo-btn-secondary bo-add-matches bo-btn-disabled') Add Matches
-            button(class='BO-btn bo-btn-secondary bo-clear-matches bo-btn-disabled') Clear Matches
-            | (#[span(class='bo-matches') 0] Matches)
         td
           div(class='bo-footer')
             button(class='BO-btn bo-btn-secondary bo-clear-selections') Clear Selections

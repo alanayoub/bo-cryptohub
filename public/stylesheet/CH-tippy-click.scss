@@ -3,17 +3,17 @@
   > header {
     position: sticky;
     top: 0;
-    background: #489dd7;
-    color: #fff;
+    background: $tippy-background;
+    color: $tippy-text-color;
     z-index: 1;
     left: 0;
     right: 0;
-    padding: 10px;
+    padding: 5px 0 5px 10px;
     border-bottom: 1px solid #f1f1f1;
   }
   h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 14px;
   }
   section {
     background: #fff;
@@ -21,12 +21,13 @@
     min-height: 226px;
   }
   footer {
-    position: sticky;
-    bottom: 0;
+    position: absolute;
+    bottom: -10px;
     left: 0;
     right: 0;
     height: 10px;
     background: #eee;
+    z-index: -1;
   }
   header strong {
     font-weight: bold;
@@ -51,5 +52,25 @@
     td:first-child {
       width: 150px;
     }
+  }
+  .ag-header {
+    background: $tippy-filter-background!important;
+  }
+  .ag-header-row {
+    background: $tippy-filter-background!important;
+  }
+  .ag-header-viewport {
+    &:before {
+      background: $tippy-header-background!important;
+    }
+  }
+  .ag-input-wrapper {
+    top: -2px;
+  }
+  .ag-header-cell::after,
+  .ag-header-group-cell::after {
+    border-right: 1px solid #bbb!important;
+    margin-top: -4px!important;
+    height: 47px!important;
   }
 }

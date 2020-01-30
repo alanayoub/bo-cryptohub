@@ -8,7 +8,7 @@ body {
   font: 13px Helvetica, Arial;
   background: #fff;
   &:before {
-    content: 'loading';
+    content: '';
     display: block;
     position: absolute;
     top: 50%;
@@ -35,4 +35,3 @@ h2 {
   font-family: 'Alegreya Sans SC', sans-serif;
   font-size: 40px;
 }
-

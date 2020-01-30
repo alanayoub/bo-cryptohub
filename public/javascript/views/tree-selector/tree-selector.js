@@ -78,7 +78,7 @@ export default class Selector {
 
     const ft = $('#tree').fancytree('getTree');
     const input = document.querySelector('.BO-edit-dialogue .bo-search input');
-    const matches = document.querySelector('.BO-edit-dialogue .bo-matches');
+    const matches = document.querySelectorAll('.BO-edit-dialogue .bo-matches');
     const btnAddMatches = document.querySelector('.BO-edit-dialogue .bo-add-matches');
     const btnClearMatches = document.querySelector('.BO-edit-dialogue .bo-clear-matches');
     const btnClearFilter = document.querySelector('.BO-edit-dialogue .bo-search .fa-window-close');
@@ -86,8 +86,8 @@ export default class Selector {
     // filter input
     input.onkeyup = () => {
       const filter = input.value.toUpperCase();
-      matches.textContent = ft.filterNodes(filter) || 0;
-      if (matches.textContent === '0') {
+      matches[0].textContent = matches[1].textContent = ft.filterNodes(filter) || 0;
+      if (matches[0].textContent === '0') {
         btnClearMatches.classList.add('bo-btn-disabled');
         btnAddMatches.classList.add('bo-btn-disabled');
       }
@@ -100,7 +100,7 @@ export default class Selector {
     // Clear filter input button
     btnClearFilter.onclick = () => {
       input.value = '';
-      matches.textContent = 0;
+      matches[0].textContent = matches[1].textContent = 0;
       ft.clearFilter();
       btnClearMatches.classList.add('bo-btn-disabled');
       btnAddMatches.classList.add('bo-btn-disabled');
@@ -113,7 +113,7 @@ export default class Selector {
         const list = document.querySelectorAll('.fancytree-match .fancytree-checkbox');
         const matches = [];
         for (item of list) {
-          const checked = item.classList.contains('fa-check-square');
+          const checked = item.closest('.fancytree-node').classList.contains('fancytree-selected')
           if (checked !== args[1]) {
             matches.push(item.parentElement.querySelector('.fancytree-title').textContent);
           }
@@ -286,7 +286,7 @@ export default class Selector {
   getSourceOptions() {
     const options = {
       keyboard: false,
-      extensions: ['dnd5', 'glyph', 'filter', 'childcounter'],
+      extensions: ['dnd5', 'filter', 'childcounter'],
       treeId: '1',
       nodata: 'No data',
       icon: true,
@@ -318,15 +318,6 @@ export default class Selector {
         counter: false, // No counter badges
         mode: 'hide'    // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
       },
-      glyph: {
-        preset: 'awesome5',
-        map: {
-          dropMarker: 'fas fa-angle-double-right',
-          // folder: "fa-folder",
-          // folderOpen: "fa-folder-open"
-          // nodata: 'fas fa-meh',
-        }
-      },
       dnd5: {
         preventForeignNodes: true,       // Prevent dropping nodes from another Fancytree
         preventNonNodes: true,           // Prevent dropping items other than Fancytree nodes
@@ -352,7 +343,7 @@ export default class Selector {
   getDestinationOptions() {
     const options = {
       keyboard: false,
-      extensions: ['dnd5', 'glyph'],
+      extensions: ['dnd5'],
       treeId: '2',
       nodata: 'No data',
       icon: false,
@@ -361,7 +352,11 @@ export default class Selector {
       collapse: (event, data) => {},
       modifyChild: (event, node) => {
         if (event.type === 'modifyChild') {
-          document.querySelector('#tree2').scrollTop = this.lastScrollTop;
+          const treeElement = document.querySelector('#tree2');
+          const containerElement = document.querySelector('.BO-edit-dialogue .bo-total-selected');
+          const numberOfColumns = treeElement.querySelectorAll(':scope > ul > li').length;
+          treeElement.scrollTop = this.lastScrollTop;
+          containerElement.innerHTML = numberOfColumns;
         }
       },
       renderNode: (event, data) => {
@@ -422,10 +417,6 @@ export default class Selector {
           $nodeSpan.data('rendered', true);
 
         }
-      },
-      glyph: {
-        preset: 'awesome5',
-        map: {}
       },
       dnd5: {
         dropMarkerOffsetX: -28,          // absolute position offset for .fancytree-drop-marker
@@ -772,6 +763,11 @@ export default class Selector {
       });
     }
     else {
+      if (target && !targetIsCheckbox) {
+        const selected = target.closest('.fancytree-selected');
+        const node = $.ui.fancytree.getNode(target);
+        node.setSelected(!selected);
+      }
       const folderNodes = new Set();
       $sourceT.visit(node => {
         if (!node.folder) {
@@ -785,7 +781,7 @@ export default class Selector {
     }
 
     // Segment Events
-    if (targetIsCheckbox) {
+    if (target && !targetIsCheckbox) {
       const label = target.parentElement.querySelector('.fancytree-title').textContent;
       const state = target.classList.contains('fa-check-square') ? 'checked' : 'unchecked';
       const group = !!targetIsFolder;

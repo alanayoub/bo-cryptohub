@@ -23,7 +23,7 @@ export default async function generateAgOptions() {
 
   if (!window.bo) throw new Error('window.bo does not exist');
   if (!window.refs) throw new Error('window.refs does not exist');
-  window.refs.rowData = [];
+  window.refs.rowData = null;
 
   const state = await bo.inst.state.get();
   const filterModel = await bo.inst.state.getFilterModel();
@@ -53,7 +53,6 @@ export default async function generateAgOptions() {
     params.api.setFilterModel(filterModel);
 
     window.bo.func.updated('now');
-    params.api.setRowData(window.refs.rowData);
 
   };
 

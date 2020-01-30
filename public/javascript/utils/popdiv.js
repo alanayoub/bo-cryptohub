@@ -15,7 +15,7 @@
  *
  */
 export default function popDiv(element, content, tippyOptions = {}) {
-  const appendTo = document.querySelector('.ag-body');
+  const appendTo = document.querySelector('body');
   const defaultTippyOptions = {
     popperOptions: {
       modifiers: {

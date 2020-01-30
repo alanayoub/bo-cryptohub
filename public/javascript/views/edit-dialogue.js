@@ -151,6 +151,7 @@ export default class EditDialogue {
 
     // Source data
     const source = [];
+    let first = 0;
     for (const [key, val] of Object.entries(columnLibrary)) {
       let children = [];
       for (const [k, v] of Object.entries(val)) {
@@ -162,7 +163,12 @@ export default class EditDialogue {
           groupMapping[k] = key;
         }
       }
-      source.push({title: key, folder: true, children});
+      source.push({
+        children,
+        title: key,
+        folder: true,
+        expanded: first ? undefined : !!++first
+      });
     }
 
     // Destination Data
@@ -196,12 +202,17 @@ export default class EditDialogue {
       }
     }
 
+    const totalAvailable = source.reduce((a, b) => a + b.children.length, 0);
+    const totalSelected = columns.length - 2;
+
     // HTML data
     const context = {
       header: {
-        title: 'Edit',
+        title: 'Edit Columns',
         subtitle: ''
       },
+      totalSelected,
+      totalAvailable,
       frozenColumns: frozen,
     };
 

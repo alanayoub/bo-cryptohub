@@ -1,12 +1,3 @@
-// Dark green
-// #241D24
-// #243239
-// #0B504B
-// #087B6E
-// #52B2A0
-// #BEE4D9
-// Light green
-
 $primary-color-1: #355e21;        // green
 
 $grey-color-0: #fff;              // white
@@ -17,8 +8,27 @@ $text-ticker-color-default: #000; // black
 $text-ticker-color-good: #019c0d; // green
 $text-ticker-color-bad: #e00909;  // red
 
+$main-background: #355e21;
+$main-header-background: scale-color(
+  $main-background,
+  $lightness: 20%,
+  $saturation: -25%
+);
+$main-filter-background: scale-color(
+  $main-background,
+  $lightness: 55%,
+  $saturation: -60%
+);
+
 //
-// interactive
-// error
-// success
+// "Tippy" Popdiv and cell hover trigger
 //
+$tippy-background: #cfcfcf;
+$tippy-text-color: #555;
+
+$tippy-header-background: #cfcfcf; //scale-color($tippy-background, $lightness: 20%);
+$tippy-header-text: #555;
+
+$tippy-filter-background: #cfcfcf; // scale-color($tippy-background, $lightness: 55%);
+
+$tippy-cell-background: rgba($tippy-background, .2);

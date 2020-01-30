@@ -1,6 +1,6 @@
 .CH-tippy-popdiv {
-  background: #fff;
-  border: 1px solid #479cd7;
+  background: transparent;
+  border: 1px solid $tippy-background;
   padding: 0;
   width: 640px;
   height: 320px;
@@ -12,5 +12,11 @@
   overflow: auto;
   .CH-pos-abs-full {
     bottom: 10px;
+  }
+  .ag-header-container:before {
+    background: $tippy-header-background!important;
+  }
+  .ag-header {
+    background: $tippy-filter-background!important;
   }
 }

@@ -2,7 +2,7 @@ div(class="CH-login")
   if user.displayName
     div(class="ch-form-logout")
       div(class="ch-profile-image")
-        img(src=user.photo.value)
+        img(src=user.photo.value alt="")
       form(action="logout" method="post")
         input(type="submit" value="logout")
   else

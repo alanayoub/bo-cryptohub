@@ -26,8 +26,11 @@ function price(arr, range, days = 7) {
     range,
     data: priceData,
     width: 100,
-    height: 32,
-    styles: 'position: absolute; top: 0; right: 11px'
+    height: 29,
+    styles: 'position: absolute; top: 0; right: 11px',
+    circleFill: '#000',
+    pathStroke: '#000',
+    textFill: '#555'
   });
 
 }
@@ -75,8 +78,9 @@ function volume(arr, range, days = 7) {
     data: volumeData,
     width: 100,
     height: 10,
-    fill: '#caecfc',
-    styles: 'position: absolute; bottom: 0; right: 11px'
+    styles: 'position: absolute; bottom: 0; right: 11px',
+    fill: '#cccccc',
+    textFill: '#cccccc'
   });
 
 }

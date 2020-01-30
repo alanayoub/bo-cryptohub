@@ -4,6 +4,7 @@
 import { objectFlattenObject as flatten } from './libs/bo-utils-client';
 
 import CellInteractions                   from './classes/class-cell-interactions.js';
+import CustomLoadingOverlay               from './classes/class-custom-loading-overlay.js';
 
 // ag-grid config
 import columnLibrary                      from './columns/';
@@ -53,7 +54,13 @@ export default {
   // Overlay Component:    To customise loading and no rows overlay components.
   // Status Bar Component: For custom status bar components.
   //
-  components: {},
+  components: {
+    customLoadingOverlay: CustomLoadingOverlay,
+  },
+  loadingOverlayComponent: 'customLoadingOverlay',
+  loadingOverlayComponentParams: {
+    loadingMessage: 'One moment please...'
+  },
 
   //
   // AG-GRID columnTypes
@@ -302,7 +309,7 @@ export default {
 
   },
 
-  rowHeight: 35,
+  rowHeight: 32,
 
   // NOTE: DO NOT CHANGE UNLESS YOU WANT TO UPDATE HOW DATA WORKS
   rowData: window.refs.rowData,

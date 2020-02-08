@@ -9,6 +9,6 @@ export default function (api) {
         requestType: 'GET'
       };
       return api.request(endpoint, {data, meta}, options);
-    }
+    },
   };
 }

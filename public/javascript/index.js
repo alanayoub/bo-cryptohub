@@ -108,12 +108,15 @@ window.bo.inst.state.init().then(state => {
     window.bo.func.updated('now');
     window.bo.inst.toolbarView = new ToolbarView(
       '.CH-hook-toolbar',
-      'min-content min-content min-content min-content auto min-content',
+      'min-content min-content max-content max-content max-content min-content auto max-content min-content',
       {
         home: true,
         edit: true,
         blog: true,
+        load: true,
+        save: true,
         twitter: true,
+        presets: true,
         // indicators: true,
         // tokens: true,
         // updated: true,
@@ -129,7 +132,7 @@ window.bo.inst.state.init().then(state => {
         window.bo.inst.state.update(event.state);
       }
       else {
-        window.history.back();
+        window.bo.inst.state.update();
       }
     }
 

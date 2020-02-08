@@ -1,3 +1,5 @@
+import defaultViews from './settings.views.default.js';
+
 // Node
 const path = require('path');
 
@@ -673,6 +675,8 @@ let fieldWhitelist = Object.keys(fieldTypeMap);
  *
  */
 const settings = {
+
+  defaultViews,
 
   isProd,
 

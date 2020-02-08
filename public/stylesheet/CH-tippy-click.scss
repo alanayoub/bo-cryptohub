@@ -8,7 +8,7 @@
     z-index: 1;
     left: 0;
     right: 0;
-    padding: 5px 0 5px 10px;
+    padding: 6px 0 6px 10px;
     border-bottom: 1px solid #f1f1f1;
   }
   h3 {
@@ -65,12 +65,18 @@
     }
   }
   .ag-input-wrapper {
-    top: -2px;
+    top: -5px;
+  }
+  .ag-pinned-left-header {
+    border-right: 1px solid $tippy-header-divider-color!important;
   }
   .ag-header-cell::after,
   .ag-header-group-cell::after {
-    border-right: 1px solid #bbb!important;
+    border-right: 1px solid $tippy-header-divider-color!important;
     margin-top: -4px!important;
     height: 47px!important;
   }
+}
+.CH-tippy-click-theme {
+  margin: 0 0 0 -10px;
 }

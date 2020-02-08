@@ -3,6 +3,8 @@
 import { objectIsObject as isObject } from '../../libs/bo-utils-client';
 import EditDialogueView               from '../edit-dialogue.js';
 import LoginView                      from '../login';
+import LoadView                       from '../load';
+import SaveView                       from '../save';
 import initPug                        from '../../generated/init-pug.generated.js';
 
 import style                          from './toolbar.scss';
@@ -14,22 +16,31 @@ export default class Toolbar {
     this.config = config;
     this.gui = document.querySelector(selector);
 
-    const context = Object.assign({}, config, {
-      gridColumns,
-      upPer: '  ',
-      dnPer: '  ',
-      ncPer: '  ',
-      total: '   '
+    bo.rest.user.get(null, {cacheFor: 1000}).then(res => {
+      const loggedIn = res.data && res.data.google;
+      const context = Object.assign({}, config, {
+        gridColumns,
+        loggedIn,
+      });
+
+      this.gui.innerHTML = initPug['toolbar'](context);
+
+      if (config.edit) {
+        window.bo.inst.editDialogue = new EditDialogueView(selector, '.ch-edit');
+      }
+      if (config.load) {
+        window.bo.inst.load = new LoadView(`${selector} .ch-load-container`);
+      }
+      if (config.save) {
+        window.bo.inst.save = new SaveView(`${selector} .ch-save-container`, !!loggedIn);
+        window.bo.inst.save.on('save', () => {
+          window.bo.inst.load.update();
+        });
+      }
+      if (config.login) {
+        window.bo.inst.login = new LoginView(`${selector} .ch-login-container`);
+      }
     });
-
-    this.gui.innerHTML = initPug['toolbar'](context);
-
-    if (config.edit) {
-      window.bo.inst.editDialogue = new EditDialogueView(selector, '.ch-edit');
-    }
-    if (config.login) {
-      window.bo.inst.login = new LoginView(`${selector} .ch-login-container`);
-    }
 
   }
 

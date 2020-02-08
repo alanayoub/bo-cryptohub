@@ -1,0 +1,14 @@
+div(class='CH-load')
+  h4 Default
+  ol
+    each val, idx in views.main
+      li
+        a(href=val.view)= val.name
+  h4 My Views
+  if views.user.length
+    ol
+      each val, idx in views.user
+        li
+          a(href=val.view)= val.name
+  else
+    div You have no saved views

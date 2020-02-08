@@ -19,16 +19,24 @@ $main-filter-background: scale-color(
   $lightness: 55%,
   $saturation: -60%
 );
+$main-filter-text: #fff;
 
 //
 // "Tippy" Popdiv and cell hover trigger
 //
-$tippy-background: #cfcfcf;
-$tippy-text-color: #555;
+$tippy-background: #869c94;
 
-$tippy-header-background: #cfcfcf; //scale-color($tippy-background, $lightness: 20%);
-$tippy-header-text: #555;
+$tippy-text-color: #fff;
 
-$tippy-filter-background: #cfcfcf; // scale-color($tippy-background, $lightness: 55%);
+$tippy-header-background: #869c94; //scale-color($tippy-background, $lightness: 20%);
+$tippy-header-text: #fff;
+$tippy-header-divider-color: #ffffff40;
+
+$tippy-filter-background: #869c94; // scale-color($tippy-background, $lightness: 55%);
 
 $tippy-cell-background: rgba($tippy-background, .2);
+
+$link-color: #869c94;
+$link-visited-color: #869c94;
+$link-hover-color: #000;
+$link-active-color: #869c94;

@@ -13,6 +13,12 @@ const validator = {
   }
 }
 
+const ViewSchema = new Schema({
+  lastUpdated: Date,
+  name: String,
+  view: String
+});
+
 const options = {
   lastIpAddress: {
     type: String,
@@ -33,6 +39,10 @@ const options = {
     username: String,
     password: String,
     salt: String
+  },
+  views: {
+    last: ViewSchema,
+    user: [ViewSchema]
   },
   google: {
     id: String,

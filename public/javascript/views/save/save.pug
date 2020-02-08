@@ -1,0 +1,17 @@
+div(class='CH-save')
+  if views
+    div Pick a slot to save your view
+      ol
+        each val, idx in views
+          li
+            span= idx + 1
+            input(
+              type='text'
+              placeholder=val.name ? '' : 'My View ' + (idx + 1)
+              value=val.name ? val.name : ''
+            )
+            i(class='fa fa-times')
+            span(class='ch-button')
+              = val.name ? ' Replace' : ' Save'
+  else
+    span You need to login before you can save a view

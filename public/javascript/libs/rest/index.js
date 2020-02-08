@@ -236,8 +236,8 @@ export default class API {
             if (Math.floor(response.status / 100) === 2) {
               let contentType = contentMap[content];
               const format = method === 'GET' && contentType !== 'json' ? contentType : 'json';
-              if (response.status === 204) {
-                resolve('no content');
+              if (response.status === 204 || response.status === 201) {
+                resolve({status: response.status, message: response.statusText});
               } else {
                 return response[format]().then(data => {
                     const meta = {method, contentType, url};
@@ -246,7 +246,7 @@ export default class API {
                     }
                     api.data = {data, meta, options, error: false};
                     api.postFetch.go(next => {}); // eslint-disable-line no-unused-vars
-                    if (method === 'GET') {
+                    if (method === 'GET' && options.cacheFor) {
                       api.cache.set(url, api.data, options.cacheFor);
                     }
                     resolve(api.data);
@@ -286,9 +286,11 @@ export default class API {
             message: 'Fetch Error :-S', err
           });
         });
-      if (method === 'GET') {
-        api.cache.set(url, promise, options.cacheFor);
-      }
+      // TODO: make caching promises work
+      // currently returns undefined
+      // if (method === 'GET' && options.cacheFor) {
+      //   api.cache.set(url, promise, options.cacheFor);
+      // }
     });
 
   }

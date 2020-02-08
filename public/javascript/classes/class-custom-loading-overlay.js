@@ -4,7 +4,7 @@ export default class CustomLoadingOverlay {
     this.eGui = document.createElement('div');
     this.eGui.innerHTML = `
       <div class="ag-overlay-loading-center">
-        <img src="/images/binaryoverdose-loading-64x64.gif" width="48" height="48" />
+        <img src="/images/bo/binaryoverdose-loading-64x64.gif" width="48" height="48" />
         <br />
         <i>${params.loadingMessage}</i>
       </div>

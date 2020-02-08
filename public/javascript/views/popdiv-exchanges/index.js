@@ -155,11 +155,11 @@ function agGridOptions(params) {
 
   // Options
   const options = {
+    rowHeight: 32,
+    headerHeight: 26,
+    floatingFiltersHeight: 20,
     rowData: rowData,
     columnDefs: columnDefs,
-    rowHeight: 32,
-    headerHeight: 22,
-    floatingFiltersHeight: 26,
     enableFilter: true,
     enableSorting: true,
     floatingFilter: true,

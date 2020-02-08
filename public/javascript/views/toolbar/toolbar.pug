@@ -12,6 +12,20 @@ div(class='ch-grid' style='grid-template-columns: ' + gridColumns)
         i(class='fa fa-edit')
         = ' Edit Columns'
 
+  if load
+    div(class='ch-item')
+      span(class='ch-load')
+        i(class='fa fa-folder-open')
+        = ' Open'
+        div(class='ch-load-container')
+
+  if save
+    div(class='ch-item')
+      span(class='ch-save')
+        i(class='fa fa-save')
+        = ' Save'
+        div(class='ch-save-container')
+
   if blog
     div(class='ch-item')
       a(class='ch-blog' href=window.location.origin + '/blog' target='_blank')
@@ -31,6 +45,32 @@ div(class='ch-grid' style='grid-template-columns: ' + gridColumns)
             target='_blank'
           )
             i(class='fab fa-twitter')
+
+  if presets
+    div(class='ch-item')
+      div(class='ch-presets')
+        ul
+          li
+            span Views:
+          li
+            a(href='google.com') Price
+          li
+            a(href='google.com') Fundamentals
+          li
+            a(href='google.com') Technology
+        ul
+          if loggedIn
+            li
+              span Custom:
+            li
+              span [ No saved view ]
+          else
+            li
+              span Custom:
+            li
+              span(class='bo-greyed') [ login required ]
+        div(class='bo-more')
+          i(class='fas fa-ellipsis-h')
 
   if live
     div(class='ch-item')
@@ -61,4 +101,4 @@ div(class='ch-grid' style='grid-template-columns: ' + gridColumns)
 
   if login
     div(class='ch-item')
-      div(class="ch-login-container")
+      div(class='ch-login-container')

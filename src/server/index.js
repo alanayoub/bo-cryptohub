@@ -4,6 +4,7 @@ import http from 'http';
 import mkdirp from 'mkdirp'
 import express from 'express';
 import session from 'express-session';
+import bodyParser from 'body-parser';
 import passport from 'passport';
 import socketIO from 'socket.io';
 import compression from 'compression';
@@ -36,6 +37,23 @@ global.io = io;
 
 export default async function startServer(config) {
 
+  function shutDown() {
+
+    console.log('Received kill signal, shutting down gracefully');
+    server.close(() => {
+      console.log('Closed out remaining connections');
+      process.exit(0);
+    });
+
+    setTimeout(() => {
+      console.error('Could not close connections in time, forcefully shutting down');
+      process.exit(1);
+    }, 10000);
+
+    connections.forEach(curr => curr.end());
+    setTimeout(() => connections.forEach(curr => curr.destroy()), 5000);
+
+  }
 
   const sess = {
     ttl: 60 * 30,
@@ -67,8 +85,10 @@ export default async function startServer(config) {
 
   app.set('view engine', 'html');
 
-  app.use(compression());
+  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.json());
   app.use(cookieParser());
+  app.use(compression());
   app.use(express.static(config.server.pub));
   app.use(session(sess));
   app.use(passport.initialize());
@@ -77,117 +97,117 @@ export default async function startServer(config) {
   passprt(passport);
   routes(app);
 
-  try {
+  //
+  // Setup server & socket
+  //
+  logger.info('index.js: Starting server');
 
-    //
-    // Setup server & socket
-    //
-    logger.info('index.js: Starting server');
+  let connections = [];
+  server.on('connection', connection => {
+    connections.push(connection);
+    connection.on('close', () => connections = connections.filter(curr => curr !== connection));
+  });
 
-    server.listen(config.server.port, () => {
-      logger.info(`index.js: listening on *: ${config.server.port}`);
-    });
+  server.listen(config.server.port, () => {
+    logger.info(`index.js: listening on *: ${config.server.port}`);
+  });
 
-    app.get('/privacy', (req, res, next) => {
-      const privacy = join(__dirname, '../../dist/public/privacy.html');
-      res.sendFile(privacy);
-    });
+  process.on('SIGTERM', shutDown);
+  process.on('SIGINT', shutDown);
 
-    app.get('/', (req, res, next) => {
+  app.get('/privacy', (req, res, next) => {
+    const privacy = join(__dirname, '../../dist/public/privacy.html');
+    res.sendFile(privacy);
+  });
 
-      const sId = req.session.id;
-      const aId = req.cookies.aId;
-      const lastIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  app.get('/', (req, res, next) => {
 
-      // If no anonymouseId create one
-      if (aId === undefined) {
+    const sId = req.session.id;
+    const aId = req.cookies.aId;
+    const lastIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-        // To create a UID of length 24, you want a byte length of 18
-        uid(18).then(newAId => {
-          // httpOnly=false because of Segment :/
-          res.cookie('aId', newAId, {maxAge: (10 * 365 * 24 * 60 * 60), httpOnly: false});
-          UsersModel.create({
-            lastIpAddress,
-            anonymousId: newAId,
-            sessionId: sId
-          });
+    // If no anonymouseId create one
+    if (aId === undefined) {
+
+      // To create a UID of length 24, you want a byte length of 18
+      uid(18).then(newAId => {
+        // httpOnly=false because of Segment :/
+        res.cookie('aId', newAId, {maxAge: (10 * 365 * 24 * 60 * 60), httpOnly: false});
+        UsersModel.create({
+          lastIpAddress,
+          anonymousId: newAId,
+          sessionId: sId
         });
-
-      } else {
-
-        // upsert sessionId
-        const query = {anonymousId: aId};
-        const update = {lastIpAddress, sessionId: sId};
-        UsersModel.findOneAndUpdate(query, update, {upsert: true}, (error, doc) => {
-          if (error) {
-            logger.error({error: error});
-          }
-        });
-
-      }
-
-      res.sendFile(config.server.index);
-
-    });
-
-    let socket;
-
-    //
-    // Everytime a user connects
-    //
-    io.on('connection', async sock => {
-
-      logger.info(`User connected: ${sock.id}`);
-
-      socket = sock;
-
-      socket.on('cols', async data => {
-
-        socket.handshake.query.cols = data;
-        const cols = JSON.parse(data);
-        const sort = cols.sort;
-        const columns = cols.columns.split(',');
-        getRows(columns, sort).then(results => {
-          const resultsStr = JSON.stringify({data: results, type: 'dbDiff'});
-          socket.emit('rows-full', resultsStr);
-        });
-
       });
 
-      socket.on('disconnect', () => {
-        logger.info(`User disconnected: ${sock.id}`);
-      });
+    } else {
 
-      let conf;
-      let data;
-      let event
-      for ([event, conf] of Object.entries(config.events)) {
-        if (conf.onAfterConnect) {
-          conf.onAfterConnect(event, socket);
+      // upsert sessionId
+      const query = {anonymousId: aId};
+      const update = {lastIpAddress, sessionId: sId};
+      UsersModel.findOneAndUpdate(query, update, {upsert: true}, (error, doc) => {
+        if (error) {
+          logger.error({error: error});
         }
-      }
+      });
 
-    });
-
-    const eventsList = Object.keys(config.events);
-    let event;
-
-    //
-    // Create folders
-    // NOTE: still have lots of other folders to create
-    //
-    const folderTmpGenerated = join(config.cacheDir, 'tmp-generated');
-    const folderOutput = join(config.cacheDir, 'out');
-    for (event of eventsList) {
-      await mkdirp(join(folderTmpGenerated, event));
-      await mkdirp(join(folderOutput, event));
     }
 
-  }
+    res.sendFile(config.server.index);
 
-  catch (error) {
-    logger.error(`bo-datatable: Um some error happened yo: ${error}`);
-    process.exit(1);
+  });
+
+  let socket;
+
+  //
+  // Everytime a user connects
+  //
+  io.on('connection', async sock => {
+
+    logger.info(`User connected: ${sock.id}`);
+
+    socket = sock;
+
+    socket.on('cols', async data => {
+
+      socket.handshake.query.cols = data;
+      const cols = JSON.parse(data);
+      const sort = cols.sort;
+      const columns = cols.columns.split(',');
+      getRows(columns, sort).then(results => {
+        const resultsStr = JSON.stringify({data: results, type: 'dbDiff'});
+        socket.emit('rows-full', resultsStr);
+      });
+
+    });
+
+    socket.on('disconnect', () => {
+      logger.info(`User disconnected: ${sock.id}`);
+    });
+
+    let conf;
+    let data;
+    let event
+    for ([event, conf] of Object.entries(config.events)) {
+      if (conf.onAfterConnect) {
+        conf.onAfterConnect(event, socket);
+      }
+    }
+
+  });
+
+  const eventsList = Object.keys(config.events);
+  let event;
+
+  //
+  // Create folders
+  // NOTE: still have lots of other folders to create
+  //
+  const folderTmpGenerated = join(config.cacheDir, 'tmp-generated');
+  const folderOutput = join(config.cacheDir, 'out');
+  for (event of eventsList) {
+    await mkdirp(join(folderTmpGenerated, event));
+    await mkdirp(join(folderOutput, event));
   }
 
 }

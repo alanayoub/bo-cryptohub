@@ -63,13 +63,18 @@ export default function dataEmitHandler(event, data) {
       window.refs.rowData = newSocketData;
     }
     else if (event === 'rows-update') {
-      for (const item of newSocketData) {
-        const idx = (window.refs.rowData || []).findIndex(x => x.id === item.id);
-        if (idx > -1) {
-          window.refs.rowData[idx] = item;
-        }
-        else {
-          window.refs.rowData.push(item);
+      if (!window.refs.rowData) {
+        window.refs.rowData = newSocketData;
+      }
+      else {
+        for (const item of newSocketData) {
+          const idx = window.refs.rowData.findIndex(x => x.id === item.id);
+          if (idx > -1) {
+            window.refs.rowData[idx] = item;
+          }
+          else {
+            window.refs.rowData.push(item);
+          }
         }
       }
     }

@@ -20,7 +20,7 @@ export default class CellInteractions {
   constructor() {
     this.openItems = [];
     this.tippyOptions = {
-      theme: 'light',
+      theme: 'light CH-tippy-click',
       placement: 'right',
       hideOnClick: 'false',
       interactiveBorder: 5,

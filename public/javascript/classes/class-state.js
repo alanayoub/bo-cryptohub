@@ -1,5 +1,7 @@
 'use strict'
 
+import JsonUrl from '../libs/json-url-single';
+
 // Binary Overdose Projects
 import { objectSetNestedProperty }              from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp }       from '../libs/bo-utils-client';
@@ -255,6 +257,10 @@ export default class State {
   async update(newState) {
 
     if (!bo.agOptions) return;
+
+    if (!newState) {
+      newState = await this.get();
+    }
 
     // Stub while we only have one "window"
     if (newState.window) {

@@ -1,5 +1,7 @@
 'use strict';
 
+import tippy from 'tippy.js';
+
 /**
  *
  * POPDIV
@@ -15,7 +17,7 @@
  *
  */
 export default function popDiv(element, content, tippyOptions = {}) {
-  const appendTo = document.querySelector('body');
+  const appendTo = document.querySelector('.ag-root');
   const defaultTippyOptions = {
     popperOptions: {
       modifiers: {
@@ -31,8 +33,9 @@ export default function popDiv(element, content, tippyOptions = {}) {
     appendTo,
     flip: false,
     arrow: false,
-    theme: 'light',
+    theme: 'light CH-tippy-popdiv',
     trigger: 'click',
+    maxWidth: 'none',
     multiple: true,
     allowHTML: true,
     placement: 'bottom-start',

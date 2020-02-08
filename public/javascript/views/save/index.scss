@@ -1,0 +1,109 @@
+@import '../../../stylesheet/variables';
+
+@keyframes yellowfade {
+  from {
+    background: yellow;
+  }
+  to {
+    background: #fff;
+  }
+}
+
+.ch-save {
+  .ch-save-container {
+    display: inline;
+  }
+  &:hover {
+    .CH-save {
+      display: block;
+    }
+  }
+  &.ch-flash,
+  &.ch-flash .CH-save {
+    animation-name: yellowfade;
+    animation-duration: 1.5s;
+  }
+  .CH-save {
+    cursor: default;
+    display: none;
+    position: absolute;
+    top: 23px;
+    left: 0;
+    background: #fff;
+    border: 1px solid #fff;
+    line-height: 20px;
+    padding: 10px;
+    border-radius: 2px;
+    border: 5px solid transparent;
+    color: #000;
+    z-index: 2;
+    box-shadow: 10px 20px 15px 0px rgba(0,0,0,0.1);
+    div {
+      margin: 0 0 10px 0;
+    }
+    li {
+      list-style: none;
+      margin: 5px 0;
+      line-height: 23px;
+    }
+    input {
+      margin: 0 5px;
+    }
+    .ch-button {
+      padding: 0 4px;
+      border-radius: 0px;
+      color: #fff;
+      border: 1px solid #869c93;
+      background: #869c93;
+      min-width: 10px;
+      display: inline-block;
+      height: 19px;
+      position: relative;
+      cursor: pointer;
+      line-height: 18px;
+      border-bottom-right-radius: 2px;
+      border-top-right-radius: 2px;
+      border-left: 1px solid #b9c6c0;
+      text-transform: uppercase;
+      &:hover {
+        color: #fff;
+        background: $main-header-background;
+        i {
+          color: #fff;
+        }
+      }
+      i {
+        padding: 0;
+        border-radius: 1px;
+        font-size: 15px;
+        margin: 1px 0;
+        display: inline-block;
+        top: -1px;
+        position: relative;
+        vertical-align: middle;
+      }
+    }
+    .fa-times {
+      border-radius: 0px;
+      font-size: 14px;
+      margin: 0;
+      display: inline-block;
+      top: -1px;
+      position: relative;
+      vertical-align: middle;
+      cursor: pointer;
+      color: #fff;
+      background: #869c93;
+      line-height: 20px;
+      width: 19px;
+      height: 19px;
+      text-align: center;
+      border-top-left-radius: 2px;
+      border-bottom-left-radius: 2px;
+      &:hover {
+        background: #940000;
+        color: #fff;
+      }
+    }
+  }
+}

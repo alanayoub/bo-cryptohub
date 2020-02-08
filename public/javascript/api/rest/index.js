@@ -2,10 +2,11 @@ import API from '../../libs/rest';
 import formatResponse from './middleware.format-response';
 import user from './endpoint.user';
 import login from './endpoint.login';
+import views from './endpoint.views';
 
 const api = new API({
-  cors: 'no-cors',
-  origin: window.location.origin,
+  cors: 'cors',
+  origin: `${window.location.origin}/api`,
   credentials: 'same-origin',
   defaultCache: 1500,
   authorization() {},
@@ -18,8 +19,9 @@ api.preFetch.use(next => {
 });
 
 // Add endpoints
-api.addEndPoint(login(api));
 api.addEndPoint(user(api));
+api.addEndPoint(views(api));
+api.addEndPoint(login(api));
 
 // Add middleware functions that run on the response
 api.postFetch.use(formatResponse(api));

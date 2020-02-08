@@ -1,16 +1,16 @@
 a,
 .cryptohub-link {
-  color: #2f88c8;
+  color: $link-color;
   text-decoration: underline;
   cursor: pointer;
   &:hover {
     text-decoration: none;
-    color: #555;
+    color: $link-hover-color;
   }
   &:active {
-    color: 000;
+    color: $link-active-color;
   }
   &:visited {
-    color: #94cbf2;
+    color: $link-visited-color;
   }
 }

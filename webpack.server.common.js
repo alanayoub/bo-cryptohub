@@ -14,7 +14,6 @@ const generateColumnDependencies = require('./src/utils/generateColumnDependenci
 module.exports = {
 
   entry: './src/index.js',
-  // watch: true,
 
   output: {
     path: path.resolve(__dirname, 'dist'),

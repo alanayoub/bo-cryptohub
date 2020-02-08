@@ -165,6 +165,7 @@ export default {
   },
 
   columnDefs: [],
+  deltaColumnMode: true,
 
   onCellMouseOver(params) {
     window.bo.inst.cellInteractions.mouseOver(params);

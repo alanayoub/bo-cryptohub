@@ -9,41 +9,19 @@ module.exports = merge(common, {
 
   mode: 'production',
 
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
-      },
-      {
-        test: /\.html$/,
-        use: [
-          {
-            loader: 'html-loader',
-            options: {minimize: true}
-          }
-        ]
-      },
-      {
-        test: /\.svg$/,
-        loader: 'file-loader'
-      },
-      {
-          test: /\.s[ac]ss$/i,
-          use: [
-            MiniCssExtractPlugin.loader,
-            // Creates `style` nodes from JS strings
-            // 'style-loader',
-            // Translates CSS into CommonJS
-            'css-loader',
-            // Compiles Sass to CSS
-            'sass-loader',
-          ],
-      }
+  plugins: [
+    new PostBuild(() => {
+      console.log('Running "critical", generating new HTML');
+      critical.generate({
+        inline: true,
+        base: 'src/',
+        src: 'index-generated.html',
+        dest: 'index-generated.html',
+        width: 1300,
+        height: 900,
+        minify: true
+      });
+    })
+  ],
 
-    ]
-  }
 });

@@ -480,6 +480,11 @@
                 width: 23px;
               }
             }
+            .fancytree-folder {
+              span {
+                cursor: move!important;
+              }
+            }
             .bo-edit-item-show {
               &:hover {
                 .fancytree-title {

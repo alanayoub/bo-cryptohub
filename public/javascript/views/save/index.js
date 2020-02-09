@@ -9,13 +9,14 @@ export default class Save extends EventEmitter {
 
   constructor(selector, loggedin = true) {
     super();
+    this.loggedin = loggedin;
     this.selector = selector;
-    this.update(loggedin);
+    this.update();
   }
 
-  async update(loggedin) {
+  async update() {
 
-    if (!loggedin) {
+    if (!this.loggedin) {
       const html = initPug['save']({});
       const container = document.querySelector(this.selector);
       container.innerHTML = html;

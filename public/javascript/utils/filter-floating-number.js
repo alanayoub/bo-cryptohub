@@ -20,7 +20,6 @@ NumberFloatingFilter.prototype.init = function (params) {
     placeholder = 'e.g. true'
   }
 
-  this.onFloatingFilterChanged = params.onFloatingFilterChanged;
   this.eGui = document.createElement('div');
   this.eGui.innerHTML = `<input type="text" placeholder="${placeholder}" data-floatingFilter=${colId} />`;
   this.currentValue = null;
@@ -28,12 +27,16 @@ NumberFloatingFilter.prototype.init = function (params) {
 
   const onInputBoxChanged = () => {
     if (this.eFilterInput.value === '') {
-      //Remove the filter
-      this.onFloatingFilterChanged(null);
+      // Remove the filter
+      params.parentFilterInstance(instance => {
+        instance.myMethodForTakingValueFromFloatingFilter(null);
+      });
       return;
     }
     this.currentValue = this.eFilterInput.value;
-    this.onFloatingFilterChanged(this.currentValue);
+    params.parentFilterInstance(instance => {
+      instance.myMethodForTakingValueFromFloatingFilter(this.currentValue);
+    });
   }
 
   this.eFilterInput.addEventListener('input', onInputBoxChanged);

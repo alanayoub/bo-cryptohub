@@ -10,6 +10,24 @@ import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
 // ag-grid config
 import generateColumnDefs                       from '../ag-grid-column-defs-generate.js';
 
+function JSONstringifyOrder(obj, space) {
+  const allKeys = [];
+  JSON.stringify(obj, (key, value) => {
+    allKeys.push(key); {
+      return value;
+    }
+  });
+  allKeys.sort();
+  return JSON.stringify(obj, allKeys, space);
+}
+
+function objectsAreEqual(obj1, obj2, order) {
+  const stringify = order ? JSONstringifyOrder : JSON.stringify;
+  const str1 = stringify(obj1);
+  const str2 = stringify(obj2);
+  return str1 === str2;
+}
+
 export default class State {
 
   /**
@@ -83,7 +101,7 @@ export default class State {
     const oldFields = oldCols.map(x => x.id).sort((a, b) => a.length - b.length);
     const newFields = newCols.map(x => x.id).sort((a, b) => a.length - b.length);
     const calcIds = newCols.filter(v => v.calc).map(v => v.id);
-    const changed = JSON.stringify(oldFields) !== JSON.stringify(newFields);
+    const changed = !objectsAreEqual(oldFields, newFields, true);
 
     if (changed || calcIds.length) {
       output = newFields;
@@ -184,7 +202,7 @@ export default class State {
     const newState = State.sanitize(state);
     const oldState = await this.get();
 
-    if (JSON.stringify(newState) !== JSON.stringify(oldState)) {
+    if (!oldState || !objectsAreEqual(newState, oldState, true)) {
       const obj = {window: {0: newState}};
       const query = await State.urlEncode(obj);
       history.pushState(obj, '/// Binary Overdose', `#${query}`);
@@ -276,7 +294,8 @@ export default class State {
     {
       const sort = newState.sort;
       const sortModel = bo.agOptions.api.getSortModel()[0];
-      const changed = JSON.stringify(sortModel) !== JSON.stringify(sort);
+
+      const changed = !!sortModel && ((sortModel.colId !== sort.column) || (sortModel.sort !== sort.direction));
 
       if (changed) {
 
@@ -299,11 +318,14 @@ export default class State {
     }
 
     const agState = this.getAgState();
-    const columnsUpdated = JSON.stringify(agState.columns) !== JSON.stringify(newState.columns);
+    const columnsUpdated = !objectsAreEqual(agState.columns, newState.columns, true);
 
     // Update AG Grid columnDefs
     if (columnsUpdated) {
       bo.agOptions.api.columnController.setColumnDefs(columnDefs);
+    }
+    else if (sortUpdated) {
+      bo.agOptions.api.setSortModel([{colId: newState.sort.column, sort: newState.sort.direction}]);
     }
 
     // Update AG Grid filters

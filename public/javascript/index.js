@@ -131,8 +131,11 @@ window.bo.inst.state.init().then(state => {
       if (event.state) {
         window.bo.inst.state.update(event.state);
       }
-      else {
+      else if (window.location.hash) {
         window.bo.inst.state.update();
+      }
+      else {
+        window.history.back();
       }
     }
 

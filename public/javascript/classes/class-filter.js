@@ -2,16 +2,20 @@
 
 export default class Filter {
 
-  // mandatory methods
-
   // The init(params) method is called on the filter once. See below for details on the
   // parameters.
   init(params) {
     this.valueGetter = params.valueGetter;
     this.filterText = null;
+    this.params = params;
     this.gui = document.createElement('div');
     this.gui.innerHTML = '<input type="text" id="filterText" />';
     this.eFilterText = this.gui.querySelector('#filterText');
+    this.onFilterChanged = () => {
+      this.extractFilterText();
+      this.params.filterChangedCallback();
+    };
+    this.eFilterText.addEventListener('input', this.onFilterChanged);
   };
 
   // Returns the GUI for this filter. The GUI can be a) a string of html or b) a DOM element or node.
@@ -21,8 +25,9 @@ export default class Filter {
 
   // The grid calls this to know if the filter icon in the header should be shown. Return true to show.
   isFilterActive() {
-    return  this.filterText !== null &&
+    return this.filterText !== null &&
       this.filterText !== undefined &&
+      this.filterText !== 'undefined' &&
       this.filterText !== '';
   };
 
@@ -41,11 +46,22 @@ export default class Filter {
   // OR the floating filter changed (only if using floating filters).
   setModel(model) {
     this.eFilterText.value = model;
-    this.filterText = this.eFilterText.value.toLowerCase();
+    this.extractFilterText();
   };
 
-  // optional methods
-
   destroy() {};
+
+  extractFilterText() {
+    this.filterText = this.eFilterText.value.toLowerCase();
+  }
+
+  myMethodForTakingValueFromFloatingFilter(value) {
+    this.eFilterText.value = value;
+    this.onFilterChanged();
+  }
+
+  destroy() {
+    this.eFilterText.removeEventListener('input', this.onFilterChanged);
+  }
 
 }

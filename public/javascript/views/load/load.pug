@@ -3,7 +3,7 @@ div(class='CH-load')
   ol
     each val, idx in views.main
       li
-        a(href=val.view)= val.name
+        a(href=origin + '/' + val.view)= val.name
   h4 My Views
   if views.user.length
     ol

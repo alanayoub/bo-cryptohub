@@ -3,7 +3,7 @@ const path = require('path');
 const argv = require('argv');
 
 const columnDependencies = require('./utils/columnDependencies.generated.js').default;
-const defaultViews = require('./settings.views.default.js');
+const defaultViews = require('./settings.views.default.js').default;
 
 // Bitbucket :/
 // Ardor: https://bitbucket.org/Jelurida/ardor/src

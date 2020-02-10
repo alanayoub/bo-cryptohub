@@ -198,7 +198,7 @@ pug_html = pug_html + "\u003Cbutton class=\"BO-btn bo-btn-secondary bo-add-custo
 ;pug_debug_line = 42;
 pug_html = pug_html + "Add Custom\u003C\u002Fbutton\u003E\u003C\u002Fdiv\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E\u003C\u002Ftable\u003E\u003C\u002Fsection\u003E";
 ;pug_debug_line = 44;
-pug_html = pug_html + "\u003Cfooter\u003E\u003C\u002Ffooter\u003E\u003C\u002Fdiv\u003E";}.call(this,"frozenColumns" in locals_for_with?locals_for_with.frozenColumns:typeof frozenColumns!=="undefined"?frozenColumns:undefined,"header" in locals_for_with?locals_for_with.header:typeof header!=="undefined"?header:undefined,"totalAvailable" in locals_for_with?locals_for_with.totalAvailable:typeof totalAvailable!=="undefined"?totalAvailable:undefined,"totalSelected" in locals_for_with?locals_for_with.totalSelected:typeof totalSelected!=="undefined"?totalSelected:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'load': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (views) {;pug_debug_line = 1;
+pug_html = pug_html + "\u003Cfooter\u003E\u003C\u002Ffooter\u003E\u003C\u002Fdiv\u003E";}.call(this,"frozenColumns" in locals_for_with?locals_for_with.frozenColumns:typeof frozenColumns!=="undefined"?frozenColumns:undefined,"header" in locals_for_with?locals_for_with.header:typeof header!=="undefined"?header:undefined,"totalAvailable" in locals_for_with?locals_for_with.totalAvailable:typeof totalAvailable!=="undefined"?totalAvailable:undefined,"totalSelected" in locals_for_with?locals_for_with.totalSelected:typeof totalSelected!=="undefined"?totalSelected:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'load': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (origin, views) {;pug_debug_line = 1;
 pug_html = pug_html + "\u003Cdiv class=\"CH-load\"\u003E";
 ;pug_debug_line = 2;
 pug_html = pug_html + "\u003Ch4\u003E";
@@ -216,7 +216,7 @@ pug_html = pug_html + "\u003Col\u003E";
 ;pug_debug_line = 5;
 pug_html = pug_html + "\u003Cli\u003E";
 ;pug_debug_line = 6;
-pug_html = pug_html + "\u003Ca" + (pug.attr("href", val.view, true, false)) + "\u003E";
+pug_html = pug_html + "\u003Ca" + (pug.attr("href", origin + '/' + val.view, true, false)) + "\u003E";
 ;pug_debug_line = 6;
 pug_html = pug_html + (pug.escape(null == (pug_interp = val.name) ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003C\u002Fli\u003E";
       }
@@ -228,7 +228,7 @@ pug_html = pug_html + (pug.escape(null == (pug_interp = val.name) ? "" : pug_int
 ;pug_debug_line = 5;
 pug_html = pug_html + "\u003Cli\u003E";
 ;pug_debug_line = 6;
-pug_html = pug_html + "\u003Ca" + (pug.attr("href", val.view, true, false)) + "\u003E";
+pug_html = pug_html + "\u003Ca" + (pug.attr("href", origin + '/' + val.view, true, false)) + "\u003E";
 ;pug_debug_line = 6;
 pug_html = pug_html + (pug.escape(null == (pug_interp = val.name) ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003C\u002Fli\u003E";
     }
@@ -281,7 +281,7 @@ pug_html = pug_html + "\u003Cdiv\u003E";
 ;pug_debug_line = 14;
 pug_html = pug_html + "You have no saved views\u003C\u002Fdiv\u003E";
 }
-pug_html = pug_html + "\u003C\u002Fdiv\u003E";}.call(this,"views" in locals_for_with?locals_for_with.views:typeof views!=="undefined"?views:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'login': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (user) {;pug_debug_line = 1;
+pug_html = pug_html + "\u003C\u002Fdiv\u003E";}.call(this,"origin" in locals_for_with?locals_for_with.origin:typeof origin!=="undefined"?origin:undefined,"views" in locals_for_with?locals_for_with.views:typeof views!=="undefined"?views:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'login': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (user) {;pug_debug_line = 1;
 pug_html = pug_html + "\u003Cdiv class=\"CH-login\"\u003E";
 ;pug_debug_line = 2;
 if (user.displayName) {

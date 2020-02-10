@@ -83,6 +83,9 @@ async function doEmit(changes) {
 
       // Get socket and required fields
       socket = sockets[socketId];
+      if (!socket.handshake.query.cols) {
+        // fetch
+      }
       const cols = JSON.parse(socket.handshake.query.cols);
       const columns = cols.columns.split(',');
       fields = [];

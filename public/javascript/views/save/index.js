@@ -69,7 +69,7 @@ export default class Save extends EventEmitter {
       else {
         payload = {
           slot: index + 1,
-          view: window.location.href,
+          view: window.location.hash,
           name: value
         }
       }

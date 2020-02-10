@@ -36,6 +36,7 @@ export default function cellRendererExchanges(params) {
   if (exchangeIds.length > max) {
     output += '...'
   }
+
   return output;
 
 }

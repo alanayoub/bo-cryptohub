@@ -12,11 +12,13 @@ export default class Load {
 
   async update() {
 
+    const origin = window.location.origin;
     const { data = {} } = await bo.rest.views.get(null, {cacheFor: 1000});
     const user = (data.user || []).filter(Boolean);
     const main = data.default || [];
     const context = {
       views: {
+        origin,
         user,
         main
       }

@@ -1,9 +1,10 @@
 'use strict';
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
 const merge = require('webpack-merge');
+const critical = require('critical');
+
 const common = require('./webpack.client.common.js');
+const PostBuild = require('./webpack-plugin-post-build.js');
 
 module.exports = merge(common, {
 

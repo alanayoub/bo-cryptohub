@@ -65,7 +65,12 @@
     }
   }
   .ag-input-wrapper {
-    top: -5px;
+    top: -3px;
+  }
+  .ag-header-cell {
+    input {
+      height: 16px;
+    }
   }
   .ag-pinned-left-header {
     border-right: 1px solid $tippy-header-divider-color!important;

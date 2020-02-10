@@ -1,12 +1,9 @@
-import defaultViews from './settings.views.default.js';
-
-// Node
+// node
 const path = require('path');
-
-// Libs
 const argv = require('argv');
 
 const columnDependencies = require('./utils/columnDependencies.generated.js').default;
+const defaultViews = require('./settings.views.default.js');
 
 // Bitbucket :/
 // Ardor: https://bitbucket.org/Jelurida/ardor/src

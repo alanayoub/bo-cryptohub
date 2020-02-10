@@ -1,7 +1,5 @@
 'use strict'
 
-import JsonUrl from '../libs/json-url-single';
-
 // Binary Overdose Projects
 import { objectSetNestedProperty }              from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp }       from '../libs/bo-utils-client';

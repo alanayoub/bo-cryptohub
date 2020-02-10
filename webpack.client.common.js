@@ -6,17 +6,13 @@ const fs                               = require('fs-extra');
 
 // Libs
 const HtmlWebpackPlugin                = require('html-webpack-plugin');
-const { CleanWebpackPlugin }           = require('clean-webpack-plugin');
 
 const CopyWebpackPlugin                = require('copy-webpack-plugin');
 const MiniCssExtractPlugin             = require('mini-css-extract-plugin');
 
 const PreBuild                         = require('./webpack-plugin-pre-build.js');
-const PostBuild                        = require('./webpack-plugin-post-build.js');
 
 const { nodePugCompileTemplates: pug } = require('bo-utils');
-
-const critical                         = require('critical');
 
 module.exports = {
 
@@ -100,6 +96,10 @@ module.exports = {
           destination: path.resolve(__dirname, './public/javascript/libs/bo-utils-client.js')
         },
         {
+          source: './node_modules/bo-datatable/dist/index.client.js',
+          destination: path.resolve(__dirname, './public/javascript/libs/bo-datatable-client.js')
+        },
+        {
           source: './node_modules/json-url/dist/browser/json-url-single.js',
           destination: path.resolve(__dirname, './public/javascript/libs/json-url-single.js')
         },
@@ -114,6 +114,19 @@ module.exports = {
         });
       }
 
+      // Copy files here because there are lots of them
+      // and if we do the copy in the normal plugin the watch task
+      // copies them every save even if we ignore that folder
+      console.log('--- Copying images folders');
+      let source, destination;
+      source = path.resolve(__dirname, './public/images/');
+      destination = path.resolve(__dirname, './dist/public/images/');
+      fs.copySync(source, destination);
+      // source = path.resolve(__dirname, './public/images/');
+      // destination = path.resolve(__dirname, './dist/public/images/');
+      // fs.copy(source, destination);
+      console.log('--- Copy images folders finished');
+
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/index.html'),
@@ -124,9 +137,25 @@ module.exports = {
       chunkFilename: '[name].[chunkhash:8].chunk.css'
     }),
     new CopyWebpackPlugin([
+      // {
+      //   from: './public/images',
+      //   to:   './images'
+      // },
       {
-        from: './public/images',
-        to:   './images'
+        from: './public/javascript/libs/bo-utils-client.js',
+        to:   './javascript/libs/bo-utils-client.js'
+      },
+      {
+        from: './public/javascript/libs/bo-datatable-client.js',
+        to:   './javascript/libs/bo-datatable-client.js'
+      },
+      {
+        from: './public/javascript/libs/json-url-single.js',
+        to:   './javascript/libs/json-url-single.js'
+      },
+      {
+        from: './public/privacy.html',
+        to:   './privacy.html'
       },
       {
         from: './public/privacy.html',

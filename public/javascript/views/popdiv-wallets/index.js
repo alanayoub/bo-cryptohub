@@ -130,10 +130,7 @@ function agGridOptions(params) {
     floatingFiltersHeight: 20,
     rowData: rowData,
     columnDefs: columnDefs,
-    enableFilter: true,
-    enableSorting: true,
     floatingFilter: true,
-    enableColResize: true,
     animateRows: false,
     columnTypes: {
       cryptohubText: {
@@ -147,7 +144,9 @@ function agGridOptions(params) {
       },
     },
     defaultColDef: {
+      resizable: true,
       sortable: true,
+      filter: true,
       editable: false,
       suppressMenu: true,
       floatingFilterComponentParams: {

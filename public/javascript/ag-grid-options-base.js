@@ -74,8 +74,8 @@ export default {
       // https://www.ag-grid.com/javascript-grid-change-detection/
       editable: false,
       equals: shouldCellUpdate,
-      tooltip: cellTooltip,
       suppressMenu: true,
+      tooltipValueGetter: cellTooltip,
       floatingFilterComponentParams: {
         suppressMenu: true,
         suppressFilterButton: true
@@ -310,6 +310,12 @@ export default {
 
   },
 
+  defaultColDef: {
+    resizable: true,
+    sortable: true,
+    filter: true
+  },
+
   rowHeight: 32,
 
   // NOTE: DO NOT CHANGE UNLESS YOU WANT TO UPDATE HOW DATA WORKS
@@ -318,18 +324,8 @@ export default {
   // Set to true to have cells flash after data changes. See Flashing Data Changes.
   enableCellChangeFlash: true,
 
-  // Set to true when using Client-side Row Model to enable Row Filtering
-  enableFilter: true,
-
-  // Set to true when using Client-side Row Model to enable Row Sorting.
-  // Clicking a column header will cause the grid to sort the data.
-  enableSorting: true,
-
   // Floating Filter components allow you to add your own floating filter types to ag-Grid
   floatingFilter: true,
-
-  // Set to true to allow column resizing by dragging the mouse at a columns headers edge.
-  enableColResize: true,
 
   // If you turn on deltaRowDataMode, then when you call api.setRowData(rowData)
   // the grid will work out which items are to be added, removed and updated.

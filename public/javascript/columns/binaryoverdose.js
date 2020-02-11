@@ -32,7 +32,6 @@ export default {
     pinned: 'left',
     lockPosition: true,
     suppressMenu: true,
-    suppressFilter: true,
     cellClass: 'CH-align-right',
     filter: false,
     cellRenderer(params) {

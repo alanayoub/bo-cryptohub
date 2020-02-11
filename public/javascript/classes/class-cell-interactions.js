@@ -44,7 +44,17 @@ export default class CellInteractions {
    */
   static getCellData(params) {
 
-    let $from = params.event.fromElement;
+    let $from, $to;
+    const type = params.event.type;
+    if (type === 'mouseout') {
+      $from = params.event.target;
+      $to = params.event.relatedTarget;
+    }
+    else if (type === 'mouseover') {
+      $to = params.event.target;
+      $from = params.event.relatedTarget;
+    }
+
     let fromIsCell;
     let fromIsOpen;
     let $fromCell;
@@ -55,7 +65,6 @@ export default class CellInteractions {
       fromIsOpen = fromIsCell && $from.dataset.chOpen === 'true';
     }
 
-    let $to = params.event.toElement;
     let toIsCell;
     let toIsOpen;
     let $toCell;

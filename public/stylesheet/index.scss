@@ -20,9 +20,21 @@
 @import 'ag-grid/custom-globals';
 @import 'ag-grid/custom-columns';
 
+// @import '../javascript/libs/golden-layout/css/goldenlayout.css';
+
+body {
+  background: #080333; // Blue
+  background: #6e1010; // Red
+  background: #008080; // Teal
+  // background: #170d6a;
+  // background: #6e1010;
+  // background: #1d6e10;
+  // background: #aaa;
+}
+
 #ch-grid {
-  position: fixed;
-  top: 50px;
+  position: absolute;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
@@ -34,4 +46,15 @@
     font-weight: 900;
     content: '\25A3';
   }
+}
+
+.CH-layout {
+  position: fixed;
+  top: 50px;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+  background: #000;
+  border: 5px solid;
+  border-radius: 4px;
 }

@@ -13,7 +13,7 @@ pug_html = pug_html + "\u003Cimage xlink:href=\"\u002Fimages\u002Fbo\u002Flogo_w
 ;pug_debug_line = 7;
 pug_html = pug_html + "\u003Cspan class=\"CH-toolbar CH-hook-toolbar\"\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E";
 ;pug_debug_line = 8;
-pug_html = pug_html + "\u003Cdiv class=\"ag-theme-balham\" id=\"ch-grid\"\u003E\u003C\u002Fdiv\u003E";} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'cookie-bar': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;pug_debug_line = 1;
+pug_html = pug_html + "\u003Cdiv class=\"CH-layout\"\u003E\u003C\u002Fdiv\u003E";} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'cookie-bar': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;pug_debug_line = 1;
 pug_html = pug_html + "\u003Cdiv id=\"cookie-bar\"\u003E";
 ;pug_debug_line = 2;
 pug_html = pug_html + "\u003Cspan\u003E";

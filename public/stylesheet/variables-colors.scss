@@ -8,17 +8,19 @@ $text-ticker-color-default: #000; // black
 $text-ticker-color-good: #019c0d; // green
 $text-ticker-color-bad: #e00909;  // red
 
-$main-background: #355e21;
-$main-header-background: scale-color(
-  $main-background,
-  $lightness: 20%,
-  $saturation: -25%
-);
-$main-filter-background: scale-color(
-  $main-background,
-  $lightness: 55%,
-  $saturation: -60%
-);
+$main-background: transparent;//#080333;
+$main-header-background: #555;
+// $main-header-background: scale-color(
+//   $main-background,
+//   $lightness: 20%,
+//   $saturation: -25%
+// );
+$main-filter-background: $main-header-background;
+// $main-filter-background: scale-color(
+//   $main-background,
+//   $lightness: 55%,
+//   $saturation: -60%
+// );
 $main-filter-text: #fff;
 
 //

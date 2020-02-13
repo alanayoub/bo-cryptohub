@@ -62,6 +62,7 @@ export default {
     width: 124,
     type: [
       'cryptohubDefaults',
+      'cryptohubText',
     ],
     cellRenderer: CellRendererSparkline,
     cellRendererParams: {
@@ -86,6 +87,7 @@ export default {
     width: 124,
     type: [
       'cryptohubDefaults',
+      'cryptohubText',
     ],
     cellRenderer: CellRendererSparkline,
     cellRendererParams: {

@@ -1,3 +1,5 @@
+@import '../../../stylesheet/variables';
+
 .CH-toolbar {
 
   width: calc(100% - 190px);
@@ -35,7 +37,7 @@
   position: absolute;
   left: 189px;
   cursor: default;
-  background: #355e21;
+  background: $main-background;
   height: 50px;
   line-height: 50px;
   z-index: 1;

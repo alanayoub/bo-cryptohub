@@ -6,6 +6,7 @@ import { ModuleRegistry } from '@ag-grid-community/all-modules';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
 import State from './classes/class-state.js';
+import Layout from './views/layout';
 import globals from './globals.js';
 import initPug from './generated/init-pug.generated.js';
 import ToolbarView from './views/toolbar/toolbar.js';
@@ -29,6 +30,7 @@ function flipMap(map) {
   }
   return out;
 }
+
 
 /**
  *
@@ -67,8 +69,11 @@ function storeEmitHandler(data) {
 
 }
 
-const content = initPug['app-container']({});
-document.querySelector('.CH-app').innerHTML = content;
+document.querySelector('.CH-app').innerHTML = initPug['app-container']({});
+
+const layout = new Layout({
+  container: document.querySelector('.CH-layout')
+});
 
 $('body').on('click', '.ch-logo a', event => {
   segment.homeLogoClicked();

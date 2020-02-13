@@ -2,9 +2,11 @@
   .ag-header {
     background: $main-filter-background;
     z-index: 10000;
+    border-bottom: none;
   }
   .ag-pinned-left-header {
     position: relative;
+    border-right: 1px solid #696969;
   }
   .ag-header-viewport:before {
     content: '';
@@ -18,9 +20,14 @@
   .ag-header-cell {
     border: none!important;
     input {
-      border: none!important;
+      border: none;
       height: 21px;
       padding: 2px;
+      height: 21px;
+      padding: 2px;
+      background: #444;
+      border-top: 1px solid #222;
+      color: #fff;
     }
   }
   .ag-header-cell-label {
@@ -107,7 +114,16 @@
   .ag-header-row {
     border-bottom: none;
   }
+  .ag-floating-filter-full-body {
+    position: relative;
+    top: -4px;
+  }
+  .ag-header-row:nth-child(2) .ag-header-cell:after {
+    top: -3px;
+    opacity: 0.3;
+  }
   .ag-row-odd, .ag-row-even {
     background-color: #fff!important;
   }
+
 }

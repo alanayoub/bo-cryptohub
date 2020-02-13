@@ -317,6 +317,8 @@ export default {
   },
 
   rowHeight: 32,
+  headerHeight: 32,
+  floatingFiltersHeight: 32,
 
   // NOTE: DO NOT CHANGE UNLESS YOU WANT TO UPDATE HOW DATA WORKS
   rowData: window.refs.rowData,

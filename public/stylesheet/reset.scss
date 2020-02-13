@@ -7,6 +7,10 @@
 body {
   font: 13px Helvetica, Arial;
   background: #fff;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transition: all 0.5s ease;
   &:before {
     content: '';
     display: block;

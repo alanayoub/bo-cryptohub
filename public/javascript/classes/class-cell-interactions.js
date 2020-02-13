@@ -6,7 +6,7 @@ import { htmlToggleClass }                from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 
 // Cryptohub util functions
-import popDiv                             from '../utils/popdiv.js';
+import popDiv                             from '../views/popdiv';
 import segment                            from '../utils/segment.js';
 import initPug                            from '../generated/init-pug.generated.js';
 

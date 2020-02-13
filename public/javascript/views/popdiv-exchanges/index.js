@@ -6,7 +6,7 @@ import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
 import cellRendererExchangesName from './cell-renderer-exchanges-name.js';
 
-import popDiv from '../../utils/popdiv.js';
+import popDiv from '../popdiv';
 import initPug from '../../generated/init-pug.generated.js';
 import sortText from '../../utils/sort-text.js';
 import { getRandomInt } from '../../libs/bo-utils-client';

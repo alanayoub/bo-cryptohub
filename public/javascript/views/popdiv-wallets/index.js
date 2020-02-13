@@ -7,7 +7,7 @@ import cellRendererUrl                    from '../../utils/cell-renderer-url.js
 import cellRendererWalletName             from '../../utils/cell-renderer-wallet-name.js';
 
 // Cryptohub
-import popDiv  from '../../utils/popdiv.js';
+import popDiv  from '../popdiv';
 import initPug from '../../generated/init-pug.generated.js';
 import sortText from '../../utils/sort-text.js';
 

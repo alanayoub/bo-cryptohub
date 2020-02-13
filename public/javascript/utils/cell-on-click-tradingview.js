@@ -7,7 +7,7 @@ import { partialApplication }             from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
 
 // Cryptohub Util functions
-import popDiv from './popdiv.js';
+import popDiv from '../views/popdiv';
 import initPug from '../generated/init-pug.generated.js';
 
 /**

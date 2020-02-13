@@ -117,17 +117,17 @@ try {
     });
 
     datatable.newSource('cryptocompare', cryptocompare.config).then(() => {
-      // datatable.sources.cryptocompare.add(cryptocompare.coinList);
-      // datatable.sources.cryptocompare.add(cryptocompare.social);
-      // datatable.sources.cryptocompare.add(cryptocompare.snapshot);
-      // datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
-      // datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
-      // datatable.sources.cryptocompare.add(cryptocompare.walletsGeneral);
-      // datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
+      datatable.sources.cryptocompare.add(cryptocompare.coinList);
+      datatable.sources.cryptocompare.add(cryptocompare.social);
+      datatable.sources.cryptocompare.add(cryptocompare.snapshot);
+      datatable.sources.cryptocompare.add(cryptocompare.exchangesList);
+      datatable.sources.cryptocompare.add(cryptocompare.topTotalVolume);
+      datatable.sources.cryptocompare.add(cryptocompare.walletsGeneral);
+      datatable.sources.cryptocompare.add(cryptocompare.exchangesGeneral);
     });
 
     datatable.newSource('messari', messari.config).then(() => {
-      // datatable.sources.messari.add(messari.assets);
+      datatable.sources.messari.add(messari.assets);
       //
       // NOTE: There doesn't seem to be a need for the below api requests. Investigate
       //
@@ -141,7 +141,7 @@ try {
     // });
 
     datatable.newSource('xe', xe.config).then(() => {
-      // datatable.sources.xe.add(xe.currency);
+      datatable.sources.xe.add(xe.currency);
     });
 
   });

@@ -1,17 +1,18 @@
 'use strict';
 
+
+import columnLibrary from '../../columns';
 import { Grid } from '@ag-grid-community/core';
-import { ModuleRegistry } from '@ag-grid-community/all-modules';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
 import cellRendererExchangesName from './cell-renderer-exchanges-name.js';
 
-import popDiv from '../popdiv';
 import initPug from '../../generated/init-pug.generated.js';
 import sortText from '../../utils/sort-text.js';
-import { getRandomInt } from '../../libs/bo-utils-client';
 import { numberGroupDigits } from '../../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
+import { objectFlattenObject as flatten } from '../../libs/bo-utils-client';
+import { getRandomInt } from '../../libs/bo-utils-client';
 
 import style from './index.scss';
 
@@ -28,7 +29,6 @@ function html(params, gridId) {
   const dexList       = gnp(params, 'data.cryptohub-exchangesListDex.value') || [];
   const fiatIds       = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
   const cryptoIds     = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
-  // const outputArray   = exchangeDataModel();
   const numberOfPairs = gnp(params, 'data.cryptohub-numberOfPairs.value');
 
   const output = {
@@ -55,13 +55,13 @@ function html(params, gridId) {
  * Build AG-GRID Options
  *
  */
-function agGridOptions(params) {
+function agGridOptions(data) {
 
   const rowData = [];
 
-  const dex = gnp(params, 'data.cryptohub-exchangesListDex.value') || [];
-  const both = gnp(params, 'data.cryptohub-exchangesListAcceptsBoth.value') || [];
-  const crypto = gnp(params, 'data.cryptohub-exchangesListCryptoOnly.value') || [];
+  const dex = gnp(data, 'cryptohub-exchangesListDex.value') || [];
+  const both = gnp(data, 'cryptohub-exchangesListAcceptsBoth.value') || [];
+  const crypto = gnp(data, 'cryptohub-exchangesListCryptoOnly.value') || [];
   const exchangeIds = Array.from(new Set([
     ...dex, ...both, ...crypto
   ]));
@@ -156,8 +156,8 @@ function agGridOptions(params) {
   // Options
   const options = {
     rowHeight: 32,
-    headerHeight: 26,
-    floatingFiltersHeight: 20,
+    headerHeight: 32,
+    floatingFiltersHeight: 32,
     rowData: rowData,
     columnDefs: columnDefs,
     floatingFilter: true,
@@ -196,25 +196,42 @@ function agGridOptions(params) {
  *
  *
  */
-export default function cellOnClickExchanges(params) {
+export default function cellOnClickExchanges({componentState}) {
 
-  const rand = getRandomInt();
-  const id = `ch-tippy-${rand}`;
-  const gridId = `grid-${rand}`;
+  const { id, assetId, colId } = componentState;
+  if (!colId) return;
+  const data = refs.rowData.find(v => v.id === assetId);
+  const selector = `#gadget-container-${id}`;
+  const colLib = flatten(columnLibrary);
+  const cellRendererParams = colLib[colId].cellRendererParams;
 
-  // Create popdiv
-  const $cell = params.event.target.closest('.ag-cell');
-  const contentPopdiv = initPug['ch-tippy-popdiv']({id});
-  popDiv($cell, contentPopdiv);
+  const containerId = `ch-exchanges-${getRandomInt(100000, 999999)}`;
 
-  // Populate html content
-  const cssId = `#${id}`;
-  const content = html(params, gridId);
-  document.querySelector(cssId).innerHTML = content;
+  const name          = gnp(data, 'cc-total-vol-full-FullName.value');
+  const dexList       = gnp(data, 'cryptohub-exchangesListDex.value') || [];
+  const fiatIds       = gnp(data, 'cryptohub-exchangesListAcceptsBoth.value') || [];
+  const cryptoIds     = gnp(data, 'cryptohub-exchangesListCryptoOnly.value') || [];
+  const numberOfPairs = gnp(data, 'cryptohub-numberOfPairs.value');
+  const total         = numberGroupDigits(gnp(data, 'cryptohub-numberOfExchanges.value'));
+  const classes = 'ch-numberofexchanges';
+  const context = {
+    header: {
+      name,
+      total,
+      classes,
+      numberOfPairs,
+      numberOfDex: dexList.length,
+      numberOfFiat: fiatIds.length,
+      numberOfCrypto: cryptoIds.length,
+    },
+    containerId
+  }
+  const contentHtml = initPug['popdiv-exchanges'](context);
 
-  // Load Grid
-  const gridOptions = agGridOptions(params);
-  const gridElement = document.querySelector(`#${gridId}`);
+  document.querySelector(selector).innerHTML = contentHtml;
+
+  const gridOptions = agGridOptions(data);
+  const gridElement = document.querySelector(`#${containerId}`);
   new Grid(gridElement, gridOptions, {modules: AllCommunityModules});
 
 }

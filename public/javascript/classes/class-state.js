@@ -120,14 +120,12 @@ export default class State {
 
     if (!state) return;
 
-    const whitelist = ['sort', 'columns', 'portfolio', 'favourites'];
-    const sanitizedState = {};
-
-    for (const field of whitelist) {
-      sanitizedState[field] = state[field];
+    state.window[0] = {
+      sort: state.window[0].sort,
+      columns: state.window[0].columns
     }
 
-    return sanitizedState;
+    return state;
 
   }
 
@@ -143,7 +141,7 @@ export default class State {
     const fragmentId = url.hash.substr(1);
     if (fragmentId.length) {
       const obj = await State.urlDecode(fragmentId);
-      return obj.window[0];
+      return obj;
     }
     else {
       return void 0;
@@ -160,27 +158,27 @@ export default class State {
    * @param {String|Object} data - data to set on target property. Could be any value
    *
    */
-  async set(target, data) {
+  async set(target, data, action) {
 
     let state;
     if (arguments.length === 1) {
-      state = target.window ? target.window[0] : target;
+      state = target;
       target = null;
     }
     else {
       state = await this.get();
     }
 
-    switch (target) {
-      case 'columns':
-        objectSetNestedProperty(state, target, data);
+    switch (true) {
+      case target === 'columns':
+        objectSetNestedProperty(state.window[0], target, data);
         break;
-      case 'sort':
-        objectSetNestedProperty(state, target, data);
+      case target === 'sort':
+        objectSetNestedProperty(state.window[0], target, data);
         break;
-      case 'filter':
+      case target === 'filter':
         const filters = Object.keys(data);
-        const columns = state.columns;
+        const columns = state.window[0].columns;
         for (const column of columns) {
           if (filters.includes(column.id)) {
             column.filter = data[column.id];
@@ -189,9 +187,18 @@ export default class State {
             delete column.filter;
           }
         }
-        objectSetNestedProperty(state, 'columns', columns);
+        objectSetNestedProperty(state.window[0], 'columns', columns);
         break;
-      case null:
+      case /^window/.test(target):
+        const idx = target.split('.')[1];
+        if (action === 'push') {
+          state.window.push(data);
+        }
+        else if (idx > -1) {
+          state.window[idx] = data;
+        }
+        break;
+      case target === null:
         // do nothing
       default:
         break;
@@ -201,7 +208,7 @@ export default class State {
     const oldState = await this.get();
 
     if (!oldState || !objectsAreEqual(newState, oldState, true)) {
-      const obj = {window: {0: newState}};
+      const obj = newState;
       const query = await State.urlEncode(obj);
       history.pushState(obj, '/// Binary Overdose', `#${query}`);
       // gtag('config', 'UA-640029-16', {
@@ -227,7 +234,7 @@ export default class State {
       return null;
     }
 
-    let model = state.columns
+    let model = state.window[0].columns
         .reduce((a, v) => {
           if (v.filter) a[v.id] = v.filter;
           return a;
@@ -278,19 +285,14 @@ export default class State {
       newState = await this.get();
     }
 
-    // Stub while we only have one "window"
-    if (newState.window) {
-      newState = newState.window[0];
-    }
-
     // Generate columnDefs
-    const columns = newState.columns;
-    const columnDefs = generateColumnDefs(newState);
+    const columns = newState.window[0].columns;
+    const columnDefs = generateColumnDefs(newState.window[0]);
 
     // Set sort order on columnDefs
     let sortUpdated = false;
     {
-      const sort = newState.sort;
+      const sort = newState.window[0].sort;
       const sortModel = bo.agOptions.api.getSortModel()[0];
 
       const changed = !!sortModel && ((sortModel.colId !== sort.column) || (sortModel.sort !== sort.direction));
@@ -316,14 +318,14 @@ export default class State {
     }
 
     const agState = this.getAgState();
-    const columnsUpdated = !objectsAreEqual(agState.columns, newState.columns, true);
+    const columnsUpdated = !objectsAreEqual(agState.columns, newState.window[0].columns, true);
 
     // Update AG Grid columnDefs
     if (columnsUpdated) {
       bo.agOptions.api.columnController.setColumnDefs(columnDefs);
     }
     else if (sortUpdated) {
-      bo.agOptions.api.setSortModel([{colId: newState.sort.column, sort: newState.sort.direction}]);
+      bo.agOptions.api.setSortModel([{colId: newState.window[0].sort.column, sort: newState.window[0].sort.direction}]);
     }
 
     // Update AG Grid filters
@@ -333,8 +335,8 @@ export default class State {
     // If columns have changed emit a socket event with the new column state
     if (columnsUpdated && bo.inst.socket) {
       const oldCols = gnp(agState, 'columns') || [];
-      const sort = newState.sort;
-      const newColFields = State.columnsChanged(oldCols, newState.columns);
+      const sort = newState.window[0].sort;
+      const newColFields = State.columnsChanged(oldCols, newState.window[0].columns);
       if (newColFields) {
         const columns = newColFields
           .filter(v => !/^c-\d{1,4}$/.test(v)) // filter out custom columns
@@ -348,7 +350,7 @@ export default class State {
         // We currently dont know if they have changed because we cant store
         // custom properties on the column definitions
         //
-        // const calcIds = newState.columns.filter(v => v.calc).map(v => v.id);
+        // const calcIds = newState.window[0].columns.filter(v => v.calc).map(v => v.id);
         // const params = {
         //   force: true,
         //   columns: calcIds
@@ -356,6 +358,29 @@ export default class State {
         // bo.agOptions.api.refreshCells(params);
       }
     }
+
+    //
+    // Load / update other panels
+    //
+    // for (const [sid, value] of Object.entries(newState.window)) {
+    //   if (sid !== 0) {
+    //     const stacks = bo.inst.layout.root.getItemsByType('stack');
+    //     const stack = stacks.filter(v => v.config.sid === sid);
+    //     if (stack.length) {
+    //       const id = getRandomInt(100000, 999999);
+    //       const newItem = {
+    //         id,
+    //         sid,
+    //         type: 'component',
+    //         title: value.field,
+    //         componentName: 'commonComponent',
+    //         componentState: {label: 'Z', ...value}
+    //       }
+    //       stack[0].addChild(newItem);
+    //       console.log(id, value, stack);
+    //     }
+    //   }
+    // }
 
   }
 

@@ -26,6 +26,7 @@ export default async function generateAgOptions() {
   window.refs.rowData = null;
 
   const state = await bo.inst.state.get();
+  const mainState = state.window[0];
   const filterModel = await bo.inst.state.getFilterModel();
   const colLib = flatten(columnLibrary);
 
@@ -39,13 +40,13 @@ export default async function generateAgOptions() {
     // default sort order
     const validColumns = [
       ...Object.keys(colLib),
-      ...state.columns.filter(v => /^c-\d{1,2}$/.test(v.id)).map(v => v.id)
+      ...mainState.columns.filter(v => /^c-\d{1,2}$/.test(v.id)).map(v => v.id)
     ];
-    const sortId = validColumns.includes(state.sort.column) ? state.sort.column : validColumns[0];
+    const sortId = validColumns.includes(mainState.sort.column) ? mainState.sort.column : validColumns[0];
     params.api.setSortModel([
       {
         colId: sortId,
-        sort: state.sort.direction
+        sort: mainState.sort.direction
       }
     ]);
 
@@ -61,7 +62,7 @@ export default async function generateAgOptions() {
   // if there is use that and backfill with the default config
   // dont forget to make it very secure!!!
   //
-  const columnDefs = generateColumnDefs(state, true);
+  const columnDefs = generateColumnDefs(mainState, true);
 
   const options = window.bo.agOptions = {
     ...agGridOptionsBase,

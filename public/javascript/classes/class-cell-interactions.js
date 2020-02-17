@@ -1,9 +1,12 @@
 'use strict'
 
+import tippy from 'tippy.js';
+
 // Binary Overdose Projects
 import { partialApplication }             from '../libs/bo-utils-client';
 import { htmlToggleClass }                from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../libs/bo-utils-client';
+import { getRandomInt }                   from '../libs/bo-utils-client';
 
 // Cryptohub util functions
 import popDiv                             from '../views/popdiv';
@@ -99,29 +102,37 @@ export default class CellInteractions {
     const tippy = $cell._tippy;
     if (!tippy) return;
 
+    const rand = getRandomInt();
+    const id = `gadget-container-${rand}`;
+    const selector = `#gadget-container-${rand}`;
+    const contentPopdiv = initPug['ch-tippy-popdiv']({id});
     const popdivType = gnp(params, 'colDef.cellRendererParams.popdiv');
 
+    const classes = {
+      tradingview: cellOnClickTradingview,
+      exchanges: cellOnClickExchanges,
+      wallets: cellOnClickWallets,
+      html: cellOnClickHtml,
+    }
+
     if (popdivType) {
+
       $cell.dataset.chOpen = true;
-      tippy.set({
-        hideOnClick: 'false',
-      });
-      switch (popdivType) {
-        case 'tradingview':
-          cellOnClickTradingview(params);
-          break;
-        case 'exchanges':
-          cellOnClickExchanges(params);
-          break;
-        case 'wallets':
-          cellOnClickWallets(params);
-          break;
-        case 'html':
-          cellOnClickHtml(params);
-          break;
+      tippy.set({hideOnClick: 'false'});
+
+      new popDiv(params, contentPopdiv);
+
+      const componentState = {
+        id: rand,
+        assetId: params.data.id,
+        colId: params.colDef.colId
       }
+      classes[popdivType]({componentState});
+
       $cell.$popDivTippy = $cell._tippy;
-      window.bo.func.openCells.addOpen(params);
+      bo.func.openCells.addOpen(params);
+
+      // segment
       const data = {
         popdivType,
         name: params.data['cryptohub-name'],
@@ -171,8 +182,39 @@ export default class CellInteractions {
    * Set the mouse over state of a cell
    *
    */
-  setMouseOverState($cell, content) {
-    popDiv($cell, content, this.tippyOptions);
+  setMouseOverState(params, content) {
+
+    const $cell = params.event.target.closest('.ag-cell');
+    const appendTo = document.querySelector('body');
+    const defaultTippyOptions = {
+      popperOptions: {
+        modifiers: {
+          preventOverflow: {
+            escapeWithReference: true,
+          },
+          hide: {
+            enabled: false
+          }
+        },
+      },
+      content,
+      appendTo,
+      flip: false,
+      arrow: false,
+      theme: 'light CH-tippy-popdiv',
+      trigger: 'click',
+      maxWidth: 'none',
+      multiple: true,
+      allowHTML: true,
+      placement: 'bottom-start',
+      showOnInit: true,
+      hideOnClick: 'toggle',
+      interactive: true,
+      interactiveBorder: 5,
+      interactiveDebounce: 1,
+    }
+    tippy($cell, Object.assign(defaultTippyOptions, this.tippyOptions));
+
     $cell.$triggerTippy = $cell._tippy;
     $cell.classList.add('CH-cell-hover');
     $cell.dataset.chHover = 'true';
@@ -258,7 +300,7 @@ export default class CellInteractions {
       const $cell = params.event.srcElement.closest('.ag-cell');
       const content = initPug['tippy-cell-hover']({id});
 
-      this.setMouseOverState($cell, content);
+      this.setMouseOverState(params, content);
 
       const $trigger = document.querySelector(`.CH-tippy-cell-hover-${id}`);
       if (!$trigger) {

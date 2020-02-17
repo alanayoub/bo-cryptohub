@@ -7,6 +7,7 @@ import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
 import State from './classes/class-state.js';
 import Layout from './views/layout';
+import GadgetsManager from './views/gadgets/manager';
 import globals from './globals.js';
 import initPug from './generated/init-pug.generated.js';
 import ToolbarView from './views/toolbar/toolbar.js';
@@ -15,6 +16,8 @@ import defaultConfig from './default-config.js';
 import dataEmitHandler from './eventHandlers/data';
 import CellInteractions from './classes/class-cell-interactions.js';
 import generateAgOptions from './ag-grid-options-generate.js';
+
+import { getRandomInt } from './libs/bo-utils-client';
 
 import style from '../stylesheet/index.scss';
 
@@ -71,9 +74,12 @@ function storeEmitHandler(data) {
 
 document.querySelector('.CH-app').innerHTML = initPug['app-container']({});
 
-const layout = new Layout({
+bo.inst.layout = new Layout({
   container: document.querySelector('.CH-layout')
 });
+bo.inst.gadgets = {
+  manager: new GadgetsManager()
+};
 
 $('body').on('click', '.ch-logo a', event => {
   segment.homeLogoClicked();
@@ -85,7 +91,18 @@ window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);
 window.bo.inst.state.init().then(state => {
 
-  window.bo.inst.socket = io();
+  bo.inst.socket = io();
+
+  // TODO: move to bo-utils
+  function waitUntil(check, cb, interval = 100) {
+    let i = setInterval(() => {
+      if (typeof check === 'function' ? check() : check) {
+        clearInterval(i);
+        cb();
+      }
+    }, interval);
+  }
+  waitUntil(() => refs.rowData, bo.inst.gadgets.manager.load, 100);
 
   generateAgOptions().then(agOptions => {
 
@@ -96,8 +113,8 @@ window.bo.inst.state.init().then(state => {
 
     window.bo.inst.socket.on('cols', data => {
       window.bo.inst.state.get().then(state => {
-        const columns = state.columns.filter(v => !/^c-\d{1,4}$/.test(v.id)).map(v => v.id).join(',');
-        const sort = state.sort;
+        const columns = state.window[0].columns.filter(v => !/^c-\d{1,4}$/.test(v.id)).map(v => v.id).join(',');
+        const sort = state.window[0].sort;
         const emitData = JSON.stringify({columns, sort});
         window.bo.inst.socket.emit('cols', emitData);
       });

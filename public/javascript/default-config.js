@@ -118,6 +118,11 @@ export default {
         column: 'volume24hUSDCC',
         direction: 'desc'
       }
+    },
+    1: {
+      colId: 'priceUSDCC',
+      id: 'nb6ozglho',
+      type: 'tradingview'
     }
   }
 }

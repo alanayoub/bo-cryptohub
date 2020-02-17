@@ -23,7 +23,7 @@ export default class Layout {
           borderWidth: 5,
           minItemHeight: 50,
           minItemWidth: 50,
-          headerHeight: 20,
+          headerHeight: 24,
           dragProxyWidth: 300,
           dragProxyHeight: 200
         },
@@ -42,10 +42,11 @@ export default class Layout {
                 width: 80,
                 content: [
                   {
+                    id: 0,
+                    sid: 0,
                     type: 'component',
                     componentName: 'default',
                     componentState: {label: 'A'},
-                    id: '1',
                     width: 80,
                     height: 80,
                     isClosable: false,
@@ -53,9 +54,11 @@ export default class Layout {
                     activeItemIndex: 1
                   },
                   {
+                    id: 1,
+                    sid: 1,
                     type: 'component',
-                    title: 'Test 0',
-                    componentName: 'testComponent',
+                    title: 'ID 1',
+                    componentName: 'commonComponent',
                     componentState: {label: 'B'}
                   },
                 ]
@@ -64,21 +67,27 @@ export default class Layout {
                 type: 'column',
                 content: [
                   {
+                    id: 2,
+                    sid: 2,
                     type: 'component',
-                    title: 'Test 1',
-                    componentName: 'testComponent',
+                    title: 'ID 2',
+                    componentName: 'commonComponent',
                     componentState: {label: 'C'}
                   },
                   {
+                    id: 3,
+                    sid: 3,
                     type: 'component',
-                    title: 'Test 2',
-                    componentName: 'testComponent',
+                    title: 'ID 3',
+                    componentName: 'commonComponent',
                     componentState: {label: 'D'}
                   },
                   {
+                    id: 4,
+                    sid: 4,
                     type: 'component',
-                    title: 'Test 3',
-                    componentName: 'testComponent',
+                    title: 'ID 4',
+                    componentName: 'commonComponent',
                     componentState: {label: 'E'}
                   }
                 ]
@@ -89,14 +98,32 @@ export default class Layout {
       };
 
       let layout = new GoldenLayout(config, container);
-      layout.registerComponent('testComponent', function( container, componentState ){
-        container.getElement().html( '<h2>' + componentState.label + '</h2>' );
+      layout.registerComponent('commonComponent', function(container, componentState) {
+        container.getElement().html(`<div id=gadget-container-${componentState.id}></div>`);
       });
-      layout.registerComponent('default', function( container, componentState ){
+      layout.registerComponent('default', function(container, componentState) {
         container.getElement().html('<div id=ch-grid class=ag-theme-balham></div>');
       });
-
-      layout.on('initialised', function () {});
+      layout.on('stateChanged', function (stack) {});
+      layout.on('selectionChanged', function (selection) {});
+      layout.on('itemCreated', function (item) {});
+      layout.on('componentCreated', function (component) {});
+      layout.on('rowCreated', function (row) {});
+      layout.on('columnCreated', function (column) {});
+      layout.on('stackCreated', function (stack) {
+        const sid = stack.contentItems[0].config.sid;
+        stack.element[0].setAttribute('data-sid', sid);
+        stack.config.sid = sid;
+      });
+      layout.on('tabCreated', function (tab) {
+        tab.contentItem.element[0].setAttribute('data-id', tab.contentItem.config.id);
+        const config = tab.contentItem.config;
+        bo.inst.gadgets.manager.doStuff(config);
+      });
+      layout.on('itemDestroyed', function (item) {});
+      layout.on('initialised', function (something) {
+        console.log('layout initialized');
+      });
 
       layout.on('urlChanged', function () {});
 

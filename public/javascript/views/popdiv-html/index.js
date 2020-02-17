@@ -1,11 +1,9 @@
 'use strict';
 
 // Binary Overdose Projects
-import { getRandomInt }                   from '../../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
 
 // Cryptohub
-import popDiv  from '../popdiv';
 import initPug from '../../generated/init-pug.generated.js';
 
 import style from './index.scss';
@@ -34,16 +32,10 @@ function html(params, gridId) {
  * Build PopDiv with Wallet data in an AG-Grid
  *
  */
-export default function popdivWallets(params) {
+export default function popdivWallets(params, rand) {
 
-  const rand = getRandomInt();
   const id = `ch-tippy-${rand}`;
   const gridId = `grid-${rand}`;
-
-  // Create popdiv
-  const $cell = params.event.target.closest('.ag-cell');
-  const contentPopdiv = initPug['ch-tippy-popdiv']({id});
-  popDiv($cell, contentPopdiv);
 
   // Populate html content
   const idSelector = `#${id}`;

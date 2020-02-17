@@ -27,6 +27,8 @@ export default function dataEmitHandler(event, data) {
 
   bo.inst.state.get().then(v => {
 
+    v = v.window[0];
+
     // Updates newSocketData with custom changes
     newSocketData = updateCustomColumnData({state: v, colLib, data: newSocketData});
 

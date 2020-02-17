@@ -643,13 +643,18 @@
 }
 .lm_header {
   background: $main-background;
+  .lm_tab {
+    padding-top: 3px;
+    margin-top: inherit;
+    color: #fff;
+    padding: 0 25px 0 10px!important;
+    line-height: 24px;
+    height: 24px;
+  }
+  .lm_active {
+    .lm_title {
+      font-weight: bold;
+    }
+  }
 }
-.lm_header .lm_tab {
-  padding-top: 3px;
-}
-.lm_header .lm_tab {
-  margin-top: inherit;
-}
-.lm_header .lm_tab {
-  color: #fff;
-}
+

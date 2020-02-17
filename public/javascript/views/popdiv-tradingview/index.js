@@ -1,13 +1,15 @@
 'use strict';
 
+import columnLibrary from '../../columns';
+
 // Binary Overdose Projects
-import { getRandomInt }                   from '../../libs/bo-utils-client';
 import { htmlPollElement }                from '../../libs/bo-utils-client';
 import { partialApplication }             from '../../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
+import { getRandomInt }                   from '../../libs/bo-utils-client';
+import { objectFlattenObject as flatten } from '../../libs/bo-utils-client';
 
 // Cryptohub Util functions
-import popDiv from '../popdiv';
 import initPug from '../../generated/init-pug.generated.js';
 
 import style from './index.scss';
@@ -64,17 +66,11 @@ function exchangeSupported(exchanges) {
  *   BTCUSD
  *   ETHBTC
  *
- * @param {Object} params - ag-grid cell params object
  * @param {STring} [symbolTo] - to symbol, defaults to BTC
  * @return {String|undefined} symbol - tradingview symbol
  *
  */
-function tradingviewGetSymbol(params) {
-
-  const symbolFrom = gnp(params, 'data.cc-coinlist-Symbol.value');
-  const rendererParams = params.colDef.cellRendererParams;
-  const exchange = rendererParams.exchange || '';
-  const symbolTo = rendererParams.symbolTo || '';
+function tradingviewGetSymbol({symbolFrom, symbolTo = '', exchange = ''}) {
 
   //
   // NOTE: don't use exchange, tradingview finds a default
@@ -100,21 +96,51 @@ function tradingviewGetSymbol(params) {
   }
 }
 
+function html({container_id, exchange, symbolTo, projectName}) {
+
+  let v2 = '';
+  if (symbolTo) v2 = ` ${symbolTo}`;
+  else if (exchange) v2 = ` ${exchange}`;
+
+  const title = `${projectName}${v2} Chart`;
+  const output = {
+    id: container_id,
+    title,
+  }
+  const contentHtml = initPug['popdiv-tradingview'](output);
+  return contentHtml;
+}
+
 /**
  *
- * LOAD TRADINGVIEW
  *
- * Load a trading view widget using ag-grid cell params as data
  *
- * @param {Object} params - ag-grid cell params object
- * @param {String} container_id - html id of where to load the widget
- * @return {undefined}
+ *
  *
  */
-function loadTradingview(params, container_id) {
-  const symbol = tradingviewGetSymbol(params);
-  const interval = gnp(params, 'colDef.cellRendererParams.interval') || 'D';
-  const style = gnp(params, 'colDef.cellRendererParams.tradingviewStyle') || 1;
+export default function cellOnClickTradingview({componentState}) {
+
+  const { id, assetId, colId } = componentState;
+  if (!colId) return;
+  const data = refs.rowData.find(v => v.id === assetId);
+  const selector = `#gadget-container-${id}`;
+  const projectName = gnp(data, 'cryptohub-name.value');
+  const colLib = flatten(columnLibrary);
+  const cellRendererParams = colLib[colId].cellRendererParams;
+
+  const container_id = `ch-tradingview-${getRandomInt(100000, 999999)}`;
+
+  const symbolFrom = gnp(data, 'cc-coinlist-Symbol.value');
+  const {
+    exchange,
+    symbolTo,
+    tradingviewStyle:style = 1,
+    interval = 'D'
+  } = cellRendererParams;
+  const symbol = tradingviewGetSymbol({symbolFrom, symbolTo, exchange});
+  const content = html({container_id, exchange, symbolTo, projectName});
+  document.querySelector(selector).innerHTML = content;
+
   if (symbol) {
     new TradingView.widget({
       style,
@@ -137,52 +163,5 @@ function loadTradingview(params, container_id) {
   else {
     console.warn('Cannot load tradingview window, missing initialization data');
   }
-}
-
-function html(params, id) {
-
-  const projectName = gnp(params, 'data.cryptohub-name.value');
-  const value = gnp(params, 'value.value');
-  const rendererParams = params.colDef.cellRendererParams;
-
-  let v2 = '';
-  const symbolTo = rendererParams.symbolTo;
-  const exchange = rendererParams.exchange;
-  if (symbolTo) v2 = ` ${symbolTo}`;
-  else if (exchange) v2 = ` ${exchange}`;
-
-  const title = `${projectName}${v2} Chart`;
-  const output = {
-    title,
-    value,
-    id,
-  }
-  const contentHtml = initPug['popdiv-tradingview'](output);
-  return contentHtml;
-}
-
-/**
- *
- *
- *
- *
- *
- */
-export default function cellOnClickTradingview(params) {
-
-  const rand = getRandomInt();
-  const id = `ch-tippy-${rand}`;
-  const gridId = `grid-${rand}`;
-
-  // Create popdiv
-  const $cell = params.event.target.closest('.ag-cell');
-  const contentPopdiv = initPug['ch-tippy-popdiv']({id});
-  popDiv($cell, contentPopdiv);
-
-  // Populate html content
-  const idSelector = `#${id}`;
-  const content = html(params, gridId);
-  document.querySelector(idSelector).innerHTML = content;
-  loadTradingview(params, gridId);
 
 }

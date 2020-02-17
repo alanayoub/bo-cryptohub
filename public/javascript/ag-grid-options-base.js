@@ -294,10 +294,10 @@ export default {
       }
 
       // Merge with previous states
-      const libKeysPreviousState = state.columns.map(v => v.id);
+      const libKeysPreviousState = state.window[0].columns.map(v => v.id);
       for (const [key, column] of Object.entries(columns)) {
         if (libKeysPreviousState.includes(column.id)) {
-          const old = state.columns.filter(v => v.id === column.id)[0];
+          const old = state.window[0].columns.filter(v => v.id === column.id)[0];
           columns[key] = Object.assign({}, old, column);
         }
       }

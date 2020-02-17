@@ -45,7 +45,7 @@ export default class EditDialogue {
       this.modal.close();
       const state = await bo.inst.state.get();
       const selectorData = this.selector.get();
-      const stateCols = state.columns;
+      const stateCols = state.window[0].columns;
       segment.editAborted(stateCols, selectorData);
     });
 
@@ -88,7 +88,7 @@ export default class EditDialogue {
 
     const state = await bo.inst.state.get();
     const selectorData = this.selector.get();
-    const stateCols = state.columns;
+    const stateCols = state.window[0].columns;
     let isValid = true;
 
     if (!selectorData.error) {
@@ -138,7 +138,7 @@ export default class EditDialogue {
 
     // Adding custom columns to colLib
     const customColumnGroup = {};
-    state.columns.forEach(custom => {
+    state.window[0].columns.forEach(custom => {
       if (/^c-\d{1,4}$/.test(custom.id)) {
         customColumnGroup[custom.id] = custom;
       }
@@ -173,7 +173,7 @@ export default class EditDialogue {
 
     // Destination Data
     const destination = [];
-    const columns = state.columns;
+    const columns = state.window[0].columns;
     const frozenFields = frozen.map(v => v.key);
     for (const col of columns) {
       const key = col.id;

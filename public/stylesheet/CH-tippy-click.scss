@@ -1,5 +1,6 @@
 .CH-tippy-click {
   background: #fff;
+  line-height: 20px;
   > header {
     position: sticky;
     top: 0;
@@ -10,6 +11,7 @@
     right: 0;
     padding: 6px 0 6px 10px;
     border-bottom: 1px solid #f1f1f1;
+    text-align: left;
   }
   h3 {
     margin: 0;
@@ -52,34 +54,6 @@
     td:first-child {
       width: 150px;
     }
-  }
-  .ag-header {
-    background: $tippy-filter-background!important;
-  }
-  .ag-header-row {
-    background: $tippy-filter-background!important;
-  }
-  .ag-header-viewport {
-    &:before {
-      background: $tippy-header-background!important;
-    }
-  }
-  .ag-input-wrapper {
-    top: -3px;
-  }
-  .ag-header-cell {
-    input {
-      height: 16px!important;
-    }
-  }
-  .ag-pinned-left-header {
-    border-right: 1px solid $tippy-header-divider-color!important;
-  }
-  .ag-header-cell::after,
-  .ag-header-group-cell::after {
-    border-right: 1px solid $tippy-header-divider-color!important;
-    margin-top: -4px!important;
-    height: 47px!important;
   }
 }
 .CH-tippy-click-theme {

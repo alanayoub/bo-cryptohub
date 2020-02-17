@@ -125,5 +125,11 @@
   .ag-row-odd, .ag-row-even {
     background-color: #fff!important;
   }
+  .ag-input-wrapper input:not([type]) {
+    border-width: 1px;
+    border-style: solid;
+    border: none;
+    border-top: 1px solid #222;
+  }
 
 }

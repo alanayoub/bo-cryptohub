@@ -13,13 +13,13 @@
   .CH-pos-abs-full {
     bottom: 10px;
   }
-  .ag-header-container:before {
-    background: $tippy-header-background!important;
-  }
-  .ag-header {
-    background: $tippy-filter-background!important;
-  }
 }
 .CH-tippy-popdiv-theme {
   margin: -10px 0 0 0;
+}
+.CH-tippy-drag-helper {
+  background: #fff;
+  padding: 5px;
+  border: 1px solid #000;
+  z-index: 10000;
 }

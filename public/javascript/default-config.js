@@ -120,8 +120,9 @@ export default {
       }
     },
     1: {
+      id: '1234',
       colId: 'priceUSDCC',
-      id: 'nb6ozglho',
+      rowId: 'nb6ozglho',
       type: 'tradingview'
     }
   }

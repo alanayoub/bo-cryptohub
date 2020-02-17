@@ -5,6 +5,7 @@ import draggable from 'jquery-ui/ui/widgets/draggable';
 import droppable from 'jquery-ui/ui/widgets/droppable';
 
 import initPug from '../../generated/init-pug.generated.js';
+import { getRandomInt } from '../../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
 
 /**
@@ -71,25 +72,33 @@ export default class popDiv {
         const html = initPug['CH-tippy-drag-helper'](context);
         return html;
       },
+      zIndex: 10000,
+      cursor: 'move',
       revert: 'invalid',
-      revertDuration: 500
+      scroll: false,
+      distance: 20,
+      cursorAt: {top: 25, left: 10},
+      iframeFix: true,
+      appendTo: 'body',
+      revertDuration: 500,
     });
     draggable.on('dragstart', (event, ui) => {
       ui.helper[0].style.transform = 'none';
       ui.helper[0].style.top = ui.originalPosition.top;
       ui.helper[0].style.left = ui.originalPosition.left;
     });
-    $('.lm_stack').droppable({
+    $('.lm_stack:not([data-sid="0"])').droppable({
       drop: (event, ui) => {
         const field = params.colDef.field;
         const colId = params.column.colDef.colId;
         const $cell = ui.draggable[0]._tippy.reference;
         const row = $cell.closest('.ag-row').getAttribute('row-index');
         const type = params.colDef.cellRendererParams.popdiv;
+        const id = getRandomInt(100000, 999999);
         const sid = event.target.dataset.sid;
-        const id = params.node.id;
+        const rowId = params.node.id;
         bo.clas.CellInteractions.close({params, $cell, row, field});
-        bo.inst.state.set(`window.${sid}`, {id, colId, type});
+        bo.inst.state.set(`window.${sid}`, {id, rowId, colId, type});
       }
     });
 

@@ -1,12 +1,19 @@
 .CH-tippy-click-html {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  color: #000;
+  text-align: left;
   section {
     position: absolute;
     top: 30px;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
-    padding: 10!important;
     z-index: 1;
+    padding: 10!important;
     user-select: text;
     cursor: text;
     h1 {
@@ -24,6 +31,16 @@
       font-weight: bold;
       font-family: inherit;
       padding: 0 0 5px 0;
+    }
+  }
+}
+.lm_content {
+  .CH-tippy-click-grid-exchanges {
+    header {
+      display: none;
+    }
+    section {
+      top: 0;
     }
   }
 }

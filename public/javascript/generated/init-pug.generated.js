@@ -357,7 +357,7 @@ pug_html = pug_html + (pug.escape(null == (pug_interp = title) ? "" : pug_interp
 ;pug_debug_line = 6;
 pug_html = pug_html + "\u003Csection" + (pug.attr("id", id, true, false)) + "\u003E\u003C\u002Fsection\u003E";
 ;pug_debug_line = 7;
-pug_html = pug_html + "\u003Cfooter\u003E\u003C\u002Ffooter\u003E\u003C\u002Fdiv\u003E";}.call(this,"id" in locals_for_with?locals_for_with.id:typeof id!=="undefined"?id:undefined,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'popdiv-wallets': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (gridId, name, total) {;pug_debug_line = 1;
+pug_html = pug_html + "\u003Cfooter\u003E\u003C\u002Ffooter\u003E\u003C\u002Fdiv\u003E";}.call(this,"id" in locals_for_with?locals_for_with.id:typeof id!=="undefined"?id:undefined,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'popdiv-wallets': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (containerId, name, total) {;pug_debug_line = 1;
 pug_html = pug_html + "\u003Cdiv class=\"CH-tippy-click CH-tippy-click-grid\"\u003E";
 ;pug_debug_line = 3;
 pug_html = pug_html + "\u003Cheader\u003E";
@@ -378,9 +378,9 @@ pug_html = pug_html + "\u003C\u002Fstrong\u003E wallets supported\u003C\u002Fspa
 ;pug_debug_line = 6;
 pug_html = pug_html + "\u003Cbr\u002F\u003E\u003C\u002Fheader\u003E";
 ;pug_debug_line = 8;
-pug_html = pug_html + "\u003Csection" + (" class=\"ag-theme-balham\""+pug.attr("id", gridId, true, false)) + "\u003E\u003C\u002Fsection\u003E";
+pug_html = pug_html + "\u003Csection" + (" class=\"ag-theme-balham\""+pug.attr("id", containerId, true, false)) + "\u003E\u003C\u002Fsection\u003E";
 ;pug_debug_line = 10;
-pug_html = pug_html + "\u003Cfooter\u003E\u003C\u002Ffooter\u003E\u003C\u002Fdiv\u003E";}.call(this,"gridId" in locals_for_with?locals_for_with.gridId:typeof gridId!=="undefined"?gridId:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"total" in locals_for_with?locals_for_with.total:typeof total!=="undefined"?total:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'CH-tippy-drag-helper': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (title) {;pug_debug_line = 1;
+pug_html = pug_html + "\u003Cfooter\u003E\u003C\u002Ffooter\u003E\u003C\u002Fdiv\u003E";}.call(this,"containerId" in locals_for_with?locals_for_with.containerId:typeof containerId!=="undefined"?containerId:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"total" in locals_for_with?locals_for_with.total:typeof total!=="undefined"?total:undefined));} catch (err) {pug.rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;},'CH-tippy-drag-helper': function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;var locals_for_with = (locals || {});(function (title) {;pug_debug_line = 1;
 pug_html = pug_html + "\u003Cdiv class=\"CH-tippy-drag-helper\"\u003E";
 ;pug_debug_line = 2;
 pug_html = pug_html + "\u003Cdiv\u003E";

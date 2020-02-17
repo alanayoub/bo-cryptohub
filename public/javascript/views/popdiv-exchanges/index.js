@@ -1,6 +1,5 @@
 'use strict';
 
-
 import columnLibrary from '../../columns';
 import { Grid } from '@ag-grid-community/core';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
@@ -196,42 +195,50 @@ function agGridOptions(data) {
  *
  *
  */
-export default function cellOnClickExchanges({componentState}) {
+export default class exchanges {
 
-  const { id, assetId, colId } = componentState;
-  if (!colId) return;
-  const data = refs.rowData.find(v => v.id === assetId);
-  const selector = `#gadget-container-${id}`;
-  const colLib = flatten(columnLibrary);
-  const cellRendererParams = colLib[colId].cellRendererParams;
+  constructor({componentState}) {
+    const { id, assetId, colId } = componentState;
+    this.selector = `#gadget-container-${id}`;
+    if (!colId) return;
 
-  const containerId = `ch-exchanges-${getRandomInt(100000, 999999)}`;
+    const data = refs.rowData.find(v => v.id === assetId);
+    const colLib = flatten(columnLibrary);
 
-  const name          = gnp(data, 'cc-total-vol-full-FullName.value');
-  const dexList       = gnp(data, 'cryptohub-exchangesListDex.value') || [];
-  const fiatIds       = gnp(data, 'cryptohub-exchangesListAcceptsBoth.value') || [];
-  const cryptoIds     = gnp(data, 'cryptohub-exchangesListCryptoOnly.value') || [];
-  const numberOfPairs = gnp(data, 'cryptohub-numberOfPairs.value');
-  const total         = numberGroupDigits(gnp(data, 'cryptohub-numberOfExchanges.value'));
-  const classes = 'ch-numberofexchanges';
-  const context = {
-    header: {
-      name,
-      total,
-      classes,
-      numberOfPairs,
-      numberOfDex: dexList.length,
-      numberOfFiat: fiatIds.length,
-      numberOfCrypto: cryptoIds.length,
-    },
-    containerId
+    const containerId = `ch-exchanges-${getRandomInt(100000, 999999)}`;
+
+    const name          = gnp(data, 'cc-total-vol-full-FullName.value');
+    const dexList       = gnp(data, 'cryptohub-exchangesListDex.value') || [];
+    const fiatIds       = gnp(data, 'cryptohub-exchangesListAcceptsBoth.value') || [];
+    const cryptoIds     = gnp(data, 'cryptohub-exchangesListCryptoOnly.value') || [];
+    const numberOfPairs = gnp(data, 'cryptohub-numberOfPairs.value');
+    const total         = numberGroupDigits(gnp(data, 'cryptohub-numberOfExchanges.value'));
+    const classes = 'ch-numberofexchanges';
+    const context = {
+      header: {
+        name,
+        total,
+        classes,
+        numberOfPairs,
+        numberOfDex: dexList.length,
+        numberOfFiat: fiatIds.length,
+        numberOfCrypto: cryptoIds.length,
+      },
+      containerId
+    }
+    const contentHtml = initPug['popdiv-exchanges'](context);
+    document.querySelector(this.selector).innerHTML = contentHtml;
+
+    const gridOptions = agGridOptions(data);
+    const gridElement = document.querySelector(`#${containerId}`);
+    new Grid(gridElement, gridOptions, {modules: AllCommunityModules});
+
+    return this;
+
   }
-  const contentHtml = initPug['popdiv-exchanges'](context);
 
-  document.querySelector(selector).innerHTML = contentHtml;
-
-  const gridOptions = agGridOptions(data);
-  const gridElement = document.querySelector(`#${containerId}`);
-  new Grid(gridElement, gridOptions, {modules: AllCommunityModules});
+  alive() {
+    return !!document.querySelector(this.selector);
+  }
 
 }

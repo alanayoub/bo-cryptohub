@@ -1,11 +1,26 @@
 .CH-tippy-click-grid {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   section {
     position: absolute;
-    top: 48px;
+    padding: 0!important;
+    top: 30px;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
-    padding: 0!important;
     z-index: 1;
+  }
+}
+.lm_content {
+  .CH-tippy-click-grid {
+    header {
+      display: none;
+    }
+    section {
+      top: 0;
+    }
   }
 }

@@ -1,4 +1,3 @@
-import { getRandomInt } from '../../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
 
 import html from '../popdiv-html';
@@ -16,7 +15,7 @@ const gadgets = {
 export default class gadgetsManager {
 
   constructor() {
-    this.gadgets = [];
+    this.gadgets = {};
   }
 
   clean() {
@@ -41,10 +40,12 @@ export default class gadgetsManager {
       }, interval);
     }
     waitUntil(() => refs.rowData, handler, 100);
+    const gadgetMan = this;
     function handler() {
       const componentState = config.componentState;
       if (componentState.type) {
-        gadgets[componentState.type]({componentState});
+        const gadget = new (gadgets[componentState.type])({componentState});
+        gadgetMan.gadgets[componentState.id] = gadget;
       }
     }
   }
@@ -59,12 +60,20 @@ export default class gadgetsManager {
     }
     for (const [sid, value] of Object.entries(state.window)) {
       sid = +sid;
-      if (sid !== 0) {
+      if (sid !== 0) { // Don't do the main window
+        let alive;
+        if (value.id) {
+          const gadget = bo.inst.gadgets.manager.gadgets[value.id];
+          if (gadget && typeof gadget.alive === 'function' && gadget.alive()) {
+            alive = true;
+          }
+        }
+        if (alive) continue;
         const stacks = bo.inst.layout.root.getItemsByType('stack');
         const stack = stacks.filter(v => v.config.sid === sid);
         if (stack.length) {
-          const id = getRandomInt(100000, 999999);
-          const data = refs.rowData.find(v => v.id === value.id);
+          const id = value.id;
+          const data = refs.rowData.find(v => v.id === value.rowId);
           const name = data['cc-total-vol-full-FullName'].value;
           const type = typeMap[value.type];
           const newItem = {
@@ -79,7 +88,7 @@ export default class gadgetsManager {
               label: 'Z',
               componentName: value.componentName,
               colId: value.colId,
-              assetId: value.id,
+              assetId: value.rowId,
               type: value.type
             }
           }

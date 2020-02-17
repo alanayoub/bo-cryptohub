@@ -111,57 +111,61 @@ function html({container_id, exchange, symbolTo, projectName}) {
   return contentHtml;
 }
 
-/**
- *
- *
- *
- *
- *
- */
-export default function cellOnClickTradingview({componentState}) {
+export default class tradingview {
 
-  const { id, assetId, colId } = componentState;
-  if (!colId) return;
-  const data = refs.rowData.find(v => v.id === assetId);
-  const selector = `#gadget-container-${id}`;
-  const projectName = gnp(data, 'cryptohub-name.value');
-  const colLib = flatten(columnLibrary);
-  const cellRendererParams = colLib[colId].cellRendererParams;
+  constructor({componentState}) {
 
-  const container_id = `ch-tradingview-${getRandomInt(100000, 999999)}`;
+    const { id, assetId, colId } = componentState;
+    this.selector = `#gadget-container-${id}`;
+    if (!colId) return;
 
-  const symbolFrom = gnp(data, 'cc-coinlist-Symbol.value');
-  const {
-    exchange,
-    symbolTo,
-    tradingviewStyle:style = 1,
-    interval = 'D'
-  } = cellRendererParams;
-  const symbol = tradingviewGetSymbol({symbolFrom, symbolTo, exchange});
-  const content = html({container_id, exchange, symbolTo, projectName});
-  document.querySelector(selector).innerHTML = content;
+    const data = refs.rowData.find(v => v.id === assetId);
+    const projectName = gnp(data, 'cryptohub-name.value');
+    const colLib = flatten(columnLibrary);
+    const cellRendererParams = colLib[colId].cellRendererParams;
 
-  if (symbol) {
-    new TradingView.widget({
-      style,
-      symbol,
-      interval,
-      container_id,
-      autosize: true,
-      timezone: 'Etc/UTC',
-      theme: 'Light',
-      locale: 'uk',
-      toolbar_bg: 'rgba(255, 255, 255, 1)',
-      enable_publishing: false,
-      allow_symbol_change: true,
-      save_image: false,
-      studies: [
-        'MAExp@tv-basicstudies'
-      ],
-    });
+    const container_id = `ch-tradingview-${getRandomInt(100000, 999999)}`;
+
+    const symbolFrom = gnp(data, 'cc-coinlist-Symbol.value');
+    const {
+      exchange,
+      symbolTo,
+      tradingviewStyle:style = 1,
+      interval = 'D'
+    } = cellRendererParams;
+    const symbol = tradingviewGetSymbol({symbolFrom, symbolTo, exchange});
+    const content = html({container_id, exchange, symbolTo, projectName});
+    document.querySelector(this.selector).innerHTML = content;
+
+    if (symbol) {
+      new TradingView.widget({
+        style,
+        symbol,
+        interval,
+        container_id,
+        autosize: true,
+        timezone: 'Etc/UTC',
+        theme: 'Light',
+        locale: 'uk',
+        toolbar_bg: 'rgba(255, 255, 255, 1)',
+        enable_publishing: false,
+        allow_symbol_change: true,
+        save_image: false,
+        studies: [
+          'MAExp@tv-basicstudies'
+        ],
+      });
+    }
+    else {
+      console.warn('Cannot load tradingview window, missing initialization data');
+    }
+
+    return this;
+
   }
-  else {
-    console.warn('Cannot load tradingview window, missing initialization data');
+
+  alive() {
+    return !!document.querySelector(this.selector);
   }
 
 }

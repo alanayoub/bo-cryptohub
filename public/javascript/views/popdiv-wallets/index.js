@@ -1,9 +1,15 @@
 'use strict';
 
+import columnLibrary from '../../columns';
+import { Grid } from '@ag-grid-community/core';
+import { AllCommunityModules } from '@ag-grid-community/all-modules';
+
 // Binary Overdose Projects
 import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
-import cellRendererUrl                    from '../../utils/cell-renderer-url.js';
-import cellRendererWalletName             from '../../utils/cell-renderer-wallet-name.js';
+import { objectFlattenObject as flatten } from '../../libs/bo-utils-client';
+import cellRendererUrl from '../../utils/cell-renderer-url.js';
+import cellRendererWalletName from '../../utils/cell-renderer-wallet-name.js';
+import { getRandomInt } from '../../libs/bo-utils-client';
 
 // Cryptohub
 import initPug from '../../generated/init-pug.generated.js';
@@ -13,32 +19,13 @@ import style from './index.scss';
 
 /**
  *
- * Generate PopDiv HTML with AG-GRID container
- *
- */
-function html(params, gridId) {
-  const name = gnp(params, 'data.cc-total-vol-full-FullName.value');
-  const walletIds = gnp(params, 'data.cryptohub-wallets.value') || [];
-  const total = walletIds.length;
-  const output = {
-    name,
-    total,
-    gridId,
-  }
-  const contentHtml = initPug['popdiv-wallets'](output);
-  return contentHtml;
-}
-
-/**
- *
  * Build AG-GRID Options
  *
  */
-function agGridOptions(params) {
+function agGridOptions(walletIds) {
 
   // Row Data
   const rowData = [];
-  const walletIds = gnp(params, 'data.cryptohub-wallets.value') || [];
   for (const id of walletIds) {
     rowData.push(ch.wallets[id]);
   }
@@ -163,19 +150,39 @@ function agGridOptions(params) {
  * Build PopDiv with Wallet data in an AG-Grid
  *
  */
-export default function popdivWallets(params, rand) {
+export default class wallets {
 
-  const id = `ch-tippy-${rand}`;
-  const gridId = `grid-${rand}`;
+  constructor({componentState}) {
+    const { id, assetId, colId } = componentState;
+    this.selector = `#gadget-container-${id}`;
+    if (!colId) return;
 
-  // Populate html content
-  const cssId = `#${id}`;
-  const content = html(params, gridId);
-  document.querySelector(cssId).innerHTML = content;
+    const data = refs.rowData.find(v => v.id === assetId);
+    const colLib = flatten(columnLibrary);
 
-  // Load Grid
-  const gridOptions = agGridOptions(params);
-  const gridElement = document.querySelector(`#${gridId}`);
-  new window.Grid(gridElement, gridOptions);
+    const containerId = `ch-wallets-${getRandomInt(100000, 999999)}`;
+
+    const name = gnp(data, 'cc-total-vol-full-FullName.value');
+    const walletIds = gnp(data, 'cryptohub-wallets.value') || [];
+    const total = walletIds.length;
+    const output = {
+      name,
+      total,
+      containerId
+    }
+    const contentHtml = initPug['popdiv-wallets'](output);
+    document.querySelector(this.selector).innerHTML = contentHtml;
+
+    const gridOptions = agGridOptions(walletIds);
+    const gridElement = document.querySelector(`#${containerId}`);
+    new Grid(gridElement, gridOptions, {modules: AllCommunityModules});
+
+    return this;
+
+  }
+
+  alive() {
+    return !!document.querySelector(this.selector);
+  }
 
 }

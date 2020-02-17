@@ -127,7 +127,7 @@ export default class CellInteractions {
         assetId: params.data.id,
         colId: params.colDef.colId
       }
-      classes[popdivType]({componentState});
+      new classes[popdivType]({componentState});
 
       $cell.$popDivTippy = $cell._tippy;
       bo.func.openCells.addOpen(params);

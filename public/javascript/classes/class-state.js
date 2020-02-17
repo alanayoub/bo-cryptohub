@@ -362,25 +362,7 @@ export default class State {
     //
     // Load / update other panels
     //
-    // for (const [sid, value] of Object.entries(newState.window)) {
-    //   if (sid !== 0) {
-    //     const stacks = bo.inst.layout.root.getItemsByType('stack');
-    //     const stack = stacks.filter(v => v.config.sid === sid);
-    //     if (stack.length) {
-    //       const id = getRandomInt(100000, 999999);
-    //       const newItem = {
-    //         id,
-    //         sid,
-    //         type: 'component',
-    //         title: value.field,
-    //         componentName: 'commonComponent',
-    //         componentState: {label: 'Z', ...value}
-    //       }
-    //       stack[0].addChild(newItem);
-    //       console.log(id, value, stack);
-    //     }
-    //   }
-    // }
+    bo.inst.gadgets.manager.load();
 
   }
 

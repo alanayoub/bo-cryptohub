@@ -1,19 +1,15 @@
 'use strict';
 
-import columnLibrary from '../../columns';
 import { Grid } from '@ag-grid-community/core';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
-// Binary Overdose Projects
-import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
-import { objectFlattenObject as flatten } from '../../libs/bo-utils-client';
+import Gadget from '../../bo/common/gadgets/gadget';
+import initPug from '../../generated/init-pug.generated.js';
+import sortText from '../../utils/sort-text.js';
 import cellRendererUrl from '../../utils/cell-renderer-url.js';
 import cellRendererWalletName from '../../utils/cell-renderer-wallet-name.js';
 import { getRandomInt } from '../../libs/bo-utils-client';
-
-// Cryptohub
-import initPug from '../../generated/init-pug.generated.js';
-import sortText from '../../utils/sort-text.js';
+import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
 
 import style from './index.scss';
 
@@ -145,32 +141,23 @@ function agGridOptions(walletIds) {
 
 }
 
-/**
- *
- * Build PopDiv with Wallet data in an AG-Grid
- *
- */
-export default class wallets {
+export default class Wallets extends Gadget {
 
   constructor({componentState}) {
-    const { id, assetId, colId } = componentState;
-    this.selector = `#gadget-container-${id}`;
-    if (!colId) return;
 
-    const data = refs.rowData.find(v => v.id === assetId);
-    const colLib = flatten(columnLibrary);
+    super({componentState})
 
-    const containerId = `ch-wallets-${getRandomInt(100000, 999999)}`;
-
-    const name = gnp(data, 'cc-total-vol-full-FullName.value');
-    const walletIds = gnp(data, 'cryptohub-wallets.value') || [];
+    const containerId = `ch-gadget-${getRandomInt(100000, 999999)}`;
+    const name = gnp(this.data, 'cc-total-vol-full-FullName.value');
+    const walletIds = gnp(this.data, 'cryptohub-wallets.value') || [];
     const total = walletIds.length;
-    const output = {
+    const context = {
       name,
       total,
       containerId
     }
-    const contentHtml = initPug['popdiv-wallets'](output);
+    const contentHtml = initPug['popdiv-wallets'](context);
+
     document.querySelector(this.selector).innerHTML = contentHtml;
 
     const gridOptions = agGridOptions(walletIds);
@@ -179,10 +166,6 @@ export default class wallets {
 
     return this;
 
-  }
-
-  alive() {
-    return !!document.querySelector(this.selector);
   }
 
 }

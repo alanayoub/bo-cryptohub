@@ -1,13 +1,12 @@
 'use strict';
 
-import columnLibrary from '../../columns';
+import Gadget from '../../bo/common/gadgets/gadget';
 
 // Binary Overdose Projects
 import { htmlPollElement }                from '../../libs/bo-utils-client';
 import { partialApplication }             from '../../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
 import { getRandomInt }                   from '../../libs/bo-utils-client';
-import { objectFlattenObject as flatten } from '../../libs/bo-utils-client';
 
 // Cryptohub Util functions
 import initPug from '../../generated/init-pug.generated.js';
@@ -111,22 +110,16 @@ function html({container_id, exchange, symbolTo, projectName}) {
   return contentHtml;
 }
 
-export default class tradingview {
+export default class Tradingview extends Gadget {
 
   constructor({componentState}) {
 
-    const { id, assetId, colId } = componentState;
-    this.selector = `#gadget-container-${id}`;
-    if (!colId) return;
+    super({componentState})
 
-    const data = refs.rowData.find(v => v.id === assetId);
-    const projectName = gnp(data, 'cryptohub-name.value');
-    const colLib = flatten(columnLibrary);
-    const cellRendererParams = colLib[colId].cellRendererParams;
-
-    const container_id = `ch-tradingview-${getRandomInt(100000, 999999)}`;
-
-    const symbolFrom = gnp(data, 'cc-coinlist-Symbol.value');
+    const container_id = `ch-gadget-${getRandomInt(100000, 999999)}`;
+    const projectName = gnp(this.data, 'cryptohub-name.value');
+    const symbolFrom = gnp(this.data, 'cc-coinlist-Symbol.value');
+    const cellRendererParams = this.column.cellRendererParams;
     const {
       exchange,
       symbolTo,
@@ -135,6 +128,7 @@ export default class tradingview {
     } = cellRendererParams;
     const symbol = tradingviewGetSymbol({symbolFrom, symbolTo, exchange});
     const content = html({container_id, exchange, symbolTo, projectName});
+
     document.querySelector(this.selector).innerHTML = content;
 
     if (symbol) {
@@ -162,10 +156,6 @@ export default class tradingview {
 
     return this;
 
-  }
-
-  alive() {
-    return !!document.querySelector(this.selector);
   }
 
 }

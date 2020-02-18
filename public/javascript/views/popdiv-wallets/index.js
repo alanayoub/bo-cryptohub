@@ -107,8 +107,8 @@ function agGridOptions(walletIds) {
   // Options
   const options = {
     rowHeight: 32,
-    headerHeight: 26,
-    floatingFiltersHeight: 20,
+    headerHeight: 32,
+    floatingFiltersHeight: 32,
     rowData: rowData,
     columnDefs: columnDefs,
     floatingFilter: true,

@@ -116,8 +116,20 @@ export default class Tradingview extends Gadget {
 
     super({componentState})
 
-    const container_id = `ch-gadget-${getRandomInt(100000, 999999)}`;
+    const container_id = this.container_id = `ch-gadget-${getRandomInt(100000, 999999)}`;
+    const { exchange, symbolTo } = this.column.cellRendererParams;
     const projectName = gnp(this.data, 'cryptohub-name.value');
+    const content = html({container_id, exchange, symbolTo, projectName});
+    document.querySelector(this.selector).innerHTML = content;
+
+    this.model = this.buildModel();
+    this.render();
+
+    return this;
+
+  }
+
+  buildModel() {
     const symbolFrom = gnp(this.data, 'cc-coinlist-Symbol.value');
     const cellRendererParams = this.column.cellRendererParams;
     const {
@@ -127,35 +139,37 @@ export default class Tradingview extends Gadget {
       interval = 'D'
     } = cellRendererParams;
     const symbol = tradingviewGetSymbol({symbolFrom, symbolTo, exchange});
-    const content = html({container_id, exchange, symbolTo, projectName});
+    return {style, symbol, interval};
+  }
 
-    document.querySelector(this.selector).innerHTML = content;
-
-    if (symbol) {
-      new TradingView.widget({
-        style,
-        symbol,
-        interval,
-        container_id,
-        autosize: true,
-        timezone: 'Etc/UTC',
-        theme: 'Light',
-        locale: 'uk',
-        toolbar_bg: 'rgba(255, 255, 255, 1)',
-        enable_publishing: false,
-        allow_symbol_change: true,
-        save_image: false,
-        studies: [
-          'MAExp@tv-basicstudies'
-        ],
-      });
-    }
-    else {
+  render() {
+    if (!this.model.symbol) {
       console.warn('Cannot load tradingview window, missing initialization data');
+      return;
     }
+    const defaultOptions = {
+      container_id: this.container_id,
+      autosize: true,
+      timezone: 'Etc/UTC',
+      theme: 'Light',
+      locale: 'uk',
+      toolbar_bg: 'rgba(255, 255, 255, 1)',
+      enable_publishing: false,
+      allow_symbol_change: true,
+      save_image: false,
+      studies: [
+        'MAExp@tv-basicstudies'
+      ],
+    }
+    const opts = Object.assign(defaultOptions, this.model);
+    new TradingView.widget(opts);
+  }
 
-    return this;
-
+  resize() {
+    const e = document.querySelector(`#${this.container_id}`);
+    const container = e.closest('[id^=gadget-container-]');
+    e.style.width = `${container.offsetWidth}px`;
+    e.style.height = `${container.offsetHeight}px`;
   }
 
 }

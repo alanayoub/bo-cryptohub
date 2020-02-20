@@ -98,7 +98,7 @@ export default class popDiv {
         const sid = event.target.dataset.sid;
         const rowId = params.node.id;
         bo.clas.CellInteractions.close({params, $cell, row, field});
-        bo.inst.state.set(`window.${sid}`, {id, rowId, colId, type});
+        bo.inst.state.set(`window.${sid}`, {id, rowId, colId, type}, 'push');
       }
     });
 

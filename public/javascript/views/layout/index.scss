@@ -657,4 +657,42 @@
     }
   }
 }
+.lm_controls {
+  top: 2px;
+  font-size: 12px;
+  > li {
+    line-height: 18px;
+    &:hover {
+      color: #fff;
+    }
+  }
+  .a-add-tab {
+    color: #fff;
+    white-space: nowrap;
+    width: 60px!important;
+  }
+  .a-divider {
+    width: 0;
+    border-left: 1px solid #fff;
+    margin: 0 5px;
+    width: 1px!important;
+    cursor: default!important;
+    &:hover {
+      filter: none;
+    }
+  }
+}
 
+.lm_header {
+  .lm_tab {
+    &.lm_active {
+      color: #fff;
+    }
+    .lm_title {
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

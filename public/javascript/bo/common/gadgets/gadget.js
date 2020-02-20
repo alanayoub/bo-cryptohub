@@ -12,12 +12,10 @@ export default class {
     this.id = componentState.id;
     this.colId = componentState.colId;
     this.assetId = componentState.assetId;
-
-    if (!this.colId) return;
-
-    this.data = refs.rowData.find(v => v.id === this.assetId);
-    this.column = flatten(columnLibrary)[this.colId];
     this.selector = `#gadget-container-${this.id}`;
+
+    if (this.assetId) this.data = refs.rowData.find(v => v.id === this.assetId);
+    if (this.colId) this.column = flatten(columnLibrary)[this.colId];
 
   }
 

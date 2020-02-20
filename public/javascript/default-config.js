@@ -119,11 +119,15 @@ export default {
         direction: 'desc'
       }
     },
-    1: {
+    1: [{
       id: '1234',
       colId: 'priceUSDCC',
       rowId: 'nb6ozglho',
       type: 'tradingview'
-    }
+    }],
+    2: [{
+      id: '2345',
+      type: 'treemap'
+    }]
   }
 }

@@ -192,7 +192,10 @@ export default class State {
       case /^window/.test(target):
         const idx = target.split('.')[1];
         if (action === 'push') {
-          state.window.push(data);
+          if (!state.window[idx]) {
+            state.window[idx] = [];
+          }
+          state.window[idx].push(data);
         }
         else if (idx > -1) {
           state.window[idx] = data;

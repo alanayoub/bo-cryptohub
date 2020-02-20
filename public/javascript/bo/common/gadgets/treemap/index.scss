@@ -1,0 +1,47 @@
+.CH-treemap-gadget {
+  background: #555;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  svg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  g text.shadow{
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: none;
+    text-shadow: 0.015em 0.015em 0 rgba(50,49,54,.28);
+    color: #fff;
+  }
+  g {
+    cursor: grab;
+    fill: #fff;
+    fill-opacity: 1;
+  }
+
+  rect:hover{
+    opacity: 0.8;
+  }
+
+  .tooltip {
+    position: absolute;
+    padding: 8px;
+    background: rgba(0, 0, 0, .87);
+    color: #fff;
+    border: 0px;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+  .tooltip hr {
+    padding: 0;
+    margin: 8px 0;
+  }
+}
+

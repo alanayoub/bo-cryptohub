@@ -1,4 +1,5 @@
 import GoldenLayout from '../../libs/golden-layout/js/goldenlayout.js';
+import { getRandomInt } from '../../libs/bo-utils-client';
 
 import style from './index.scss';
 
@@ -45,7 +46,7 @@ export default class Layout {
                     id: 0,
                     sid: 0,
                     type: 'component',
-                    componentName: 'default',
+                    componentName: 'mainGrid',
                     componentState: {label: 'A'},
                     width: 80,
                     height: 80,
@@ -101,13 +102,18 @@ export default class Layout {
       layout.registerComponent('commonComponent', function(container, componentState) {
         container.getElement().html(`<div id=gadget-container-${componentState.id}></div>`);
       });
-      layout.registerComponent('default', function(container, componentState) {
+      layout.registerComponent('mainGrid', function(container, componentState) {
         container.getElement().html('<div id=ch-grid class=ag-theme-balham></div>');
       });
-      layout.on('stateChanged', function (stack) {});
       layout.on('selectionChanged', function (selection) {});
       layout.on('itemCreated', function (item) {});
-      layout.on('componentCreated', function (component) {});
+      layout.on('componentCreated', function (component) {
+        component.container.on('resize',function() {
+          console.log('component.resize', component.componentName);
+          const sid = component.config.sid;
+          bo.inst.gadgets.manager.resize(sid);
+        });
+      });
       layout.on('rowCreated', function (row) {});
       layout.on('columnCreated', function (column) {});
       layout.on('stackCreated', function (stack) {
@@ -148,6 +154,7 @@ export default class Layout {
       });
 
       layout.on('stateChanged', function () {
+        console.log('state changed');
         // vm.last_change = +new Date();
         // setTimeout(() => {
         //     vm.save({
@@ -172,23 +179,26 @@ export default class Layout {
       });
 
       layout.on('stackCreated', function (stack) {
-        // const $html = $(`
-        //         <li class="a-add-tab">
-        //             <i class="fa fa-plus-circle" aria-hidden="true"></i>
-        //             New
-        //         </li>
-        //         <li class="a-divider"></li>
-        // `);
-        // $html.on('click', function (event) {
-        //     const id = getRandomInt(0, 9999999999);
-        //     stack.addChild({
-        //         id,
-        //         type: 'component',
-        //         componentName: 'default',
-        //         componentState: {id, title: '', url: ''}
-        //     });
-        // });
-        // stack.header.controlsContainer.prepend($html);
+        const $html = $(`
+          <li class="a-add-tab">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            New
+          </li>
+          <li class="a-divider"></li>
+        `);
+        $html.on('click', function (event) {
+          const id = getRandomInt(100000, 999999);
+          stack.addChild({
+            id,
+            type: 'component',
+            componentName: 'commonComponent',
+            componentState: {id, type: 'default'},
+            title: 'Default',
+          });
+          const sid = stack.config.sid;
+          bo.inst.state.set(`window.${sid}`, {id, type: 'default'}, 'push');
+        });
+        stack.header.controlsContainer.prepend($html);
       });
 
       $(window).on('resize', event => {

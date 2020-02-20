@@ -58,3 +58,11 @@ body {
   border: 5px solid;
   border-radius: 4px;
 }
+
+[id^=gadget-container-] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}

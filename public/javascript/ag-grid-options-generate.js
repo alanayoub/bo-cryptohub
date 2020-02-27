@@ -19,15 +19,13 @@ import generateColumnDefs                 from './ag-grid-column-defs-generate.j
  * Generate AgOptions
  *
  */
-export default async function generateAgOptions() {
+export default function generateAgOptions(state, filterModel) {
 
   if (!window.bo) throw new Error('window.bo does not exist');
   if (!window.refs) throw new Error('window.refs does not exist');
   window.refs.rowData = null;
 
-  const state = await bo.inst.state.get();
   const mainState = state.window[0];
-  const filterModel = await bo.inst.state.getFilterModel();
   const colLib = flatten(columnLibrary);
 
   /**

@@ -1,0 +1,21 @@
+@keyframes blinker {
+  50% { opacity: 0; }
+}
+.CH-gadget-container {
+  .bo-loading {
+    animation: blinker 0.05s linear infinite;
+    svg {
+      fill: #ccc;
+      zoom: 0.5;
+      margin-top: -20px;
+      margin-left: -20px;
+    }
+    span {
+      position: absolute;
+      top: 22px;
+      left: -17px;
+      display: none;
+    }
+  }
+}
+/* f7931a */

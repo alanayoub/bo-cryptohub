@@ -3,6 +3,8 @@
 import columnLibrary from '../../../columns';
 import { objectFlattenObject as flatten } from '../../../libs/bo-utils-client';
 
+import style from './index.scss';
+
 export default class {
 
   constructor({componentState}) {
@@ -16,6 +18,8 @@ export default class {
 
     if (this.assetId) this.data = refs.rowData.find(v => v.id === this.assetId);
     if (this.colId) this.column = flatten(columnLibrary)[this.colId];
+
+    bo.inst.gadgets.manager.register(this);
 
   }
 

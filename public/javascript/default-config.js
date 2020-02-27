@@ -100,6 +100,8 @@
 export default {
   window: {
     0: {
+      id: '000',
+      type: 'main',
       columns: [
         {id: 'rowIndex', width: 40},
         {id: 'nameCC', width: 236},
@@ -120,14 +122,22 @@ export default {
       }
     },
     1: [{
-      id: '1234',
+      id: '001',
+      type: 'default'
+    }],
+    2: [{
+      id: '002',
+      type: 'treemap'
+    }],
+    3: [{
+      id: '003',
       colId: 'priceUSDCC',
       rowId: 'nb6ozglho',
       type: 'tradingview'
     }],
-    2: [{
-      id: '2345',
-      type: 'treemap'
+    4: [{
+      id: '004',
+      type: 'default'
     }]
   }
 }

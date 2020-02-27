@@ -53,8 +53,9 @@ export default class State {
   async init() {
 
     const urlConfig = await this.get();
-    const state = !!urlConfig ? urlConfig : this.defaultConfig;
-    return await this.set(state);
+    const state = await this.set(!!urlConfig ? urlConfig : this.defaultConfig);
+    const filterModel = await this.getFilterModel();
+    return {state, filterModel};
 
   }
 
@@ -121,6 +122,8 @@ export default class State {
     if (!state) return;
 
     state.window[0] = {
+      id: state.window[0].id,
+      type: state.window[0].type,
       sort: state.window[0].sort,
       columns: state.window[0].columns
     }
@@ -170,6 +173,9 @@ export default class State {
     }
 
     switch (true) {
+      case target === 'layout':
+        state.layout = data;
+        break;
       case target === 'columns':
         objectSetNestedProperty(state.window[0], target, data);
         break;

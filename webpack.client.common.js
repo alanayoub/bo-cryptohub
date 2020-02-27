@@ -29,6 +29,7 @@ module.exports = {
 
   externals: {
     JsonUrl: 'JsonUrl',
+    jquery: 'jQuery',
     GoldenLayout: 'GoldenLayout',
   },
 
@@ -86,7 +87,7 @@ module.exports = {
       console.log('--- Compiling pug templates');
       pug({
         varName: 'initPug',
-        pugGlob: path.join(__dirname, './public/javascript/views/**/*.pug'),
+        pugGlob: path.join(__dirname, './public/javascript/{views,bo}/**/*.pug'),
         outFile: path.join(__dirname, './public/javascript/generated/init-pug.generated.js')
       });
 

@@ -175,6 +175,37 @@ export default {
     window.bo.inst.cellInteractions.mouseOut(params);
   },
 
+  onBodyScroll(params) {
+
+    function isElementInElement(el1, el2, buffer = 0) {
+      var el1Rect = el1.getBoundingClientRect();
+      var el2Rect = el2.getBoundingClientRect();
+      return (
+        el1Rect.top >= (el2Rect.top + buffer) &&
+        el1Rect.left >= (el2Rect.left + buffer) &&
+        el1Rect.bottom <= (el2Rect.bottom + buffer) &&
+        el1Rect.right <= (el2Rect.right + buffer)
+      );
+    }
+    // TODO: make them appear again if the cell gets back into the view
+    for (const cell of bo.inst.cellInteractions.openItems) {
+      const viewport = document.querySelector('.ag-body-viewport');
+      const isOk = isElementInElement(cell, viewport, 10);
+      if (!isOk) {
+        CellInteractions.setMouseOutState(cell);
+        if (cell.$popDivTippy) {
+          cell.$popDivTippy.destroy();
+        }
+        cell.dataset.chOpen = false;
+        const idx = bo.inst.cellInteractions.openItems.indexOf(cell);
+        if (idx >-1) {
+          bo.inst.cellInteractions.openItems.splice(idx, 1);
+        }
+      }
+    }
+
+  },
+
   /**
    *
    * When cell HTML elements are removed from the DOM

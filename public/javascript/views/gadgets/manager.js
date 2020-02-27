@@ -1,6 +1,8 @@
 import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
+import { waitUntil } from '../../libs/bo-utils-client';
 
 import def from '../../bo/common/gadgets/default';
+import main from '../../bo/common/gadgets/main';
 import html from '../popdiv-html';
 import wallets from '../popdiv-wallets';
 import treemap from '../../bo/common/gadgets/treemap';
@@ -8,6 +10,7 @@ import exchanges from '../popdiv-exchanges';
 import tradingview from '../popdiv-tradingview';
 
 const gadgets = {
+  main,
   html,
   treemap,
   wallets,
@@ -22,16 +25,6 @@ export default class gadgetsManager {
     this.gadgets = {};
   }
 
-  clean() {
-    for (const gadget of this.gadgets) {
-      try {
-        gadget.alive.call(gadget.context);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
-
   resize(stackId) {
     const stacks = bo.inst.layout.root.getItemsByType('stack');
     const stack = stacks.filter(x => x.config.sid === stackId)[0];
@@ -43,28 +36,20 @@ export default class gadgetsManager {
     }
   }
 
-  doStuff(config) {
-    // TODO: move to bo-utils
-    function waitUntil(check, cb, interval = 100) {
-      let i = setInterval(() => {
-        if (typeof check === 'function' ? check() : check) {
-          clearInterval(i);
-          cb();
-        }
-      }, interval);
-    }
-    waitUntil(() => refs.rowData, handler, 100);
+  loadTabGadget(config) {
+    console.log('layout loadTabGadget');
     const gadgetMan = this;
-    function handler() {
+    waitUntil(() => refs.rowData, () => {
       const componentState = config.componentState;
       if (componentState.type) {
         const gadget = new (gadgets[componentState.type])({componentState});
         gadgetMan.gadgets[componentState.id] = gadget;
       }
-    }
+    }, 100);
   }
 
   async load() {
+    console.log('gadgets manager load');
     const state = await bo.inst.state.get();
     const typeMap = {
       html: 'Data',
@@ -77,8 +62,8 @@ export default class gadgetsManager {
     for (const [sid, arr] of Object.entries(state.window)) {
       sid = +sid;
       if (sid !== 0) { // Don't do the main window for now
-        let alive;
         for (const value of arr) {
+          let alive;
           if (value.id) {
             const gadget = bo.inst.gadgets.manager.gadgets[value.id];
             if (gadget && typeof gadget.alive === 'function' && gadget.alive()) {
@@ -128,9 +113,7 @@ export default class gadgetsManager {
   }
 
   register(gadget) {
-    debugger;
-    this.clean();
-    this.gadgets.push(gadget);
+    this.gadgets[gadget.id] = gadget;
   }
 
 }

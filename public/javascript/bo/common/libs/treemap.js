@@ -5,6 +5,7 @@ export default class TreeMap {
   constructor(idName, data, options) {
 
     let chartDiv = document.getElementById(idName);
+    d3.select(chartDiv).html('');
     let svg = d3.select(chartDiv).append("svg");
 
     let format = d3.format("");

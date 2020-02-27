@@ -102,9 +102,7 @@ export default class CellInteractions {
     const tippy = $cell._tippy;
     if (!tippy) return;
 
-    const rand = getRandomInt();
     const id = `gadget-container-${rand}`;
-    const selector = `#gadget-container-${rand}`;
     const contentPopdiv = initPug['ch-tippy-popdiv']({id});
     const popdivType = gnp(params, 'colDef.cellRendererParams.popdiv');
 
@@ -118,12 +116,11 @@ export default class CellInteractions {
     if (popdivType) {
 
       $cell.dataset.chOpen = true;
-      tippy.set({hideOnClick: 'false'});
+      tippy.set({hideOnClick: true});
 
       new popDiv(params, contentPopdiv);
 
       const componentState = {
-        id: rand,
         assetId: params.data.id,
         colId: params.colDef.colId
       }
@@ -182,7 +179,10 @@ export default class CellInteractions {
    * Set the mouse over state of a cell
    *
    */
-  setMouseOverState(params, content) {
+  static setMouseOverState(params, content) {
+
+    const id = params.data.id;
+    content = content || initPug['tippy-cell-hover']({id});
 
     const $cell = params.event.target.closest('.ag-cell');
     const appendTo = document.querySelector('body');
@@ -213,7 +213,20 @@ export default class CellInteractions {
       interactiveBorder: 5,
       interactiveDebounce: 1,
     }
-    tippy($cell, Object.assign(defaultTippyOptions, this.tippyOptions));
+    const tippyOptions = {
+      theme: 'light CH-tippy-click',
+      placement: 'right',
+      hideOnClick: 'false',
+      interactiveBorder: 5,
+      interactiveDebounce: 1,
+      onHide(tippy) {
+        const opened = tippy.reference.dataset.chOpen === 'true';
+        const hovering = tippy.reference.dataset.chHover === 'true';
+        if (opened || hovering) return false;
+        else return true;
+      }
+    }
+    tippy($cell, Object.assign(defaultTippyOptions, tippyOptions));
 
     $cell.$triggerTippy = $cell._tippy;
     $cell.classList.add('CH-cell-hover');
@@ -245,12 +258,7 @@ export default class CellInteractions {
    */
   static triggerClickHandler(params) {
     const $cell = params.event.srcElement.closest('.ag-cell');
-    if ($cell.dataset.chOpen === 'true') {
-      CellInteractions.close({params});
-    }
-    else {
-      CellInteractions.open(params);
-    }
+    CellInteractions.close({params});
   }
 
   /**
@@ -300,7 +308,7 @@ export default class CellInteractions {
       const $cell = params.event.srcElement.closest('.ag-cell');
       const content = initPug['tippy-cell-hover']({id});
 
-      this.setMouseOverState(params, content);
+      CellInteractions.setMouseOverState(params, content);
 
       const $trigger = document.querySelector(`.CH-tippy-cell-hover-${id}`);
       if (!$trigger) {

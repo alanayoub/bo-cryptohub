@@ -1,12 +1,7 @@
 'use strict';
 
-// Binary Overdose Projects
 import { objectFlattenObject as flatten } from './libs/bo-utils-client';
 
-// Cryptohub util functions
-import convertWorkingDataToRowData        from './utils/convert-working-data-to-row-data.js';
-
-// ag-grid config
 import columnLibrary                      from './columns/';
 import agGridOptionsBase                  from './ag-grid-options-base.js';
 import generateColumnDefs                 from './ag-grid-column-defs-generate.js';

@@ -17,17 +17,25 @@ export default class TreeMap extends Gadget {
     const contentHtml = initPug['common.gadgets.treemap']({containerId});
     document.querySelector(this.selector).innerHTML = contentHtml;
 
-    this.model = this.buildModel();
+    this.model = this.buildModel(bo.inst.data.last.main);
+    bo.inst.data.on('main', data => {
+      this.model = this.buildModel(data.data);
+    })
     this.render();
     return this;
 
   }
 
-  buildModel() {
-    const children = refs.rowData.concat()
+  buildModel(data) {
+    if (!data) return;
+    const f = 'cc-total-vol-full-MKTCAP';
+    const children = data
+      .concat()
+      .filter(x => {
+        return x[f] && x[f].value;
+      })
       .sort((a, b) => {
-        const field = 'cc-total-vol-full-MKTCAP';
-        return a[field] && b[field] ? b[field].value - a[field].value : false;
+        return b[f].value - a[f].value;
       })
       .slice(0, 100) // make copy
       .reduce((acc, val, idx) => {
@@ -44,10 +52,19 @@ export default class TreeMap extends Gadget {
   }
 
   render() {
-    // NOTE: we are using a really shit treemap library
-    // that required data in a dumb way amongst other things
-    // TODO: write our own
-    new TMap(this.containerId, this.model, {});
+    const check = () => {
+      const container = document.querySelector(`#${this.containerId}`);
+      return container.offsetWidth && container.offsetHeight;
+    }
+    const callback = () => {
+      // NOTE: we are using a really shit treemap library
+      // that required data in a dumb way amongst other things
+      // TODO: write our own
+      new TMap(this.containerId, this.model, {});
+    }
+    const interval = 25;
+    // The tab created event is called but the container doesnt have and dimentions yet!
+    this.waitUntil(check, callback, interval);
   }
 
   resize() {

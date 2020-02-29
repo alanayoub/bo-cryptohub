@@ -72,6 +72,7 @@ export default async function startServer(config) {
       path: '/',
       httpOnly: false, // httpOnly=false because of Segment :/
       secure: false,
+      sameSite: true,
       maxAge: null
     },
     saveUninitialized: true, // don't create session until something is stored

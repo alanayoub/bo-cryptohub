@@ -219,11 +219,13 @@ export default class State {
     if (!oldState || !objectsAreEqual(newState, oldState, true)) {
       const obj = newState;
       const query = await State.urlEncode(obj);
-      history.pushState(obj, '/// Binary Overdose', `#${query}`);
+      window.location.hash = query;
+      if (bo.inst.gadgets && bo.inst.gadgets.manager) bo.inst.gadgets.manager.load();
+      // history.pushState(obj, '/// Binary Overdose', `#${query}`);
       // gtag('config', 'UA-640029-16', {
       //   'page_path': location.pathname + location.search  + location.hash
       // });
-      await this.update(newState);
+      // await this.update(newState);
     }
 
     return newState;

@@ -1,5 +1,6 @@
 {
   "presets": ["@babel/preset-env"],
   "plugins": ["@babel/plugin-transform-modules-umd"],
-  "plugins": ["@babel/plugin-syntax-dynamic-import"]
+  "plugins": ["@babel/plugin-syntax-dynamic-import"],
+  "plugins": ["@babel/plugin-proposal-private-methods"]
 }

@@ -1,5 +1,4 @@
 import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
-import { waitUntil } from '../../libs/bo-utils-client';
 
 import def from '../../bo/common/gadgets/default';
 import main from '../../bo/common/gadgets/main';
@@ -23,6 +22,10 @@ export default class gadgetsManager {
 
   constructor() {
     this.gadgets = {};
+    this.data = bo.inst.data.last.main;
+    bo.inst.data.on('main', data => {
+      this.data = data.data;
+    });
   }
 
   resize(stackId) {
@@ -31,25 +34,20 @@ export default class gadgetsManager {
     const item = stack.getActiveContentItem().config;
     const gadget = bo.inst.gadgets.manager.gadgets[item.componentState.id];
     if (gadget && gadget.resize) {
-      console.log('resizeing', gadget, item.config);
       gadget.resize();
     }
   }
 
   loadTabGadget(config) {
-    console.log('layout loadTabGadget');
     const gadgetMan = this;
-    waitUntil(() => refs.rowData, () => {
-      const componentState = config.componentState;
-      if (componentState.type) {
-        const gadget = new (gadgets[componentState.type])({componentState});
-        gadgetMan.gadgets[componentState.id] = gadget;
-      }
-    }, 100);
+    const componentState = config.componentState;
+    if (componentState.type) {
+      const gadget = new (gadgets[componentState.type])({componentState});
+      gadgetMan.gadgets[componentState.id] = gadget;
+    }
   }
 
   async load() {
-    console.log('gadgets manager load');
     const state = await bo.inst.state.get();
     const typeMap = {
       html: 'Data',
@@ -76,7 +74,7 @@ export default class gadgetsManager {
           if (stack.length) {
             const id = value.id;
 
-            const data = refs.rowData.find(v => v.id === value.rowId);
+            const data = this.data.find(v => v.id === value.rowId);
             let title;
             if (data) {
               const name = data['cc-total-vol-full-FullName'].value;

@@ -28,16 +28,6 @@ export default class gadgetsManager {
     });
   }
 
-  resize(stackId) {
-    const stacks = bo.inst.layout.root.getItemsByType('stack');
-    const stack = stacks.filter(x => x.config.sid === stackId)[0];
-    const item = stack.getActiveContentItem().config;
-    const gadget = bo.inst.gadgets.manager.gadgets[item.componentState.id];
-    if (gadget && gadget.resize) {
-      gadget.resize();
-    }
-  }
-
   loadTabGadget(config) {
     const gadgetMan = this;
     const componentState = config.componentState;
@@ -57,53 +47,57 @@ export default class gadgetsManager {
       exchanges: 'Exchanges',
       tradingview: 'Chart'
     }
-    for (const [sid, arr] of Object.entries(state.window)) {
-      sid = +sid;
-      if (sid !== 0) { // Don't do the main window for now
-        for (const value of arr) {
-          let alive;
-          if (value.id) {
-            const gadget = bo.inst.gadgets.manager.gadgets[value.id];
-            if (gadget && typeof gadget.alive === 'function' && gadget.alive()) {
-              alive = true;
-            }
-          }
-          if (alive) continue;
-          const stacks = bo.inst.layout.root.getItemsByType('stack');
-          const stack = stacks.filter(v => v.config.sid === sid);
-          if (stack.length) {
-            const id = value.id;
-
-            const data = this.data.find(v => v.id === value.rowId);
-            let title;
-            if (data) {
-              const name = data['cc-total-vol-full-FullName'].value;
-              const type = typeMap[value.type];
-              title = `${name} ${type}`;
-            }
-            else if (value.type === 'default') {
-              title = 'Default';
-            }
-            else if (value.type === 'treemap') {
-              title = 'Treemap';
-            }
-
-            const { colId, rowId, type } = value;
-            const newItem = {
-              id,
-              sid,
-              title,
-              type: 'component',
-              componentName: 'commonComponent',
-              componentState: {
-                id,
-                sid,
-                type,
-                ...colId && {colId},
-                ...rowId && {assetId: rowId}
+    for (const {ref, type} of bo.clas.Layout.iterateStacks(state.layout)) {
+      if (type === 'stack') {
+        const stack = ref;
+        const sid = +stack.sid;
+        const arr = stack.content;
+        if (sid !== 0) { // Don't do the main window for now
+          for (const value of arr) {
+            let alive;
+            if (value.id) {
+              const gadget = bo.inst.gadgets.manager.gadgets[value.id];
+              if (gadget && typeof gadget.alive === 'function' && gadget.alive()) {
+                alive = true;
               }
             }
-            stack[0].addChild(newItem);
+            if (alive) continue;
+            const stacks = bo.inst.layout.root.getItemsByType('stack');
+            const stack = stacks.filter(v => v.config.sid === sid);
+            if (stack.length) {
+              const id = value.id;
+
+              const data = this.data.find(v => v.id === value.rowId);
+              let title;
+              if (data) {
+                const name = data['cc-total-vol-full-FullName'].value;
+                const type = typeMap[value.type];
+                title = `${name} ${type}`;
+              }
+              else if (value.type === 'default') {
+                title = 'Default';
+              }
+              else if (value.type === 'treemap') {
+                title = 'Treemap';
+              }
+
+              const { colId, rowId, type } = value;
+              const newItem = {
+                id,
+                sid,
+                title,
+                type: 'component',
+                componentName: 'commonComponent',
+                componentState: {
+                  id,
+                  sid,
+                  type,
+                  ...colId && {colId},
+                  ...rowId && {assetId: rowId}
+                }
+              }
+              stack[0].addChild(newItem);
+            }
           }
         }
       }

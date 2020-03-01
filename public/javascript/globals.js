@@ -25,6 +25,7 @@ import rest              from './api/rest';
 // Cryptohub classes
 import CellInteractions  from './classes/class-cell-interactions.js';
 import State             from './classes/class-state.js';
+import Layout            from './views/layout';
 
 window.bo = {
   rest,
@@ -42,6 +43,7 @@ window.bo = {
 
 window.bo.clas.CellInteractions = CellInteractions;
 window.bo.clas.State = State;
+window.bo.clas.Layout = Layout;
 window.initStore = window.initStore || {};
 
 window.refs = {

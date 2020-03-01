@@ -27,19 +27,9 @@ export default class Layout {
 
     static #getConfig(state, data) {
 
-      const urlContent = Layout.#getContentFromUrl(state);
+      const content = state.layout;
 
-      const content = urlContent || Layout.#getDefaultContent();
-
-      // Generating golden layout stacks
-      const stacks = Layout.#generateStacksFromUrl(state.window, data);
-
-      // Insert stacks into content
-      for (const val of Layout.#iterateStacks(content)) {
-        if (val.type === 'stack') {
-          val.ref.content = stacks[val.ref.sid] || [];
-        }
-      }
+      Layout.#decompress(content, data);
 
       const config = {
         settings: {
@@ -80,15 +70,18 @@ export default class Layout {
 
       layout.on('componentCreated', component => {
         component.container.on('resize', () => {
-          const sid = component.config.sid;
-          bo.inst.gadgets.manager.resize(sid);
+          const stack = component.parent;
+          const item = stack.getActiveContentItem().config;
+          const gadget = bo.inst.gadgets.manager.gadgets[item.componentState.id];
+          if (gadget && gadget.resize) {
+            gadget.resize();
+          }
         });
       });
 
       layout.on('stackCreated', stack => {
-        const sid = stack.contentItems[0].config.sid;
+        const sid = stack.config.sid;
         stack.element[0].setAttribute('data-sid', sid);
-        stack.config.sid = sid;
       });
 
       layout.on('tabCreated', tab => {
@@ -120,8 +113,8 @@ export default class Layout {
             componentState: {id, type: 'default'},
             title: 'Default',
           });
-          const sid = stack.config.sid;
-          bo.inst.state.set(`window.${sid}`, {id, type: 'default'}, 'push');
+          // const sid = stack.config.sid;
+          // bo.inst.state.set(`window.${sid}`, {id, type: 'default'}, 'push');
         });
         stack.header.controlsContainer.prepend($html);
       });
@@ -131,6 +124,7 @@ export default class Layout {
       layout.on('urlChanged', event => {});
       layout.on('itemCreated', item => {});
       layout.on('initialised', something => {});
+      layout.on('stackCreated', stack => {});
       layout.on('columnCreated', column => {});
       layout.on('itemDestroyed', item => {});
       layout.on('selectionChanged', selection => {});
@@ -141,43 +135,7 @@ export default class Layout {
 
     }
 
-    static layoutCompress(config) {
-      for (const val of Layout.#iterateStacks(config)) {
-        if (val.type === 'stack') {
-          Object.keys(val.ref).forEach(key => {
-            if (!['sid', 'type', 'width', 'height'].includes(key)) {
-              delete val.ref[key];
-            }
-          });
-        }
-        else if (val.type === 'component') {
-          Object.keys(val.ref).forEach(key => {
-            if (!['id', 'type', 'content'].includes(key)) {
-              delete val.ref[key];
-            }
-          });
-        }
-        else {
-          Object.keys(val.ref).forEach(key => {
-            if (!['type', 'content', 'width', 'height'].includes(key)) {
-              delete val.ref[key];
-            }
-          });
-        }
-      }
-      return config;
-    }
-
-    static layoutDecompress(config, win) {
-      for (const val of Layout.#iterateStacks(config)) {
-        if (val.type === 'stack') {
-          val.content = win[val.sid];
-        }
-      }
-      return config;
-    }
-
-    static * #iterateStacks(config) {
+    static * iterateStacks(config) {
       function* recurse(config) {
         for (const ref of config) {
           if (ref.content) {
@@ -197,57 +155,44 @@ export default class Layout {
       yield* recurse(config);
     }
 
-    static #getDefaultContent() {
-      const config = [
-        {
-          type: 'row',
-          content: [
-            {
-              type: 'column',
-              width: 70,
-              content: [
-                {
-                  sid: 0,
-                  type: 'stack',
-                  height: 70,
-                },
-                {
-                  sid: 1,
-                  type: 'stack',
-                }
-              ]
-            },
-            {
-              type: 'column',
-              content: [
-                {
-                  sid: 2,
-                  type: 'stack',
-                },
-                {
-                  sid: 3,
-                  type: 'stack',
-                },
-                {
-                  sid: 4,
-                  type: 'stack',
-                }
-              ]
+    static #getContentFromUrl(state) {
+    }
+
+    static #compress(config) {
+      for (const val of Layout.iterateStacks(config)) {
+        if (val.type === 'stack') {
+          Object.keys(val.ref).forEach(key => {
+            if (!['sid', 'type', 'content', 'width', 'height', 'activeItemIndex'].includes(key)) {
+              delete val.ref[key];
             }
-          ]
+          });
         }
-      ];
+        else if (val.type === 'component') {
+          // Delete everything except for componentState
+          Object.keys(val.ref).forEach(key => {
+            if (!['componentState'].includes(key)) {
+              delete val.ref[key];
+            }
+          });
+          // Flatten component state on the main object
+          Object.keys(val.ref.componentState).forEach(key => {
+            val.ref[key] = val.ref.componentState[key];
+          });
+          // Delete componentState
+          delete val.ref.componentState;
+        }
+        else {
+          Object.keys(val.ref).forEach(key => {
+            if (!['type', 'content', 'width', 'height'].includes(key)) {
+              delete val.ref[key];
+            }
+          });
+        }
+      }
       return config;
     }
 
-    static #getContentFromUrl(state) {
-      if (!state.layout) return;
-      const win = state.window;
-      const content = JSON.parse(state.layout);
-      return Layout.layoutDecompress(content, win);
-    }
-
-    static #generateStacksFromUrl(win, data) {
+    static #decompress(content, data) {
       const typeMap = {
         html: 'Data',
         treemap: 'Treemap',
@@ -256,59 +201,56 @@ export default class Layout {
         exchanges: 'Exchanges',
         tradingview: 'Chart'
       }
-      const stacks = {};
-      for (const [sid, arr] of Object.entries(win)) {
-        sid = +sid;
-        if (sid === 0) {
-          arr = [arr];
-        }
-        for (const value of arr) {
+      for (const val of Layout.iterateStacks(content)) {
+        if (val.type === 'stack') {
 
-          const id = value.id;
+          // itterate components in stack
+          for (const [key, value] of Object.entries(val.ref.content)) {
 
-          const d = data.find(v => v.id === value.rowId);
-          let title;
-          if (d) {
-            const name = d['cc-total-vol-full-FullName'].value;
-            const type = typeMap[value.type];
-            title = `${name} ${type}`;
-          }
-          else if (value.type === 'default') {
-            title = 'Default';
-          }
-          else if (value.type === 'treemap') {
-            title = 'Treemap';
-          }
-          else if (value.type === 'main') {
-            title = 'All Assets';
-          }
+            const id = value.id;
 
-          const { colId, rowId, type } = value;
-          const newItem = {
-            id,
-            sid,
-            title,
-            type: 'component',
-            componentName: 'commonComponent',
-            componentState: {
-              id,
-              sid,
-              type,
-              ...colId && {colId},
-              ...rowId && {assetId: rowId}
+            const d = data.find(v => v.id === value.rowId);
+            let title;
+            if (d) {
+              const name = d['cc-total-vol-full-FullName'].value;
+              const type = typeMap[value.type];
+              title = `${name} ${type}`;
             }
+            else if (value.type === 'default') {
+              title = 'Default';
+            }
+            else if (value.type === 'treemap') {
+              title = 'Treemap';
+            }
+            else if (value.type === 'main') {
+              title = 'All Assets';
+            }
+
+            const { colId, rowId, type } = value;
+            const newItem = {
+              id,
+              title,
+              type: 'component',
+              componentName: 'commonComponent',
+              componentState: {
+                id,
+                type,
+                ...colId && {colId},
+                ...rowId && {assetId: rowId}
+              }
+            }
+            Object.assign(val.ref.content[key], newItem);
           }
-          if (!stacks[sid]) stacks[sid] = [];
-          stacks[sid].push(newItem);
+
         }
       }
-      return stacks;
+
     }
 
     static #save(layout) {
       const config = layout.toConfig().content;
-      const compressedConfig = Layout.layoutCompress(config);
-      bo.inst.state.set('layout', JSON.stringify(compressedConfig));
+      const compressedConfig = Layout.#compress(config);
+      bo.inst.state.set('layout', compressedConfig);
     }
 
 }

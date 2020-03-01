@@ -195,16 +195,20 @@ export default class State {
         }
         objectSetNestedProperty(state.window[0], 'columns', columns);
         break;
-      case /^window/.test(target):
-        const idx = target.split('.')[1];
-        if (action === 'push') {
-          if (!state.window[idx]) {
-            state.window[idx] = [];
+      case /^stack/.test(target):
+        const sid = +target.split('.')[1];
+        let stack;
+        for (const {ref, type} of bo.clas.Layout.iterateStacks(state.layout)) {
+          if (type === 'stack' && ref.sid === sid) {
+            stack = ref;
           }
-          state.window[idx].push(data);
         }
-        else if (idx > -1) {
-          state.window[idx] = data;
+        if (action === 'push') {
+          stack.content.push(data);
+        }
+        else if (sid > -1) {
+          debugger
+          // state.window[sid] = data;
         }
         break;
       case target === null:

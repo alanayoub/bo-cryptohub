@@ -6,6 +6,7 @@ import { ModuleRegistry } from '@ag-grid-community/all-modules';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
 import Data from './bo/common/data';
+import Events from './bo/common/events';
 import State from './classes/class-state.js';
 import Layout from './views/layout';
 import GadgetsManager from './views/gadgets/manager';
@@ -79,6 +80,7 @@ $('body').on('click', '.ch-logo a', event => {
 
 new CookieBarView();
 bo.inst.data = new Data();
+bo.inst.events = new Events();
 
 window.bo.inst.cellInteractions = new CellInteractions();
 window.bo.inst.state = new State(defaultConfig);

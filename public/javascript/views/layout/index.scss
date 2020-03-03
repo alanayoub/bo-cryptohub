@@ -1,4 +1,5 @@
 @import '../../../stylesheet/variables';
+@import '../../../stylesheet/mixins/BO-droppable';
 
 //
 // Main golden layout styles
@@ -95,7 +96,6 @@
 
 .lm_header {
   overflow: visible;
-  position: relative;
   z-index: 1;
   user-select: none;
 
@@ -699,9 +699,8 @@
 .lm_dropTargetIndicator {
   box-shadow: none;
   outline: none;
-  .lm_inner {
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAa0lEQVQ4y63Uyw3AIAyD4X8sT8QIzN9bpaovJ/EhEuTwIQExwHJK0nYKSTuJci5CKJdNAOXWGKI8Ngcoryc1UT7vo4Hy+2pFFOtvFVDsCTBRSmPlgmG0EQAuGEIHUeWCQzQQqi7YRIPxD+sAmYYvMA+fMFoAAAAASUVORK5CYII=);
-    opacity: 1;
+  .lm_inner:after {
+    @include BO-droppable;
   }
 }
 .lm_splitter {
@@ -712,5 +711,14 @@
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAACCAYAAACQahZdAAAAF0lEQVQI12PIzMxs/v//vy8yzYAuAKIBBMYZKSjBigwAAAAASUVORK5CYII=);
     opacity: 1;
     z-index: 10000;
+  }
+}
+.lm_stack {
+  &.ui-droppable {}
+  &.ui-droppable-active:after {
+    @include BO-droppable;
+  }
+  &.ui-droppable-hover:after {
+    border: 2px solid #fff;
   }
 }

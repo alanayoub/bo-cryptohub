@@ -1,30 +1,13 @@
 'use strict'
 
 // Binary Overdose Projects
+import { objectsAreEqual }                      from '../libs/bo-utils-client';
 import { objectSetNestedProperty }              from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp }       from '../libs/bo-utils-client';
 import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
 
 // ag-grid config
 import generateColumnDefs                       from '../ag-grid-column-defs-generate.js';
-
-function JSONstringifyOrder(obj, space) {
-  const allKeys = [];
-  JSON.stringify(obj, (key, value) => {
-    allKeys.push(key); {
-      return value;
-    }
-  });
-  allKeys.sort();
-  return JSON.stringify(obj, allKeys, space);
-}
-
-function objectsAreEqual(obj1, obj2, order) {
-  const stringify = order ? JSONstringifyOrder : JSON.stringify;
-  const str1 = stringify(obj1);
-  const str2 = stringify(obj2);
-  return str1 === str2;
-}
 
 export default class State {
 

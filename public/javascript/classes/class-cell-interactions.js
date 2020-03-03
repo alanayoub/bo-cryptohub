@@ -121,7 +121,7 @@ export default class CellInteractions {
       new popDiv(params, contentPopdiv);
 
       const componentState = {
-        assetId: params.data.id,
+        rowId: params.data.id,
         colId: params.colDef.colId
       }
       new classes[popdivType]({componentState});
@@ -215,6 +215,7 @@ export default class CellInteractions {
     }
     const tippyOptions = {
       theme: 'light CH-tippy-click',
+      appendTo: document.querySelector('.ag-root-wrapper'),
       placement: 'right',
       hideOnClick: 'false',
       interactiveBorder: 5,

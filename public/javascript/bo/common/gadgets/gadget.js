@@ -14,7 +14,7 @@ export default class {
 
     this.id = componentState.id;
     this.colId = componentState.colId;
-    this.assetId = componentState.assetId;
+    this.rowId = componentState.rowId;
     this.selector = `#gadget-container-${this.id}`;
     this.waitUntil = waitUntil;
 
@@ -23,7 +23,7 @@ export default class {
       this.data = data;
     });
 
-    if (this.assetId) this.data = this.data.find(v => v.id === this.assetId);
+    if (this.rowId) this.data = this.data.find(v => v.id === this.rowId);
     if (this.colId) this.column = flatten(columnLibrary)[this.colId];
 
     bo.inst.gadgets.manager.register(this);
@@ -32,6 +32,15 @@ export default class {
 
   alive() {
     return !!document.querySelector(this.selector);
+  }
+
+  async active() {
+    const { layout } = await bo.inst.state.get();
+    const active = bo.clas.Layout.isActiveGadget(this.id, layout);
+  }
+
+  dataDependencies() {
+    return false;
   }
 
 }

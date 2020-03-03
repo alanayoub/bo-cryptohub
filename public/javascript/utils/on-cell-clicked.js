@@ -65,7 +65,7 @@ export default function onCellClicked(params) {
 
       const componentState = {
         id: rand,
-        assetId: params.data.id,
+        rowId: params.data.id,
         colId: params.colDef.colId
       }
       new classes[popdivType]({componentState});

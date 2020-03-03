@@ -25,6 +25,41 @@ export default class Layout {
 
     }
 
+    static * iterateStacks(config) {
+      function* recurse(config) {
+        for (const ref of config) {
+          if (ref.content) {
+            yield* recurse(ref.content);
+          }
+          if (ref.type === 'stack') {
+            yield {ref, type: 'stack'};
+          }
+          else if (ref.type === 'component') {
+            yield {ref, type: 'component'};
+          }
+          else {
+            yield {ref, type: 'other'};
+          }
+        }
+      }
+      yield* recurse(config);
+    }
+
+    static isActiveGadget(gadgetId, config) {
+      for (const val of Layout.iterateStacks(config)) {
+        if (val.type === 'stack') {
+          for (const [idx, component] of Object.entries(val.ref.content)) {
+            if (component.id === gadgetId) {
+              if (Number(val.ref.activeItemIndex) === Number(idx)) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+      return false;
+    }
+
     static #getConfig(state, data) {
 
       const content = state.layout;
@@ -135,26 +170,6 @@ export default class Layout {
 
     }
 
-    static * iterateStacks(config) {
-      function* recurse(config) {
-        for (const ref of config) {
-          if (ref.content) {
-            yield* recurse(ref.content);
-          }
-          if (ref.type === 'stack') {
-            yield {ref, type: 'stack'};
-          }
-          else if (ref.type === 'component') {
-            yield {ref, type: 'component'};
-          }
-          else {
-            yield {ref, type: 'other'};
-          }
-        }
-      }
-      yield* recurse(config);
-    }
-
     static #getContentFromUrl(state) {
     }
 
@@ -236,7 +251,7 @@ export default class Layout {
                 id,
                 type,
                 ...colId && {colId},
-                ...rowId && {assetId: rowId}
+                ...rowId && {rowId}
               }
             }
             Object.assign(val.ref.content[key], newItem);

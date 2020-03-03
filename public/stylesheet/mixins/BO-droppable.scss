@@ -1,0 +1,12 @@
+@mixin BO-droppable {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAa0lEQVQ4y63Uyw3AIAyD4X8sT8QIzN9bpaovJ/EhEuTwIQExwHJK0nYKSTuJci5CKJdNAOXWGKI8Ngcoryc1UT7vo4Hy+2pFFOtvFVDsCTBRSmPlgmG0EQAuGEIHUeWCQzQQqi7YRIPxD+sAmYYvMA+fMFoAAAAASUVORK5CYII=);
+  opacity: 1;
+  z-index: 1;
+  zoom: 1;
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}

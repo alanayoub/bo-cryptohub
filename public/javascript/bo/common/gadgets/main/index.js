@@ -1,13 +1,10 @@
 'use strict';
 
-import { Grid } from '@ag-grid-community/core';
-import { AllCommunityModules } from '@ag-grid-community/all-modules';
-import getAgOptions from './utils/get-ag-options';
-
 import Gadget from '../gadget';
 import initPug from '../../../../generated/init-pug.generated.js';
-import generateColumnDefs from '../../../../ag-grid-column-defs-generate.js';
 
+import Grid                                     from '../../libs/grid/';
+import columnLibrary                            from '../../../../columns/';
 import { getRandomInt }                         from '../../../../libs/bo-utils-client';
 import { objectsAreEqual }                      from '../../../../libs/bo-utils-client';
 import { objectIsEmptyObject as isEmptyObject } from '../../../../libs/bo-utils-client';
@@ -22,6 +19,7 @@ export default class Main extends Gadget {
     const containerId = this.containerId = `ch-gadget-${getRandomInt(100000, 999999)}`;
     const content = initPug['common-gadget-main']({containerId});
     this.selector = `#gadget-container-${this.id}`;
+    this.id = componentState.id;
     document.querySelector(this.selector).innerHTML = content;
 
     // Initial data
@@ -33,49 +31,24 @@ export default class Main extends Gadget {
       this.updateData();
     });
 
-    bo.inst.events.on('MAIN_COLUMNS_CHANGED', ({oldState, newState}) => {
-      console.log('main_columns_changed');
-      // request cols data
-      const oldCols = oldState.window[0].columns;
-      const newCols = newState.window[0].columns;
-      const sort = newState.window[0].sort;
-      const newColFields = Main.columnsChanged(oldCols, newCols);
-      if (newColFields) {
-        const columns = newColFields
-          .filter(v => !/^c-\d{1,4}$/.test(v)) // filter out custom columns
-          .join();
-        const emitData = JSON.stringify({columns, sort});
-        bo.inst.socket.emit('cols', emitData);
+    bo.inst.events.on('GADGET_STATE_CHANGED', ({gadgetId, oldState, newState}) => {
+      if (gadgetId === componentState.id) {
+        const oldCols = oldState.columns;
+        const newCols = newState.columns;
+        const sort = newState.sort;
+        const newColFields = Main.columnsChanged(oldCols, newCols);
+        if (newColFields) {
+          const columns = newColFields
+            .filter(v => !/^c-\d{1,4}$/.test(v)) // filter out custom columns
+            .join();
+          const emitData = JSON.stringify({columns, sort});
+          bo.inst.socket.emit('cols', emitData);
+        }
+        this.grid.setColumnDefs(newState.columns, newState.sort);
       }
-
-      // update ag-grid columns
-      const columnDefs = generateColumnDefs(newState.window[0]);
-      bo.agOptions.api.columnController.setColumnDefs(columnDefs);
-    });
-
-    bo.inst.events.on('MAIN_SORT_CHANGED', ({oldState, newState}) => {
-      console.log('main_sort_changed');
-    });
-
-    bo.inst.events.on('MAIN_FILTER_CHANGED', ({oldState, newState}) => {
-      console.log('main_filter_changed');
     });
 
     this.render();
-  }
-
-  static getFilterModel(state) {
-    if (!state) {
-      return null;
-    }
-
-    const model = state.columns
-      .reduce((a, v) => {
-        if (v.filter) a[v.id] = v.filter;
-        return a;
-      }, {});
-
-    return isEmptyObject(model) ? null : model;
   }
 
   /**
@@ -102,14 +75,9 @@ export default class Main extends Gadget {
   }
 
   async render() {
-    const urlState = await bo.inst.state.get();
-    const state = urlState.window[0];
-    const filterModel = Main.getFilterModel(state);
-    bo.agOptions = getAgOptions(state, filterModel);
-    bo.agOptions.rowData = this.data;
+    const gadgetState = await bo.clas.State.getGadgetState(this.id);
     const container = document.querySelector(`#${this.containerId}`);
-    const grid = new Grid(container, bo.agOptions, {modules: AllCommunityModules});
-    if (!grid) throw new Error('Cant find grid');
+    this.grid = new Grid(container, columnLibrary, gadgetState, this.data);
   }
 
   update() {
@@ -117,7 +85,9 @@ export default class Main extends Gadget {
   }
 
   updateData() {
-    bo.agOptions.api.setRowData(this.data);
+    if (this.grid) {
+      this.grid.agGrid.gridOptions.api.setRowData(this.data);
+    }
     // move upadate from state to here!
   }
 

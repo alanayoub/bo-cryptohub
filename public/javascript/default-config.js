@@ -1,48 +1,6 @@
 'use strict';
 
 export default {
-  window: {
-    0: {
-      // id: '000',
-      // type: 'main',
-      columns: [
-        {id: 'rowIndex', width: 40},
-        {id: 'nameCC', width: 236},
-        {id: 'priceUSDCC', width: 100},
-        {id: 'priceBTCCC', width: 120},
-        {id: 'percentChange7dBTCMessari', width: 80},
-        {id: 'percentChange1mBTCMessari', width: 80},
-        {id: 'marketcapUSDCC', width: 150},
-        {id: 'volume24hUSDCC', width: 150},
-        {id: 'numberOfExchanges', width: 117},
-        {id: 'nvtMessari', width: 95},
-        {id: 'sharpRatioLast30DaysMessari', width: 126},
-        {id: 'sectorsMessari', width: 250}
-      ],
-      sort: {
-        column: 'volume24hUSDCC',
-        direction: 'desc'
-      }
-    },
-    // 1: [{
-    //   id: '001',
-    //   type: 'default'
-    // }],
-    // 2: [{
-    //   id: '002',
-    //   type: 'treemap'
-    // }],
-    // 3: [{
-    //   id: '003',
-    //   colId: 'priceUSDCC',
-    //   rowId: 'nb6ozglho',
-    //   type: 'tradingview'
-    // }],
-    // 4: [{
-    //   id: '004',
-    //   type: 'default'
-    // }]
-  },
   layout: [{
     type: 'row',
     content: [
@@ -58,6 +16,24 @@ export default {
               {
                 id: '000',
                 type: 'main',
+                columns: [
+                  {id: 'rowIndex', width: 40},
+                  {id: 'nameCC', width: 236},
+                  {id: 'priceUSDCC', width: 100},
+                  {id: 'priceBTCCC', width: 120},
+                  {id: 'percentChange7dBTCMessari', width: 80},
+                  {id: 'percentChange1mBTCMessari', width: 80},
+                  {id: 'marketcapUSDCC', width: 150},
+                  {id: 'volume24hUSDCC', width: 150},
+                  {id: 'numberOfExchanges', width: 117},
+                  {id: 'nvtMessari', width: 95},
+                  {id: 'sharpRatioLast30DaysMessari', width: 126},
+                  {id: 'sectorsMessari', width: 250}
+                ],
+                sort: {
+                  colId: 'volume24hUSDCC',
+                  direction: 'desc'
+                }
               }
             ]
           },

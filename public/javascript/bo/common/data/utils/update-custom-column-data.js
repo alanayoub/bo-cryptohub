@@ -8,9 +8,9 @@ function evil(fn) {
 
 const colLib = flatten(columnLibrary);
 
-export default function updateCustomColumnData({state, data}) {
+export default function updateCustomColumnData({columns, data}) {
 
-  for (const column of state.columns) {
+  for (const column of columns) {
 
     const id = column.id;
     const custom = /^c-\d{1,4}$/.test(id);

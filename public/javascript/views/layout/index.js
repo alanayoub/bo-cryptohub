@@ -148,8 +148,12 @@ export default class Layout {
             componentState: {id, type: 'default'},
             title: 'Default',
           });
-          // const sid = stack.config.sid;
-          // bo.inst.state.set(`window.${sid}`, {id, type: 'default'}, 'push');
+          debugger;
+          const sid = stack.config.sid;
+          bo.inst.state.set({stackId: sid, handler: oldStack => {
+            oldStack.content.push({id, type: 'default'});
+            return oldStack;
+          }});
         });
         stack.header.controlsContainer.prepend($html);
       });
@@ -241,17 +245,13 @@ export default class Layout {
               title = 'All Assets';
             }
 
-            const { colId, rowId, type } = value;
             const newItem = {
               id,
               title,
               type: 'component',
               componentName: 'commonComponent',
               componentState: {
-                id,
-                type,
-                ...colId && {colId},
-                ...rowId && {rowId}
+                ...value
               }
             }
             Object.assign(val.ref.content[key], newItem);
@@ -265,7 +265,7 @@ export default class Layout {
     static #save(layout) {
       const config = layout.toConfig().content;
       const compressedConfig = Layout.#compress(config);
-      bo.inst.state.set('layout', compressedConfig);
+      bo.inst.state.set({newState: {layout: compressedConfig}});
     }
 
 }

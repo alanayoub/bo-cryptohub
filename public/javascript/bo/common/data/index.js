@@ -21,18 +21,63 @@ export default class Data extends EventEmitter {
 
     socket.on('cols', () => {
       bo.inst.state.get().then(state => {
-        const columns = state.window[0].columns
-          .filter(v => !/^c-\d{1,4}$/.test(v.id))
-          .map(v => v.id).join(',');
-        const sort = state.window[0].sort;
-        const emitData = JSON.stringify({columns, sort});
+
+        //
+        // Get data dependencies from all gadgets
+        // TODO: at the moment we are only getting dependencies
+        // for grids
+        //
+        // cols = {
+        //   123: {
+        //     columns: [
+        //       {id: 'price', width: 100},
+        //       {id: 'volume', width: 100},
+        //     ],
+        //     sort: {colId: 'price', sort: 'asc'}
+        //   },
+        //   456: {...}
+        // }
+        //
+        const cols = {};
+        for (const val of bo.clas.Layout.iterateStacks(state.layout)) {
+          if (val.type === 'stack') {
+            for (const [idx, component] of Object.entries(val.ref.content)) {
+              const { columns, sort, id, type } = component;
+              if (columns) {
+                cols[id] = {
+                  columns
+                };
+              }
+              if (sort) cols[id].sort = sort;
+            }
+          }
+        }
+
+        //
+        // Send data in old format
+        // TODO: send in new format with multiple sorts etc
+        //
+        let sort;
+        let columns = [];
+        for (const [id, data] of Object.entries(cols)) {
+          const c = data.columns
+            .filter(v => !/^c-\d{1,4}$/.test(v.id))
+            .map(v => v.id);
+          columns = columns.concat(c);
+          if (!sort) sort = data.sort;
+        }
+        const emitData = JSON.stringify({
+          sort, columns: columns.join(',')
+        });
+
         socket.emit('cols', emitData);
       });
     });
 
     socket.on('rows-full', data => {
       bo.inst.state.get().then(state => {
-        const parsed = mainFull({data, state: state.window[0]});
+        const columns = Data.getAllColumnsFlat(state.layout);
+        const parsed = mainFull({data, columns});
         this.last.main = parsed;
         this.emit('main', {full: true, data: parsed});
       });
@@ -40,7 +85,8 @@ export default class Data extends EventEmitter {
 
     socket.on('rows-update', data => {
       bo.inst.state.get().then(state => {
-        const parsed = mainPartial({data, state: state.window[0], lastData: this.last.main});
+        const columns = Data.getAllColumnsFlat(state.layout);
+        const parsed = mainPartial({data, columns, lastData: this.last.main});
         this.last.main = parsed;
         this.emit('main', {partial: true, data: parsed});
       });
@@ -93,6 +139,38 @@ export default class Data extends EventEmitter {
     if (!fragmentId) return;
     const state = await bo.clas.State.urlDecode(fragmentId);
     return state;
+  }
+
+  static getAllColumnsFlat(layout) {
+    //
+    // Get data dependencies from all gadgets
+    // TODO: at the moment we are only getting dependencies
+    // for grids
+    //
+    // cols = {
+    //   123: {
+    //     columns: [
+    //       {id: 'price', width: 100},
+    //       {id: 'volume', width: 100},
+    //     ],
+    //     sort: {colId: 'price', sort: 'asc'}
+    //   },
+    //   456: {...}
+    // }
+    //
+    const cols = new Set();
+    for (const val of bo.clas.Layout.iterateStacks(layout)) {
+      if (val.type === 'stack') {
+        for (const [idx, component] of Object.entries(val.ref.content)) {
+          const { columns, sort, id, type } = component;
+          if (columns) {
+            columns.forEach(x => cols.add(x));
+          }
+        }
+      }
+    }
+    return Array.from(cols);
+
   }
 
 }

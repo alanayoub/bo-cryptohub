@@ -7,7 +7,7 @@ import columnLibrary from '../../../columns';
 
 const colLib = flatten(columnLibrary);
 
-export default function mainFull({data, state}) {
+export default function mainFull({data, columns}) {
 
   let parsedData = JSON.parse(data).data;
   const arrayData = [];
@@ -17,8 +17,8 @@ export default function mainFull({data, state}) {
   }
 
   parsedData = arrayData;
-  parsedData = updateCustomColumnData({state, colLib, data: parsedData});
-  parsedData = updateStubbedColumnData({state, colLib, data: parsedData});
+  parsedData = updateCustomColumnData({columns, colLib, data: parsedData});
+  parsedData = updateStubbedColumnData({columns, colLib, data: parsedData});
 
   return parsedData;
 

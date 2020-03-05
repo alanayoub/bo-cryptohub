@@ -16,10 +16,35 @@ export default class Events extends EventEmitter {
       if (!oldState) {
         return;
       }
-      const oldColumns = oldState.window[0].columns.map(v => v.id).sort().toString();
-      const newColumns = newState.window[0].columns.map(v => v.id).sort().toString();
-      if (oldColumns !== newColumns) {
-        this.emit('MAIN_COLUMNS_CHANGED', {oldState, newState});
+
+      const oldComponents = {};
+      for (const val of bo.clas.Layout.iterateStacks(oldState.layout)) {
+        if (val.type === 'stack') {
+          for (const component of Object.values(val.ref.content)) {
+            oldComponents[component.id] = component;
+          }
+        }
+      }
+      const newComponents = {};
+      for (const val of bo.clas.Layout.iterateStacks(newState.layout)) {
+        if (val.type === 'stack') {
+          for (const component of Object.values(val.ref.content)) {
+            newComponents[component.id] = component;
+          }
+        }
+      }
+
+      for (const [gadgetId, component] of Object.entries(newComponents)) {
+        const newComponentStr = JSON.stringify(component);
+        const oldComponentStr = JSON.stringify(oldComponents[gadgetId]);
+        if (oldComponentStr !== newComponentStr) {
+          const emitData = {
+            gadgetId,
+          }
+          if (oldComponentStr) emitData.oldState = JSON.parse(oldComponentStr);
+          if (newComponentStr) emitData.newState = JSON.parse(newComponentStr);
+          this.emit('GADGET_STATE_CHANGED', emitData);
+        }
       }
 
     };

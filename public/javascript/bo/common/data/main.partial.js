@@ -7,7 +7,7 @@ import columnLibrary from '../../../columns';
 
 const colLib = flatten(columnLibrary);
 
-export default function mainPartial({data, state, lastData}) {
+export default function mainPartial({data, columns, lastData}) {
 
   let parsedData = JSON.parse(data).data;
   const arrayData = [];
@@ -17,8 +17,8 @@ export default function mainPartial({data, state, lastData}) {
   }
 
   parsedData = arrayData;
-  parsedData = updateCustomColumnData({state, colLib, data: parsedData});
-  parsedData = updateStubbedColumnData({state, colLib, data: parsedData});
+  parsedData = updateCustomColumnData({columns, colLib, data: parsedData});
+  parsedData = updateStubbedColumnData({columns, colLib, data: parsedData});
 
   if (!lastData) {
     return parsedData;

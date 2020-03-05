@@ -43,12 +43,21 @@ NumberFloatingFilter.prototype.init = function (params) {
 
   this.eFilterInput.addEventListener('blur', () => {
     const model = params.api.getFilterModel();
-    bo.inst.state.set('filter', model);
+    const gadgetId = params.api.gridOptionsWrapper.gridOptions.boGadgetId;
+    bo.inst.state.set({gadgetId, handler: state => {
+      const filters = Object.keys(model);
+      const columns = state.columns;
+      for (const column of columns) {
+        if (filters.includes(column.id)) {
+          column.filter = model[column.id];
+        }
+        else {
+          delete column.filter;
+        }
+      }
+      return state;
+    }});
     segment.columnFiltered(model);
-  });
-
-  bo.inst.state.getFilterModel().then(model => {
-    this.eGui.querySelector('input').value = model && model[colId] ? model[colId] : null;
   });
 
 };

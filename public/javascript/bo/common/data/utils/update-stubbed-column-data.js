@@ -2,10 +2,10 @@
 
 // Stub columns with no direct field data (only dependencies)
 // We need to do this or ag-grid wont call the renderer in some instances
-export default function updateCustomColumnData({state, colLib, data}) {
+export default function updateCustomColumnData({columns, colLib, data}) {
 
   const stubs = [];
-  for (const column of state.columns) {
+  for (const column of columns) {
     const colData = colLib[column.id];
     if (!colData) {
       // Custom columns wont show up in colLib data

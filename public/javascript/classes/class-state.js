@@ -36,9 +36,8 @@ export default class State {
   async init() {
 
     const urlConfig = await this.get();
-    const state = await this.set(!!urlConfig ? urlConfig : this.defaultConfig);
-    const filterModel = await this.getFilterModel();
-    return {state, filterModel};
+    const state = await this.set({newState: !!urlConfig ? urlConfig : this.defaultConfig});
+    return {state};
 
   }
 
@@ -102,6 +101,7 @@ export default class State {
    */
   static sanitize(state) {
 
+    return state;
     if (!state) return;
 
     state.window[0] = {
@@ -113,6 +113,60 @@ export default class State {
 
     return state;
 
+  }
+
+  static async getGadgetState(gadgetId) {
+    const state = await bo.inst.state.get();
+    for (const val of bo.clas.Layout.iterateStacks(state.layout)) {
+      if (val.type === 'stack') {
+        for (const [key, value] of Object.entries(val.ref.content)) {
+          if (value.id === gadgetId) {
+            return value;
+          }
+        }
+      }
+    }
+  }
+
+  static async setGadgetState(gadgetId, newGadgetState) {
+    const state = await bo.inst.state.get();
+    for (const val of bo.clas.Layout.iterateStacks(state.layout)) {
+      if (val.type === 'stack') {
+        for (const [key, value] of Object.entries(val.ref.content)) {
+          if (value.id === gadgetId) {
+            for (const key of Object.keys(newGadgetState)) {
+              value[key] = newGadgetState[key];
+            }
+            return state;
+          }
+        }
+      }
+    }
+  }
+
+  static async getStackState(stackId) {
+    const state = await bo.inst.state.get();
+    for (const val of bo.clas.Layout.iterateStacks(state.layout)) {
+      if (val.type === 'stack') {
+        if (Number(val.ref.sid) === Number(stackId)) {
+          return val.ref;
+        }
+      }
+    }
+  }
+
+  static async setStackState(stackId, newStackState) {
+    const state = await bo.inst.state.get();
+    for (const val of bo.clas.Layout.iterateStacks(state.layout)) {
+      if (val.type === 'stack') {
+        if (Number(val.ref.sid) === Number(stackId)) {
+          for (const key of Object.keys(newStackState)) {
+            val.ref[key] = newStackState[key];
+          }
+          return state;
+        }
+      }
+    }
   }
 
   /**
@@ -144,103 +198,93 @@ export default class State {
    * @param {String|Object} data - data to set on target property. Could be any value
    *
    */
-  async set(target, data, action) {
+  async set({gadgetId, stackId, handler, newState}) {
 
-    let state;
-    if (arguments.length === 1) {
-      state = target;
-      target = null;
+    if (gadgetId && handler) {
+      const oldGadgetState = await State.getGadgetState(gadgetId);
+      const newGadgetState = handler(oldGadgetState);
+      newState = await State.setGadgetState(gadgetId, newGadgetState);
     }
-    else {
-      state = await this.get();
+    else if (stackId && handler) {
+      const oldStackState = await State.getStackState(stackId);
+      const newStackState = handler(oldStackState);
+      newState = await State.setStackState(stackId, newStackState);
     }
+    const query = await State.urlEncode(newState);
+    window.location.hash = query;
+    if (bo.inst.gadgets && bo.inst.gadgets.manager) bo.inst.gadgets.manager.load();
 
-    switch (true) {
-      case target === 'layout':
-        state.layout = data;
-        break;
-      case target === 'columns':
-        objectSetNestedProperty(state.window[0], target, data);
-        break;
-      case target === 'sort':
-        objectSetNestedProperty(state.window[0], target, data);
-        break;
-      case target === 'filter':
-        const filters = Object.keys(data);
-        const columns = state.window[0].columns;
-        for (const column of columns) {
-          if (filters.includes(column.id)) {
-            column.filter = data[column.id];
-          }
-          else {
-            delete column.filter;
-          }
-        }
-        objectSetNestedProperty(state.window[0], 'columns', columns);
-        break;
-      case /^stack/.test(target):
-        const sid = +target.split('.')[1];
-        let stack;
-        for (const {ref, type} of bo.clas.Layout.iterateStacks(state.layout)) {
-          if (type === 'stack' && ref.sid === sid) {
-            stack = ref;
-          }
-        }
-        if (action === 'push') {
-          stack.content.push(data);
-        }
-        else if (sid > -1) {
-          debugger
-          // state.window[sid] = data;
-        }
-        break;
-      case target === null:
-        // do nothing
-      default:
-        break;
-    }
+    // let state;
+    // const { gadgetId, property, data, handler } = target;
+    // if (!gadgetId) {
+    //   state = target;
+    //   target = null;
+    // }
+    // else {
+    //   state = State.getGadgetState(gadgetId);
+    // }
+    // debugger;
 
-    const newState = State.sanitize(state);
-    const oldState = await this.get();
+    // if (gadgetId) {
+    //   switch (true) {
+    //     // case target === 'layout':
+    //     //   state.layout = data;
+    //     //   break;
+    //     // case target === 'columns':
+    //     //   objectSetNestedProperty(state.window[0], target, data);
+    //     //   break;
+    //     // case target === 'sort':
+    //     //   objectSetNestedProperty(state.window[0], target, data);
+    //     //   break;
+    //     // case target === 'filter':
+    //     //   const filters = Object.keys(data);
+    //     //   const columns = state.window[0].columns;
+    //     //   for (const column of columns) {
+    //     //     if (filters.includes(column.id)) {
+    //     //       column.filter = data[column.id];
+    //     //     }
+    //     //     else {
+    //     //       delete column.filter;
+    //     //     }
+    //     //   }
+    //     //   objectSetNestedProperty(state.window[0], 'columns', columns);
+    //     //   break;
+    //     // case /^stack/.test(target):
+    //     //   const sid = +target.split('.')[1];
+    //     //   let stack;
+    //     //   for (const {ref, type} of bo.clas.Layout.iterateStacks(state.layout)) {
+    //     //     if (type === 'stack' && ref.sid === sid) {
+    //     //       stack = ref;
+    //     //     }
+    //     //   }
+    //     //   if (action === 'push') {
+    //     //     stack.content.push(data);
+    //     //   }
+    //     //   else if (sid > -1) {
+    //     //     debugger
+    //     //     // state.window[sid] = data;
+    //     //   }
+    //     //   break;
+    //     // case target === null:
+    //     //   // do nothing
+    //     // default:
+    //     //   break;
+    //   }
+    // }
 
-    if (!oldState || !objectsAreEqual(newState, oldState, true)) {
-      const obj = newState;
-      const query = await State.urlEncode(obj);
-      window.location.hash = query;
-      if (bo.inst.gadgets && bo.inst.gadgets.manager) bo.inst.gadgets.manager.load();
-      // history.pushState(obj, '/// Binary Overdose', `#${query}`);
-      // gtag('config', 'UA-640029-16', {
-      //   'page_path': location.pathname + location.search  + location.hash
-      // });
-      // await this.update(newState);
-    }
+    // if (!oldState || !objectsAreEqual(newState, oldState, true)) {
+    //   const obj = newState;
+    //   const query = await State.urlEncode(obj);
+    //   window.location.hash = query;
+    //   if (bo.inst.gadgets && bo.inst.gadgets.manager) bo.inst.gadgets.manager.load();
+    //   // history.pushState(obj, '/// Binary Overdose', `#${query}`);
+    //   // gtag('config', 'UA-640029-16', {
+    //   //   'page_path': location.pathname + location.search  + location.hash
+    //   // });
+    //   // await this.update(newState);
+    // }
 
     return newState;
-
-  }
-
-  /**
-   *
-   * Get URL Filter State
-   *
-   */
-  async getFilterModel() {
-
-    const state = await this.get();
-
-    if (!state) {
-      return null;
-    }
-
-    let model = state.window[0].columns
-        .reduce((a, v) => {
-          if (v.filter) a[v.id] = v.filter;
-          return a;
-        }, {});
-
-    model = isEmptyObject(model) ? null : model;
-
-    return model;
 
   }
 
@@ -277,6 +321,7 @@ export default class State {
    */
   async update(newState) {
 
+      debugger;
     if (!bo.agOptions) return;
 
     if (!newState) {
@@ -327,8 +372,8 @@ export default class State {
     }
 
     // Update AG Grid filters
-    const filterModel = await bo.inst.state.getFilterModel();
-    bo.agOptions.api.setFilterModel(filterModel);
+    // const filterModel = await bo.inst.state.getFilterModel();
+    // bo.agOptions.api.setFilterModel(filterModel);
 
     // If columns have changed emit a socket event with the new column state
     if (columnsUpdated && bo.inst.socket) {

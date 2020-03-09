@@ -31,20 +31,49 @@ export default class Main extends Gadget {
       this.updateData();
     });
 
-    bo.inst.events.on('GADGET_STATE_CHANGED', ({gadgetId, oldState, newState}) => {
+    bo.inst.events.on('GADGET_STATE_CHANGED', ({gadgetId, newState:urlState}) => {
       if (gadgetId === componentState.id) {
-        const oldCols = oldState.columns;
-        const newCols = newState.columns;
-        const sort = newState.sort;
-        const newColFields = Main.columnsChanged(oldCols, newCols);
-        if (newColFields) {
-          const columns = newColFields
+        const api = this.grid.agGrid.gridOptions.api;
+        const { columnController, sortController } = api;
+
+        const urlSort = [urlState.sort];
+        const urlCols = urlState.columns.map(x => {
+          return {colId: x.id, width: x.width}
+        });
+        const urlFilters = urlState.columns.reduce((acc, val) => {
+          if (val.hasOwnProperty('filter')) {
+            acc[val.id] = val.filter;
+          }
+          return acc;
+        }, {});
+
+        const gridSort = sortController.getSortModel();
+        const gridCols = columnController.columnDefs.map(x => {
+          return {colId: x.colId, width: x.width}
+        });
+        const gridFilters = api.getFilterModel();
+
+        const colsChanged = !objectsAreEqual(gridCols, urlCols, true);
+        const sortChanged = !objectsAreEqual(gridSort, urlSort, true);
+        const filterChanged = !objectsAreEqual(gridFilters, urlFilters, true);
+
+        if (colsChanged) {
+          const urlColFields = Main.columnsChanged(gridCols, urlCols);
+          const columns = urlColFields
             .filter(v => !/^c-\d{1,4}$/.test(v)) // filter out custom columns
             .join();
-          const emitData = JSON.stringify({columns, sort});
+          const emitData = JSON.stringify({columns, sort: urlSort});
           bo.inst.socket.emit('cols', emitData);
+          this.grid.setColumnDefs(urlState.columns, urlState.sort);
         }
-        this.grid.setColumnDefs(newState.columns, newState.sort);
+
+        if (sortChanged) {
+          api.setSortModel(urlSort);
+        }
+
+        if (filterChanged) {
+          api.setFilterModel(urlFilters);
+        }
       }
     });
 
@@ -59,7 +88,7 @@ export default class Main extends Gadget {
    */
   static columnsChanged(oldCols, newCols) {
 
-    let output = false;
+    let output = [];
 
     const oldFields = oldCols.map(x => x.id).sort((a, b) => a.length - b.length);
     const newFields = newCols.map(x => x.id).sort((a, b) => a.length - b.length);

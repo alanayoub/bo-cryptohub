@@ -32,7 +32,7 @@ export default {
                 ],
                 sort: {
                   colId: 'volume24hUSDCC',
-                  direction: 'desc'
+                  sort: 'desc'
                 }
               }
             ]

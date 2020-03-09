@@ -337,33 +337,20 @@ export default function getAgOptions({grid, columnLibrary, state, data, filterMo
     onDragStopped(params) {
 
       const gadgetId = state.id;
-      window.bo.inst.state.set({gadgetId: gadgetId, handler: oldGadgetState => {
+      window.bo.inst.state.set({gadgetId: gadgetId, handler: state => {
 
-        const columns = [];
-
-        // Generate brand new column states
-        const libKeysWhitelist = Object.keys(columnLibrary);
-        const agGridColumnState = params.api.columnController.getColumnState();
-        for (const [idx, field] of Object.entries(agGridColumnState)) {
-           if (libKeysWhitelist.includes(field.colId) || /^c-\d{1,2}$/.test(field.colId)) {
-             const col = {
-               id: field.colId
-             };
-             if (field.width) col.width = field.width;
-             columns.push(col);
-           }
-        }
-
-        // Merge with previous states
-        const libKeysPreviousState = state.columns.map(v => v.id);
-        for (const [key, column] of Object.entries(columns)) {
-          if (libKeysPreviousState.includes(column.id)) {
-            const old = state.columns.filter(v => v.id === column.id)[0];
-            columns[key] = Object.assign({}, old, column);
+        const agColumns = params.api.columnController.getColumnState();
+        const filterModel = params.api.getFilterModel();
+        const columns = agColumns.map(x => {
+          return {
+            id: x.colId,
+            width: x.width,
+            ...filterModel[x.colId] && {filter: filterModel[x.colId]}
           }
-        }
-        oldGadgetState.columns = columns;
-        return oldGadgetState;
+        });
+
+        state.columns = columns;
+        return state;
       }});
 
       segment.columnMoved();
@@ -379,6 +366,10 @@ export default function getAgOptions({grid, columnLibrary, state, data, filterMo
     rowHeight: 32,
     headerHeight: 32,
     floatingFiltersHeight: 32,
+    enableBrowserTooltips: true,
+
+    // The number of rows rendered outside the scrollable viewable area the grid renders. Defaults to 20
+    rowBuffer: 0,
 
     // Set to true to have cells flash after data changes. See Flashing Data Changes.
     enableCellChangeFlash: true,

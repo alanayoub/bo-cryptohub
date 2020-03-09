@@ -1,5 +1,7 @@
 'use strict'
 
+import { diff } from 'deep-object-diff';
+
 // Binary Overdose Projects
 import { objectsAreEqual }                      from '../libs/bo-utils-client';
 import { objectSetNestedProperty }              from '../libs/bo-utils-client';
@@ -210,79 +212,14 @@ export default class State {
       const newStackState = handler(oldStackState);
       newState = await State.setStackState(stackId, newStackState);
     }
+    const oldState = await this.get();
     const query = await State.urlEncode(newState);
-    window.location.hash = query;
-    if (bo.inst.gadgets && bo.inst.gadgets.manager) bo.inst.gadgets.manager.load();
-
-    // let state;
-    // const { gadgetId, property, data, handler } = target;
-    // if (!gadgetId) {
-    //   state = target;
-    //   target = null;
-    // }
-    // else {
-    //   state = State.getGadgetState(gadgetId);
-    // }
-    // debugger;
-
-    // if (gadgetId) {
-    //   switch (true) {
-    //     // case target === 'layout':
-    //     //   state.layout = data;
-    //     //   break;
-    //     // case target === 'columns':
-    //     //   objectSetNestedProperty(state.window[0], target, data);
-    //     //   break;
-    //     // case target === 'sort':
-    //     //   objectSetNestedProperty(state.window[0], target, data);
-    //     //   break;
-    //     // case target === 'filter':
-    //     //   const filters = Object.keys(data);
-    //     //   const columns = state.window[0].columns;
-    //     //   for (const column of columns) {
-    //     //     if (filters.includes(column.id)) {
-    //     //       column.filter = data[column.id];
-    //     //     }
-    //     //     else {
-    //     //       delete column.filter;
-    //     //     }
-    //     //   }
-    //     //   objectSetNestedProperty(state.window[0], 'columns', columns);
-    //     //   break;
-    //     // case /^stack/.test(target):
-    //     //   const sid = +target.split('.')[1];
-    //     //   let stack;
-    //     //   for (const {ref, type} of bo.clas.Layout.iterateStacks(state.layout)) {
-    //     //     if (type === 'stack' && ref.sid === sid) {
-    //     //       stack = ref;
-    //     //     }
-    //     //   }
-    //     //   if (action === 'push') {
-    //     //     stack.content.push(data);
-    //     //   }
-    //     //   else if (sid > -1) {
-    //     //     debugger
-    //     //     // state.window[sid] = data;
-    //     //   }
-    //     //   break;
-    //     // case target === null:
-    //     //   // do nothing
-    //     // default:
-    //     //   break;
-    //   }
-    // }
-
-    // if (!oldState || !objectsAreEqual(newState, oldState, true)) {
-    //   const obj = newState;
-    //   const query = await State.urlEncode(obj);
-    //   window.location.hash = query;
-    //   if (bo.inst.gadgets && bo.inst.gadgets.manager) bo.inst.gadgets.manager.load();
-    //   // history.pushState(obj, '/// Binary Overdose', `#${query}`);
-    //   // gtag('config', 'UA-640029-16', {
-    //   //   'page_path': location.pathname + location.search  + location.hash
-    //   // });
-    //   // await this.update(newState);
-    // }
+    const changes = diff(oldState, newState);
+    console.log(changes);
+    if (Object.keys(changes).length) {
+      window.location.hash = query;
+      if (bo.inst.gadgets && bo.inst.gadgets.manager) bo.inst.gadgets.manager.load();
+    }
 
     return newState;
 
@@ -311,102 +248,5 @@ export default class State {
      return {columns, sort};
 
    }
-
-  /**
-   *
-   * Copy state from url to ag-grid state
-   *
-   * TODO: make sure only stuff that needs updating gets updated
-   *
-   */
-  async update(newState) {
-
-      debugger;
-    if (!bo.agOptions) return;
-
-    if (!newState) {
-      newState = await this.get();
-    }
-
-    // Generate columnDefs
-    const columns = newState.window[0].columns;
-    const columnDefs = generateColumnDefs(newState.window[0]);
-
-    // Set sort order on columnDefs
-    let sortUpdated = false;
-    {
-      const sort = newState.window[0].sort;
-      const sortModel = bo.agOptions.api.getSortModel()[0];
-
-      const changed = !!sortModel && ((sortModel.colId !== sort.column) || (sortModel.sort !== sort.direction));
-
-      if (changed) {
-
-        // Delete old
-        for (const def of columnDefs) {
-          delete def.sort;
-        }
-
-        // Add new
-        const sortCol = sort.column;
-        const sortDir = sort.direction;
-        const col = columnDefs.filter(v => v.colId === sortCol)[0];
-        if (col) {
-          col.sort = sortDir;
-        }
-
-        sortUpdated = true;
-
-      }
-    }
-
-    const agState = this.getAgState();
-    const columnsUpdated = !objectsAreEqual(agState.columns, newState.window[0].columns, true);
-
-    // Update AG Grid columnDefs
-    if (columnsUpdated) {
-      bo.agOptions.api.columnController.setColumnDefs(columnDefs);
-    }
-    else if (sortUpdated) {
-      bo.agOptions.api.setSortModel([{colId: newState.window[0].sort.column, sort: newState.window[0].sort.direction}]);
-    }
-
-    // Update AG Grid filters
-    // const filterModel = await bo.inst.state.getFilterModel();
-    // bo.agOptions.api.setFilterModel(filterModel);
-
-    // If columns have changed emit a socket event with the new column state
-    if (columnsUpdated && bo.inst.socket) {
-      const oldCols = gnp(agState, 'columns') || [];
-      const sort = newState.window[0].sort;
-      const newColFields = State.columnsChanged(oldCols, newState.window[0].columns);
-      if (newColFields) {
-        const columns = newColFields
-          .filter(v => !/^c-\d{1,4}$/.test(v)) // filter out custom columns
-          .join();
-        const emitData = JSON.stringify({columns, sort});
-        bo.inst.socket.emit('cols', emitData);
-      }
-      else {
-        //
-        // Update custom calculations
-        // We currently dont know if they have changed because we cant store
-        // custom properties on the column definitions
-        //
-        // const calcIds = newState.window[0].columns.filter(v => v.calc).map(v => v.id);
-        // const params = {
-        //   force: true,
-        //   columns: calcIds
-        // };
-        // bo.agOptions.api.refreshCells(params);
-      }
-    }
-
-    //
-    // Load / update other panels
-    //
-    bo.inst.gadgets.manager.load();
-
-  }
 
 }

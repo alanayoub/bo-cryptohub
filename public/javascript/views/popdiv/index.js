@@ -95,11 +95,12 @@ export default class popDiv {
         const row = $cell.closest('.ag-row').getAttribute('row-index');
         const type = params.colDef.cellRendererParams.popdiv;
         const id = getRandomInt(100000, 999999);
-        const sid = event.target.dataset.sid;
+        const sid = +event.target.dataset.sid;
         const rowId = params.node.id;
         bo.clas.CellInteractions.close({params, $cell, row, field});
         bo.inst.state.set({stackId: sid, handler: stack => {
-          stack.content.push({id, rowId, colId, type});
+          stack.content.push({id, sid, rowId, colId, type});
+          stack.activeItemIndex = stack.content.length - 1;
           return stack;
         }});
       }

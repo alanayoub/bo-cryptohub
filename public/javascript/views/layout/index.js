@@ -3,12 +3,17 @@ import { getRandomInt } from '../../libs/bo-utils-client';
 
 import style from './index.scss';
 
+//
+// NOTE: Golden-layout makes it very difficult to programatically update the layout.
+// While its the best layout manager out there its really bad. Build your own
+// if you get the time
+//
 export default class Layout {
 
     constructor({container, state, data = []}) {
 
       const config = Layout.#getConfig(state, data);
-      const layout = new GoldenLayout(config, container);
+      const layout = this.layout = new GoldenLayout(config, container);
 
       // We don't use the golden layout component types
       // We have our own system, therefor every component
@@ -20,6 +25,22 @@ export default class Layout {
       Layout.#registerEvents(layout);
 
       layout.init();
+
+      bo.inst.events.on('LAYOUT_STATE_CHANGED', ({newState}) => {
+        const stacksChanged = this.#stacksChanged(newState);
+
+        if (stacksChanged) {
+          this.layout.destroy();
+          this.layout.config = Layout.#getConfig(newState, data);
+          this.layout.init();
+        }
+        else {
+          this.#syncStackDimentions(newState);
+          this.#syncStackActiveTabs(newState);
+          this.#syncStackTabs(newState);
+          bo.inst.gadgets.manager.load();
+        }
+      });
 
       return layout;
 
@@ -125,9 +146,7 @@ export default class Layout {
         bo.inst.gadgets.manager.loadTabGadget(config);
       });
 
-      layout.on('stateChanged', () => {
-        console.log('state changed');
-        if (!bo.agOptions || !bo.agOptions.api) return;
+      layout.on('stateChanged', arg => {
         Layout.#save(layout);
       });
 
@@ -260,6 +279,134 @@ export default class Layout {
         }
       }
 
+    }
+
+    /**
+     *
+     * Check if the number of stacks or stack ids between newState and
+     * instance state have diverged
+     *
+     */
+    #stacksChanged(newState) {
+      const layoutStacks = this.layout.root.getItemsByType('stack').reduce((acc, val) => {
+        acc[val.config.sid] = val;
+        return acc;
+      }, {});
+
+      const urlStacks = {};
+      for (const val of Layout.iterateStacks(newState.layout[0].content)) {
+        if (val.type === 'stack') {
+          urlStacks[val.ref.sid] = val.ref;
+        }
+      }
+
+      const stacksChanged = Object.keys(layoutStacks).join() !== Object.keys(urlStacks).join();
+      return stacksChanged;
+    }
+
+    /**
+     *
+     * Copy properties from the layout provided to the instance layout
+     *
+     */
+    #syncStackDimentions(newState) {
+      const propsToCopy = ['width', 'height'];
+      const layoutStacks = this.layout.root.getItemsByType('stack').reduce((acc, val) => {
+        acc[val.config.sid] = val;
+        return acc;
+      }, {});
+      const stackDimentions = {};
+      for (const val of Layout.iterateStacks(newState.layout)) {
+        if ((val.ref.width || val.ref.height) && (val.ref.type === 'row' || val.ref.type === 'column')) {
+          for (const stack of val.ref.content) {
+            stackDimentions[stack.sid] = {};
+            for (const prop of propsToCopy) {
+              stackDimentions[stack.sid][prop] = stack.hasOwnProperty(prop) ? stack[prop] : val.ref[prop];
+            }
+          }
+        }
+      }
+      for (const [id, stack] of Object.entries(layoutStacks)) {
+        const stackDims = stackDimentions[Number(id)];
+        for (const prop of propsToCopy) {
+          if (stack.parent.config[prop]) {
+            stack.parent.config[prop] = stackDims[prop];
+          }
+          if (stack.config[prop]) {
+            stack.config[prop] = stackDims[prop];
+          }
+        }
+      }
+      bo.inst.layout.updateSize();
+    }
+
+    #syncStackTabs(newState) {
+
+      // Delete components that are no longer in the stack
+      const layoutStacks = bo.inst.layout.root.getItemsByType('stack');
+      for (const {ref, type} of Layout.iterateStacks(newState.layout)) {
+        if (type === 'stack') {
+          const layoutStack = layoutStacks.filter(x => x.config.sid === ref.sid)[0];
+          const layoutStackComponentIds = layoutStack.contentItems.map(x => x.config.id);
+          const stateStackComponentIds = ref.content.map(x => x.id);
+          for (const id of layoutStackComponentIds) {
+            if (!stateStackComponentIds.includes(id)) {
+              const component = bo.inst.layout.root.getItemsById(id)[0];
+              layoutStack.removeChild(component);
+            }
+          }
+        }
+      }
+
+    //  const layoutStacks = this.layout.root.getItemsByType('stack');
+    //  for (const val of Layout.iterateStacks(newState.layout)) {
+    //    if (val.ref.type === 'stack') {
+    //      const stateStack = val.ref;
+    //      const layoutStack = layoutStacks.filter(stack => stack.config.sid === val.ref.sid)[0];
+    //      for (const component of stateStack.content) {
+    //        const newStateComponent = val.ref.content[0];
+    //        const layoutComponent = layoutStack.contentItems[0];
+    //        const newStateComponentStr = JSON.stringify(newStateComponent);
+    //        const layoutComponentStr = JSON.stringify(layoutComponent.config.componentState);
+    //        if (newStateComponentStr === layoutComponentStr) {
+    //            // do nothing
+    //        }
+    //        else {
+    //          // layoutStack.replaceChild(layoutComponent, newStateComponent);
+    //        }
+    //      }
+    //      // const item = layoutStack.contentItems[val.ref.activeItemIndex];
+    //      // item.tab.header.parent.setActiveContentItem(item);
+    //    }
+    //  }
+    //  // check ids
+    //  // check count
+    //  //   add / remove
+    //  // check order
+    //  //   reorder
+    //  //
+    //  //   [01, 02, 04]
+    //  //   [02, 03, 04, 05]
+    //  //
+    //  //   myLayout.selectedItem.addChild(newItemConfig, index)
+    //  //   replaceChild( oldChild, newChild )
+    //  //   removeChild
+    }
+
+    /**
+     *
+     * Set active tab for all stacks based on new state
+     *
+     */
+    #syncStackActiveTabs(newState) {
+      const layoutStacks = this.layout.root.getItemsByType('stack');
+      for (const val of Layout.iterateStacks(newState.layout)) {
+        if (val.ref.type === 'stack') {
+          const layoutStack = layoutStacks.filter(stack => stack.config.sid === val.ref.sid)[0];
+          const item = layoutStack.contentItems[val.ref.activeItemIndex];
+          item.tab.header.parent.setActiveContentItem(item);
+        }
+      }
     }
 
     static #save(layout) {

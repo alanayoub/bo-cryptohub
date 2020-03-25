@@ -168,8 +168,11 @@ export default class Tradingview extends Gadget {
   resize() {
     const e = document.querySelector(`#${this.container_id}`);
     const container = e.closest('[id^=gadget-container-]');
-    e.style.width = `${container.offsetWidth}px`;
-    e.style.height = `${container.offsetHeight}px`;
+    const width = container.offsetWidth;
+    const height = container.offsetHeight;
+    if (!width || !height) return;
+    e.style.width = `${width}px`;
+    e.style.height = `${height}px`;
   }
 
 }

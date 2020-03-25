@@ -1,7 +1,14 @@
 import GoldenLayout from '../../libs/golden-layout/js/goldenlayout.js';
 import { getRandomInt } from '../../libs/bo-utils-client';
+import { objectGetNestedProperty as gnp } from '../../libs/bo-utils-client';
+import { objectFlattenObject as flatten } from '../../libs/bo-utils-client';
+import initPug from '../../generated/init-pug.generated.js';
+import columnLibrary from '../../columns';
+import { waitUntil } from '../../libs/bo-utils-client';
 
 import style from './index.scss';
+
+const colLib = flatten(columnLibrary);
 
 //
 // NOTE: Golden-layout makes it very difficult to programatically update the layout.
@@ -36,9 +43,9 @@ export default class Layout {
         }
         else {
           this.#syncStackDimentions(newState);
-          this.#syncStackActiveTabs(newState);
           this.#syncStackTabs(newState);
-          bo.inst.gadgets.manager.load();
+          this.#syncStackActiveTabs(newState);
+          // bo.inst.gadgets.manager.load();
         }
       });
 
@@ -66,6 +73,23 @@ export default class Layout {
       yield* recurse(config);
     }
 
+    getStackBySid(sid) {
+      const stacks = this.layout.root.getItemsByType('stack');
+      const stack = stacks.filter(x => x.config.sid === sid)[0];
+      return stack;
+    }
+
+    moveGadget(sid, id) {
+      const component = this.layout.root.getItemsById(id)[0];
+      const stack = this.getStackBySid(sid);
+
+      component.remove();
+      component.config.sid = sid;
+      component.config.componentState.sid = sid;
+
+      stack.addChild(component);
+    }
+
     static isActiveGadget(gadgetId, config) {
       for (const val of Layout.iterateStacks(config)) {
         if (val.type === 'stack') {
@@ -91,7 +115,7 @@ export default class Layout {
         settings: {
           hasHeaders: true,
           constrainDragToContainer: true,
-          reorderEnabled: true,
+          reorderEnabled: false, // Turn off tab drag / drop so we can implement our own
           selectionEnabled: false,
           popoutWholeStack: false,
           blockedPopoutsThrowError: true,
@@ -141,12 +165,50 @@ export default class Layout {
       });
 
       layout.on('tabCreated', tab => {
-        tab.contentItem.element[0].setAttribute('data-id', tab.contentItem.config.id);
+        tab.element[0].setAttribute('data-id', tab.contentItem.config.id);
         const config = tab.contentItem.config;
         bo.inst.gadgets.manager.loadTabGadget(config);
+
+        waitUntil(
+          () => {
+            return document.body.contains(tab.element[0]);
+          },
+          () => {
+            const draggable = $(tab.element[0]).draggable({
+              helper: function (event, ui) {
+                const id = +event.target.closest('.lm_tab').dataset.id;
+                const config = bo.inst.layout.root.getItemsById(id)[0].config;
+                const data = bo.inst.data.last.main.filter(x => x.id === config.rowId)[0];
+                const name = gnp(data, 'cc-total-vol-full-FullName.value');
+                const field = colLib[config.componentState.colId].field;
+                const title = `${name} ${field}`;
+                const rowId = config.componentState.rowId;
+                const colId = config.componentState.colId;
+                const context = {title, id, rowId, colId};
+                const html = initPug['CH-tippy-drag-helper'](context);
+                return html;
+              },
+              zIndex: 10000,
+              cursor: 'move',
+              revert: 'invalid',
+              scroll: false,
+              distance: 20,
+              cursorAt: {top: 25, left: 10},
+              iframeFix: true,
+              appendTo: 'body',
+              revertDuration: 500,
+            });
+            draggable.on('dragstart', (event, ui) => {
+              ui.helper[0].style.transform = 'none';
+              ui.helper[0].style.top = ui.originalPosition.top;
+              ui.helper[0].style.left = ui.originalPosition.left;
+            });
+          },
+          100);
+
       });
 
-      layout.on('stateChanged', arg => {
+      layout.on('stateChanged', async arg => {
         Layout.#save(layout);
       });
 
@@ -167,7 +229,6 @@ export default class Layout {
             componentState: {id, type: 'default'},
             title: 'Default',
           });
-          debugger;
           const sid = stack.config.sid;
           bo.inst.state.set({stackId: sid, handler: oldStack => {
             oldStack.content.push({id, type: 'default'});
@@ -178,14 +239,74 @@ export default class Layout {
       });
 
       layout.on('newTab', event => {});
+
+      layout.on('stackCreated', stack => {
+
+        if (this.$droppable) {
+          this.$droppable.droppable('destroy');
+        }
+        this.$droppable = $('.lm_stack:not([data-sid="0"])').droppable({
+          drop: async (event, ui) => {
+
+            // from cell to stack
+            let { rowid:rowId, colid:colId, id } = ui.helper[0].dataset
+            const colDef = colLib[colId];
+            const type = colDef.cellRendererParams.popdiv;
+            if (id) id = +id;
+
+            if (!id) {
+              // from cell to stack
+              const field = colDef.field;
+              const $cell = ui.draggable[0]._tippy.reference;
+              const row = $cell.closest('.ag-row').getAttribute('row-index');
+              const id = getRandomInt(100000, 999999);
+              const sid = +event.target.dataset.sid;
+              bo.clas.CellInteractions.close({$cell, row, field});
+              bo.inst.state.set({stackId: sid, handler: stack => {
+                stack.content.push({id, sid, rowId, colId, type});
+                stack.activeItemIndex = stack.content.length - 1;
+                return stack;
+              }});
+            }
+            else {
+              // from stack to stack
+              const config = bo.inst.layout.root.getItemsById(id)[0].config;
+              const fromSid = config.sid;
+              const toSid = +event.target.dataset.sid;
+              bo.inst.state.set({handler: state => {
+                for (const val of Layout.iterateStacks(state.layout)) {
+                  if (val.type === 'stack') {
+                    const stack = val.ref;
+                    if (stack.sid === fromSid) {
+                      // remove from stack
+                      const idx = stack.content.findIndex(x => x.id === id);
+                      stack.content.splice(idx, 1);
+                      if (stack.activeItemIndex > stack.content.length - 1) {
+                        stack.activeItemIndex = stack.content.length - 1;
+                      }
+                    }
+                    if (stack.sid === toSid) {
+                      // add to stack
+                      stack.content.push({id, sid: toSid, rowId, colId, type});
+                      stack.activeItemIndex = stack.content.length - 1;
+                    }
+                  }
+                }
+                return state;
+              }});
+            }
+
+          }
+        });
+      });
+
+      layout.on('columnCreated', column => {});
+      layout.on('itemDestroyed', item => {});
+      layout.on('selectionChanged', selection => {});
       layout.on('rowCreated', row => {});
       layout.on('urlChanged', event => {});
       layout.on('itemCreated', item => {});
       layout.on('initialised', something => {});
-      layout.on('stackCreated', stack => {});
-      layout.on('columnCreated', column => {});
-      layout.on('itemDestroyed', item => {});
-      layout.on('selectionChanged', selection => {});
 
       $(window).on('resize', event => {
         layout.updateSize();
@@ -230,7 +351,7 @@ export default class Layout {
       return config;
     }
 
-    static #decompress(content, data) {
+    static #getTypeMap() {
       const typeMap = {
         html: 'Data',
         treemap: 'Treemap',
@@ -239,6 +360,11 @@ export default class Layout {
         exchanges: 'Exchanges',
         tradingview: 'Chart'
       }
+      return typeMap;
+    }
+
+    static #decompress(content, data) {
+      const typeMap = Layout.#getTypeMap();
       for (const val of Layout.iterateStacks(content)) {
         if (val.type === 'stack') {
 
@@ -340,13 +466,32 @@ export default class Layout {
       bo.inst.layout.updateSize();
     }
 
-    #syncStackTabs(newState) {
+    getTitle(component) {
+      let data;
+      let title;
+      const { colId, rowId, type } = component;
+      if (rowId) {
+        data = bo.inst.data.last.main.find(x => x.id === rowId);
+      }
+      if (data) {
+        const name = data['cc-total-vol-full-FullName'].value;
+        const typeMap = Layout.#getTypeMap();
+        const typeName = typeMap[type];
+        title = `${name} ${typeName}`;
+      }
+      else if (type === 'default') {
+        title = 'Default';
+      }
+      else if (type === 'treemap') {
+        title = 'Treemap';
+      }
+      return title;
+    }
 
-      // Delete components that are no longer in the stack
-      const layoutStacks = bo.inst.layout.root.getItemsByType('stack');
+    #syncStacksDelete(newState) {
       for (const {ref, type} of Layout.iterateStacks(newState.layout)) {
         if (type === 'stack') {
-          const layoutStack = layoutStacks.filter(x => x.config.sid === ref.sid)[0];
+          const layoutStack = this.getStackBySid(ref.sid);
           const layoutStackComponentIds = layoutStack.contentItems.map(x => x.config.id);
           const stateStackComponentIds = ref.content.map(x => x.id);
           for (const id of layoutStackComponentIds) {
@@ -357,40 +502,89 @@ export default class Layout {
           }
         }
       }
+    }
 
-    //  const layoutStacks = this.layout.root.getItemsByType('stack');
-    //  for (const val of Layout.iterateStacks(newState.layout)) {
-    //    if (val.ref.type === 'stack') {
-    //      const stateStack = val.ref;
-    //      const layoutStack = layoutStacks.filter(stack => stack.config.sid === val.ref.sid)[0];
-    //      for (const component of stateStack.content) {
-    //        const newStateComponent = val.ref.content[0];
-    //        const layoutComponent = layoutStack.contentItems[0];
-    //        const newStateComponentStr = JSON.stringify(newStateComponent);
-    //        const layoutComponentStr = JSON.stringify(layoutComponent.config.componentState);
-    //        if (newStateComponentStr === layoutComponentStr) {
-    //            // do nothing
-    //        }
-    //        else {
-    //          // layoutStack.replaceChild(layoutComponent, newStateComponent);
-    //        }
-    //      }
-    //      // const item = layoutStack.contentItems[val.ref.activeItemIndex];
-    //      // item.tab.header.parent.setActiveContentItem(item);
-    //    }
-    //  }
-    //  // check ids
-    //  // check count
-    //  //   add / remove
-    //  // check order
-    //  //   reorder
-    //  //
-    //  //   [01, 02, 04]
-    //  //   [02, 03, 04, 05]
-    //  //
-    //  //   myLayout.selectedItem.addChild(newItemConfig, index)
-    //  //   replaceChild( oldChild, newChild )
-    //  //   removeChild
+    #syncStacksAdd(newState) {
+      for (const {ref, type} of Layout.iterateStacks(newState.layout)) {
+        if (type === 'stack') {
+          const layoutStack = this.getStackBySid(ref.sid);
+          const layoutStackComponentIds = layoutStack.contentItems.map(x => x.config.id);
+          const stateStackComponentIds = ref.content.map(x => x.id);
+          for (const id of stateStackComponentIds) {
+            if (!layoutStackComponentIds.includes(id)) {
+              const config = ref.content.filter(x => x.id === id)[0];
+              const title = this.getTitle({rowId: config.rowId, colId: config.colId, type: config.type});
+              const newItem = {
+                title,
+                id: config.id,
+                sid: config.sid,
+                type: 'component',
+                componentName: 'commonComponent',
+                componentState: {
+                  ...config
+                }
+              }
+              layoutStack.addChild(newItem);
+            }
+          }
+        }
+      }
+    }
+
+    #syncStacksMove(newState) {
+      for (const {ref, type} of Layout.iterateStacks(newState.layout)) {
+        if (type === 'stack') {
+          const layoutStack = this.getStackBySid(ref.sid);
+          const layoutStackComponentIds = layoutStack.contentItems.map(x => x.config.id);
+          const stateStackComponentIds = ref.content.map(x => x.id);
+          for (const component of ref.content) {
+            const { id, sid } = component;
+            const title = this.getTitle(component);
+            const gadget = bo.inst.gadgets.manager.gadgets[id];
+
+            if (bo.inst.gadgets.manager.gadgetHasMoved(gadget, sid)) {
+              this.moveGadget(sid, id);
+            }
+
+            if (bo.inst.gadgets.manager.gadgetIsAlive(gadget)) {
+              continue;
+            }
+
+            const stack = this.getStackBySid(sid);
+            if (!stack) {
+              continue
+            }
+
+            const newComponent = {
+              id,
+              sid,
+              title,
+              type: 'component',
+              componentName: 'commonComponent',
+              componentState: {
+                ...config
+                // id,
+                // sid,
+                // type,
+                // ...colId && {colId},
+                // ...rowId && {rowId}
+              }
+            }
+            stack.addChild(newComponent);
+          }
+        }
+      }
+    }
+
+    #syncStackTabs(newState) {
+      const layoutStacks = bo.inst.layout.root.getItemsByType('stack');
+      const layoutStackMap = layoutStacks.reduce((acc, val) => {
+        acc[val.config.sid] = val;
+        return acc;
+      }, {});
+      this.#syncStacksDelete(newState);
+      this.#syncStacksAdd(newState);
+      this.#syncStacksMove(newState);
     }
 
     /**

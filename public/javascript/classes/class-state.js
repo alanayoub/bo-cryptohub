@@ -200,8 +200,9 @@ export default class State {
    * @param {String|Object} data - data to set on target property. Could be any value
    *
    */
-  async set({gadgetId, stackId, handler, newState}) {
+  async set({gadgetId, stackId, handler, newState, suppressUpdate}) {
 
+    const oldState = await this.get();
     if (gadgetId && handler) {
       const oldGadgetState = await State.getGadgetState(gadgetId);
       const newGadgetState = handler(oldGadgetState);
@@ -212,13 +213,26 @@ export default class State {
       const newStackState = handler(oldStackState);
       newState = await State.setStackState(stackId, newStackState);
     }
-    const oldState = await this.get();
+    else if (handler) {
+      newState = handler(JSON.parse(JSON.stringify(oldState)));
+    }
     const query = await State.urlEncode(newState);
     const changes = diff(oldState, newState);
-    console.log(changes);
     if (Object.keys(changes).length) {
-      window.location.hash = query;
-      if (bo.inst.gadgets && bo.inst.gadgets.manager) bo.inst.gadgets.manager.load();
+      const hash = `#${query}`;
+      const oldURL = window.location.href;
+      const newURL = `${window.origin}/${hash}`;
+      if (!suppressUpdate && !bo.flag.popstate) {
+        if (oldURL !== newURL) {
+          history.pushState({oldURL, newURL}, 'BinaryOverdose', newURL);
+          if (bo.inst.gadgets && bo.inst.gadgets.manager) {
+            bo.inst.events.handleChange(oldURL, newURL);
+          }
+        }
+      }
+      if (bo.flag.popstate) {
+        bo.flag.popstate = false;
+      }
     }
 
     return newState;

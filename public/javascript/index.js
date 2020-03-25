@@ -79,6 +79,7 @@ $('body').on('click', '.ch-logo a', event => {
 });
 
 new CookieBarView();
+bo.flag = {};
 bo.inst.data = new Data();
 bo.inst.events = new Events();
 
@@ -141,16 +142,16 @@ window.bo.inst.state.init().then(({state, filterModel}) => {
     }
   );
 
-  window.onpopstate = event => {
-    if (event.state) {
-      // window.bo.inst.state.update(event.state);
-    }
-    else if (window.location.hash) {
-      // window.bo.inst.state.update();
-    }
-    else {
-      window.history.back();
-    }
-  }
+  // window.onpopstate = event => {
+  //   if (event.state) {
+  //     // window.bo.inst.state.update(event.state);
+  //   }
+  //   else if (window.location.hash) {
+  //     // window.bo.inst.state.update();
+  //   }
+  //   else {
+  //     window.history.back();
+  //   }
+  // }
 
 });

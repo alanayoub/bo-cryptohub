@@ -37,7 +37,21 @@ export default class gadgetsManager {
     }
   }
 
+  gadgetIsAlive(gadget) {
+    let alive;
+    if (gadget && typeof gadget.alive === 'function' && gadget.alive()) {
+      alive = true;
+    }
+    return alive;
+  }
+
+  gadgetHasMoved(gadget, sid) {
+    return gadget && gadget.componentState.sid !== sid;
+  }
+
+
   async load() {
+    debugger;
     const state = await bo.inst.state.get();
     const typeMap = {
       html: 'Data',
@@ -47,18 +61,24 @@ export default class gadgetsManager {
       exchanges: 'Exchanges',
       tradingview: 'Chart'
     }
+    // loop over stacks
     for (const {ref, type} of bo.clas.Layout.iterateStacks(state.layout)) {
       if (type === 'stack') {
         const stack = ref;
         const sid = +stack.sid;
         const arr = stack.content;
 
+        // loop over components
         for (const value of arr) {
           let alive;
           if (value.id) {
-            const gadget = bo.inst.gadgets.manager.gadgets[value.id];
+            const gadget = this.gadgets[value.id];
             if (gadget && typeof gadget.alive === 'function' && gadget.alive()) {
               alive = true;
+            }
+            const gadgetMoved = gadget && gadget.componentState.sid !== value.sid;
+            if (gadgetMoved) {
+              bo.inst.layout.moveGadget(value.sid, value.id);
             }
           }
           if (alive) continue;

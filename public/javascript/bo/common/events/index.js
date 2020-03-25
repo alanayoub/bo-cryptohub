@@ -7,39 +7,43 @@ export default class Events extends EventEmitter {
   constructor() {
     super();
 
-    window.onhashchange = async event => {
-      this.emit('hashchange', event);
-
-      const { oldURL, newURL } = event;
-      const oldState = await Events.getState(oldURL);
-      const newState = await Events.getState(newURL);
-      if (!oldState) {
-        return;
-      }
-
-      if (newState.silent) {
-        delete newState.silent;
-        const newUrlHash = await bo.clas.State.urlEncode(newState);
-        history.replaceState(newState, '', window.location.origin + '#' + newUrlHash);
-        return;
-      }
-
-      let changed, emitData;
-
-      ({ changed, emitData } = this.checkGadgetStateChange(oldState, newState));
-      if (changed && emitData) {
-        this.emit('GADGET_STATE_CHANGED', emitData);
-      }
-
-      ({ changed, emitData } = this.checkLayoutStateChange(oldState, newState));
-      if (changed && emitData) {
-        this.emit('LAYOUT_STATE_CHANGED', emitData);
-      }
-
+    window.onpopstate = async event => {
+      bo.flag.popstate = true;
+      this.emit('hashchange', event.state);
+      const { oldURL, newURL } = event.state;
+      this.handleChange(oldURL, newURL);
     };
 
   }
 
+  async handleChange(oldURL, newURL) {
+
+    const oldState = await Events.getState(oldURL);
+    const newState = await Events.getState(newURL);
+    if (!oldState) {
+      return;
+    }
+
+    if (newState.silent) {
+      delete newState.silent;
+      const newUrlHash = await bo.clas.State.urlEncode(newState);
+      history.replaceState(newState, '', window.location.origin + '#' + newUrlHash);
+      return;
+    }
+
+    let changed, emitData;
+
+    ({ changed, emitData } = this.checkGadgetStateChange(oldState, newState));
+    if (changed && emitData) {
+      this.emit('GADGET_STATE_CHANGED', emitData);
+    }
+
+    ({ changed, emitData } = this.checkLayoutStateChange(oldState, newState));
+    if (changed && emitData) {
+      this.emit('LAYOUT_STATE_CHANGED', emitData);
+    }
+
+  }
 
   checkGadgetStateChange(oldState, newState) {
     const oldComponents = {};

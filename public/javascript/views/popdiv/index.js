@@ -68,7 +68,9 @@ export default class popDiv {
         const name = gnp(params, 'data.cc-total-vol-full-FullName.value');
         const field = params.colDef.field;
         const title = `${name} ${field}`;
-        const context = {title};
+        const rowId = params.data.id;
+        const colId = params.colDef.colId;
+        const context = {title, rowId, colId};
         const html = initPug['CH-tippy-drag-helper'](context);
         return html;
       },
@@ -86,24 +88,6 @@ export default class popDiv {
       ui.helper[0].style.transform = 'none';
       ui.helper[0].style.top = ui.originalPosition.top;
       ui.helper[0].style.left = ui.originalPosition.left;
-    });
-    $('.lm_stack:not([data-sid="0"])').droppable({
-      drop: (event, ui) => {
-        const field = params.colDef.field;
-        const colId = params.column.colDef.colId;
-        const $cell = ui.draggable[0]._tippy.reference;
-        const row = $cell.closest('.ag-row').getAttribute('row-index');
-        const type = params.colDef.cellRendererParams.popdiv;
-        const id = getRandomInt(100000, 999999);
-        const sid = +event.target.dataset.sid;
-        const rowId = params.node.id;
-        bo.clas.CellInteractions.close({params, $cell, row, field});
-        bo.inst.state.set({stackId: sid, handler: stack => {
-          stack.content.push({id, sid, rowId, colId, type});
-          stack.activeItemIndex = stack.content.length - 1;
-          return stack;
-        }});
-      }
     });
 
   }

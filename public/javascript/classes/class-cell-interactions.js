@@ -149,7 +149,7 @@ export default class CellInteractions {
    *
    */
   static close({params, $cell, row, field}) {
-    const popdivType = gnp(params, 'colDef.cellRendererParams.popdiv');
+    // const popdivType = gnp(params, 'colDef.cellRendererParams.popdiv');
     if (!$cell) {
       $cell = params.event.srcElement.closest('.ag-cell');
     }
@@ -164,14 +164,14 @@ export default class CellInteractions {
       $cell.$triggerTippy.reference.classList.remove('CH-cell-hover');
       $cell.$triggerTippy.destroy();
     }
-    window.bo.func.openCells.removeOpen({params, $cell, row, field});
-    const data = {
-      popdivType,
-      name: params.data['cryptohub-name'],
-      rowId: params.id,
-      columnId: params.colDef.colId,
-    }
-    segment.cellSelected(data);
+    window.bo.func.openCells.removeOpen({$cell, row, field});
+    // const data = {
+    //   popdivType,
+    //   name: params.data['cryptohub-name'],
+    //   rowId: params.id,
+    //   columnId: params.colDef.colId,
+    // }
+    // segment.cellSelected(data);
   }
 
   /**

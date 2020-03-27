@@ -13,7 +13,7 @@ import { objectIsEmptyObject as isEmptyObject } from '../libs/bo-utils-client';
  */
 export default function cellRendererExchanges(params) {
 
-  if (isEmptyObject(ch.exchanges)) {
+  if (isEmptyObject(bo.inst.data.last.exchanges)) {
     return ch.emptyCellValue;
   }
 
@@ -27,7 +27,7 @@ export default function cellRendererExchanges(params) {
   let output = new Set();
   let max = 3;
   for (const id of exchangeIds) {
-    output.add(ch.exchanges[id]['cc-Name']);
+    output.add(bo.inst.data.last.exchanges[id]['cc-Name']);
     if (output.size === max) {
       break;
     }

@@ -23,7 +23,7 @@ function agGridOptions(walletIds) {
   // Row Data
   const rowData = [];
   for (const id of walletIds) {
-    rowData.push(ch.wallets[id]);
+    rowData.push(bo.inst.data.last.wallets[id]);
   }
 
   // Column Defs

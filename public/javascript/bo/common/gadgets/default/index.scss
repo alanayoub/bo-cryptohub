@@ -1,0 +1,108 @@
+.CH-default-gadget {
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #555;
+
+  .bo-header {
+    margin: 10px 0;
+    font-size: 16px;
+  }
+
+  .bo-gadgets {
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 50%;
+    left: 0;
+    border-bottom: 1px solid #666;
+
+    .bo-container {
+      position: absolute;
+      height: 164px;
+      top: 50%;
+      margin-top: -82px;
+      width: 100%;
+    }
+    .bo-row {
+      flex-direction: row;
+      flex-wrap: wrap;
+      grid-template-columns: min-content min-content 100px min-content;
+      display: grid;
+      text-align: left;
+      width: 370px;
+      margin: 0 auto;
+    }
+    .bo-col {
+      flex: 1;
+      margin: 0 5px 5px 5px;
+      padding: 2px;
+      line-height: 21px;
+    }
+    button {
+      background: #333;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 2px 10px;
+      cursor: pointer;
+      &:hover {
+        background: #eaf80c;
+        color: #333;
+      }
+    }
+    input {
+      background: #444;
+      border: none;
+      border-top: 1px solid #222;
+      color: #fff;
+      height: 21px;
+      padding-left: 2px;
+      outline: none;
+    }
+  }
+
+  .bo-split {
+
+    position: absolute;
+    top: 50%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    color: #fff;
+
+    .bo-container {
+      position: absolute;
+      height: 80px;
+      top: 50%;
+      margin-top: -40px;
+      width: 100%;
+    }
+    .bo-split-h,
+    .bo-split-v {
+      display: inline-block;
+      background: #333;
+      width: auto;
+      border: 1px solid #444;
+      padding-right: 10px;
+      color: #fff;
+      cursor: pointer;
+      &:hover {
+        background: #eaf80c;
+        color: #333;
+      }
+    }
+
+    .fa-arrows-alt-h,
+    .fa-arrows-alt-v {
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+    }
+
+  }
+
+}

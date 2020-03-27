@@ -1,0 +1,17 @@
+.BO-search-dropdown {
+  .bo-dropdown {
+    display: none;
+    z-index: 1;
+    position: absolute;
+    min-width: 200px;
+    background: #fff;
+    color: #000;
+    overflow: auto;
+    li {
+      cursor: default;
+      &:hover {
+        background: #f1ff00;
+      }
+    }
+  }
+}

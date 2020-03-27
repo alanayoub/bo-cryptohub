@@ -49,7 +49,6 @@ export default class gadgetsManager {
     return gadget && gadget.componentState.sid !== sid;
   }
 
-
   async load() {
     debugger;
     const state = await bo.inst.state.get();

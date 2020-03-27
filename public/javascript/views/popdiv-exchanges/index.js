@@ -30,7 +30,7 @@ function agGridOptions(data) {
   ]));
 
   for (const id of exchangeIds) {
-    rowData.push(ch.exchanges[id]);
+    rowData.push(bo.inst.data.last.exchanges[id]);
   }
 
   // Column Defs

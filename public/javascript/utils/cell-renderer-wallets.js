@@ -18,10 +18,10 @@ export default function cellRendererWallets(params) {
   }
   let output = [];
   let max = 3;
-  if (ch.walletMapIdName) {
+  if (bo.inst.data.last.walletMapIdName) {
     for (let i = 0; i < max; i++) {
       if (value[i]) {
-        output[i] = ch.walletMapIdName[value[i]];
+        output[i] = bo.inst.data.last.walletMapIdName[value[i]];
       }
     }
   }

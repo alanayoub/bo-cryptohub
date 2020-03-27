@@ -20,7 +20,6 @@ export default class TreeMap extends Gadget {
     this.model = this.buildModel(bo.inst.data.last.main);
     bo.inst.data.on('main', data => {
       this.model = this.buildModel(data.data);
-      // this.render();
     });
     this.render();
     return this;

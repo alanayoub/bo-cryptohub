@@ -4,6 +4,10 @@ import EventEmitter from 'events';
 
 import mainFull from './main.full';
 import mainPartial from './main.partial';
+import exchangeMapIdName from './exchange.map.id.name';
+import projectMapIdName from './project.map.id.name';
+import exchanges from './exchanges';
+import wallets from './wallets';
 
 export default class Data extends EventEmitter {
 
@@ -93,42 +97,34 @@ export default class Data extends EventEmitter {
     });
 
     socket.on('store', data =>  {
-      function flipMap(map) {
-        const out = {};
-        for(const key in map) {
-          out[map[key]] = key;
-        }
-        return out;
-      }
-      window.bo.func.updated('now');
 
-      let newSocketData = JSON.parse(data);
-      const type = newSocketData.type;
-      newSocketData = newSocketData.data;
+      data = JSON.parse(data);
 
-      if (type === 'maps') {
-        for (const item of newSocketData) {
-          window.ch[item._id] = item.map;
+      if (data.type === 'maps') {
+        for (const item of data.data) {
           if (item._id === 'exchangeMapIdName') {
-            window.ch['exchangeMapNameId'] = flipMap(item.map);
+            const parsed = exchangeMapIdName({data: item.map, lastData: this.last.exchangeMapIdName});
+            this.last.exchangeMapIdName = parsed;
+            this.emit('exchangeMapIdName', {partial: false, data: parsed});
           }
           if (item._id === 'projectMapIdName') {
-            window.ch['projectMapNameId'] = flipMap(item.map);
+            const parsed = projectMapIdName({data: item.map, lastData: this.last.projectMapIdName});
+            this.last.projectMapIdName = parsed;
+            this.emit('projectMapIdName', {partial: false, data: parsed});
           }
         }
       }
-      else if (type === 'exchanges') {
-        window.ch.exchanges = newSocketData;
+      else if (data.type === 'exchanges') {
+        const parsed = exchanges({data: data.data, lastData: this.last.exchanges});
+        this.last.exchanges = parsed;
+        this.emit('exchanges', {partial: false, data: parsed});
       }
-      else if (type === 'wallets') {
-        window.ch.wallets = newSocketData;
+      else if (data.type === 'wallets') {
+        const parsed = wallets({data: data.data, lastData: this.last.wallets});
+        this.last.wallets = parsed;
+        this.emit('wallets', {partial: false, data: parsed});
       }
-      if (!window.initStore) window.initStore = window.ch;
     });
-
-    // this.emit('cols', {full: true, data: {}});
-    // this.emit('main', {full: true, data: {}});
-    // this.emit('main', {partial: true, data: {}});
 
   }
 

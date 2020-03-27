@@ -1,2 +1,53 @@
-div(class='CH-default-gadget')
-  span Default Gadget
+div(id=containerId class='CH-gadget-container CH-default-gadget')
+
+  div(class='bo-gadgets')
+    div(class='bo-container')
+      div(class='bo-header') Load Gadgets
+      div(class='bo-portfolios bo-row')
+        div(class='bo-col')
+          i(class='fas fa-chart-pie')
+        div(class='bo-col')
+          input(type='text' placeholder='New')
+        div(class='bo-col')
+          | Portfolio
+        div(class='bo-col')
+          button Load
+
+      div(class='bo-tradingview bo-row')
+        div(class='bo-col')
+          i(class='fas fa-chart-line')
+        div(class='bo-col')
+          input(type='text' placeholder='BTCUSD')
+        div(class='bo-col')
+          | Chart
+        div(class='bo-col')
+          button Load
+
+      div(class='bo-exchanges bo-row')
+        div(class='bo-col')
+          i(class='fas fa-exchange-alt')
+        div(class='bo-col js-exchanges')
+        div(class='bo-col')
+          | Exchanges
+        div(class='bo-col')
+          button Load
+
+      div(class='bo-wallets bo-row')
+        div(class='bo-col')
+          i(class='fas fa-wallet')
+        div(class='bo-col js-wallets')
+        div(class='bo-col')
+          | Wallets
+        div(class='bo-col')
+          button Load
+
+  div(class='bo-split')
+    div(class='bo-container')
+      div(class='bo-header') Split Pane
+      div(class='bo-split-h')
+        i(class='fas fa-arrows-alt-h')
+        | H Split
+      div(class='bo-split-v')
+        i(class='fas fa-arrows-alt-v')
+        | V Split
+

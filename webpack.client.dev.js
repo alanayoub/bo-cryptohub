@@ -1,5 +1,3 @@
-'use strict';
-
 const merge  = require('webpack-merge');
 const common = require('./webpack.client.common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -21,6 +19,6 @@ module.exports = merge(common, {
     ]
   },
 
-  devtool: 'inline-source-map',
+  devtool: 'cheap-module-eval-source-map',
 
 });

@@ -22,6 +22,7 @@ module.exports = {
   },
 
   output: {
+    pathinfo: true,
     path: path.join(__dirname, './dist/public'),
     filename: 'javascript/[name].[chunkhash:8].js',
     chunkFilename: 'javascript/[name].[chunkhash:8].chunk.js'
@@ -35,6 +36,10 @@ module.exports = {
 
   // The target: 'node' option tells webpack not to touch any built-in modules like fs or path
   target: 'web',
+
+  resolve: {
+    unsafeCache: true
+  },
 
   optimization: {
     splitChunks: {
@@ -120,29 +125,27 @@ module.exports = {
       // and if we do the copy in the normal plugin the watch task
       // copies them every save even if we ignore that folder
       console.log('--- Copying images folders');
-      let source, destination;
-      source = path.resolve(__dirname, './public/images/');
-      destination = path.resolve(__dirname, './dist/public/images/');
-      fs.copySync(source, destination);
+      // let source, destination;
+      // source = path.resolve(__dirname, './public/images/');
+      // destination = path.resolve(__dirname, './dist/public/images/');
+      // fs.copySync(source, destination);
       // source = path.resolve(__dirname, './public/images/');
       // destination = path.resolve(__dirname, './dist/public/images/');
       // fs.copy(source, destination);
       console.log('--- Copy images folders finished');
 
     }),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, './src/index.html'),
-      filename: 'index-generated.html',
-    }),
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash:8].css',
       chunkFilename: '[name].[chunkhash:8].chunk.css'
     }),
     new CopyWebpackPlugin([
-      // {
-      //   from: './public/images',
-      //   to:   './images'
-      // },
+      {
+        from: './public/images',
+        to:   './images',
+        ignore: ['generated/*'],
+        logLevel: 'debug'
+      },
       {
         from: './public/javascript/libs/bo-utils-client.js',
         to:   './javascript/libs/bo-utils-client.js'
@@ -168,6 +171,10 @@ module.exports = {
         to:   './manifest.json'
       }
     ]),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, './src/index.html'),
+      filename: 'index-generated.html',
+    }),
   ],
 
 };

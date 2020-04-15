@@ -2,7 +2,7 @@
 
 import { diff } from 'deep-object-diff';
 
-// Binary Overdose Projects
+import { getRandomInt }                         from '../libs/bo-utils-client';
 import { objectsAreEqual }                      from '../libs/bo-utils-client';
 import { objectSetNestedProperty }              from '../libs/bo-utils-client';
 import { objectGetNestedProperty as gnp }       from '../libs/bo-utils-client';
@@ -211,6 +211,12 @@ export default class State {
     else if (stackId && handler) {
       const oldStackState = await State.getStackState(stackId);
       const newStackState = handler(oldStackState);
+      for (let component of newStackState.content) {
+        component.sid = stackId;
+        if (!component.id) {
+          component.id = Number(getRandomInt(1000, 9999)).toString();
+        }
+      }
       newState = await State.setStackState(stackId, newStackState);
     }
     else if (handler) {

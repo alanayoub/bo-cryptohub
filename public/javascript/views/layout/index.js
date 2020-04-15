@@ -33,6 +33,9 @@ export default class Layout {
 
       layout.init();
 
+      //
+      // Dimensions, active tabs, changed stacks etc
+      //
       bo.inst.events.on('LAYOUT_STATE_CHANGED', ({newState}) => {
         const stacksChanged = this.#stacksChanged(newState);
 
@@ -46,6 +49,17 @@ export default class Layout {
           this.#syncStackTabs(newState);
           this.#syncStackActiveTabs(newState);
           // bo.inst.gadgets.manager.load();
+        }
+      });
+
+      //
+      // Changes to a single gadget or a new gadget being added
+      //
+      bo.inst.events.on('GADGET_STATE_CHANGED', ({gadgetId, oldState, newState}) => {
+        if (newState && !oldState) {
+          const newComponent = Layout.#buildComponentConfig(newState);
+          const layoutStack = this.getStackBySid(newState.sid);
+          layoutStack.addChild(newComponent);
         }
       });
 
@@ -363,6 +377,43 @@ export default class Layout {
       return typeMap;
     }
 
+    static #buildComponentConfig({rowId, colId, type, sid, id}) {
+
+      const data = bo.inst.data.last.main.find(x => x.id === rowId);
+      const typeMap = Layout.#getTypeMap();
+
+      let title;
+      if (data) {
+        const name = data['cc-total-vol-full-FullName'].value;
+        title = `${name} ${typeMap[type]}`;
+      }
+      else if (type === 'default') {
+        title = 'Default';
+      }
+      else if (type === 'treemap') {
+        title = 'Treemap';
+      }
+      else if (type === 'main') {
+        title = 'All Assets';
+      }
+
+      const newItem = {
+        id,
+        title,
+        type: 'component',
+        componentName: 'commonComponent',
+        componentState: {
+          id,
+          sid,
+          type,
+          colId,
+          rowId
+        }
+      }
+      return newItem;
+
+    }
+
     static #decompress(content, data) {
       const typeMap = Layout.#getTypeMap();
       for (const val of Layout.iterateStacks(content)) {
@@ -371,35 +422,35 @@ export default class Layout {
           // itterate components in stack
           for (const [key, value] of Object.entries(val.ref.content)) {
 
-            const id = value.id;
+            const newComponent = Layout.#buildComponentConfig(value);
 
-            const d = data.find(v => v.id === value.rowId);
-            let title;
-            if (d) {
-              const name = d['cc-total-vol-full-FullName'].value;
-              const type = typeMap[value.type];
-              title = `${name} ${type}`;
-            }
-            else if (value.type === 'default') {
-              title = 'Default';
-            }
-            else if (value.type === 'treemap') {
-              title = 'Treemap';
-            }
-            else if (value.type === 'main') {
-              title = 'All Assets';
-            }
+            // const d = data.find(v => v.id === value.rowId);
+            // let title;
+            // if (d) {
+            //   const name = d['cc-total-vol-full-FullName'].value;
+            //   const type = typeMap[value.type];
+            //   title = `${name} ${type}`;
+            // }
+            // else if (value.type === 'default') {
+            //   title = 'Default';
+            // }
+            // else if (value.type === 'treemap') {
+            //   title = 'Treemap';
+            // }
+            // else if (value.type === 'main') {
+            //   title = 'All Assets';
+            // }
 
-            const newItem = {
-              id,
-              title,
-              type: 'component',
-              componentName: 'commonComponent',
-              componentState: {
-                ...value
-              }
-            }
-            Object.assign(val.ref.content[key], newItem);
+            // const newItem = {
+            //   id,
+            //   title,
+            //   type: 'component',
+            //   componentName: 'commonComponent',
+            //   componentState: {
+            //     ...value
+            //   }
+            // }
+            Object.assign(val.ref.content[key], newComponent);
           }
 
         }
@@ -555,22 +606,22 @@ export default class Layout {
               continue
             }
 
-            const newComponent = {
-              id,
-              sid,
-              title,
-              type: 'component',
-              componentName: 'commonComponent',
-              componentState: {
-                ...config
-                // id,
-                // sid,
-                // type,
-                // ...colId && {colId},
-                // ...rowId && {rowId}
-              }
-            }
-            stack.addChild(newComponent);
+            // const newComponent = {
+            //   id,
+            //   sid,
+            //   title,
+            //   type: 'component',
+            //   componentName: 'commonComponent',
+            //   componentState: {
+            //     // ...config
+            //     // id,
+            //     // sid,
+            //     // type,
+            //     // ...colId && {colId},
+            //     // ...rowId && {rowId}
+            //   }
+            // }
+            // stack.addChild(newComponent);
           }
         }
       }

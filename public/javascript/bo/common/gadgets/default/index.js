@@ -61,10 +61,19 @@ export default class Default extends Gadget {
       const target = event.target;
       const node = target.nodeName;
       if (node === 'BUTTON') {
-        const row = target.closest('.bo-row');
-        const input = row.querySelector('input');
-        const dataset = input.dataset;
-        console.log(dataset);
+        const stackId = +target.closest('.lm_stack').dataset.sid;
+        bo.inst.state.set({stackId, handler: stack => {
+          const row = target.closest('.bo-row');
+          const dataset = row.querySelector('input').dataset;
+          const type = dataset.name;
+          const rowId = dataset.id;
+          const colId = ({
+            exchanges: 'cryptohub-numberOfExchanges',
+            wallets: 'cryptohub-numberOfWallets'
+          })[type];
+          stack.content.push({rowId, colId, type});
+          return stack;
+        }});
       }
     }
     this.container.removeEventListener('click', containerListener);

@@ -26,52 +26,6 @@ import segment from './utils/segment.js';
 
 window.pug = pug;
 
-// function flipMap(map) {
-//   const out = {};
-//   for(const key in map) {
-//     out[map[key]] = key;
-//   }
-//   return out;
-// }
-
-
-// /**
-//  *
-//  * Handle store events
-//  *
-//  * @param {Object} data
-//  * @return void
-//  *
-//  */
-// function storeEmitHandler(data) {
-
-//   window.bo.func.updated('now');
-
-//   let newSocketData = JSON.parse(data);
-//   const type = newSocketData.type;
-//   newSocketData = newSocketData.data;
-
-//   if (type === 'maps') {
-//     for (const item of newSocketData) {
-//       window.ch[item._id] = item.map;
-//       if (item._id === 'exchangeMapIdName') {
-//         window.ch['exchangeMapNameId'] = flipMap(item.map);
-//       }
-//       if (item._id === 'projectMapIdName') {
-//         window.ch['projectMapNameId'] = flipMap(item.map);
-//       }
-//     }
-//   }
-//   else if (type === 'exchanges') {
-//     window.ch.exchanges = newSocketData;
-//   }
-//   else if (type === 'wallets') {
-//     window.ch.wallets = newSocketData;
-//   }
-//   if (!window.initStore) window.initStore = window.ch;
-
-// }
-
 document.querySelector('.CH-app').innerHTML = initPug['app-container']({});
 
 $('body').on('click', '.ch-logo a', event => {
@@ -100,27 +54,8 @@ window.bo.inst.state.init().then(({state, filterModel}) => {
       });
     }
   });
-  // waitUntil(() => refs.rowData, () => {
-    // bo.inst.gadgets.manager.load();
-  // }, 100);
 
   setInterval(window.bo.func.updated, 1000 * 1);
-
-  // window.bo.inst.socket.on('cols', data => {
-  //   window.bo.inst.state.get().then(state => {
-  //     const columns = state.window[0].columns.filter(v => !/^c-\d{1,4}$/.test(v.id)).map(v => v.id).join(',');
-  //     const sort = state.window[0].sort;
-  //     const emitData = JSON.stringify({columns, sort});
-  //     window.bo.inst.socket.emit('cols', emitData);
-  //   });
-  // });
-  // window.bo.inst.socket.on('rows-full', data => {
-  //   dataEmitHandler('rows-full', data);
-  // });
-  // window.bo.inst.socket.on('rows-update', data => {
-  //   dataEmitHandler('rows-update', data);
-  // });
-  // window.bo.inst.socket.on('store', storeEmitHandler);
 
   window.bo.func.updated('now');
   window.bo.inst.toolbarView = new ToolbarView(
@@ -141,17 +76,5 @@ window.bo.inst.state.init().then(({state, filterModel}) => {
       login: true
     }
   );
-
-  // window.onpopstate = event => {
-  //   if (event.state) {
-  //     // window.bo.inst.state.update(event.state);
-  //   }
-  //   else if (window.location.hash) {
-  //     // window.bo.inst.state.update();
-  //   }
-  //   else {
-  //     window.history.back();
-  //   }
-  // }
 
 });

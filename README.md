@@ -1,5 +1,7 @@
 ![](https://github.com/alanayoub/bo-cryptohub/blob/master/graphics/screenshots/Screenshot_002.png)
 
+https://www.youtube.com/watch?v=NABFf5wNTM4&t=101s
+
 ### env
 ```
 source ~/.profile
